@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<helpLines>
+    <category title="$l10n_ad_helpCategory_1">
+        <page title="$l10n_ad_helpTitle_01">
+            <item type="text" value="$l10n_ad_helpText_01_01" />
+            <item type="text" value="$l10n_ad_helpText_01_02" />
+            <item type="text" value="$l10n_ad_helpText_01_03" />
+            <!--<item type="image" value="$adDir/icon.png" />-->
+        </page>
+        <page title="$l10n_ad_helpTitle_02">
+            <item type="text" value="$l10n_ad_helpText_02_01" />
+        </page>
+        <page title="$l10n_ad_helpTitle_03">
+            <item type="text" value="$l10n_ad_helpText_03_01" />
+            <item type="text" value="$l10n_ad_helpText_03_02" />
+            <item type="text" value="$l10n_ad_helpText_03_03" />
+        </page>
+        <page title="$l10n_ad_helpTitle_04">
+            <item type="text" value="$l10n_ad_helpText_04_01" />
+            <item type="text" value="$l10n_ad_helpText_04_02" />
+            <item type="text" value="$l10n_ad_helpText_04_03" />
+            <item type="text" value="$l10n_ad_helpText_04_04" />
+            <item type="text" value="$l10n_ad_helpText_04_05" />
+        </page>
+        <page title="$l10n_ad_helpTitle_05">
+            <item type="text" value="$l10n_ad_helpText_05_01" />
+            <item type="text" value="$l10n_ad_helpText_05_02" />
+            <item type="text" value="$l10n_ad_helpText_05_03" />
+            <item type="text" value="$l10n_ad_helpText_05_04" />
+        </page>
+        <page title="$l10n_ad_helpTitle_06">
+            <item type="text" value="$l10n_ad_helpText_06_01" />
+            <item type="text" value="$l10n_ad_helpText_06_02" />
+            <item type="text" value="$l10n_ad_helpText_06_03" />
+        </page>
+        <page title="$l10n_ad_helpTitle_07">
+            <item type="text" value="$l10n_ad_helpText_07_01" />
+            <item type="text" value="$l10n_ad_helpText_07_02" />
+            <item type="text" value="$l10n_ad_helpText_07_03" />
+            <item type="text" value="$l10n_ad_helpText_07_04" />
+            <item type="text" value="$l10n_ad_helpText_07_05" />
+        </page>
+        <page title="$l10n_ad_helpTitle_08">
+            <item type="text" value="$l10n_ad_helpText_08_01" />
+            <item type="text" value="$l10n_ad_helpText_08_02" />
+            <item type="text" value="$l10n_ad_helpText_08_03" />
+            <item type="text" value="$l10n_ad_helpText_08_04" />
+            <item type="text" value="$l10n_ad_helpText_08_05" />
+        </page>
+        <page title="$l10n_ad_helpTitle_09">
+            <item type="text" value="$l10n_ad_helpText_09_01" />
+        </page>
+        <page title="$l10n_ad_helpTitle_10">
+            <item type="text" value="$l10n_ad_helpText_10_01" />
+            <item type="text" value="$l10n_ad_helpText_10_02" />
+            <item type="text" value="$l10n_ad_helpText_10_03" />
+        </page>
+        <page title="$l10n_ad_helpTitle_11">
+            <item type="text" value="$l10n_ad_helpText_11_01" />
+        </page>
+        <page title="$l10n_ad_helpTitle_12">
+            <item type="text" value="$l10n_ad_helpText_12_01" />
+            <item type="text" value="$l10n_ad_helpText_12_02" />
+            <item type="text" value="$l10n_ad_helpText_12_03" />
+        </page>
+        <page title="$l10n_ad_helpTitle_13">
+            <item type="text" value="$l10n_ad_helpText_13_01" />
+            <item type="text" value="$l10n_ad_helpText_13_02" />
+            <item type="text" value="$l10n_ad_helpText_13_03" />
+            <item type="text" value="$l10n_ad_helpText_13_04" />
+            <item type="text" value="$l10n_ad_helpText_13_05" />
+        </page>
+    </category>
+</helpLines>

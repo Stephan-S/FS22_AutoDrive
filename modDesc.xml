@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="62">
+	<author>Balu</author>
+	<title>
+		<en>AutoDrive</en>
+	</title>
+	<description>
+		<en>
+			<![CDATA[This mod can be used to create a network of routes for vehicles to drive autonomously. Once setup you can tell a tractor which is standing anywhere close to the network to drive to any point, such as the shop, field 1 or to a sell point.
+
+Changelog 2.0.0.0:
+]]>
+		</en>
+		<de>
+			<![CDATA[Dieser Mod erlaubt es ein Netzwerk von Routen aufzuzeichnen, um dann ein Fahrzeug von jedem beliebigen Punkt zu speziell definierten Zielen, wie zum Beispiel der eigenen Farm, Feld 1 oder auch zu jedem Verkaufspunkt fahren zu lassen.
+
+Changelog 2.0.0.0:
+]]>
+		</de>
+		<it>
+			<![CDATA[Questa mod può essere usata per creare una rete di percorsi per permettere ai veicoli di guidare autonomamente. Una volta effettuata la configurazione puoi dire a un veicolo di guidare tramite la rete verso un qualsiasi punto, come il negozio, il campo 1 o un punto vendita.
+
+Log delle modifiche 2.0.0.08:
+]]>
+		</it>
+		<fr>
+			<![CDATA[Ce mod peut être utilisé pour créer un réseau de routes permettant aux véhicules de conduire de manière autonome. Une fois la configuration effectuée, vous pouvez indiquer à un tracteur situé près du réseau de se rendre à n’importe quel point, tel que le magasin, le champ 1 ou un point de vente.
+Créer, ajouter, modifier, supprimer vos routes ou points de destination à l'aide de l'éditeur intégré très pratique !
+Différents modes d'utilisation ont été ajoutés depuis les premières versions, et peuvent être combinés à l'utilisation du bien connu "Courseplay".
+
+Changelog 2.0.0.0:
+]]>
+		</fr>
+		<es>
+			<![CDATA[Este mod se utiliza para crear una red de rutas y permitir que los vehículos conduzcan de forma autónoma. Una vez configurado, puede ordenar a un tractor, cercano a la red, que conduzca a cualquier meta definida, como la tienda, el campo 1 o un punto de venta.]]>
+		</es>
+		<ru>
+			<![CDATA[Этот мод может быть использован для создания сети маршрутов для транспортных средств для автономного вождения. После настройки вы можете указать трактору, стоящему где-угодно рядом с сетью, проехать в любую точку, например, в магазин, поле №1 или в точку продажи.]]>
+		</ru>
+	</description>
+	<version>2.0.0.0</version>
+	<multiplayer supported="true" />
+	<iconFilename>icon.dds</iconFilename>
+	<extraSourceFiles>
+		<sourceFile filename="register.lua" />
+	</extraSourceFiles>
+
+	<l10n filenamePrefix="translations/translation" />
+
+	<actions>
+		<action name="ADSilomode" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADPreviousMode" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADRecord" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADRecord_Dual" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADRecord_SubPrio" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADRecord_SubPrioDual" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADEnDisable" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSelectTarget" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSelectPreviousTarget" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSelectTargetUnload" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSelectPreviousTargetUnload" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADActivateDebug" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDisplayMapPoints" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugSelectNeighbor" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugCreateConnection" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugToggleConnectionInverted" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugChangeNeighbor" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugPreviousNeighbor" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugCreateMapMarker" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADRenameMapMarker" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugDeleteDestination" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADNameDriver" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSetDestinationFilter" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_Speed_up" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_Speed_down" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_FieldSpeed_up" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_FieldSpeed_down" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADToggleHud" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADToggleMouse" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDebugDeleteWayPoint" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_routes_manager" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSelectNextFillType" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSelectPreviousFillType" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADOpenGUI" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADCallDriver" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADGoToVehicle" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADIncLoopCounter" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADDecLoopCounter" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSwapTargets" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADStartCP" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADToggleCP_AIVE" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_open_notification_history" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_continue" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADParkVehicle" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADSetParkDestination" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_devAction" category="VEHICLE" ignoreComboMask="false" />
+		<action name="AD_open_tipOfTheDay" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADRefuelVehicle" category="VEHICLE" ignoreComboMask="false" />	
+		<action name="ADToggleHudExtension" category="VEHICLE" ignoreComboMask="false" />	
+	</actions>
+
+	<inputBinding>
+		<actionBinding action="ADToggleHud">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lalt KEY_KP_0" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_17" />
+		</actionBinding>
+		<actionBinding action="ADOpenGUI">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_KP_0" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_16" />
+		</actionBinding>
+		<actionBinding action="ADToggleMouse">
+			<binding device="KB_MOUSE_DEFAULT" input="MOUSE_BUTTON_MIDDLE" axisComponent="+" neutralInput="0" index="3" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_19" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADEnDisable">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_up" axisComponent="+" inputComponent="+" index="1" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_17" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADSelectTarget">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_right" axisComponent="+" neutralInput="0" index="1" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_18" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADSelectPreviousTarget">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_left" axisComponent="+" neutralInput="0" index="1" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_20" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADSelectTargetUnload">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 AXIS_3+" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADSelectPreviousTargetUnload">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 AXIS_3-" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADActivateDebug">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_11" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADDebugSelectNeighbor">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_9" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADDebugChangeNeighbor">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 AXIS_4-" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADDebugCreateConnection">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_12" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADSelectNextFillType">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_o" axisComponent="+" neutralInput="0" index="1" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 AXIS_2-" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADSelectPreviousFillType">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_KP_4" axisComponent="+" neutralInput="0" index="1" />
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 AXIS_2+" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADRecord">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_3" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="AD_routes_manager">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_KP_1" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="ADSilomode">
+			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 AXIS_4+" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+		<actionBinding action="AD_open_notification_history">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_m" axisComponent="+" neutralInput="0" index="1" />
+		</actionBinding>
+	</inputBinding>
+</modDesc>

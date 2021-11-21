@@ -1,0 +1,33 @@
+Main developer:
+Stephan-S
+TyKonKet
+
+GUI Textures and Design:
+OlfDE
+
+Tips & Tricks for Lua/FS: 
+DeckerMMIV
+
+Others:
+Anonymous-any
+Roby1164
+Gonimy-Vetrom
+Bandesss
+raxtor
+raupach
+Dzi4d3k
+PromGames
+jala15
+cristiancundari
+Iwan1803
+rogeriodec
+Efratror
+pvaiko
+Datalund
+Bobster82
+criss20ster
+Gariot
+Axel32019
+andrefelipeschulle
+
+Many code examples reused from Courseplay!

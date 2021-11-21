@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <GuiElement type="empty" profile="newLayer" />
+    <GuiElement type="bitmap" profile="dialogFullscreenBg" />
+
+    <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter">
+        <GuiElement type="bitmap" profile="dialogHeaderDocked">
+            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_colorSettingsTitle" />
+        </GuiElement>
+
+        <GuiElement type="empty" profile="autoDriveColorSettingsNavigationBox">
+
+            <GuiElement type="list" profile="autoDriveColorSettingsList" position="1px -1px" onSelectionChanged="onListSelectionChanged" onDoubleClick="onDoubleClick" id="autoDriveColorList">
+                <GuiElement type="listItem" profile="autoDriveColorSettingsListItem" id="listItemTemplate">
+                    <GuiElement type="text" profile="autoDriveColorSettingsItemText" text="Color text" name="listItemText" />
+                </GuiElement>
+            </GuiElement>
+
+            <GuiElement type="bitmap" profile="verticalGlassListSliderBackground" size="28px 690px" position="-1px -1px">
+                <GuiElement type="slider" profile="verticalGlassListSlider" size="16px 678px" dataElementId="autoDriveColorList" handleFocus="false" />
+            </GuiElement>
+        </GuiElement>
+
+        <GuiElement type="flowLayout" profile="buttonBoxDocked">
+            <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
+            <GuiElement type="button" profile="buttonOK" text="$l10n_gui_ad_button_export" onClick="onClickOk" />
+            <!-- <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset" onClick="onClickReset" /> -->
+            <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset_selected" onClick="onClickReset" />
+            
+        </GuiElement>
+    </GuiElement>
+</GUI>

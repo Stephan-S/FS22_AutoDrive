@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="sphere" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="8.2.0"/>
+  </Asset>
+
+  <Files>
+    <File fileId="3" filename="defaultPlastic_specular.dds"/>
+    <File fileId="1" filename="default_diffuse.dds"/>
+    <File fileId="2" filename="default_normal.dds"/>
+    <File fileId="4" filename="diffuseColorShader.xml"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="line_mat" materialId="4" customShaderId="4">
+      <Texture fileId="1"/>
+      <Normalmap fileId="2"/>
+      <Glossmap fileId="3"/>
+      <CustomParameter name="color" value="0 1 0 0"/>
+    </Material>
+  </Materials>
+
+
+  <Shapes externalShapesFile="sphere.i3d.shapes">
+  </Shapes>
+
+
+  <Dynamics>
+  </Dynamics>
+
+  <Scene>
+    <Shape shapeId="1" name="sphere" clipDistance="100" nodeId="7" materialIds="4"/>
+  </Scene>
+
+</i3D>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <GuiElement type="empty" profile="newLayer" />
+    <GuiElement type="bitmap" profile="dialogFullscreenBg" />
+
+    <GuiElement type="bitmap" profile="yesNoDialogBg">
+        <GuiElement type="bitmap" profile="dialogHeaderDocked">
+            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_enterGroupNameTitle" />
+        </GuiElement>
+
+        <GuiElement type="text" profile="sleepDialogText" text="$l10n_gui_ad_enterGroupNameText" />
+
+        <GuiElement type="textInput" profile="dialogTextInput" id="textInputElement" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" focusInit="onOpen" maxCharacters="20" />
+
+        <GuiElement type="flowLayout" profile="buttonBoxDocked">
+            <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
+            <GuiElement type="button" profile="buttonOK" text="$l10n_button_ok" onClick="onClickOk" />
+        </GuiElement>
+    </GuiElement>
+</GUI>

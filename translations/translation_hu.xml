@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<translationContributors>Gozmozdony</translationContributors>
+	<texts>
+		<text name="UNKNOWN"									text="Ismeretlen" />
+		<text name="input_ADToggleHud"							text="AD: HUD be/ki" />
+		<text name="input_ADToggleHudExtension"					text="AD: Show HUD infos" />
+		<text name="input_ADToggleMouse"						text="AD: Egér be/ki" />
+		<text name="input_ADEnDisable"							text="AD: Bekapcsolás/Kikapcsolás" />
+		<text name="input_ADSilomode"							text="AD: Módváltás" />
+		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
+		<text name="input_ADRecord"								text="AD: felvétel" />
+		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
+		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
+		<text name="input_ADSelectTarget"						text="AD: Cél választás" />
+		<text name="input_ADSelectPreviousTarget"				text="AD: Előző cél választás" />
+		<text name="input_AD_Speed_up"							text="AD: Sebesség növelése " />
+		<text name="input_AD_Speed_down"						text="AD: Sebesség csökkentése" />
+		<text name="input_AD_routes_manager" 					text="AD: Útvonalkezelő megnyitása" />
+		<text name="input_AD_open_notification_history" 		text="AD: Előzmények megnyitása" />
+		<text name="input_AD_continue"							text="AD: Folytatás" />
+		<text name="input_ADSelectTargetUnload"					text="AD: Következő kirakodás " />
+		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Előző kirakodás" />
+		<text name="input_ADActivateDebug"						text="AD: Szerkesztés" />
+		<text name="input_ADDisplayMapPoints"					text="AD: Show waypoints" />
+		<text name="input_ADDebugSelectNeighbor"				text="AD: Szomszédos pont" />
+		<text name="input_ADDebugChangeNeighbor"				text="AD: Következő szomszédos pont" />
+		<text name="input_ADDebugPreviousNeighbor"				text="AD: Select previous Neighbour Point" />
+		<text name="input_ADDebugCreateConnection"				text="AD: Kapcsolat be/ki" />
+		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Toggle connection between inverted" />
+		<text name="input_ADDebugCreateMapMarker"				text="AD: Cél létrehozása/szerkesztése" />
+		<text name="input_ADRenameMapMarker"					text="AD: Kijelölt cél szerkesztése" />
+		<text name="input_ADDebugDeleteWayPoint"				text="AD: Útpont törlés" />
+		<text name="input_ADDebugDeleteDestination"				text="AD: A legközelebbi cél törlése " />
+		<text name="input_ADSelectNextFillType"					text="AD: Következő termék" />
+		<text name="input_ADSelectPreviousFillType"				text="AD: Előző termék" />
+		<text name="input_ADOpenGUI"							text="AD: GUI nyitás" />
+		<text name="input_ADCallDriver"							text="AD: Sofőr felvétel" />
+		<text name="input_ADGoToVehicle"						text="AD: Váltás az érkezett járműre" />
+		<text name="input_ADNameDriver"							text="AD: Sofőr elnevezése" />
+		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
+		<text name="input_ADIncLoopCounter"						text="AD: Útvonal ismétlése" />
+		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
+		<text name="input_ADParkVehicle"						text="AD: Parkolja le a járművet" />
+		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
+		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
+		<text name="input_ADbunkerUnloadType"					text="AD: Unload to Trailer or BGA" />
+		<text name="input_ADSwapTargets"						text="AD: Cél csere" />
+		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
+		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
+		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
+		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
+		<text name="hud_avoidFruit"								text="AD: Termény kikerülése" />
+		<text name="hud_startCp"								text="AD: Start CP / AIVE at destination" />
+		<text name="AD_parkVehicle_noPosSet"					text="Járműnek nincs parkolója. Jobb egérgombbal rendeljen hozzá parkolási helyet." />
+		<text name="AD_parkVehicle_selected"					text="Kiválasztott parkolóhely: " />
+		<text name="AD_Driver_of"								text="Sofőr ki" />
+		<text name="AD_has_reached"								text="Megérkezett" />
+		<text name="AD_got_stuck"								text="Elakadt" />
+		<text name="AD_cannot_reach"							text="Nem találja az utat" />
+		<text name="AD_cannot_find_path"						text="Nem tudja kiszámítani az útvonalat" />
+		<text name="AD_new_marker"								text="Új cél:" />
+		<text name="AD_No_Trailer"								text="Nem találja a pótkocsit" />
+		<text name="AD_No_Bunker"								text="Nem találja a Silót" />
+		<text name="AD_No_Shovel"								text="Nem talál kanalat" />
+		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_MODE_DRIVETO"							text="Sofőr" />
+		<text name="AD_MODE_DELIVERTO"							text="Szállító" />
+		<text name="AD_MODE_PICKUPANDDELIVER"					text="Felrakás és lerakás" />
+		<text name="AD_MODE_UNLOAD"								text="Kombájn ürítés" />
+		<text name="AD_MODE_LOAD"								text="Töltés" />
+		<text name="AD_MODE_BGA"								text="Siló kirakás" />
+		<text name="AD_synchronizing"							text="Útvonal betöltése a serverről.." />
+		<text name="AD_lctrl_for_extendedEditor" 				text="Bal CTRL szerkesztés megnyitása" />
+		<text name="AD_lctrl_for_creation" 						text="Bal CTRL bevitel" />
+		<text name="AD_lalt_for_deletion" 						text="Bal ALT törlés" />
+		<text name="AD_lshift_for_reverse" 						text="Bal SHIFT szállító törlése" />
+		<text name="gui_ad_Setting"								text="AutoDrive - Beállítás" />
+		<text name="gui_ad_collisionHeigth"						text="Ütközés érzékelés" />
+		<text name="gui_ad_collisionHeigth_tooltip"				text="Beállítás az ütközés érzékelésére a jármű előtt. Ha vezetés közben nem észlel más járműveket, csökkentse lépésről lépésre. (Alapértelmezett 2m)" />
+		<text name="gui_ad_blinkValue"						    text="Irányjelző bekapcsolása automatikus" />
+		<text name="gui_ad_blinkValue_tooltip"					text="Kormányállás az irányjelző fények automatikus engedélyezéséhez. (0 = az irányjelző fény automatikusan kikapcsol)" />
+		<text name="gui_ad_pipe_offset"							text="Cső eltolás" />
+		<text name="gui_ad_followDistance"						text="Távolság a kombájntól" />
+		<text name="gui_ad_followDistance_tooltip"				text="Távolság ha a kombájnt hátul követi" />
+		<text name="gui_ad_lookahead_turning"					text="Kanyarodási távolság" />
+		<text name="gui_ad_lookahead_turning_tooltip"			text="Távolság beállítása a kormányzáshoz" />
+		<text name="gui_ad_useFastestRoute"						text="Leggyorsabb útvonal" />
+		<text name="gui_ad_useFastestRoute_tooltip"				text="A legjobb útvonal számításakor a sebességet vegye figyelembe a távolság helyett." />
+		<text name="gui_ad_mapMarkerDetour"						text="Maximális kitérő" />
+		<text name="gui_ad_mapMarkerDetour_tooltip"				text="Maximális kitérő a célok elkerülésekor" />
+		<text name="gui_ad_siloEmpty"							text="Siló üres" />
+		<text name="gui_ad_siloEmpty_tooltip"					text="Hogyan regáljon a szállító az üres silóra" />
+		<text name="gui_ad_useFolders"							text="Mappa használat" />
+		<text name="gui_ad_useFolders_tooltip"					text="Mappák használatával rendezheti az útvonalakat" />
+		<text name="gui_ad_wait"								text="Várjon" />
+		<text name="gui_ad_drive"								text="Sofőr be" />
+		<text name="gui_ad_yes"									text="Igen" />
+		<text name="gui_ad_no"									text="Nem" />
+		<text name="ad_bga_init"								text="Elindítás" />
+		<text name="ad_bga_waiting"								text="Várakozás pótkocsira" />
+		<text name="ad_bga_active"								text="Aktív" />
+		<text name="gui_ad_autoConnect_start"					text="Automatikus kapcsolás (indítás)" />
+		<text name="gui_ad_autoConnect_start_tooltip"			text="A megfelelő csomópontok automatikus csatlakoztatása a felvétel indításakor" />
+		<text name="gui_ad_autoConnect_end"						text="Automatikus kapcsolás (Vége)" />
+		<text name="gui_ad_autoConnect_end_tooltip"				text="Automatikusan csatlakoztassa a megfelelő csomópontot a felvétel végén" />
+		<text name="gui_ad_parkInField"							text="Parkolás a földön" />
+		<text name="gui_ad_parkInField_tooltip"					text="A kombájn kirakása után a sofőr megvárja a következő rakodást a mezőn, ha nem a mező betakarítatlan részén áll vagy tele van." />
+		<text name="gui_ad_unloadFillLevel"						text="Töltési szint" />
+		<text name="gui_ad_unloadFillLevel_tooltip"				text="A kombájn kirakása után, amikor elérte ezt a szintet, azonnal kirakja." />
+		<text name="gui_ad_findDriver"							text="Szállító keresés" />
+		<text name="gui_ad_findDriver_tooltip"					text="Keresse meg a legközelebbi sofőrt (figyelmen kívül hagyja a távolságot)" />
+		<text name="gui_ad_gui_scale"							text="Az AutoDrive HUD grafikus felhasználói felületének méretezése" />
+		<text name="gui_ad_gui_scale_tooltip"					text="Az Alapértelmezett beállítás kiválasztásakor a játék beállításai irányadók" />
+		<text name="gui_ad_notifications"						text="Értesítés" />
+		<text name="gui_ad_notifications_text_1"				text="Tiltva" />
+		<text name="gui_ad_notifications_text_2"				text="Rövid" />
+		<text name="gui_ad_notifications_text_3"				text="Alapértelmezett" />
+		<text name="gui_ad_notifications_text_4"				text="Hosszú" />
+		<text name="gui_ad_notifications_text_5"				text="Leghosszabb" />
+		<text name="gui_ad_notifications_text_6"				text="Végtelen" />
+		<text name="gui_ad_notifications_tooltip"				text="Az értesítések megjelenítési ideje: nincs megjelenítés / ca. 2,5s / 5s / 10s / 25s / Megjelenítés a felhasználó bezárásáig" />
+		<text name="gui_ad_exitField"							text="Föld elhagyása" />
+		<text name="gui_ad_exitField_tooltip"					text="Föld elhagyása a kirakodás után - kezdőpont, röviddel a kezdőpont után, a legközelebbi pont" />
+		<text name="gui_ad_default"								text="Alapértelmezett" />
+		<text name="gui_ad_after_start"							text="Kezdőpont" />
+		<text name="gui_ad_closest"								text="Legközelebbi pont" />
+		<text name="gui_ad_showHelp"							text="Súgó" />
+		<text name="gui_ad_showHelp_tooltip"					text="Súgó megjelenítése F1 gomb megnyomásával" />
+		<text name="gui_ad_driverWages"							text="Sofőr bérezése" />
+		<text name="gui_ad_driverWages_tooltip"					text="A munkavállaló fizetése ennek az értéknek megfelelően" />
+		<text name="gui_ad_showNextPath"						text="A következő útvonal megjelenítése" />
+		<text name="gui_ad_showNextPath_tooltip"				text="Engedélyezi/Letiltja a következő két útpont megjelenítését" />
+		<text name="gui_ad_avoidFruit"							text="Kerülje a növényt" />
+		<text name="gui_ad_avoidFruit_tooltip"					text="A sofőr megpróbálja kikerülni a mező betakarítatlan részét" />
+		<text name="gui_ad_pathFinderTime"						text="Útkereső ideje (max)" />
+		<text name="gui_ad_pathFinderTime_tooltip"				text="Meghatározza, hogy az útkereső algoritmus mennyi ideig kereshet ütközésmentes utat a kombájnhoz. (Potenciális fps-hatás)" />
+		<text name="gui_ad_lineHeight"							text="Vonal magassága" />
+		<text name="gui_ad_lineHeight_tooltip"					text="Útvonal megjelenítési mód" />
+		<text name="gui_ad_ground"								text="Talajszinten" />
+		<text name="gui_ad_aboveDriver"							text="Traktor felett" />
+		<text name="gui_ad_enableTrafficDetection"				text="Ütközésészlelés" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Fejlett ütközésészlelés, amely észleli a forgalmat, a táblákat, a kerítéseket stb" />
+		<text name="gui_ad_shovelWidth"							text="Kanál szélessége" />
+		<text name="gui_ad_shovelWidth_tooltip"					text="Ha az automatikusan felismert szélesség túl kicsi, ezzel növelhető" />
+		<text name="gui_ad_preCallLevel"						text="Hívás előtti szint" />
+		<text name="gui_ad_preCallLevel_tooltip"				text="A kirakodó hívása a beállított kitöltési szintnél." />
+		<text name="gui_ad_none"					            text="Egyik sem" />
+		<text name="gui_ad_onlyPickup"					        text="Csak átvétel" />
+		<text name="gui_ad_onlyDeliver"					        text="Csal szállítás" />
+		<text name="gui_ad_PickupandDeliver"					text="Átvétel és szállítás" />
+		<text name="gui_ad_rotateTargets"					    text="Átvétel és szállítási ciklus" />
+		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: A célok nem változnak / csak a felvételi célok / csak a célok kézbesítése / az átvétel és a célok kézbesítése a mappában ciklusosak (nem az alapértelmezett mappával) (csak akkor vehető figyelembe, ha a mappák használata aktív)" />
+		<text name="gui_ad_maxTriggerDistance"					text="Maximális kirakodási távolság" />
+		<text name="gui_ad_maxTriggerDistance_tooltip"			text="A célponttól e távolságig a kirakodás felismerése esetén be- és kirakodás történik" />
+		<text name="gui_ad_useBeaconLights"						text="Jelző lámpa" />
+		<text name="gui_ad_useBeaconLights_tooltip"				text="Használjon jelzőfényeket az úton." />
+		<text name="gui_ad_restrictToField"						text="Korlátozza az útkeresőt a földre" />
+		<text name="gui_ad_restrictToField_tooltip"				text="Ha már egy fuvarozó a földön parkol, akkor az útvonal keresése a föld szélére lesz korlátozva." />
+		<text name="gui_ad_showTooltips"						text="Eszköztár mutatása" />
+		<text name="gui_ad_showTooltips_tooltip"				text="Lehetővé teszi a HUD gombok súgó megjelenítését" />
+		<text name="gui_ad_enterTargetNameTitle_add"			text="Cél hozzáadása" />
+		<text name="gui_ad_enterTargetNameTitle_edit"			text="Cél szerkesztése" />
+		<text name="gui_ad_enterTargetNameText"					text="Írja be a cél nevét:" />
+		<text name="gui_ad_createButtonText"					text="Írás" />
+		<text name="gui_ad_enterDriverNameTitle"				text="Szállító átnevezése" />
+		<text name="gui_ad_enterDriverNameText"					text="Írja be a szállító nevét:" />
+		<text name="gui_ad_enterGroupNameTitle"					text="Mappa létrehozása" />
+		<text name="gui_ad_enterGroupNameText"					text="Írja be a mappa nevét:" />
+		<text name="gui_ad_autoRefuel"							text="Automatikus tankolás" />
+		<text name="gui_ad_autoRefuel_tooltip"					text="Ha alacsony az üzemanyagszint, menjen az üzemanyagtöltési célig (közel az üzemanyag kiadóhoz)." />
+		<text name="gui_ad_filter"								text="Szűrő" />
+		<text name="gui_ad_enterDestinationFilterTitle"			text="Célszűrés választás" />
+		<text name="gui_ad_enterDestinationFilterText"			text="Szűrő szöveg bevitel:" />
+		<text name="gui_ad_shovelHeight"						text="Kanál magasság" />
+		<text name="gui_ad_shovelHeight_tooltip"				text="Ha az automatikusan észlelt lapátmagasság nem megfelelő,ezzel állíthatja be a magasságot" />
+		<text name="gui_ad_showMarkersOnMap"					text="Jelzők megjelenítése" />
+		<text name="gui_ad_showMarkersOnMap_tooltip"			text="Mutassa a célokat a térképen" />
+		<text name="gui_ad_switchToMarkersOnMap"				text="Célok a térképen" />
+		<text name="gui_ad_switchToMarkersOnMap_tooltip"		text="A térképen jelölt pontkora kattintva állítsa be a cél / kirakodás célpontját" />
+		<text name="gui_ad_cornerSpeed"							text="Kanyarodási sebesség" />
+		<text name="gui_ad_cornerSpeed_tooltip"					text="Állítsa be az egyes járművek kanyarodási sebességét. A tömeg és az aktuális sebesség továbbra is hatással lesz a féktávolságra." />
+		<text name="gui_ad_callSecondUnloader"					text="2. számú szállító hívása" />
+		<text name="gui_ad_callSecondUnloader_tooltip"			text="Hívja a 2. számú kirakót, amikor az aktuális kirakodó eléri az előhívás töltési szintjét" />
+		<text name="gui_ad_followOnlyOnField"					text="Szállítót tartsa a földön" />
+		<text name="gui_ad_followOnlyOnField_tooltip"			text="Szállító földön tartása ürítés közben" />
+		<text name="gui_ad_addSettingsToHUD"					text="Adja meg a HUD beállításait" />
+		<text name="gui_ad_addSettingsToHUD_tooltip"			text="Gombok hozzáadása a HUD-hoz a beállítások módosításához a menü megnyitása nélkül" />
+		<text name="gui_ad_iconSetToUse"						text="Logó személyre szabása" />
+		<text name="gui_ad_iconSetToUse_tooltip"				text="Alapértelmezett logó vagy személyre szabott logó - A választék bővíthető." />
+		<text name="gui_ad_secondEditorModeAllowed"				text="Használja a 2. szerkesztő módot" />
+		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Használja a 2. szerkesztő módot az útvonal manipulálásához az Bal CTRL lenyomása helyett" />
+		<text name="gui_ad_wideHUD"								text="Széles HUD" />
+		<text name="gui_ad_wideHUD_tooltip"						text="Használjon széles HUD módot, amely lehetővé teszi még néhány beállítási gombot a HUD-ban" />
+		<text name="gui_ad_syncMultiTargets"					text="Több cél szinkronizálása" />
+		<text name="gui_ad_syncMultiTargets_tooltip"			text="Több útvonal, amely ugyanazt a mappát használja több célhoz, szinkronizálja a következő célokat" />
+		<text name="gui_ad_enableParkAtJobFinished"				text="Parkolás a végén" />
+		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Csak az Átvétel és kézbesítés, kézbesítés módokban érhető el: Ha a munka befejeződött, a jármű / tartozék tárolt parkolási pozíciójába kerül. A Dedi-Server-en csak a jármű parkolóhelye áll rendelkezésre!" />
+		<text name="gui_ad_autoTipSide"                         text="Automatikus hegyoldal" />
+		<text name="gui_ad_autoTipSide_tooltip"                 text="Igen - Az AutoDrive automatikusan kiválasztja a csúcsoldalt / Nem - a már kiválasztott csúcsoldalt fogja használni" />
+		<text name="gui_ad_autoTrailerCover"                    text="Automatikus pótkocsi fedél " />
+		<text name="gui_ad_autoTrailerCover_tooltip"            text="Igen - az AutoDrive szükség esetén nyissa meg és zárja be a pótkocsi fedelét / Nem - az AutoDrive nem nyitja vagy zárja le a pótkocsi fedelét" />
+		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning manoeuvre" />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
+		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
+		<text name="gui_ad_AL_off"                              text="Unload Off" />
+		<text name="gui_ad_AL_center"                           text="Unload center" />
+		<text name="gui_ad_AL_left"                             text="Unload left" />
+		<text name="gui_ad_AL_behind"                           text="Unload behind" />
+		<text name="gui_ad_AL_right"                            text="Unload right" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+
+		<text name="gui_ad_settingsPage_title"					text="Beállítás - AutoDrive" />
+		<text name="gui_ad_userSettingsPage_title"				text="Felhasználói beállítások - AutoDrive" />
+		<text name="gui_ad_vehicleSettingsPage_title"			text="Jármű beállítás - AutoDrive" />
+		<text name="gui_ad_combineUnloadSettingsPage_title"		text="Kombájn ürítés - AutoDrive" />
+		<text name="gui_ad_debugSettingsPage_title"				text="Hibakeresési beállítás - AutoDrive" />
+		<text name="gui_ad_eFeaturesSettingsPage_title"			text="Kísérleti szolgáltatások beállításai - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_restoreButtonText"					text="Visszaállítás" />
+		<text name="gui_ad_settingsClosingDialog_title"			text="Minden változás elveszik" />
+		<text name="gui_ad_settingsClosingDialog_text"			text="Biztosan bezárja a beállításokat mentés nélkül?" />
+		<text name="gui_ad_routesManagerTitle" 					text="Útvonal szerkesztés" />
+		<text name="gui_ad_routesManagerTextTitle" 				text="Útvpnal bevitel:" />
+		<text name="gui_ad_button_export" 						text="Mentés" />
+		<text name="gui_ad_button_import" 						text="Betöltés" />
+		<text name="gui_ad_routeExportWarn_text" 				text="Biztosan felül akarja írni a meglévő útvonalat?" />
+		<text name="gui_ad_routeExportWarn_title" 				text="Útvonal felülírása" />
+		<text name="gui_ad_routeDeleteWarn_text" 				text="Biztosan törli ezt az útvonalat '%s'?" />
+		<text name="gui_ad_routeDeleteWarn_title" 				text="Útvonal törlés" />
+		<text name="statistic_driversTraveledDistance" 			text="Vezetési távolság a sofőröktől" />
+		<text name="statistic_driversHired" 					text="Alkalmazott sofőrök" />
+		<text name="gui_ad_debugChannelVehicle" 				text="Jármű" />
+		<text name="gui_ad_debugChannelCombine" 				text="Kombájn" />
+		<text name="gui_ad_debugChannelTrailer" 				text="Pótkocsi" />
+		<text name="gui_ad_debugChannelDev" 					text="Fejlesztő" />
+		<text name="gui_ad_debugChannelPath" 					text="Útkeresés" />
+		<text name="gui_ad_debugChannelSensor" 					text="Érzékelők" />
+		<text name="gui_ad_debugChannelNetwork" 				text="Hálózat" />
+		<text name="gui_ad_debugChannelExternalInterface" 		text="Külső interfész" />
+		<text name="gui_ad_debugChannelRender" 					text="Rendering" />
+		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Úthálózat" />
+		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelAll" 					text="Mind" />
+		<text name="gui_ad_notificationHistoryTitle" 			text="Értesítések" />
+
+		<text name="gui_ad_colorSettingsTitle" 			        text="Color Assignments" />
+        <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
+		<text name="ad_color_singleConnection" 			        text="01 line of single-way connection" />
+		<text name="ad_color_dualConnection" 			        text="02 line of dual-way connection" />
+		<text name="ad_color_reverseConnection" 			    text="03 line of reverse connection" />
+		<text name="ad_color_default" 			                text="04 waypoint on sinle and reverse connection" />
+		<text name="ad_color_subPrioSingleConnection" 			text="05 line of secondary single-way connection" />
+		<text name="ad_color_subPrioDualConnection" 			text="06 line of secondary dual-way connection" />
+		<text name="ad_color_subPrioNode" 			            text="07 secondary waypoint" />
+		<text name="ad_color_hoveredNode" 			            text="08 hovered waypoint" />
+		<text name="ad_color_previousNode" 			            text="09 connected previous waypoint" />
+		<text name="ad_color_nextNode" 			                text="10 connected next waypoint" />
+		<text name="ad_color_selectedNode" 			            text="11 selected waypoint" />
+		<text name="ad_color_currentConnection" 			    text="12 line next path" />
+		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
+		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+
+		<text name="button_delete_all" 							text="Összes törlése" />
+		<text name="button_reset_selected" 					    text="Reset selected" />
+
+		<text name="ad_helpCategory_1"							text="AutoDrive" />
+		<text name="ad_helpTitle_01"							text="AD - Bevezetés" />
+		<text name="ad_helpText_01_01"							text="Az AutoDrive egy olyan vezetéssegítő program, amely lehetővé teszi a járművek számára, hogy önállóan mozogjanak a Farming Simulator világában." />
+		<text name="ad_helpText_01_02"							text="Az útvonalak a rögzített pontok és meghatározott úti célok összekapcsolt hálózata. Néhány térképhez biztosított az útvonal térkép.A legtöbb térképen mindent magának kell rögzítenie, vagy importálnia kell egy hálózatot egy másik felhasználótól (lásd alább az import / export)." />
+		<text name="ad_helpText_01_03"							text="Feltéve, hogy minden úticél megfelelően csatlakozik a hálózathoz, az AutoDrive navigál, hasonlóan az autóban használt tipikus navigációs rendszerhez, kiszámítva a célhoz vezető legrövidebb utat. Ezért fontos, hogy minden pont csatlakozzon a hálózathoz. Ha az AutoDrive szétkapcsolódott pontot észlel, akkor azt ´X´ jellel jelölik, és a felhasználónak el kell távolítania vagy csatlakoztatnia." />
+		<text name="ad_helpTitle_02"							text="AD modes - Csak vezetés" />
+		<text name="ad_helpText_02_01"							text="Ebben az üzemmódban az aktuális jármű a legmegfelelőbb pontot veszi (aktuális iránya és távolsága szerint), vagy egyszerűen a legközelebbi pontot, majd a legrövidebb utat használja onnan a célig, és ott megáll. Ez a legegyszerűbb mód, és a legalkalmasabb az új útvonalak tesztelésére." />
+		<text name="ad_helpTitle_03"							text="AD mód - Szállítás" />
+		<text name="ad_helpText_03_01"							text="Ebben az üzemmódban az AutoDrive ugyanúgy vezeti a járművet, mint a ´Csak vezetés´ módban, de emellett az aktuális pótkocsit is kirakja a rendeltetési helyen, ha a kirakodási lehetőséget észleli." />
+		<text name="ad_helpText_03_02"							text="A rendeltetési pontot (célt) a kirakodási küszöb mögött kell létrehozni, hogy a hosszú pótkocsival rendelkező járművek a cél elérése előtt elérjék a kirakodási pontot. " />
+		<text name="ad_helpText_03_03"							text="A sofőr megáll a célállomáson, függetlenül attól, hogy üres vagy sem. Ha észreveszi, hogy a célpont túl közel vagy messze van, könnyen eltávolíthatja a célállomást, és létrehozhatja a következő pontban anélkül, hogy el kellene távolítania a pontot. (Lásd HUD-gombok)." />
+		<text name="ad_helpTitle_04"							text="AD mód - Átvétel és Szállítás" />
+		<text name="ad_helpText_04_01"							text="Ebben a módban kiválaszthatja a célállomásokat. Az első pont az átvétel, a második a kirakodási pont." />
+		<text name="ad_helpText_04_02"							text="Ha az AutoDrive be van kapcsolva, akkor a csatlakoztatott pótkocsik / munkagépek aktuális töltöttségi szintjét nézi. Ha ez az érték magasabb, mint a beállított ´Kirakodás´ szint (lásd a beállításokat), a járművezető közvetlenül a kirakodási cél felé indul." />
+		<text name="ad_helpText_04_03"							text="Ellenkező esetben először a rakomány célpontja felé veszi az irányt. A kiválasztott beállítástól függően (´Üres silón´) a sofőr vagy a rakomány rendeltetési helyén várakozik a kitöltésre a ´Kirakodás itt´ mellett, vagy folytatja a kirakodást." />
+		<text name="ad_helpText_04_04"							text="Akárhogy is, az útvonaltervező először megpróbálja betölteni a kiválasztott kitöltési típust a rendelkezésre álló triggerek bármelyikére a megadott tartományban (lásd a beállításokat) a kivűlasztott cél előtt." />
+		<text name="ad_helpText_04_05"							text="Ezen kívül kiválaszthat egy ismétlésszámlálót az útvonal elindítása előtt. Ha ezt a számlálót 2-re állítja, a szállító leáll, miután kétszer elérte a kirakodási pontot. Ha ez a beállítás (lásd: HUD) alapértelmezett, akkor a szállító mindig elkezdi a következő ciklust." />
+		<text name="ad_helpTitle_05"							text="AD mód - Töltő mód" />
+		<text name="ad_helpText_05_01"							text="Ez a mód nagyon hasonlít a korábban leírt ´Átvétel és szállítás´ módhoz, csak néhány kisebb kivétellel. Nem veszi figyelembe az ´Ismétlésszámlálót´." />
+		<text name="ad_helpText_05_02"							text="Csak egy töltési és egy cél létezik, ahol a szállító leáll és letiltja az AutoDrive-t." />
+		<text name="ad_helpText_05_03"							text="Ezt az üzemmódot újratöltési módként lehet használni a művelési munkákhoz. Így a vetőgépeket vagy permetezőgépeket el lehet indítani a szántóföldi helyre, el lehet küldeni utántöltő helyre, és utána visszatérnek a beállított szántóföldhöz." />
+		<text name="ad_helpText_05_04"							text="Ez a mód a Courseplay-vel együtt is használható. A Courseplay HUD-ben ki kell választania az ´AutoDrive használata újratöltéshez / kirakodáshoz´ lehetőséget (nem része ennek a leírásnak)." />
+		<text name="ad_helpTitle_06"							text="AD mód - Kombájn kirakodás" />
+		<text name="ad_helpText_06_01"							text="Ebben a módban ismét két cél állítható be. Az elsőnek az ahol az aktív kombájn elérhető. A második a kirakodási pont." />
+		<text name="ad_helpText_06_02"							text="Ez olyan mód, amelyben a vezetők elhagyhatják a rögzített utat és a terepen vezethetnek. Ez a mód meglehetősen bonyolult és sok beállítást tartalmaz, mely a ´Beállítások´ menüben érhető el." />
+		<text name="ad_helpText_06_03"							text="Ez a dokumentáció elsősorban az alapokat tartalmazza, és megadja, hogy a beállítások hogyan befolyásolják az egyes módok működését." />
+		<text name="ad_helpTitle_07"							text="AD mód - Kombájn kirakodás - Alapok - 1" />
+		<text name="ad_helpText_07_01"							text="A vezetősegéd az indításkor eldönti, hogy a földre indul, vagy először kirak (lásd: ´Átvétel és szállítás´). Ha eléri a kiválasztott helyet (földet), jelentkezik elérhető szállítóként. Ha a kombájn 100% -os töltöttségi szintnél van, és ki van engedve a cső, akkor kiválasztja a hozzá legközelebb esőt szállítót. A ´Keresse meg a szállítót´ beállítástól függően vagy 300 méteres távolságon belül az összes járművezető elfogadható (igen), vagy csak a beállított járművezetőket fogadja el az AutoDrive Hud-ban (nem)." />
+		<text name="ad_helpText_07_02"							text="" />
+		<text name="ad_helpText_07_03"							text="Fontos: Betakarító gépnél nem kell aktiválnia az AutoDrive-t,csak a kiválasztott célra van szükség." />
+		<text name="ad_helpText_07_04"							text="" />
+		<text name="ad_helpText_07_05"							text="Alternatív megoldásként a játékos manuálisan is hívhatja a szállítót úgy, hogy a játékbeállításokhoz hozzárendeli a ´Szállító hívása´  vezérlő (Billenytyűzet, Gamepad) adott gombjához, és ezt használja a betakarítóban ülve. Ha a betakarítót a Courseplay vezérli, az AutoDrive egy kirakodót is hív, ha észleli, hogy a Courseplay akarja üríteni." />
+		<text name="ad_helpTitle_08"							text="AD mód - Kombájn kirakodás - Alapok - 2" />
+		<text name="ad_helpText_08_01"							text="Ha egy szállítót a betakarítóhoz hívnak, megkezdi az utat a betakarító csövéhez. Az útvonaltervező egy teljesen egyedi megoldás. Alapvetően a szimulált világ rácscellákra vannak osztva. Ezek a rácscellák a jármű fordulási sugarának megfelelően vannak méretezve, és ellenőrzik, hogy terménymentesek (lásd a beállításokat), ütközésmentesek, a pályán vannak (lásd a beállításokat) és megfelelő lejtéssel rendelkeznek az AI vezetők számára. Miután megtalálták a szabad utat, ha szükséges simítják az éles kanyarokat, majd a szállító ezen az úton megy a betakarítóhoz." />
+		<text name="ad_helpText_08_02"							text="" />
+		<text name="ad_helpText_08_03"							text="Megjegyzés: Amint a szállító megkapja a betakarítóhoz hajtás parancsát, az állapotüzenet a HUD információs sávjában a ´Várakozás a kombájnra´ -ról a ´Vezetés a kombájnhoz´ -ra változik. Ami azt jelenti, hogy az útvonaltervező aktívan keresi az utat. A CPU teljesítményétől és a beállításaitól (‘Ütvonalkeresés ideje (max)’) függően ez a folyamat eltarthat egy ideig, és szélsőséges esetekben lefogja az fps-t. Ez általában akkor fordul elő, ha a szállító nem képes elfogadható utat találni a kombájnhoz. Mindig győződjön meg arról, hogy a vezető előtti tér akadályoktól mentes (és terménymentes), és hogy a betakarító csövéhez vezető út szintén ütközésmentes (pl. A termény nincs közvetlenül a betakarító mögött." />
+		<text name="ad_helpText_08_04"							text="" />
+		<text name="ad_helpText_08_05"							text="Amikor eléri a betakarítót, ellenőrzi, hogy a kirakodás befejeződött-e, vagy hogy a jelenlegi pótkocsi megtelt-e. Több pótkocsi esetén a sofőr előre halad, amíg a következő pótkocsi töltés lehetőségét észleli. A kirakodás után a sofőr néhány métert hátrafelé halad, hogy elegendő helyet biztosítson a kombájnnak a munka folytatásához. Ezután a sofőr néhány másodpercet vár, amíg a kombájn előre halad, és megkezdi az útvonal tervezését a kiindulópontig. A kiindulási pont elérésekor ismét elérhető szállítóként jelentkezik,és várja  hogy újra felhívják. Ha a pótkocsi abban a pillanatban már tele van, akkor közvetlenül a kirakodási célhoz megy, mielőtt visszatérne a szántóföldre." />
+		<text name="ad_helpTitle_09"							text="AD mód - Kombájn kirakodás - Parkolás a földön" />
+		<text name="ad_helpText_09_01"							text="Ha ez az opció igazra van állítva az AutoDrive beállításaiban, a vezetősegéd ellenőrzi, hogy a kombájn csőve milyen helyzetben van (a termény elkerülését ´Igen´-re kell állítani). Ha kirakodást nem észlel,és a szállító még nem érte el a ´kirakodás´ töltési szintet, akkor a szántóföld jelenlegi helyén marad. " />
+		<text name="ad_helpTitle_10"							text="AD mós - Kombájn kirakodás - Mozgás csak a földön" />
+		<text name="ad_helpText_10_01"							text="Ha ez az opció igazra van állítva, akkor a vezetősegéd csak a mezőben lévő rácscellákat fogadja el. Ez a beállítás csak akkor lép életbe, ha a jármű már a szántóföldön van (a szántóföldön elindult vagy a szántóföldön parkolt). Ez az opció elősegíti a vezető terepen tartását, különösen fordulási manőverek közben." />
+		<text name="ad_helpText_10_02"							text="" />
+		<text name="ad_helpText_10_03"							text="Fontos: Ha a megadott idő alatt nem lehet a terménymentes utat kiszámítani (lásd a beállításokat), akkor az útkereső figyelmen kívül hagyja a termény és a szántóföld határát!" />
+		<text name="ad_helpTitle_11"							text="AD mód - Kombájn kirakodás - Termény elkerülés" />
+		<text name="ad_helpText_11_01"							text="Ez az opció biztosítja, hogy az útkereső csak olyan rácscellákat fogadjon el, amelyek nem tartalmaznak terményt, vagy csak minimális mennyiségben (pl. betakarításkor hátrahagyott). Fontos: Ha a megadott idő alatt nem lehet kiszámítani a termény nélküli utat (lásd a beállításokat), az útkereső figyelmen kívül hagyja a termény és a mező határát!" />
+		<text name="ad_helpTitle_12"							text="AD mód - Kombájn kirakodás - Kombájn követés" />
+		<text name="ad_helpText_12_01"							text="Szálító előre hívás / Kombájn követés" />
+		<text name="ad_helpText_12_02"							text="" />
+		<text name="ad_helpText_12_03"							text="Ezeket az opciókat arra használhatja, hogy egyszerűen kövesse a betakarító gépet bizonyos távolságokban (A szállító előre hívása be- / kombájn követés kikapcsolása). Vagy a kombájnt kiüríteni betakarítás közben. Amikor az aratógép eléri a beállított kitöltési szintet (Hívás előtti szint), akkor már az aktuális helyére hívja a szállítót. Amint a vezető eléri ezt a pontot, újratervez, ha közel van a kombájnhoz (kevesebb, mint 60 méter), és be van kapcsolva a ´kombájn követése´ beállítása, látószögből kezdi követni. Ellenkező esetben újrakezdi az útkeresési folyamatot. Követés közben érzékeli, hogy a kombájn jelenleg a terményben van-e vagy sem. Ha nincs benne a terményben, akkor a cső helyét kezdi megcélozni, különben bizonyos távolsággal követi a betakarítót. Amikor a járművezető eléri az ´Ürítés´ szintet, azonnal megkezdi az útvonal tervezését a szántóföld kijárathoz (lásd a beállításokat). Ezért van értelme ebben a módban a szintet 100% -ra állítani. Így véletlenül sem próbál meg a kombájn elé menni, vagy elmegy, mielőtt teljesen betöltené." />
+		<text name="ad_helpTitle_13"							text="AD mód - Bunkersilo kirakodás" />
+		<text name="ad_helpText_13_01"							text="Ez a mód csak olyan járműveknél használható, amelyekhez lapát van rögzítve. Egy kattintással megoldható az abunker silók ürítése. Indításkor a jármű ellenőrzi a szükséges feltételeket. Szüksége van egy megtöltött bunker silóra a közelben (~ 100 m), és egy felcsatolt kanálra. Ha mindkét feltétel teljesül, a jármű indítja a rakodó vezérlését, hogy megkapja a megfelelő értékeket a fel / le, a be- és kirakodáshoz, valamint a meghosszabbításhoz / visszahúzáshoz. Ezután a bunker silószélességét olyan széles darabokra osztja, mint a lapátja (lásd a beállításokat), és az első sornál kezdi. Ha az első vagy az utolsó sor a siló falához ér, akkor növelje a lapát hozzáadás értékét a beállításokban, és indítsa újra a vezetősegédet. Ez akkor fordulhat elő, ha vagy a lapát szélessége nincs megfelelően összehangolva a fizikai méretekkel, vagy pedig a bunker siló széle  falnál fal, ami nem szokatlan, mivel megkönnyíti a jó kinézetű bunker silót. A lapát megtöltése és a jármű megfordítása után a bunkerből egy utánfutóval felszerelt járművet keres (bal töltési hellyel) és elindul oda." />
+		<text name="ad_helpText_13_02"							text="" />
+		<text name="ad_helpText_13_03"							text="Vigyázat: Ebben a módban jelenleg nincs ütközésészlelés!" />
+		<text name="ad_helpText_13_04"							text="" />
+		<text name="ad_helpText_13_05"							text="Mivel a jármű automatikusan megpróbálja megtalálni az ideális rakodási helyzetet, előfordulhat, hogy az első kerekeket emeli fel. Ehhez tartozik egy észlelés, amely ellenőrzi, hogy minden kerék a földön van-e, és megkezdi a lapát felemelését a megfelelő pontig." />
+		<text name="AD_task_pathfinding"						text="Útvonal számítása" />
+		<text name="AD_task_catch_up_with_combine"				text="Kombájn indítása" />
+		<text name="AD_task_clearcrop"							text="Aratás" />
+		<text name="AD_task_drive_to_destination"				text="Hajtson a célpontig" />
+		<text name="AD_task_drive_to_vehicle"					text="Vezetés a cél járműhöz" />
+		<text name="AD_task_drive_to_combine_pipe"				text="Vezetés a kombánhoz" />
+		<text name="AD_task_unloading_combine"					text="Kombájn ürítés" />
+		<text name="AD_task_reversing_from_combine"				text="Tolatás a kombájntól" />
+		<text name="AD_task_waiting_for_space"					text="Várakozás a megfelelő méretű helyre a manőverzéshez " />
+		<text name="AD_task_wait_for_combine_turn"				text="Kombájnra várás" />
+		<text name="AD_task_drive_to_load_point"				text="Hajtson a rakodási ponthoz" />
+		<text name="AD_task_drive_to_refuel_point"				text="Hajtson az üzemanyagtöltési ponthoz" />
+		<text name="AD_task_stop_and_disable"					text="Megállás" />
+		<text name="AD_task_drive_to_unload_point"				text="Hajtson a kirakodási pontig" />
+		<text name="AD_task_wait_for_call"						text="Hívásra vár" />
+		<text name="AD_task_chasing_combine"					text="Kombájn követés" />	
+		<text name="AD_task_wait_for_combine_pass_by"			text="A kombájn elengedése" />	
+		<text name="AD_task_catching_chase_side"				text="Kitöltési oldal" />	
+		<text name="AD_task_chase_side"							text="Oldal" />	
+		<text name="AD_task_chase_side_left"					text="Bal" />	
+		<text name="AD_task_chase_side_rear"					text="Hátsó" />	
+		<text name="AD_task_chase_side_right"					text="Jobb" />		
+		<text name="AD_task_waiting_for_room"					text="Várakozás a helyre" />
+		<text name="AD_task_exiting_field"						text="Kilépés a fölről" />
+		<text name="AD_task_reversing_from_collision"			text="Tiszta terület keresése" />
+        <text name="AD_task_drive_to_park"				        text="Parkolás a területen" />
+		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
+
+		<text name = "gui_CPAD_off"								text = "off"/>
+		<text name = "gui_CPAD_simple"							text = "simple"/>
+		<text name = "gui_CPAD_full"							text = "full"/>		
+		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
+    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
+	
+		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
+		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
+		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
+		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
+		<text name="ad_next_tip" 								text="Next" />
+		<text name="ad_totd_01_title" 							text="Multiple functions" />
+		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
+		
+		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
+		<text name="ad_totd_02_title" 							text="Different types of roads" />
+		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
+
+		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
+		
+		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
+		
+		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
+		
+		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
+		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
+		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
+		
+		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
+		
+		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
+		<text name="ad_totd_04_title" 							text="Settings - 1" />
+		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
+
+		1. General settings - Applied for all vehicles.
+
+		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
+
+		3. Vehicle settings - Applied only for the current vehicle.
+
+		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
+
+		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
+		
+		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
+		
+		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
+		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
+		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>
+		<text name = "gui_ad_editorTip_4"								text = "LALT = Delete node"/>
+		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Toggle point as side road"/>
+
+		<text name = "gui_ad_editorTip_6"								text = "Clicking on second node:"/>
+		<text name = "gui_ad_editorTip_7"								text = "Toggle connection"/>
+		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Create reverse road"/>
+
+		<text name = "gui_ad_editorTip_9"								text = "1. node is intersection, second it's neighbor:"/>
+		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Toggle segment type (normal/dual)"/>
+		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Toggle side road"/>
+	</texts>
+</l10n>

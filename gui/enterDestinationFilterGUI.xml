@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <GuiElement type="empty" profile="newLayer" />
+    <GuiElement type="bitmap" profile="dialogFullscreenBg" />
+
+    <GuiElement type="bitmap" profile="yesNoDialogBg">
+        <GuiElement type="bitmap" profile="dialogHeaderDocked">
+            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_enterDestinationFilterTitle" />
+        </GuiElement>
+
+        <GuiElement type="text" profile="sleepDialogText" text="$l10n_gui_ad_enterDestinationFilterText" />
+
+        <GuiElement type="textInput" profile="dialogTextInput" id="textInputElement" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" focusInit="onOpen" maxCharacters="10" />
+
+        <GuiElement type="flowLayout" profile="buttonBoxDocked">
+            <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
+            <GuiElement type="button" profile="buttonOK" text="$l10n_button_ok" onClick="onClickOk" />
+            <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset" onClick="onClickCancel" />
+        </GuiElement>
+    </GuiElement>
+</GUI>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <GuiElement type="bitmap" profile="uiFullInGameBackground" />
+
+    <GuiElement type="bitmap" profile="uiInGameMenuHeader" id="header">
+        <GuiElement type="multiTextOption" profile="uiInGameMenuHeaderSelector" onClick="onClickPageSelection" id="pageSelector" soundDisabled="true">
+            <GuiElement type="button" profile="uiInGameMenuPagingButtonLeft" id="pagingButtonLeft" />
+            <GuiElement type="button" profile="uiInGameMenuPagingButtonRight" id="pagingButtonRight" />
+        </GuiElement>
+
+        <GuiElement type="list" profile="uiInGameMenuPagingTabList" id="pagingTabList" handleFocus="false">
+            <!-- Page tab template element, will be cloned for each known page: -->
+            <GuiElement type="listItem" id="pagingTabTemplate" profile="uiTabbedMenuPageTab" position="0px 0px" handleFocus="false">
+                <GuiElement type="button" name="tabButton" profile="uiTabbedMenuPageTabButton" handleFocus="false" />
+            </GuiElement>
+        </GuiElement>
+    </GuiElement>
+
+    <GuiElement type="bitmap" profile="uiElementContainerFullScreenSpanning">
+        <GuiElement type="paging" profile="uiInGameMenuPaging" onPageChange="onPageChange" onPageUpdate="onPageUpdate" id="pagingElement">
+            <GuiElement type="frameReference" ref="autoDriveSettings" name="autoDriveSettings" id="autoDriveSettings" />
+            <GuiElement type="frameReference" ref="autoDriveUserSettings" name="autoDriveUserSettings" id="autoDriveUserSettings" />
+            <GuiElement type="frameReference" ref="autoDriveVehicleSettings" name="autoDriveVehicleSettings" id="autoDriveVehicleSettings" />
+            <GuiElement type="frameReference" ref="autoDriveCombineUnloadSettings" name="autoDriveCombineUnloadSettings" id="autoDriveCombineUnloadSettings" />
+            <GuiElement type="frameReference" ref="autoDriveEnvironmentSettings" name="autoDriveEnvironmentSettings" id="autoDriveEnvironmentSettings" />
+            <GuiElement type="frameReference" ref="autoDriveDebugSettings" name="autoDriveDebugSettings" id="autoDriveDebugSettings" />
+            <GuiElement type="frameReference" ref="autoDriveExperimentalFeaturesSettings" name="autoDriveExperimentalFeaturesSettings" id="autoDriveExperimentalFeaturesSettings" />
+        </GuiElement>
+    </GuiElement>
+
+    <GuiElement type="flowLayout" profile="buttonBoxDocked" id="buttonsPanel">
+        <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" id="menuButton[1]" />
+        <GuiElement type="button" profile="buttonOK" text="$l10n_button_apply" onClick="onClickOk" id="menuButton[2]" />
+        <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset" onClick="onClickReset" id="menuButton[3]" />
+        <GuiElement type="button" profile="buttonActivate" text="$l10n_gui_ad_restoreButtonText" onClick="onClickRestore" id="menuButton[4]" />
+    </GuiElement>
+</GUI>

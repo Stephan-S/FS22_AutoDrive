@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="marker" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="8.2.0"/>
+  </Asset>
+
+  <Files>
+    <File fileId="2" filename="$data/shaders/fxCircleShader.xml"/>
+    <File fileId="1" filename="marker_diffuse_3.dds"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="marker_mat" materialId="4" alphaBlending="true" customShaderId="2" customShaderVariation="PULSATING">
+      <Emissivemap fileId="1"/>
+      <CustomParameter name="scaleParameters" value="0.65 1 2.5 1"/>
+    </Material>
+  </Materials>
+
+
+  <Shapes externalShapesFile="marker_3.i3d.shapes">
+  </Shapes>
+
+
+  <Dynamics>
+  </Dynamics>
+
+  <Scene>
+    <Shape shapeId="1" name="marker" clipDistance="100" nodeId="7" materialIds="4"/>
+  </Scene>
+
+</i3D>

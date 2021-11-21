@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<translationContributors>Anonymous, Sam</translationContributors>
+	<texts>
+		<text name="UNKNOWN"									text="Inconnu" />
+		<text name="input_ADToggleHud"							text="AD: Montrer/cacher HUD" />
+		<text name="input_ADToggleHudExtension"					text="AD: Show HUD infos" />
+		<text name="input_ADToggleMouse"						text="AD: Montrer/cacher Souris" />
+		<text name="input_ADEnDisable"							text="AD: Activer/Désactiver" />
+		<text name="input_ADSilomode"							text="AD: Changer mode" />
+		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
+		<text name="input_ADRecord"								text="AD: Enregistrer" />
+		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
+		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
+		<text name="input_ADSelectTarget"						text="AD: Sélect. prochaine destination" />
+		<text name="input_ADSelectPreviousTarget"				text="AD: Sélect. destination précédente" />
+		<text name="input_AD_Speed_up"							text="AD: Augmenter la vitesse" />
+		<text name="input_AD_Speed_down"						text="AD: Réduire la vitesse" />
+		<text name="input_AD_routes_manager"					text="AD: Ouvrir le gestionnaire d'itinéraires" />
+		<text name="input_AD_open_notification_history" 		text="AD: Ouvrir l'historique des notifications" />
+		<text name="input_AD_continue"							text="AD: Continuer" />
+		<text name="input_ADSelectTargetUnload"					text="AD: Sélect. prochain déchargement" />
+		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Sélect. déchargement précédent" />
+		<text name="input_ADActivateDebug"						text="AD: Activer mode édition" />
+		<text name="input_ADDisplayMapPoints"					text="AD: Show waypoints" />
+		<text name="input_ADDebugSelectNeighbor"				text="AD: Sélecteur de connection" />
+		<text name="input_ADDebugChangeNeighbor"				text="AD: Sélect. point suivant" />
+		<text name="input_ADDebugPreviousNeighbor"				text="AD: Select previous Neighbour Point" />
+		<text name="input_ADDebugCreateConnection"				text="AD: Connecter entre" />
+		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Toggle connection between inverted" />
+		<text name="input_ADDebugCreateMapMarker"				text="AD: Créer nouvelle destination" />
+		<text name="input_ADRenameMapMarker"					text="AD: Renommer destination actuelle" />
+		<text name="input_ADDebugDeleteWayPoint"				text="AD: Effacer point de passage" />
+		<text name="input_ADDebugDeleteDestination"				text="AD: Éffacer point destination" />
+		<text name="input_ADSelectNextFillType"					text="AD: Sélect. prochain type de fruit" />
+		<text name="input_ADSelectPreviousFillType"				text="AD: Sélect. précédent type de fruit" />
+		<text name="input_ADOpenGUI"							text="AD: Ouvrir l'interface Graphique Utilisateur/GUI" />
+		<text name="input_ADCallDriver"							text="AD: Appeler un chauffeur" />
+		<text name="input_ADGoToVehicle"						text="AD: Entrer dans le vehicule arrivé" />
+		<text name="input_ADNameDriver"							text="AD: Donnez un nom au chauffeur" />
+		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
+		<text name="input_ADIncLoopCounter"						text="AD: Augmenter le nombre de répétitions" />
+		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
+		<text name="input_ADbunkerUnloadType"					text="AD: Unload to Trailer or BGA" />
+		<text name="input_ADParkVehicle"						text="AD: Garer le véhicule" />
+		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
+		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
+		<text name="input_ADSwapTargets"						text="AD: Échange d'objectifs" />
+		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
+		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
+		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
+		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
+		<text name="hud_avoidFruit"								text="AD: Éviter les cultures" />
+		<text name="hud_startCp"								text="AD: Démarrer CP/AIVE à la destination" />
+		<text name="AD_parkVehicle_noPosSet"					text="Pas de parking attribué. Veuillez sélectionner la (Destination actuelle) et corriger avec le clic droit de souris sur le 'P' HUD." />
+		<text name="AD_parkVehicle_selected"					text="Parking assigné: " />
+		<text name="AD_Driver_of"								text="Le chauffeur de" />
+		<text name="AD_has_reached"								text="est arrivé à" />
+		<text name="AD_got_stuck"								text="est bloqué" />
+		<text name="AD_cannot_reach"							text="ne peut pas rejoindre" />
+		<text name="AD_cannot_find_path"						text="n'a pas pu calculer un chemin d'accès à la destination" />
+		<text name="AD_new_marker"								text="Nouvel objectif:" />
+		<text name="AD_No_Trailer"								text="Ne trouve pas de remorque" />
+		<text name="AD_No_Bunker"								text="Ne trouve pas le silo (bunker)" />
+		<text name="AD_No_Shovel"								text="Ne trouve pas de pelle" />
+		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_MODE_DRIVETO"							text="Conduite" />
+		<text name="AD_MODE_DELIVERTO"							text="Livraison" />
+		<text name="AD_MODE_PICKUPANDDELIVER"					text="Chargement et livraison" />
+		<text name="AD_MODE_UNLOAD"								text="Décharger moissonneuse" />
+		<text name="AD_MODE_LOAD"								text="Chargement" />
+		<text name="AD_MODE_BGA"								text="Vider silo (bunker)" />
+		<text name="AD_synchronizing"							text="Chargement des routes du serveur .." />
+		<text name="AD_lctrl_for_extendedEditor" 				text="CTRLG pour le mode éditeur étendu" />
+		<text name="AD_lctrl_for_creation" 						text="CTRLG pour créer" />
+		<text name="AD_lalt_for_deletion" 						text="ALTG pour effacer" />
+		<text name="AD_lshift_for_reverse" 						text="MAJG marche arrière" />
+		<text name="gui_ad_Setting"								text="AutoDrive - paramètres" />
+		<text name="gui_ad_collisionHeigth"						text="Hauteur de collision au sol" />
+		<text name="gui_ad_collisionHeigth_tooltip"				text="Réglage de la détection de collision devant le véhicule. Si d'autres véhicules ne sont pas détectés pendant la conduite, réduisez progressivement. (Par défaut 2 m)" />
+		<text name="gui_ad_blinkValue"						    text="Clignotant automatique" />
+		<text name="gui_ad_blinkValue_tooltip"					text="Angle de braquage pour activer automatiquement les feux de virage. (0 = clignotant automatiquement désactivé)" />
+		<text name="gui_ad_pipe_offset"							text="Décalage du tuyau (pipe)" />
+		<text name="gui_ad_followDistance"						text="Distance de moissonneuse" />
+		<text name="gui_ad_followDistance_tooltip"				text="Distance de la moissonneuse depuis son extrémité arrière, lorsqu'elle est suivie." />
+		<text name="gui_ad_lookahead_turning"					text="Distance devant vous (virage)" />
+		<text name="gui_ad_lookahead_turning_tooltip"			text="Distance à laquelle le véhicule tourne afin de suivre le segment suivant." />
+		<text name="gui_ad_useFastestRoute"						text="Préférer les routes rapide" />
+		<text name="gui_ad_useFastestRoute_tooltip"				text="Lors du calcul de l'itinéraire, la vitesse de conduite privilégiée est prise en compte, pas seulement la distance." />
+		<text name="gui_ad_mapMarkerDetour"						text="Détour maximum" />
+		<text name="gui_ad_mapMarkerDetour_tooltip"				text="Détour maximum quand des destinations doivent être évités." />
+		<text name="gui_ad_siloEmpty"							text="Quand le silo est vide" />
+		<text name="gui_ad_siloEmpty_tooltip"					text="Détermine comment un chauffeur devrait réagir à un silo vide." />
+		<text name="gui_ad_useFolders"							text="Utiliser des dossiers" />
+		<text name="gui_ad_useFolders_tooltip"					text="Trier les points de destination dans des dossiers." />
+		<text name="gui_ad_wait"								text="Attente" />
+		<text name="gui_ad_drive"								text="Continuer" />
+		<text name="gui_ad_yes"									text="Oui" />
+		<text name="gui_ad_no"									text="Non" />
+		<text name="ad_bga_init"								text="Initialiser" />
+		<text name="ad_bga_waiting"								text="En attente de remorque/silo" />
+		<text name="ad_bga_active"								text="Actif" />
+		<text name="gui_ad_autoConnect_start"					text="Connexion automatique (départ)" />
+		<text name="gui_ad_autoConnect_start_tooltip"			text="Connecter automatiquement le noeud approprié au début de l'enregistrement." />
+		<text name="gui_ad_autoConnect_end"						text="Connexion automatique (fin)" />
+		<text name="gui_ad_autoConnect_end_tooltip"				text="Connecter automatiquement le noeud approprié en fin d'enregistrement." />
+		<text name="gui_ad_parkInField"							text="Garer au champ" />
+		<text name="gui_ad_parkInField_tooltip"					text="Après avoir déchargé une moissonneuse - Le chauffeur attend le chargement suivant au champ, à moins qu’il ne se trouve sur la partie non exploitée du champ ou complètement chargé." />
+		<text name="gui_ad_unloadFillLevel"						text="Décharger le contenu" />
+		<text name="gui_ad_unloadFillLevel_tooltip"				text="Après avoir déchargé une moissonneuse - Partir tout de suite et ne pas attendre le prochain remplissage." />
+		<text name="gui_ad_findDriver"							text="Trouver un chauffeur" />
+		<text name="gui_ad_findDriver_tooltip"					text="Recherche du chauffeur le plus proche (Ignore la destination)." />
+		<text name="gui_ad_gui_scale"							text="Taille du HUD AutoDrive" />
+		<text name="gui_ad_gui_scale_tooltip"					text="Définit (par défaut) le paramètre de l'échelle de l'interface graphique utilisé en jeu." />
+		<text name="gui_ad_notifications"						text="Notifications" />
+		<text name="gui_ad_notifications_text_1"				text="Désactivé" />
+		<text name="gui_ad_notifications_text_2"				text="Court" />
+		<text name="gui_ad_notifications_text_3"				text="Par défaut" />
+		<text name="gui_ad_notifications_text_4"				text="Long" />
+		<text name="gui_ad_notifications_text_5"				text="Extra long" />
+		<text name="gui_ad_notifications_text_6"				text="Perpétuel" />
+		<text name="gui_ad_notifications_tooltip"				text="Temps d'affichage des notifications" />
+		<text name="gui_ad_exitField"							text="Sortie de champ" />
+		<text name="gui_ad_exitField_tooltip"					text="Stratégie de sortie au champ après le déchargement - Commencer, peu après le point de départ, le point le plus proche." />
+		<text name="gui_ad_default"								text="Par défaut" />
+		<text name="gui_ad_after_start"							text="Après le départ" />
+		<text name="gui_ad_closest"								text="Le plus proche" />
+		<text name="gui_ad_showHelp"							text="Afficher l'aide" />
+		<text name="gui_ad_showHelp_tooltip"					text="Afficher l'affectation des touches dans la fenêtre d'aide F1." />
+		<text name="gui_ad_driverWages"							text="Salaire du chauffeur" />
+		<text name="gui_ad_driverWages_tooltip"					text="Avec cette option, les coûts salariaux des chauffeurs sont multipliés." />
+		<text name="gui_ad_showNextPath"						text="Montrer chemin suivant" />
+		<text name="gui_ad_showNextPath_tooltip"				text="Activer/Désactiver l'affichage des deux prochains points de passage." />
+		<text name="gui_ad_avoidFruit"							text="Éviter les cultures" />
+		<text name="gui_ad_avoidFruit_tooltip"					text="Les déchargements de moissonneuses tentent d'éviter les cultures autant que possible." />
+		<text name="gui_ad_pathFinderTime"						text="Temps de recherche (max)" />
+		<text name="gui_ad_pathFinderTime_tooltip"				text="Détermine combien de temps l'algorithme est autorisé à rechercher un itinéraire sans collision depuis/vers la moisonneuse. (Des valeurs élevées peuvent ralentir le jeu)." />
+		<text name="gui_ad_lineHeight"							text="Hauteur de ligne" />
+		<text name="gui_ad_lineHeight_tooltip"					text="Hauteur de ligne en mode d'édition, au-dessus ou au-dessous du tracteur." />
+		<text name="gui_ad_ground"								text="Niveau du sol" />
+		<text name="gui_ad_aboveDriver"							text="Au-dessus du tracteur" />
+		<text name="gui_ad_enableTrafficDetection"				text="Détection de collision" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Permet la détection de collision avancée, qui réagit également au trafic d'intelligence artificielle, aux panneaux, aux clôtures, etc..." />
+		<text name="gui_ad_shovelWidth"							text="Largeur de la pelle (ajout)" />
+		<text name="gui_ad_shovelWidth_tooltip"					text="Si la largeur détectée automatiquement est trop petite, elle peut être augmentée." />
+		<text name="gui_ad_preCallLevel"						text="Appel anticipé pour décharger" />
+		<text name="gui_ad_preCallLevel_tooltip"				text="Appel anticipé du chauffeur au niveau de déchargement défini." />
+		<text name="gui_ad_none"					            text="Aucun" />
+		<text name="gui_ad_onlyPickup"					        text="Uniquement ramasser" />
+		<text name="gui_ad_onlyDeliver"					        text="Uniquement livrer " />
+		<text name="gui_ad_PickupandDeliver"					text="Ramasser et livrer" />
+		<text name="gui_ad_rotateTargets"					    text="Cycle de ramassage et livraison" />
+		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: Aucune cibles|Cibles ramassage|Cibles livraison|Les cibles de ramassage et livraison dans un dossier sont cyclées (pas avec le dossier par défaut, et seulement pris en compte si l'utilisation des dossiers est activé)" />
+		<text name="gui_ad_distributeToFolder"					text="Objectifs multiples" />
+		<text name="gui_ad_distributeToFolder_tooltip"			text="Toutes les cibles d'un même dossier deviendront des cibles de déchargement les unes après les autres." />
+		<text name="gui_ad_maxTriggerDistance"					text="Zone maxi du silo" />
+		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Définis la distance jusqu'où le déclencheur est détecté lorsque le point de destination est chargé/déchargé." />
+		<text name="gui_ad_useBeaconLights"						text="Gyrophares" />
+		<text name="gui_ad_useBeaconLights_tooltip"				text="Utiliser les gyrophares sur la route." />
+		<text name="gui_ad_restrictToField"						text="Recherche de parcours limité" />
+		<text name="gui_ad_restrictToField_tooltip"				text="Si le chauffeur est déjà garé sur le champ, il limitera la recherche aux limites du champ." />
+		<text name="gui_ad_showTooltips"						text="Afficher les info-bulles" />
+		<text name="gui_ad_showTooltips_tooltip"				text="Afficher les info-bulles des boutons dans le HUD." />
+		<text name="gui_ad_enterTargetNameTitle_add"			text="Ajouter une destination" />
+		<text name="gui_ad_enterTargetNameTitle_edit"			text="Modifier la destination" />
+		<text name="gui_ad_enterTargetNameText"					text="Entrez le nom de la destination:" />
+		<text name="gui_ad_createButtonText"					text="Créer" />
+		<text name="gui_ad_enterDriverNameTitle"				text="Renommer le chauffeur" />
+		<text name="gui_ad_enterDriverNameText"					text="Entrez le nom du chauffeur:" />
+		<text name="gui_ad_enterGroupNameTitle"					text="Créer un dossier" />
+		<text name="gui_ad_enterGroupNameText"					text="Entrez le nom du dossier:" />
+		<text name="gui_ad_autoRefuel"							text="Faire le plein automatiquement" />
+		<text name="gui_ad_autoRefuel_tooltip"					text="Lorsque le niveau du réservoir est bas, la station-service la plus proche est automatiquement ajoutée dans les trajets." />
+		<text name="gui_ad_filter"								text="Filtrage" />
+		<text name="gui_ad_enterDestinationFilterTitle"			text="Changer le filtre de destination" />
+		<text name="gui_ad_enterDestinationFilterText"			text="Entrez le filtre de destination:" />
+		<text name="gui_ad_shovelHeight"						text="Hauteur de pelle" />
+		<text name="gui_ad_shovelHeight_tooltip"				text="Si la hauteur de pelle détectée automatiquement n’est pas correcte au sol, utilisez cette valeur pour ajuster." />
+		<text name="gui_ad_switchToMarkersOnMap"				text="Commutation de marqueurs" />
+		<text name="gui_ad_switchToMarkersOnMap_tooltip"		text="Définissez la cible/décharger la cible en cliquant sur les points disponible de la carte." />
+		<text name="gui_ad_cornerSpeed"							text="Vitesse dans les virages" />
+		<text name="gui_ad_cornerSpeed_tooltip"					text="Ajuster la vitesse de virage pour chaque véhicule. La masse et la vitesse actuelle auront toujours un impact sur le point de freinage" />
+		<text name="gui_ad_callSecondUnloader"					text="Appelez le 2. Déchargeur" />
+		<text name="gui_ad_callSecondUnloader_tooltip"			text="Appelez le 2. Déchargeur lorsque le déchargeur actuel atteint le niveau de remplissage préappel" />
+		<text name="gui_ad_enableParkAtJobFinished"				text="Garer après le boulot fini" />
+		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Disponible que dans les modes cycle 'Ramasser et livrer, Uniquement livrer': Si le travail est terminé, la position parking mémorisée du véhicule/outil y sera conduite. Sur un Serveur-dedié, disponible que pour le parking véhicule!" />
+		<text name="gui_ad_autoTipSide"                         text="Côté pour vider automatique" />
+		<text name="gui_ad_autoTipSide_tooltip"                 text="Oui - AutoDrive sélectionne automatiquement le côté pour vider / Non - le côté pour vider déjà sélectionné sera utilisé" />
+		<text name="gui_ad_autoTrailerCover"                    text="Bâches remorques automatique" />
+		<text name="gui_ad_autoTrailerCover_tooltip"            text="Oui - AutoDrive ouvre et ferme les bâches remorque au besoin / Non - les bâches remorque ne seront pas ouvertes ou fermées par AutoDrive" />
+		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning manoeuvre" />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
+		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
+		<text name="gui_ad_AL_off"                              text="Unload Off" />
+		<text name="gui_ad_AL_center"                           text="Unload center" />
+		<text name="gui_ad_AL_left"                             text="Unload left" />
+		<text name="gui_ad_AL_behind"                           text="Unload behind" />
+		<text name="gui_ad_AL_right"                            text="Unload right" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+
+		<text name="gui_ad_followOnlyOnField"					text="Restreindre au champ..." />
+		<text name="gui_ad_followOnlyOnField_tooltip"			text="Restreindre le déchargement au champ pendant le déchargement actif" />
+		<text name="gui_ad_addSettingsToHUD"					text="Ajouter des paramètres au HUD" />
+		<text name="gui_ad_addSettingsToHUD_tooltip"			text="Ajoute des boutons au HUD pour modifier les paramètres sans ouvrir ce menu" />
+		<text name="gui_ad_iconSetToUse"						text="Personnalisation du logo" />
+		<text name="gui_ad_iconSetToUse_tooltip"				text="Logo par défaut ou logo personnalisé - La sélection peut être étendue." />
+		<text name="gui_ad_secondEditorModeAllowed"				text="Utiliser 2. le mode éditeur" />
+		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Utilisez le mode 2. éditeur pour la manipulation d'itinéraire au lieu de maintenir CTRLG enfoncé" />
+		<text name="gui_ad_wideHUD"								text="HUD large" />
+		<text name="gui_ad_wideHUD_tooltip"						text="Utilisez le mode HUD large, qui permet également quelques boutons de réglage supplémentaires dans le HUD" />
+		<text name="gui_ad_syncMultiTargets"					text="Synchroniser plusieurs cibles" />
+		<text name="gui_ad_syncMultiTargets_tooltip"			text="Plusieurs conducteurs utilisant le même dossier pour plusieurs cibles synchroniseront les cibles suivantes" />
+
+    <text name="gui_ad_settingsPage_title"					text="Paramètres - AutoDrive" />
+		<text name="gui_ad_userSettingsPage_title"				text="Paramètres utilisateur - AutoDrive" />
+		<text name="gui_ad_vehicleSettingsPage_title"			text="Paramètres de véhicules - AutoDrive" />
+		<text name="gui_ad_combineUnloadSettingsPage_title"		text="Paramètres de déchargements moissonneuses - AutoDrive" />
+		<text name="gui_ad_debugSettingsPage_title" 			text="Paramètres de débogage - AutoDrive" />
+		<text name="gui_ad_eFeaturesSettingsPage_title" 		text="Paramètres de fonctionnalités expérimentales - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_restoreButtonText" 					text="Restaurer" />
+		<text name="gui_ad_settingsClosingDialog_title"			text="Tous les changements seront perdus" />
+		<text name="gui_ad_settingsClosingDialog_text"			text="Êtes-vous sûr de vouloir fermer les paramètres sans enregistrer ?" />
+		<text name="gui_ad_showMarkersOnMap"					text="Afficher les marqueurs" />
+		<text name="gui_ad_showMarkersOnMap_tooltip"			text="Affiche les marqueurs/destinations en jeu sur la carte." />
+		
+		<text name="gui_ad_routesManagerTitle" 					text="Gestionnaire d'itinéraires" />
+		<text name="gui_ad_routesManagerTextTitle" 				text="Entrez le nom de l'itinéraire:" />
+		<text name="gui_ad_button_export" 						text="Sauvegarder" />
+		<text name="gui_ad_button_import" 						text="Charger" />
+		<text name="gui_ad_routeExportWarn_text" 				text="Voulez-vous vraiment remplacer les itinéraires existant ?" />
+		<text name="gui_ad_routeExportWarn_title" 				text="Ecrasement des itinéraires" />
+		<text name="gui_ad_routeDeleteWarn_text" 				text="Voulez-vous vraiment supprimer l'itinéraire '%s'?" />
+		<text name="gui_ad_routeDeleteWarn_title" 				text="Suppression de l'itinéraire" />
+
+		<text name="statistic_driversTraveledDistance" 			text="Distance de conduite des chauffeurs" />
+		<text name="statistic_driversHired" 					text="Chauffeurs actuellement embauchés" />
+
+		<text name="gui_ad_debugChannelVehicle" 				text="Véhicules" />
+		<text name="gui_ad_debugChannelCombine" 				text="Moissonneuses" />
+		<text name="gui_ad_debugChannelTrailer" 				text="Remorques" />
+		<text name="gui_ad_debugChannelDev" 					text="Développement" />
+		<text name="gui_ad_debugChannelPath" 					text="Recherche d'itinéraire" />
+		<text name="gui_ad_debugChannelSensor" 					text="Capteurs" />
+		<text name="gui_ad_debugChannelNetwork" 				text="Réseau" />
+		<text name="gui_ad_debugChannelExternalInterface" 		text="Interface externe" />
+
+		<text name="gui_ad_debugChannelRender" 					text="Rendu" />
+		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Réseau routier" />
+		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelAll" 					text="Tous" />
+		
+		<text name="gui_ad_notificationHistoryTitle" 			text="Notifications" />
+
+		<text name="gui_ad_colorSettingsTitle" 			        text="Color Assignments" />
+        <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
+		<text name="ad_color_singleConnection" 			        text="01 line of single-way connection" />
+		<text name="ad_color_dualConnection" 			        text="02 line of dual-way connection" />
+		<text name="ad_color_reverseConnection" 			    text="03 line of reverse connection" />
+		<text name="ad_color_default" 			                text="04 waypoint on sinle and reverse connection" />
+		<text name="ad_color_subPrioSingleConnection" 			text="05 line of secondary single-way connection" />
+		<text name="ad_color_subPrioDualConnection" 			text="06 line of secondary dual-way connection" />
+		<text name="ad_color_subPrioNode" 			            text="07 secondary waypoint" />
+		<text name="ad_color_hoveredNode" 			            text="08 hovered waypoint" />
+		<text name="ad_color_previousNode" 			            text="09 connected previous waypoint" />
+		<text name="ad_color_nextNode" 			                text="10 connected next waypoint" />
+		<text name="ad_color_selectedNode" 			            text="11 selected waypoint" />
+		<text name="ad_color_currentConnection" 			    text="12 line next path" />
+		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
+		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+
+		<text name="button_delete_all" 							text="Effacer tout" />
+		<text name="button_reset_selected" 					    text="Reset selected" />
+		
+		<text name="ad_helpCategory_1"							text="AutoDrive" />
+		
+		<text name="ad_helpTitle_01"							text="AD - Introduction" />
+		<text name="ad_helpText_01_01"							text="AutoDrive est un outil polyvalent qui permet à vos tracteurs de naviguer de manière autonome dans le monde de Farming Simulator." />
+		<text name="ad_helpText_01_02"							text="La structure est un réseau interconnecté de points enregistrés et de destinations définies. Pour certaines cartes, un réseau initial est fourni avec le mod. Sur la plupart des cartes, vous devrez tout enregistrer vous-même ou importer un réseau d'un autre utilisateur (voir Import/Export ci-dessous)." />
+		<text name="ad_helpText_01_03"							text="Si toutes les destinations sont correctement connectées au réseau, AutoDrive navigue comme le système de navigation standard de votre voiture, en calculant l'itinéraire le plus court vers la destination. Il est donc important de vous assurer que tous les points sont connectés au réseau. Si AutoDrive détecte un point déconnecté, il sera marqué d’un ‘X’ et devra être supprimé ou connecté manuellement." />
+		
+		<text name="ad_helpTitle_02"							text="AD mode - Conduite uniquement" />
+		<text name="ad_helpText_02_01"							text="Dans ce mode, le véhicule actuel prend le point le mieux adapté (par sa direction et sa distance actuelles) ou simplement le point le plus proche, puis utilise le chemin le plus court de A jusqu'à la destination B et s’arrête là. C'est le mode le plus simple et le mieux adapté pour tester vos nouveaux itinéraires." />
+		
+		<text name="ad_helpTitle_03"							text="AD mode - Livraison" />
+		<text name="ad_helpText_03_01"							text="Dans ce mode, AutoDrive conduira le véhicule comme dans le mode ‘Conduite uniquement’, mais déchargera en outre la remorque actuelle à la destination, si un déclencheur de déchargement est détecté." />
+		<text name="ad_helpText_03_02"							text="Le point de destination doit être créé après le déclencheur de déchargement, de sorte que les véhicules avec de longues remorques atteignent le déclencheur de déchargement avant d'atteindre la destination." />
+		<text name="ad_helpText_03_03"							text="Le chauffeur s’arrêtera à la destination, qu’elle soit vide ou non. Si vous remarquez que votre point de destination n’est pas assez éloigné, vous pouvez facilement supprimer le nom de destination et le créer au point suivant sans avoir à supprimer le point lui-même (voir Boutons HUD)." />
+		
+		<text name="ad_helpTitle_04"							text="AD mode - Ramassage et livraison" />
+		<text name="ad_helpText_04_01"							text="Dans ce mode, vous pouvez sélectionner des destinations. Une pour le chargement (Ramassage), et la seconde pour le point de déchargement (livraison)." />
+		<text name="ad_helpText_04_02"							text="Si AutoDrive est activé, il examinera le niveau de remplissage actuel des remorques/outils connectés. Si cette valeur est supérieure au niveau défini ‘Appel anticipé pour décharger’ (voir les paramètres), le chauffeur se dirigera directement vers la destination de déchargement." />
+		<text name="ad_helpText_04_03"							text="Sinon, il se dirigera d'abord vers la destination du chargement. En fonction du paramètre sélectionné (‘Quand le silo est vide’), le chauffeur attendra que le niveau de chargement soit déchargé au-delà du niveau ‘Appel anticipé pour décharger’ ou continuera jusqu’à la destination de déchargement." />
+		<text name="ad_helpText_04_04"							text="Dans les deux cas, le chauffeur essaiera d’abord de charger le type de remplissage sélectionné sur n’importe quel déclencheur disponible dans la plage fournie ‘Zone maxi du silo’ (voir les paramètres) avant la destination du chargement." />
+		<text name="ad_helpText_04_05"							text="De plus, vous pouvez sélectionner un compteur de répétition avant de démarrer le chauffeur. Si vous définissez ce compteur sur 2, le chauffeur s’arrêtera 2 fois après avoir atteint la destination de déchargement. Si ce paramètre (voir HUD) est laissé par défaut, le chauffeur commencera toujours un nouveau cycle." />
+		
+		<text name="ad_helpTitle_05"							text="AD mode - Mode de chargement" />
+		<text name="ad_helpText_05_01"							text="Ce mode est très similaire au mode 'Ramassage et livraison' décrit précédemment, à une exception près. Il ne respectera pas le 'compteur de répétition'." />
+		<text name="ad_helpText_05_02"							text="Il existe uniquement une destination de chargement et une destination cible à laquelle le chauffeur s’arrête et désactive AutoDrive." />
+		<text name="ad_helpText_05_03"							text="Ce mode est destiné à être utilisé comme mode de remplissage pour les travaux sur le terrain. De cette façon, les semoirs ou les pulvérisateurs peuvent être démarrés sur le terrain et envoyés à un point de remplissage. Ils retournent ensuite à la destination définie sur le terrain." />
+		<text name="ad_helpText_05_04"							text="Ce mode peut également être utilisé conjointement avec le mod 'Courseplay'. Vous devrez sélectionner ‘Utiliser AutoDrive pour recharger/décharger’ dans le HUD de Courseplay (qui ne fait pas partie de cette documentation)." />
+		
+		<text name="ad_helpTitle_06"							text="AD mode - Déchargement de la moissonneuse" />
+		<text name="ad_helpText_06_01"							text="Dans ce mode, vous pouvez à nouveau définir deux destinations. La première devrait être un emplacement d'un champ à partir duquel une moissonneuse active peut être atteinte. La seconde est à nouveau une destination de déchargement." />
+		<text name="ad_helpText_06_02"							text="Il s'agit du premier mode dans lequel les chauffeurs AutoDrive sont capables de quitter les parcours réels enregistrés et à conduire sur des points virtualisés aux champs. Ce mode est assez compliqué et implique de nombreux paramètres à partir du menu des paramètres." />
+		<text name="ad_helpText_06_03"							text="Donc, cette documentation décrira d'abord le comportement de base, puis ajoutera comment les paramètres affectent le comportement." />
+		
+		<text name="ad_helpTitle_07"							text="AD mode - Déchargement de la moissonneuse - Basique - 1" />
+		<text name="ad_helpText_07_01"							text="Le chauffeur décidera au démarrage de se rendre sur le champ ou de décharger d’abord (voir Ramassage et livraison). S'il atteint l'emplacement sur le champ, il est enregistré en tant que chauffeur disponible. Si une moissonneuse a un niveau de remplissage de 100% et le tuyau de déchargement ouvert, elle appellera automatiquement les chauffeurs enregistrés et choisira celui qui est le plus proche d'elle. En fonction du paramètre 'Trouver un chauffeur', tous les chauffeurs dans une zone de 300 mètres sont acceptés (oui) ou seuls les chauffeurs ayant les mêmes destinations attribués que sur le Hud de la moissonneuse (non)." />
+		<text name="ad_helpText_07_02"							text="" />
+		<text name="ad_helpText_07_03"							text="Important: Il n'est pas nécessaire d'activer AutoDrive sur la moissonneuse. Seule la cible sélectionnée est requise." />
+		<text name="ad_helpText_07_04"							text="" />
+		<text name="ad_helpText_07_05"							text="Le joueur peut également appeler le chauffeur manuellement soit en attribuant le raccourci clavier 'Appeler un chauffeur' dans les options de jeu et aussi en l’utilisant assis dans la moissonneuse. Si la moissonneuse est contrôlée par Courseplay, AutoDrive appellera également un chauffeur s'il détecte que le chauffeur de Courseplay veut être déchargé." />
+		
+		<text name="ad_helpTitle_08"							text="AD mode - Déchargement de la moissonneuse - Basique - 2" />
+		<text name="ad_helpText_08_01"							text="Si un chauffeur est appelé à une moissonneuse, il commencera à planifier un itinéraire vers le tuyau de déchargement ouvert de la moissonneuse. La virtualisation d'itinéraire est une implémentation totalement unique et une explication peut être incluse en annexe de cette documentation ultérieurement. Les concepts de base sont une division du monde simulé en cellules de grille. Ces cellules de grille sont dimensionnées en fonction du rayon de braquage des véhicules et sont vérifiées sans cultures (voir réglages), sans collision, sur le terrain (voir réglages) et ont une pente maximale acceptable pour les chauffeurs en IA. Une fois qu'un itinéraire libre a été trouvé, un lissage est également appliqué pour éliminer les virages les plus serrés, puis le chauffeur est envoyé le long de cet itinéraire virtuel vers la moissonneuse." />
+		<text name="ad_helpText_08_02"							text="" />
+		<text name="ad_helpText_08_03"							text="Note: Dès que le chauffeur de déchargement reçoit la commande à conduire à la moissonneuse, le message d’état dans la barre d’informations du HUD passe de ‘Attente de moissonneuse’ à ‘Conduire à la moissonneuse’. Ce qui signifie que le planificateur d'itinéraire recherche maintenant activement un chemin. En fonction des performances de votre CPU et de vos réglages (‘Temps de recherche (max)’), cette procédure peut prendre un certain temps et, dans des cas extrêmes, réduire vos fps. C'est généralement le cas si le chauffeur ne parvient pas à trouver un itinéraire acceptable pour rejoindre la moissonneuse-batteuse. Assurez-vous toujours que l’espace devant le chauffeur est exempt d’obstacles (et de cultures) et que l'itinéraire menant à la moissonneuse est également exempt de collision (Par exemple, qu'aucune culture ne se trouve juste derrière la moissonneuse)." />
+		<text name="ad_helpText_08_04"							text="" />
+		<text name="ad_helpText_08_05"							text="Lorsqu'il atteindra la moissonneuse, il vérifiera si le processus de déchargement est terminé ou si la remorque actuelle est remplie. Dans le cas de plusieurs remorques, le chauffeur avance jusqu'à ce qu'un processus de remplissage de la prochaine remorque soit détecté. Après le déchargement, le chauffeur commencera à rouler en arrière sur quelques mètres afin de laisser à la moissonneuse suffisamment d’espace pour continuer son travail. Ensuite, le chauffeur attendra quelques secondes que la moissonneuse nettoie la zone et commence la planification d'itinéraire jusqu'au point de départ. Une fois le point de départ atteint, il s’enregistrera de nouveau en tant que chauffeur disponible et attendra d’être rappelé. Si la remorque est déjà pleine à ce stade, elle se dirigera directement vers la destination de déchargement avant de revenir à l'emplacement sur le terrain." />
+		
+		<text name="ad_helpTitle_09"							text="AD mode - Déchargement de la moissonneuse - Garer au champ" />
+		<text name="ad_helpText_09_01"							text="Si cette option est définie sur ‘oui’ dans les paramètres AutoDrive, le chauffeur vérifie si la cellule cible (position du tuyau) à détecter une culture (l'évitement des cultures doit être défini sur ‘oui’). Si aucune culture n’est détectée et que le chauffeur n’a pas encore atteint le niveau de ‘déchargement au remplissage’, il restera à l’emplacement actuel au champ." />
+		
+		<text name="ad_helpTitle_10"							text="AD mode - Déchargement de la moissonneuse - Recherche de parcours limité" />
+		<text name="ad_helpText_10_01"							text="Si cette option est définie sur ‘oui’, l'algorithme de recherche d'itinéraire n'acceptera que les cellules de la grille se trouvant sur le champ. Ce paramètre ne prend effet que si le véhicule est déjà sur le terrain (démarré sur le terrain ou garé sur le terrain). Cette option devrait aider à garder le chauffeur au champ, en particulier lors des manœuvres en virage." />
+		<text name="ad_helpText_10_02"							text="" />
+		<text name="ad_helpText_10_03"							text="Important: Si aucun itinéraire sans culture ne peut être calculé dans le temps imparti (voir les paramètres), le planificateur d'itinéraire passera en mode de secours qui ignore les bordures des cultures et des champs!" />
+		
+		<text name="ad_helpTitle_11"							text="AD mode - Déchargement de la moissonneuse - Éviter les cultures" />
+		<text name="ad_helpText_11_01"							text="Cette option permet de s’assurer que le planificateur d'itinéraire n’acceptera que les cellules de la grille qui ne contiennent aucune culture ou n’ont que peu de cultures. Important: si aucun itinéraire sans culture ne peut être calculé dans le temps imparti (voir les paramètres), le planificateur d'itinéraire passera en mode de secours qui ignore les bordures des cultures et des champs!" />
+		
+		<text name="ad_helpTitle_12"							text="AD mode - Déchargement de la moissonneuse - Suivre la moissonneuse" />
+		<text name="ad_helpText_12_01"							text="Appel anticipé pour charger/Suivre la moissonneuse" />
+		<text name="ad_helpText_12_02"							text="" />
+		<text name="ad_helpText_12_03"							text="Chacune de ces options peut être utilisée pour suivre simplement la moissonneuse avec une certaine distance (Appel anticipé pour charger ON/Suivre la moissonneuse OFF). Ou pour avoir un chauffeur actif qui décharge la moissonneuse pendant qu'elle continue toujours son travail. Lorsque la moissonneuse atteint le niveau de déchargement défini (Appel anticipé pour décharger), elle aura déjà appelé le chauffeur à son emplacement actuel. Une fois que le chauffeur a atteint ce point, il réévaluera. S'il est proche de la moissonneuse (moins de 60 mètres) et que le paramètre ‘Suivre la moissonneuse’ est sur ON, il va commencer à la suivre en ligne de mire. Sinon, il relancera un processus de recherche de chemin vers le nouveau lieu de récolte. Tout en poursuivant, il sentira si le tuyau est actuellement dans la culture ou non. Si ce dernier n'est pas dans la culture, il commencera à cibler l'emplacement du tuyau, sinon il suivra la moissonneuse avec une certaine distance. Lorsque le chauffeur atteint son niveau ‘Décharger le contenu’, il commence immédiatement à planifier un chemin vers la sortie de champ sélectionnée (voir les paramètres). Il est donc judicieux de régler le niveau à 100% dans ce mode. De cette façon, il n’essaiera pas accidentellement de passer devant la moissonneuse ou de partir avant d’être complètement rempli." />
+		<text name="ad_helpTitle_13"							text="AD mode - Vider silo (bunker)" />
+		<text name="ad_helpText_13_01"							text="Ce mode ne peut être utilisé qu'avec des véhicules équipés d'une pelle. L'idée de base est une solution en un clic pour vider les silos bunker à accès direct. Au démarrage, le véhicule vérifiera les conditions requises. Il faut un silo bunkers rempli à proximité (~ 100 m?) et une pelle attachée. Si les deux conditions sont remplies, le véhicule initialisera l’axe de son chargeur frontal pour obtenir les valeurs correctes pour les mouvements de montée/descente, de chargement/déchargement et d’extension/rétraction. Ensuite, il divisera la largeur du silo bunker en morceaux aussi larges que son addition pelle + pelle (voir les réglages) et commencera à la première ligne. Si la première ou la dernière ligne finit par heurter le mur du silo, vous devez augmenter la valeur de l'ajout de pelle dans les paramètres et redémarrer le chauffeur. Cela peut se produire si la largeur de ramassage de la pelle n’est pas adaptée aux dimensions physiques ou si la définition du silo se trouve à l’intérieur de mur, ce qui n’est pas inhabituel dans la mesure où il est plus facile de développer un beau silo. Une fois que la pelle est remplie et que le véhicule est sorti du bunker, il recherche un véhicule avec une remorque attachée (avec de l'espace disponible) et commence à s'y rendre." />
+		<text name="ad_helpText_13_02"							text="" />
+		<text name="ad_helpText_13_03"							text="Attention: aucune détection de collision n'est actuellement incluse dans ce mode!" />
+		<text name="ad_helpText_13_04"							text="" />
+		<text name="ad_helpText_13_05"							text="Étant donné que le véhicule essaie de trouver automatiquement la position de chargement idéale pour la pelle, il se peut qu’il soulève ses roues avant. Une détection est incluse pour ce scénario, qui vérifie si toutes les roues sont au sol et commence à soulever la pelle si cette vérification est fausse pendant quelques centaines de millisecondes." />
+
+		
+		<text name="AD_task_pathfinding"						text="Planifier le parcours" />
+		<text name="AD_task_catch_up_with_combine"				text="Rattraper le temps perdu avec la moissonneuse-batteuse" />
+		<text name="AD_task_clearcrop"							text="Culture de défrichement" />
+		<text name="AD_task_drive_to_destination"				text="Conduire jusqu'à destination" />
+		<text name="AD_task_drive_to_vehicle"					text="Conduire vers le véhicule cible" />
+		<text name="AD_task_drive_to_combine_pipe"				text="Conduire vers le tuyau de moissonneuse" />
+		<text name="AD_task_unloading_combine"					text="Déchargement de la moissonneuse-batteuse" />
+		<text name="AD_task_reversing_from_combine"				text="Inversion de la combinaison" />
+		<text name="AD_task_waiting_for_space"					text="En attente d'une marge de manœuvre" />
+		<text name="AD_task_wait_for_combine_turn"				text="Attendre le tour de la moissonneuse-batteuse" />
+		<text name="AD_task_drive_to_load_point"				text="Conduire jusqu'au point de chargement" />
+		<text name="AD_task_drive_to_refuel_point"				text="Conduire jusqu'à la station-service" />
+		<text name="AD_task_stop_and_disable"					text="Arrêter" />
+		<text name="AD_task_drive_to_unload_point"				text="Conduire jusqu'au point de déchargement" />
+		<text name="AD_task_wait_for_call"						text="En attente d'un appel" />	
+		<text name="AD_task_chasing_combine"					text="Combinaison de chaînage" />	
+		<text name="AD_task_wait_for_combine_pass_by"			text="Laisser passer la moissonneuse-batteuse" />	
+		<text name="AD_task_catching_chase_side"				text="Côté recherché" />	
+		<text name="AD_task_chase_side"							text="Côté" />	
+		<text name="AD_task_chase_side_left"					text="gauche" />	
+		<text name="AD_task_chase_side_rear"					text="arrière" />	
+		<text name="AD_task_chase_side_right"					text="droite" />	
+		<text name="AD_task_waiting_for_room"					text="En attente d'une chambre" />	
+		<text name="AD_task_exiting_field"						text="Champ de sortie" />
+		<text name="AD_task_reversing_from_collision"			text="Recherche d'une zone dégagée" />
+    	<text name="AD_task_drive_to_park"				        text="Conduire vers le parking" />
+		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
+
+		<text name = "gui_CPAD_off"								text = "off"/>
+		<text name = "gui_CPAD_simple"							text = "simple"/>
+		<text name = "gui_CPAD_full"							text = "full"/>		
+		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
+    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
+
+		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
+		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
+		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
+		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
+		<text name="ad_next_tip" 								text="Next" />
+		<text name="ad_totd_01_title" 							text="Multiple functions" />
+		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
+		
+		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
+		<text name="ad_totd_02_title" 							text="Different types of roads" />
+		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
+
+		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
+		
+		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
+		
+		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
+		
+		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
+		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
+		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
+		
+		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
+		
+		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
+		<text name="ad_totd_04_title" 							text="Settings - 1" />
+		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
+
+		1. General settings - Applied for all vehicles.
+
+		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
+
+		3. Vehicle settings - Applied only for the current vehicle.
+
+		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
+
+		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
+		
+		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
+		
+		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
+		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
+		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>
+		<text name = "gui_ad_editorTip_4"								text = "LALT = Delete node"/>
+		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Toggle point as side road"/>
+
+		<text name = "gui_ad_editorTip_6"								text = "Clicking on second node:"/>
+		<text name = "gui_ad_editorTip_7"								text = "Toggle connection"/>
+		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Create reverse road"/>
+
+		<text name = "gui_ad_editorTip_9"								text = "1. node is intersection, second it's neighbor:"/>
+		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Toggle segment type (normal/dual)"/>
+		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Toggle side road"/>
+  </texts>
+</l10n>

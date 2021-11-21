@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<translationContributors>Balu</translationContributors>
+	<texts>
+		<text name="UNKNOWN"									text="Unknown" />
+		<text name="input_ADToggleHud"							text="AD: Toggle HUD" />
+		<text name="input_ADToggleHudExtension"					text="AD: Show HUD infos" />
+		<text name="input_ADToggleMouse"						text="AD: Toggle Mouse" />
+		<text name="input_ADEnDisable"							text="AD: En/Disable" />
+		<text name="input_ADSilomode"							text="AD: Change mode" />
+		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
+		<text name="input_ADRecord"								text="AD: Record" />
+		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
+		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
+		<text name="input_ADSelectTarget"						text="AD: Select Next Target" />
+		<text name="input_ADSelectPreviousTarget"				text="AD: Select Previous Target" />
+		<text name="input_AD_Speed_up"							text="AD: Increase Speed" />
+		<text name="input_AD_Speed_down"						text="AD: Decrease Speed" />
+		<text name="input_AD_routes_manager" 					text="AD: Open routes manager" />
+		<text name="input_AD_open_notification_history" 		text="AD: Open notification history" />
+		<text name="input_AD_open_colorSettings" 		        text="AD: Color Assignments" />
+		<text name="input_AD_continue"							text="AD: Continue" />
+		<text name="input_ADSelectTargetUnload"					text="AD: Select Next Unload" />
+		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Select Previous Unload" />
+		<text name="input_ADActivateDebug"						text="AD: Edit Mode" />
+		<text name="input_ADDisplayMapPoints"					text="AD: Show waypoints" />
+		<text name="input_ADDebugSelectNeighbor"				text="AD: Select Neighbour Point" />
+		<text name="input_ADDebugChangeNeighbor"				text="AD: Select next Neighbour Point" />
+		<text name="input_ADDebugPreviousNeighbor"				text="AD: Select previous Neighbour Point" />
+		<text name="input_ADDebugCreateConnection"				text="AD: Toggle connection between" />
+		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Toggle connection between inverted" />
+		<text name="input_ADDebugCreateMapMarker"				text="AD: Create/Edit Target" />
+		<text name="input_ADRenameMapMarker"					text="AD: Edit selected Target" />
+		<text name="input_ADDebugDeleteWayPoint"				text="AD: Delete Waypoint" />
+		<text name="input_ADDebugDeleteDestination"				text="AD: Delete closest Target" />
+		<text name="input_ADSelectNextFillType"					text="AD: Select Next Filltype" />
+		<text name="input_ADSelectPreviousFillType"				text="AD: Select Previous Filltype" />
+		<text name="input_ADOpenGUI"							text="AD: Open GUI" />
+		<text name="input_ADCallDriver"							text="AD: Call Driver" />
+		<text name="input_ADGoToVehicle"						text="AD: Go to arrived vehicle" />
+		<text name="input_ADNameDriver"							text="AD: Assign driver name" />
+		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
+		<text name="input_ADIncLoopCounter"						text="AD: Increase loop counter" />
+		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
+		<text name="input_ADbunkerUnloadType"					text="AD: Unload to Trailer or BGA" />
+		<text name="input_ADParkVehicle"						text="AD: Park vehicle" />
+		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
+		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
+		<text name="input_ADSwapTargets"						text="AD: Swap targets" />
+		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
+		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
+		<text name="input_AD_devAction"                         text="AD: Developer Action" />
+		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
+		<text name="hud_avoidFruit"								text="AD: Avoid fruit" />
+		<text name="hud_startCp"								text="AD: Start CP / AIVE at destination" />
+		<text name="AD_parkVehicle_noPosSet"					text="No parking destination assigned." />
+		<text name="AD_parkVehicle_selected"					text="Chosen parking destination: " />
+		<text name="AD_parkVehicle_deleted"					    text="parking destination deleted!" />
+		<text name="AD_Driver_of"								text="Driver of" />
+		<text name="AD_has_reached"								text="has reached" />
+		<text name="AD_got_stuck"								text="got stuck" />
+		<text name="AD_cannot_reach"							text="can't reach" />
+		<text name="AD_cannot_find_path"						text="can't calculate a path" />
+		<text name="AD_new_marker"								text="New Goal:" />
+		<text name="AD_No_Trailer"								text="couldn't find trailer" />
+		<text name="AD_No_Bunker"								text="couldn't find silo bunker" />
+		<text name="AD_No_Shovel"								text="couldn't find a connected shovel" />
+		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_MODE_DRIVETO"							text="Drive" />
+		<text name="AD_MODE_DELIVERTO"							text="Deliver" />
+		<text name="AD_MODE_PICKUPANDDELIVER"					text="Pickup and Deliver" />
+		<text name="AD_MODE_UNLOAD"								text="Unload Combine" />
+		<text name="AD_MODE_LOAD"								text="Load" />
+		<text name="AD_MODE_BGA"								text="Unload bunker silo" />
+		<text name="AD_synchronizing"							text="loading network from server.." />
+		<text name="AD_lctrl_for_extendedEditor" 				text="LCTRL for extended editor mode" />
+		<text name="AD_lctrl_for_creation" 						text="LCTRL to create" />
+		<text name="AD_lalt_for_deletion" 						text="LALT to delete" />
+		<text name="AD_lshift_for_reverse" 						text="RSHIFT reverse drive" />
+		<text name="gui_ad_Setting"								text="AutoDrive - Settings" />
+		<text name="gui_ad_collisionHeigth"						text="Collisionheigth over ground" />
+		<text name="gui_ad_collisionHeigth_tooltip"				text="Setting for collision detection in front of vehicle. If other vehicles are not detected during driving, reduce step by step. (Default 2m)" />
+		<text name="gui_ad_blinkValue"						    text="Turnlight Automatic" />
+		<text name="gui_ad_blinkValue_tooltip"					text="Steering angle to enable turn lights automatically. (0 = turn light automatic deactivated)" />
+		<text name="gui_ad_pipe_offset"							text="Pipe Offset" />
+		<text name="gui_ad_followDistance"						text="Distance combine" />
+		<text name="gui_ad_followDistance_tooltip"				text="Distance kept from combine when following it's rear end" />
+		<text name="gui_ad_lookahead_turning"					text="Look ahead distance (turn)" />
+		<text name="gui_ad_lookahead_turning_tooltip"			text="The distance the vehicle looks ahead to adjust steering to follow the next segment" />
+		<text name="gui_ad_useFastestRoute"						text="Use fastest Route" />
+		<text name="gui_ad_useFastestRoute_tooltip"				text="Take the driving speed into consideration instead of simple distances, when calculating best routes" />
+		<text name="gui_ad_mapMarkerDetour"						text="Maximum detour" />
+		<text name="gui_ad_mapMarkerDetour_tooltip"				text="Maximum detour when avoiding targets" />
+		<text name="gui_ad_siloEmpty"							text="If silo empty" />
+		<text name="gui_ad_siloEmpty_tooltip"					text="How a pickup and deliver driver reacts to an empty silo" />
+		<text name="gui_ad_useFolders"							text="Use folders" />
+		<text name="gui_ad_useFolders_tooltip"					text="Use folders to structure destinations" />
+		<text name="gui_ad_wait"								text="Wait" />
+		<text name="gui_ad_drive"								text="Drive on" />
+		<text name="gui_ad_yes"									text="Yes" />
+		<text name="gui_ad_no"									text="No" />
+		<text name="ad_bga_init"								text="Initializing" />
+		<text name="ad_bga_waiting"								text="Waiting for trailer/silo" />
+		<text name="ad_bga_active"								text="Active" />
+		<text name="gui_ad_autoConnect_start"					text="Auto connect (start)" />
+		<text name="gui_ad_autoConnect_start_tooltip"			text="Auto connect suitable node on start of recording" />
+		<text name="gui_ad_autoConnect_end"						text="Auto connect (end)" />
+		<text name="gui_ad_autoConnect_end_tooltip"				text="Auto connect suitable node on end of recording" />
+		<text name="gui_ad_parkInField"							text="Park in field" />
+		<text name="gui_ad_parkInField_tooltip"					text="After unloading a combine - if not parked in fruit" />
+		<text name="gui_ad_unloadFillLevel"						text="Unload fill level" />
+		<text name="gui_ad_unloadFillLevel_tooltip"				text="After unloading combine. Directly go to deliver at this fill level." />
+		<text name="gui_ad_findDriver"							text="Find Driver" />
+		<text name="gui_ad_findDriver_tooltip"					text="Search for close by drivers (Ignore destination)" />
+		<text name="gui_ad_gui_scale"							text="Gui scale for AutoDrive HUD" />
+		<text name="gui_ad_gui_scale_tooltip"					text="Leave default to use in game scaling settings" />
+		<text name="gui_ad_notifications"						text="Notifications" />
+		<text name="gui_ad_notifications_text_1"				text="Disabled" />
+		<text name="gui_ad_notifications_text_2"				text="Short" />
+		<text name="gui_ad_notifications_text_3"				text="Default" />
+		<text name="gui_ad_notifications_text_4"				text="Long" />
+		<text name="gui_ad_notifications_text_5"				text="Extra Long" />
+		<text name="gui_ad_notifications_text_6"				text="Endless" />
+		<text name="gui_ad_notifications_tooltip"				text="Display time for notifications: no display / ca. 2,5s / 5s / 10s / 25s / Show until user close" />
+		<text name="gui_ad_exitField"							text="Field exit" />
+		<text name="gui_ad_exitField_tooltip"					text="Field exit strategy for unloader" />
+		<text name="gui_ad_default"								text="Default" />
+		<text name="gui_ad_after_start"							text="Behind Start" />
+		<text name="gui_ad_closest"								text="Closest point" />
+		<text name="gui_ad_showHelp"							text="Display help" />
+		<text name="gui_ad_showHelp_tooltip"					text="Display keybinding in F1 window" />
+		<text name="gui_ad_driverWages"							text="Driver wages" />
+		<text name="gui_ad_driverWages_tooltip"					text="Driver wages will be multiplied with this value" />
+		<text name="gui_ad_showNextPath"						text="Show next path" />
+		<text name="gui_ad_showNextPath_tooltip"				text="En/Disable the display of the next two waypoints" />
+		<text name="gui_ad_avoidFruit"							text="Avoid fruit" />
+		<text name="gui_ad_avoidFruit_tooltip"					text="Combine unloader tries to avoid fruit destruction" />
+		<text name="gui_ad_pathFinderTime"						text="Pathfinder factor" />
+		<text name="gui_ad_pathFinderTime_tooltip"				text="Determines how far pathfinding algorithm is allowed to search for collision free path to/from combine. Should only be slightly increased in case fruit avoid on large fields with sufficient headland is not working." />
+		<text name="gui_ad_lineHeight"							text="Line height" />
+		<text name="gui_ad_lineHeight_tooltip"					text="Line height in editor mode. Either on ground level or above the tractor" />
+		<text name="gui_ad_ground"								text="Ground level" />
+		<text name="gui_ad_aboveDriver"							text="Above tractor" />
+		<text name="gui_ad_enableTrafficDetection"				text="Collision detection" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Advanced collision detection, which also detects AI-traffic, signs, fences etc" />
+		<text name="gui_ad_shovelWidth"							text="Shovel width (Addition)" />
+		<text name="gui_ad_shovelWidth_tooltip"					text="If automatically detected shovel width is too small, it can be increased with this value" />
+		<text name="gui_ad_preCallLevel"						text="Pre call level" />
+		<text name="gui_ad_preCallLevel_tooltip"				text="Pre call unloader at the set fill level." />
+		<text name="gui_ad_none"					            text="None" />
+		<text name="gui_ad_onlyPickup"					        text="only Pickup" />
+		<text name="gui_ad_onlyDeliver"					        text="only Deliver" />
+		<text name="gui_ad_PickupandDeliver"					text="Pickup and Deliver" />
+		<text name="gui_ad_rotateTargets"					    text="Cycle Pickup and Deliver" />
+		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: No change of targets / only Pickup Targets / only Deliver Targets / Pickup and Deliver Targets in folder are cycled (not with default folder) (only considered if use folders is active)" />
+		<text name="gui_ad_maxTriggerDistance"					text="Maximum trigger distance" />
+		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance to target at which triggers are detected and activated." />
+		<text name="gui_ad_useBeaconLights"						text="Beacon lights" />
+		<text name="gui_ad_useBeaconLights_tooltip"				text="Yes - Use beacon lights automatic outside of fields / No - beacon lights will not be turned on or off automatically" />
+		<text name="gui_ad_restrictToField"						text="Restrict pathfinder to field" />
+		<text name="gui_ad_restrictToField_tooltip"				text="If unloader is already parked in the field, he will limit the pathfinder to field boundaries." />
+		<text name="gui_ad_showTooltips"						text="Show tooltips" />
+		<text name="gui_ad_showTooltips_tooltip"				text="Show tooltips of buttons in the HUD." />
+		<text name="gui_ad_enterTargetNameTitle_add"			text="Add Target" />
+		<text name="gui_ad_enterTargetNameTitle_edit"			text="Edit Target" />
+		<text name="gui_ad_enterTargetNameText"					text="Insert target name:" />
+		<text name="gui_ad_createButtonText"					text="Create" />
+		<text name="gui_ad_enterDriverNameTitle"				text="Rename Driver" />
+		<text name="gui_ad_enterDriverNameText"					text="Insert driver name:" />
+		<text name="gui_ad_enterGroupNameTitle"					text="Create Folder" />
+		<text name="gui_ad_enterGroupNameText"					text="Insert folder name:" />
+		<text name="gui_ad_autoRefuel"							text="Automatic Refueling" />
+		<text name="gui_ad_autoRefuel_tooltip"					text="Drive to refuel destination (close to refuel trigger) when fuel level is low." />
+		<text name="gui_ad_filter"								text="Filter" />
+		<text name="gui_ad_enterDestinationFilterTitle"			text="Change destination filter text" />
+		<text name="gui_ad_enterDestinationFilterText"			text="Insert filter text:" />
+		<text name="gui_ad_shovelHeight"						text="Shovel height" />
+		<text name="gui_ad_shovelHeight_tooltip"				text="If automatically detected shovel height is incorrect. Use this to adjust the target ground height" />
+		<text name="gui_ad_showMarkersOnMap"					text="Show markers" />
+		<text name="gui_ad_showMarkersOnMap_tooltip"			text="Show markers/destinations on the ingame map" />
+		<text name="gui_ad_switchToMarkersOnMap"				text="Switch to markers" />
+		<text name="gui_ad_switchToMarkersOnMap_tooltip"		text="Set target/unload target when clicking on map hotspots" />
+		<text name="gui_ad_cornerSpeed"							text="Corner speed" />
+		<text name="gui_ad_cornerSpeed_tooltip"					text="Adjust corner speed for individual vehicle. Mass and current speed will still impact brake point" />
+		<text name="gui_ad_callSecondUnloader"					text="Call 2. Unloader" />
+		<text name="gui_ad_callSecondUnloader_tooltip"			text="Call 2. Unloader when the current unloader reaches the precall fill level" />
+		<text name="gui_ad_followOnlyOnField"					text="Restrict unloader to field" />
+		<text name="gui_ad_followOnlyOnField_tooltip"			text="Restrict unloader to field while actively unloading" />
+		<text name="gui_ad_addSettingsToHUD"					text="Add settings to HUD" />
+		<text name="gui_ad_addSettingsToHUD_tooltip"			text="Adds buttons to the HUD to change settings without opening this menu" />
+		<text name="gui_ad_iconSetToUse"						text="Logo personalization" />
+		<text name="gui_ad_iconSetToUse_tooltip"				text="Default logo or personalized logo - Selection can be expanded." />
+		<text name="gui_ad_secondEditorModeAllowed"				text="Use 2. editor mode" />
+		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Use 2. editor mode for route manipulation instead of holding down LCTRL" />
+		<text name="gui_ad_wideHUD"								text="Wide HUD" />
+		<text name="gui_ad_wideHUD_tooltip"						text="Use wide HUD mode, which also allows a few more setting buttons in the HUD" />
+		<text name="gui_ad_syncMultiTargets"					text="Sync multiple targets" />
+		<text name="gui_ad_syncMultiTargets_tooltip"			text="Multiple drivers using the same folder for multiple targets will synchronize next targets" />
+		<text name="gui_ad_enableParkAtJobFinished"				text="Park at Job finished" />
+		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Only available in Modes Pickup and Deliver, Deliver: If Job is finished, stored parking position of vehicle / attachment will be driven to. On Dedi-Server only available for vehicle parking place!" />
+		<text name="gui_ad_autoTipSide"                         text="Automatic Tip Side" />
+		<text name="gui_ad_autoTipSide_tooltip"                 text="Yes - AutoDrive select tip side automatically / No - the already selected tip side will be used" />
+		<text name="gui_ad_autoTrailerCover"                    text="Automatic Trailer Covers" />
+		<text name="gui_ad_autoTrailerCover_tooltip"            text="Yes - AutoDrive open and close trailer covers as needed / No - trailer covers will not be opened or closed by AutoDrive" />
+		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning maneuver" />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
+		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
+		<text name="gui_ad_AL_off"                              text="Unload Off" />
+		<text name="gui_ad_AL_center"                           text="Unload center" />
+		<text name="gui_ad_AL_left"                             text="Unload left" />
+		<text name="gui_ad_AL_behind"                           text="Unload behind" />
+		<text name="gui_ad_AL_right"                            text="Unload right" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+
+		<text name="gui_ad_settingsPage_title"					text="Settings - AutoDrive" />
+		<text name="gui_ad_userSettingsPage_title"				text="User Settings - AutoDrive" />
+		<text name="gui_ad_vehicleSettingsPage_title"			text="Vehicle Settings - AutoDrive" />
+		<text name="gui_ad_combineUnloadSettingsPage_title"		text="Combine Unload Settings - AutoDrive" />
+		<text name="gui_ad_debugSettingsPage_title"				text="Debug Settings - AutoDrive" />
+		<text name="gui_ad_eFeaturesSettingsPage_title"			text="Experimental Features Settings - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_restoreButtonText"					text="Restore" />
+		<text name="gui_ad_settingsClosingDialog_title"			text="All changes will be lost" />
+		<text name="gui_ad_settingsClosingDialog_text"			text="Are you sure you want to close the settings without saving?" />
+
+		<text name="gui_ad_routesManagerTitle" 					text="Routes Manager" />
+		<text name="gui_ad_routesManagerTextTitle" 				text="Insert route name:" />
+		<text name="gui_ad_button_export" 						text="Save" />
+		<text name="gui_ad_button_import" 						text="Load" />
+		<text name="gui_ad_routeExportWarn_text" 				text="Are you sure you want to overwrite the existing route?" />
+		<text name="gui_ad_routeExportWarn_title" 				text="Route overwrite" />
+		<text name="gui_ad_routeDeleteWarn_text" 				text="Are you sure you want to delete the route '%s'?" />
+		<text name="gui_ad_routeDeleteWarn_title" 				text="Route deletion" />
+
+		<text name="statistic_driversTraveledDistance" 			text="Driving distance from drivers" />
+		<text name="statistic_driversHired" 					text="Drivers currently hired" />
+
+		<text name="gui_ad_debugChannelVehicle" 				text="Vehicles" />
+		<text name="gui_ad_debugChannelCombine" 				text="Combines" />
+		<text name="gui_ad_debugChannelTrailer" 				text="Trailers" />
+		<text name="gui_ad_debugChannelDev" 					text="Developing" />
+		<text name="gui_ad_debugChannelPath" 					text="Pathfinding" />
+		<text name="gui_ad_debugChannelSensor" 					text="Sensors" />
+		<text name="gui_ad_debugChannelNetwork" 				text="Network" />
+		<text name="gui_ad_debugChannelExternalInterface" 		text="External Interface" />
+		<text name="gui_ad_debugChannelRender" 					text="Rendering" />
+		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Road network" />
+		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelAll" 					text="Everything" />
+
+		<text name="gui_ad_notificationHistoryTitle" 			text="Notifications" />
+
+		<text name="gui_ad_colorSettingsTitle" 			        text="Color Assignments" />
+        <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
+		<text name="ad_color_singleConnection" 			        text="01 line of single-way connection" />
+		<text name="ad_color_dualConnection" 			        text="02 line of dual-way connection" />
+		<text name="ad_color_reverseConnection" 			    text="03 line of reverse connection" />
+		<text name="ad_color_default" 			                text="04 waypoint on sinle and reverse connection" />
+		<text name="ad_color_subPrioSingleConnection" 			text="05 line of secondary single-way connection" />
+		<text name="ad_color_subPrioDualConnection" 			text="06 line of secondary dual-way connection" />
+		<text name="ad_color_subPrioNode" 			            text="07 secondary waypoint" />
+		<text name="ad_color_hoveredNode" 			            text="08 hovered waypoint" />
+		<text name="ad_color_previousNode" 			            text="09 connected previous waypoint" />
+		<text name="ad_color_nextNode" 			                text="10 connected next waypoint" />
+		<text name="ad_color_selectedNode" 			            text="11 selected waypoint" />
+		<text name="ad_color_currentConnection" 			    text="12 line next path" />
+		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
+		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+
+		<text name="button_delete_all" 							text="Delete All" />
+		<text name="button_reset_selected" 					    text="Reset selected" />
+
+		<text name="ad_helpCategory_1"							text="AutoDrive" />
+		
+		<text name="ad_helpTitle_01"							text="AD - Introduction" />
+		<text name="ad_helpText_01_01"							text="AutoDrive is a multipurpose tool to let your tractors navigate autonomously through the world of Farming Simulator." />
+		<text name="ad_helpText_01_02"							text="The backbone is an interconnected network of recorded points and defined destinations. For some maps, an initial network is provided with the mod. On most maps you will have to record everything yourself or import a network from another user (see import/export below)." />
+		<text name="ad_helpText_01_03"							text="Provided all destinations are properly connected to the network, AutoDrive navigates much like your typical navigation system in your car, by calculating the shortest route to the destination.So it is important to ensure that all points are connected to the network. If AutoDrive detects a disconnected point, it is marked with an ‚X‘ and should be removed or connected by the player." />
+		
+		<text name="ad_helpTitle_02"							text="AD modes - Only Drive" />
+		<text name="ad_helpText_02_01"							text="In this mode, the current vehicle will take the most suited point (by it's current direction and distance) or simply the nearest one and then use the shortest path from there to the destination and stop there. It is the most simple mode and best suited to test your new routes." />
+		
+		<text name="ad_helpTitle_03"							text="AD modes - Deliver" />
+		<text name="ad_helpText_03_01"							text="In this mode AutoDrive will drive the vehicle just like in the ‚Only Drive‘ mode but it will additionally unload the current trailer at the destination, if an unload trigger is detected." />
+		<text name="ad_helpText_03_02"							text="The destination point should be created behind the unload trigger, so that vehicles with long trailers will reach the unload trigger before reaching the destination. " />
+		<text name="ad_helpText_03_03"							text="The driver will stop at the destination regardless of it being empty or not. If you notice that your destination point isn’t far enough back, you can easily remove the destination and create it at the following point without having to remove the point it self.(see HUD-Buttons)." />
+		
+		<text name="ad_helpTitle_04"							text="AD modes - Pickup and Deliver" />
+		<text name="ad_helpText_04_01"							text="In this mode, you can select to target destinations. One for loading (the first one) and the second one for the unload point." />
+		<text name="ad_helpText_04_02"							text="If AutoDrive is activated, it will look at the current fill level of the connected trailers/implements. If this value is higher than the set ‚Unload at‘ level (see settings), the driver will directly head for the unload destination." />
+		<text name="ad_helpText_04_03"							text="Otherwise it will head for the load destination first. Depending on the selected setting (‚On empty silo‘), the driver will either wait at the load destination to be filled past the ‚Unload at‘ level or it will continue to the unload destination." />
+		<text name="ad_helpText_04_04"							text="Either way, the driver will first try to load the selected fill type on any available trigger in the provided range (see settings) before the load destination." />
+		<text name="ad_helpText_04_05"							text="Additionally you can select a repetition counter before starting the driver. If you set this counter to 2, the driver will stop after having reached the unload destination 2 times. If this setting (see HUD) is left at default, the driver will always start the next cycle." />
+		
+		<text name="ad_helpTitle_05"							text="AD modes - Load mode" />
+		<text name="ad_helpText_05_01"							text="This mode is very similar to the previously described ‘Pickup and Deliver’ mode with only a few minor exceptions. It will not respect the ‘repetition counter’." />
+		<text name="ad_helpText_05_02"							text="There is only a load destination and a target destination at which the driver will stop and disable AutoDrive." />
+		<text name="ad_helpText_05_03"							text="This mode is intended to be used as refill mode for field work. This way seeders or sprayers can be started at the field location and sent to a refill point and will return to the set field destination afterwards." />
+		<text name="ad_helpText_05_04"							text="This mode can also be used in conjunction with Courseplay. You will have to select ‘Use AutoDrive for refill/unload’ in the Courseplay HUD (not part of this documentation)." />
+		
+		<text name="ad_helpTitle_06"							text="AD modes - Combine Unloader" />
+		<text name="ad_helpText_06_01"							text="In this mode, you can again set two destinations. The first one should be a field location from where an active harvester can be reached. The second one is again an unload destination." />
+		<text name="ad_helpText_06_02"							text="This is the first mode in which AutoDrive drivers are allowed to leave the recorded path and drive on the field. This mode is quite complicated and involves many settings from the settings menu." />
+		<text name="ad_helpText_06_03"							text="So this documentation will first describe the basic behaviour and then add how the settings affect the behaviour." />
+		
+		<text name="ad_helpTitle_07"							text="AD modes - Combine Unloader - Basics - 1" />
+		<text name="ad_helpText_07_01"							text="The driver will decide on startup whether to head to the field or unload first (see ‘Pickup and Deliver). If it reaches the field location it registers itself as available driver. If a combine harvester is at 100% fill level and has an extended pipe, it will automatically go through the registered unloaders and choose the one that is nearest to him. Depending on the setting ‘Find unloader’ either all drivers in a range of 300 meters are accepted (yes) or only drivers with the same target destinations as the harvester in the AutoDrive Hud (no)." />
+		<text name="ad_helpText_07_02"							text="" />
+		<text name="ad_helpText_07_03"							text="Important: You do not have to activate AutoDrive on the harvester. Only the selected target is required." />
+		<text name="ad_helpText_07_04"							text="" />
+		<text name="ad_helpText_07_05"							text="Alternatively, the player can also call the unloader manually by assigning the keybinding ‘Call Unloader’ in the game options and using this while sitting in the harvester. If the harvester is controlled by Courseplay, AutoDrive will also call an unloader if it detects that the Courseplay driver wants to be unloaded." />
+		
+		<text name="ad_helpTitle_08"							text="AD modes - Combine Unloader - Basics - 2" />
+		<text name="ad_helpText_08_01"							text="If an unloader is called to a harvester, it will start planning a path to the extended pipe of the harvester. The path planner is a completely unique implementation and an explanation might be included as appendix to this documentation later on. The core concepts are a division of the simulated world into grid cells. These grid cells are sized according the vehicles turn radius and are checked to be fruit free (see settings), collision free, are on the field (see settings) and have a maximum slope acceptable to AI drivers. After a free path has been found, some smoothing to get rid of most sharp turns is also applied and then the driver is sent along this path to the harvester." />
+		<text name="ad_helpText_08_02"							text="" />
+		<text name="ad_helpText_08_03"							text="Note: As soon as the unload driver receives the command to drive to the harvester, the status message in the info bar of the HUD changes from ‘Waiting for combine’ to ‘Drive to combine’. Which means the path planner is now actively searching for a path. Depending on you CPU performance and your settings (‘Pathfinder time (max)’), this process may take some time and in extreme cases bring your fps down. This is usually the case if the unloader is unable to find an acceptable path to the combine. Always make sure that the space in front of the driver is obstacle free (and fruit free) and the path leading to the pipe of the harvester is also collision free (e.g. no trees fruit just behind the harvester)." />
+		<text name="ad_helpText_08_04"							text="" />
+		<text name="ad_helpText_08_05"							text="When it reaches the harvester it will check whether the unloading process is finished or if the current trailer is filled. In case of multiple trailers, the driver will drive forwards until a filling process on the next trailer is detected. After the unloading process, the driver will start driving backwards for a few meters to provide the harvester enough space to continue it’s work. Then the driver will wait a few seconds for the harvester to clear the area and start path planning back to the starting point. Upon reaching the starting point it will again register itself as available unloader and wait to be called again. If the trailer is already full at that point it will directly head for the unload destination before returning back to the field location." />
+		
+		<text name="ad_helpTitle_09"							text="AD modes - Combine Unloader - Park in field" />
+		<text name="ad_helpText_09_01"							text="If this option is set to true in the AutoDrive settings, the driver will check whether the target cell (pipe position) has detected fruit (Fruit Avoidance has to be set to true). If no fruit is detected and the driver has not yet reached it’s ‘unload at’ fill level, he will remain at the current field location. " />
+		
+		<text name="ad_helpTitle_10"							text="AD modes - Combine Unloader - Restrict to field" />
+		<text name="ad_helpText_10_01"							text="If this option is set to true, the path finder algorithm will only accept grid cells which are on the field. This setting only takes effect if the vehicle is already on the field (started on the field or parked in the field). This option should help to keep the driver on the field, especially during turn manoeuvres. " />
+		<text name="ad_helpText_10_02"							text="" />
+		<text name="ad_helpText_10_03"							text="Important: If no fruit free path can be calculated in the provided time (see settings), the path finder will go into a fallback mode which ignores fruit and field borders!" />
+		
+		<text name="ad_helpTitle_11"							text="AD modes - Combine Unloader - Fruit avoidance" />
+		<text name="ad_helpText_11_01"							text="This options ensures that the path finder will only accept grid cells that don’t contain any fruit or only have a marginal amount of fruit. Important: If no fruit free path can be calculated in the provided time (see settings), the path finder will go into a fallback mode which ignores fruit and field borders!" />
+		
+		<text name="ad_helpTitle_12"							text="AD modes - Combine Unloader - Chase combine" />
+		<text name="ad_helpText_12_01"							text="Pre call driver / Chase combine" />
+		<text name="ad_helpText_12_02"							text="" />
+		<text name="ad_helpText_12_03"							text="These options can be used to either simply follow the harvester with some distance (Pre call driver on / chase combine off). Or to have the unloader actively unload while the harvester is still driving. When the harvester reaches the set fill level (Pre call level), it will already call the driver to it’s current location. Once the driver reaches this point it will re-evaluate. If he is close to the harvester (less than 60 meters) and the ‘chase combine’ setting is on, he will start following him by line of sight. Otherwise he will retrigger a path finding process to the new harvester location. While chasing, he will sense if the pipe is currently in the fruit or not. If it isn't in the fruit, he will start targeting the pipe location, otherwise he will follow the harvester with some distance. When the driver reaches it’s ‘Unload at’ level he will immediately start planning a path to the selected field exit (see settings). Thus it makes sense to set the level to 100% in this mode. This way he won’t accidentally try to cut in front of the harvester or leave before being completely filled." />
+		<text name="ad_helpTitle_13"							text="AD modes - Unload Bunker silo" />
+		<text name="ad_helpText_13_01"							text="This mode can only be used with vehicles that have a shovel attached. The basic idea is a one-click solution to empty drive-through bunker silos. On startup, the vehicle will check for the required conditions. It needs a filled bunker silo in the vicinity (~100m?) and an attached shovel. If both conditions are met, the vehicle will initialize it’s front loader axis to acquire the correct values for up/down, load/unload and extend/retract motions. Then he will divide the bunker silo width into chunks as wide as his shovel + shovel addition (see settings) and start at the first line. If the first or the last line ends up hitting the silo wall, you should increase the shovel addition value in the settings and restart the driver. This can occur if either the shovel pickup width is not matched properly to the physical dimensions or the bunker silo definition lies inside the wall, which is not unusual since it makes it easier to develop a good looking bunker silo. After the shovel is filled and the vehicle reversed from the bunker, it will scan for a vehicle with an attached trailer (with left fill space) and start heading there." />
+		<text name="ad_helpText_13_02"							text="" />
+		<text name="ad_helpText_13_03"							text="Caution: There is currently no collision detection included in this mode!" />
+		<text name="ad_helpText_13_04"							text="" />
+		<text name="ad_helpText_13_05"							text="Since the vehicle tries to find the ideal loading position for the shovel automatically, it can happen that he lifts it’s front wheels up. There is a detection included for this scenario, which checks if all wheels are on the ground and starts lifting the shovel if this check returns false for a few hundred milliseconds." />
+
+
+		<text name="AD_task_pathfinding"						text="Planning path" />
+		<text name="AD_task_catch_up_with_combine"				text="Catching up with combine" />
+		<text name="AD_task_clearcrop"							text="Clearing crop" />
+		<text name="AD_task_drive_to_destination"				text="Driving to destination" />
+		<text name="AD_task_drive_to_vehicle"					text="Driving to target vehicle" />
+		<text name="AD_task_drive_to_combine_pipe"				text="Drive to combine pipe" />
+		<text name="AD_task_unloading_combine"					text="Unloading combine" />
+		<text name="AD_task_reversing_from_combine"				text="Reversing from combine" />
+		<text name="AD_task_waiting_for_space"					text="Waiting for maneuver room" />
+		<text name="AD_task_wait_for_combine_turn"				text="Wait for combine's turn" />
+		<text name="AD_task_drive_to_load_point"				text="Drive to loading point" />
+		<text name="AD_task_drive_to_refuel_point"				text="Drive to refuel station" />
+		<text name="AD_task_stop_and_disable"					text="Stopping" />
+		<text name="AD_task_drive_to_unload_point"				text="Drive to unload point" />
+		<text name="AD_task_wait_for_call"						text="Waiting for call" />
+		<text name="AD_task_chasing_combine"					text="Chasing combine" />	
+		<text name="AD_task_wait_for_combine_pass_by"			text="Letting combine pass by" />	
+		<text name="AD_task_catching_chase_side"				text="Catching side" />	
+		<text name="AD_task_chase_side"							text="Side" />	
+		<text name="AD_task_chase_side_left"					text="left" />	
+		<text name="AD_task_chase_side_rear"					text="rear" />	
+		<text name="AD_task_chase_side_right"					text="right" />		
+		<text name="AD_task_waiting_for_room"					text="Waiting for room" />
+		<text name="AD_task_exiting_field"						text="Exiting field" />
+		<text name="AD_task_reversing_from_collision"			text="Searching clear area" />
+        <text name="AD_task_drive_to_park"				        text="Drive to parking place" />
+		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
+
+		<text name = "gui_CPAD_off"								text = "off"/>
+		<text name = "gui_CPAD_simple"							text = "simple"/>
+		<text name = "gui_CPAD_full"							text = "full"/>		
+		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
+    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
+
+		
+		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
+		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
+		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
+		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
+		<text name="ad_next_tip" 								text="Next" />
+		<text name="ad_totd_01_title" 							text="Multiple functions" />
+		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
+		
+		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
+		<text name="ad_totd_02_title" 							text="Different types of roads" />
+		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
+
+		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
+		
+		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
+		
+		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
+		
+		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
+		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
+		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
+		
+		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
+		
+		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
+		<text name="ad_totd_04_title" 							text="Settings - 1" />
+		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
+
+		1. General settings - Applied for all vehicles.
+
+		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
+
+		3. Vehicle settings - Applied only for the current vehicle.
+
+		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
+
+		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
+		
+		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
+
+		
+		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
+		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
+		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>
+		<text name = "gui_ad_editorTip_4"								text = "LALT = Delete node"/>
+		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Toggle point as side road"/>
+
+		<text name = "gui_ad_editorTip_6"								text = "Clicking on second node:"/>
+		<text name = "gui_ad_editorTip_7"								text = "Toggle connection"/>
+		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Create reverse road"/>
+
+		<text name = "gui_ad_editorTip_9"								text = "1. node is intersection, second it's neighbor:"/>
+		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Toggle segment type (normal/dual)"/>
+		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Toggle side road"/>
+	</texts>
+</l10n>
