@@ -8,9 +8,12 @@ function ADHudIcon:new(posX, posY, width, height, image, layer, name)
     o.image = image
     o.isVisible = true
     o.lastLineCount = 1
-    o.ov = Overlay:new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
+    
+Logging.info("[AD] ADHudIcon:new type image %s type o.image %s", type(image), type(o.image))
+return o
+    -- o.ov = Overlay:new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
 
-    return o
+    -- return o
 end
 
 function ADHudIcon:onDraw(vehicle, uiScale)
@@ -22,7 +25,7 @@ function ADHudIcon:onDraw(vehicle, uiScale)
         self:onDrawHeader(vehicle, uiScale)
     end
 
-    if self.isVisible then
+    if self.isVisible and self.ov ~= nil then
         self.ov:render()
     end
 end
@@ -69,7 +72,7 @@ function ADHudIcon:renderDefaultText(vehicle, uiScale, fontSize, posX, posY)
 
     local lines = self:splitTextByLength(textToShow, fontSize, self.size.width - 4 * AutoDrive.Hud.gapWidth - 3 * AutoDrive.Hud.headerIconWidth)
     
-    if #lines ~= self.lastLineCount then
+    if #lines ~= self.lastLineCount and self.ov ~= nil then
         self.ov:setDimension(nil, self.size.height + (textHeight + AutoDrive.Hud.gapHeight) * (#lines - 1))        
     end
 
@@ -206,5 +209,7 @@ function ADHudIcon:updateIcon(vehicle)
     end
 
     self.image = newIcon
-    self.ov:setImage(self.image)
+    if self.ov ~= nil then
+        self.ov:setImage(self.image)
+    end
 end

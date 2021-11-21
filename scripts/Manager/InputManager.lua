@@ -106,7 +106,7 @@ end
 function ADInputManager.onActionCall(vehicle, actionName)
     local input = ADInputManager.actionsToInputs[actionName]
     if type(input) ~= "string" or input == "" then
-        g_logManager:devError("[AutoDrive] Action '%s' = '%s'", actionName, input)
+        Logging.devError("[AutoDrive] Action '%s' = '%s'", actionName, input)
         return
     end
 
@@ -116,7 +116,7 @@ end
 function ADInputManager:onInputCall(vehicle, input, sendEvent)
     local func = self[input]
     if type(func) ~= "function" then
-        g_logManager:devError("[AutoDrive] Input '%s' = '%s'", input, type(func))
+        Logging.devError("[AutoDrive] Input '%s' = '%s'", input, type(func))
         return
     end
 

@@ -93,7 +93,7 @@ function AutoDriveSync.streamWriteGraph(streamId, wayPoints, mapMarkers, groups)
     -- writing waypoints
     for i, wp in pairs(wayPoints) do
         if wp.id ~= i then
-            g_logManager:error(string.format("[AutoDriveSync] Waypoint number %s have a wrong id %s", i, wp.id))
+            Logging.error(string.format("[AutoDriveSync] Waypoint number %s have a wrong id %s", i, wp.id))
         end
         NetworkUtil.writeCompressedWorldPosition(streamId, wp.x, paramsXZ)
         NetworkUtil.writeCompressedWorldPosition(streamId, wp.y, paramsY)
@@ -200,7 +200,7 @@ function AutoDriveSync.streamReadGraph(streamId)
             local marker = {id = markerId, markerIndex = i, name = AutoDrive.streamReadStringOrEmpty(streamId), group = AutoDrive.streamReadStringOrEmpty(streamId)}
             mapMarkers[i] = marker
         else
-            g_logManager:error("[AutoDriveSync] Error receiving marker %s (%s)", AutoDrive.streamReadStringOrEmpty(streamId), markerId)
+            Logging.error("[AutoDriveSync] Error receiving marker %s (%s)", AutoDrive.streamReadStringOrEmpty(streamId), markerId)
             -- we have to read everything to keep the right reading order
             _ = AutoDrive.streamReadStringOrEmpty(streamId)
         end
@@ -225,8 +225,8 @@ end
 
 function AutoDriveSync.print(text, ...)
     if g_dedicatedServerInfo ~= nil then
-        g_logManager:info(text, ...)
+        Logging.info(text, ...)
     else
-        g_logManager:devInfo(text, ...)
+        Logging.info(text, ...)
     end
 end

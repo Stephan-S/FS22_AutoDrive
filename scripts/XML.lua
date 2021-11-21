@@ -7,12 +7,12 @@ function AutoDrive.loadStoredXML()
 	local xmlFile_new = AutoDrive.getXMLFile_new()
 
 	if fileExists(xmlFile_new) then
-		g_logManager:devInfo("[AutoDrive] Loading xml file from " .. xmlFile_new)
+		Logging.info("[AutoDrive] Loading xml file from " .. xmlFile_new)
 		local adXml = loadXMLFile("AutoDrive_XML", xmlFile_new)
 		AutoDrive.readFromXML(adXml)
 		delete(adXml)
 	elseif fileExists(xmlFile) then
-		g_logManager:devInfo("[AutoDrive] Loading xml file from " .. xmlFile)
+		Logging.info("[AutoDrive] Loading xml file from " .. xmlFile)
 		local adXml = loadXMLFile("AutoDrive_XML", xmlFile)
 		AutoDrive.readFromXML(adXml)
 		delete(adXml)
@@ -24,7 +24,7 @@ end
 function AutoDrive.loadInitConfig(xmlFile)
 	if ADThirdPartyModsManager:getHasDefaultRoutesForMap(AutoDrive.loadedMap) then
 		local defaultRoutesPath = ADThirdPartyModsManager:getDefaultRoutesForMap(AutoDrive.loadedMap)
-		g_logManager:devInfo("[AutoDrive] Loading default routes from " .. defaultRoutesPath)
+		Logging.info("[AutoDrive] Loading default routes from " .. defaultRoutesPath)
 		local xmlId = loadXMLFile("AutoDrive_XML_temp", defaultRoutesPath)
 		local wayPoints, mapMarkers, groups = AutoDrive.readGraphFromXml(xmlId, "defaultRoutes")
 		ADGraphManager:resetWayPoints()
@@ -37,17 +37,17 @@ function AutoDrive.loadInitConfig(xmlFile)
 		-- Loading custom init config from mod map
 		local initConfFile = g_currentMission.missionInfo.map.baseDirectory .. "AutoDrive_init_config.xml"
 		if fileExists(initConfFile) then
-			g_logManager:devInfo("[AutoDrive] Loading init config from " .. initConfFile)
+			Logging.info("[AutoDrive] Loading init config from " .. initConfFile)
 			local xmlId = loadXMLFile("AutoDrive_XML_temp", initConfFile)
 			AutoDrive.readFromXML(xmlId)
 			delete(xmlId)
 		else
-			g_logManager:devWarning("[AutoDrive] Can't load init config from " .. initConfFile)
+			Logging.warning("[AutoDrive] Can't load init config from " .. initConfFile)
 		end
 	end
 
 	ADGraphManager:markChanges()
-	g_logManager:devInfo("[AutoDrive] Saving xml file to " .. xmlFile)
+	Logging.info("[AutoDrive] Saving xml file to " .. xmlFile)
 end
 
 function AutoDrive.getXMLFile()
@@ -252,12 +252,12 @@ function AutoDrive.readFromXML(xmlFile)
 	end
 
 	if ADGraphManager:getWayPointById(wp_counter) ~= nil then
-		g_logManager:devInfo("[AutoDrive] Loaded %s waypoints", wp_counter)
+		Logging.info("[AutoDrive] Loaded %s waypoints", wp_counter)
 	end
 
 	for markerIndex, marker in pairs(ADGraphManager:getMapMarkers()) do
 		if ADGraphManager:getWayPointById(marker.id) == nil then
-			g_logManager:devInfo("[AutoDrive] mapMarker[" .. markerIndex .. "] : " .. marker.name .. " points to a non existing waypoint! Please repair your config file!")
+			Logging.info("[AutoDrive] mapMarker[" .. markerIndex .. "] : " .. marker.name .. " points to a non existing waypoint! Please repair your config file!")
 		end
 	end
 
@@ -267,9 +267,9 @@ function AutoDrive.readFromXML(xmlFile)
 	AutoDrive.tipOfTheDay.currentTipId = getXMLInt(xmlFile, "AutoDrive.lastTipOfTheDay") or 1
 	AutoDrive.tipOfTheDay.highestTipId = getXMLInt(xmlFile, "AutoDrive.highestTipOfTheDay") or 1
 	
-    g_logManager:info("[AD] AutoDrive.readFromXML waypoints: %s", tostring(ADGraphManager:getWayPointsCount()))
-    g_logManager:info("[AD] AutoDrive.readFromXML markers: %s", tostring(#ADGraphManager:getMapMarkers()))
-    g_logManager:info("[AD] AutoDrive.readFromXML groups: %s", tostring(table.count(ADGraphManager:getGroups())))
+    Logging.info("[AD] AutoDrive.readFromXML waypoints: %s", tostring(ADGraphManager:getWayPointsCount()))
+    Logging.info("[AD] AutoDrive.readFromXML markers: %s", tostring(#ADGraphManager:getMapMarkers()))
+    Logging.info("[AD] AutoDrive.readFromXML groups: %s", tostring(table.count(ADGraphManager:getGroups())))
 end
 
 function AutoDrive.saveToXML(xmlFile)
@@ -356,9 +356,9 @@ function AutoDrive.saveToXML(xmlFile)
 	
 	saveXMLFile(xmlFile)
 	if g_client == nil then
-		g_logManager:info("[AD] AutoDrive.saveToXML waypoints: %s", tostring(ADGraphManager:getWayPointsCount()))
-		g_logManager:info("[AD] AutoDrive.saveToXML markers: %s", tostring(#ADGraphManager:getMapMarkers()))
-		g_logManager:info("[AD] AutoDrive.saveToXML groups: %s", tostring(table.count(ADGraphManager:getGroups())))
+		Logging.info("[AD] AutoDrive.saveToXML waypoints: %s", tostring(ADGraphManager:getWayPointsCount()))
+		Logging.info("[AD] AutoDrive.saveToXML markers: %s", tostring(#ADGraphManager:getMapMarkers()))
+		Logging.info("[AD] AutoDrive.saveToXML groups: %s", tostring(table.count(ADGraphManager:getGroups())))
 	end
 end
 

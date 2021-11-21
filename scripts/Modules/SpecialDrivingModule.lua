@@ -322,7 +322,7 @@ function ADSpecialDrivingModule:getReverseNode()
 
     for _, implement in pairs(self.vehicle:getAttachedImplements()) do
         if implement ~= nil and implement.object ~= nil then
-            -- g_logManager:info("[AD] ADSpecialDrivingModule:getReverseNode count %s ", tostring(count))
+            -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode count %s ", tostring(count))
             
             if (implement.object ~= self.vehicle or reverseNode == nil) and 
                 implement.object.spec_wheels ~= nil and
@@ -330,7 +330,7 @@ function ADSpecialDrivingModule:getReverseNode()
             then
                 local implementX, implementY, implementZ = getWorldTranslation(implement.object.components[1].node)
                 local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, implementX, implementY, implementZ)
-                -- g_logManager:info("[AD] ADSpecialDrivingModule:getReverseNode diffZ %s ", tostring(diffZ))
+                -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode diffZ %s ", tostring(diffZ))
                 if diffZ < 0 then
                 -- if diffZ < 0 and math.abs(diffZ) >= (self.vehicle.sizeLength / 2) then
                 
@@ -338,7 +338,7 @@ function ADSpecialDrivingModule:getReverseNode()
                     for _, wheel in pairs(implement.object.spec_wheels.wheels) do
                         hasSynchronizedWheels = hasSynchronizedWheels or wheel.isSynchronized
                     end
-                    -- g_logManager:info("[AD] ADSpecialDrivingModule:getReverseNode hasSynchronizedWheels %s ", tostring(hasSynchronizedWheels))
+                    -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode hasSynchronizedWheels %s ", tostring(hasSynchronizedWheels))
                     if hasSynchronizedWheels then
                         reverseNode = implement.object.spec_wheels.steeringCenterNode
                         self.reverseSolo = false
@@ -353,7 +353,7 @@ function ADSpecialDrivingModule:getReverseNode()
     if reverseNode == nil then
         reverseNode = self.vehicle.spec_wheels.steeringCenterNode
         self.reverseSolo = true
-        -- g_logManager:info("[AD] ADSpecialDrivingModule:getReverseNode end reverseNode == nil ")
+        -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode end reverseNode == nil ")
     end
     return reverseNode
 end

@@ -81,7 +81,7 @@ function AutoDriveMessageEvent.sendMessage(vehicle, messageType, text, duration,
             vehicle.owner:sendEvent(AutoDriveMessageEvent:new(vehicle, false, messageType, text, duration, {...}))
         end
     else
-        g_logManager:error("A client is trying to send a message event.")
+        Logging.error("A client is trying to send a message event.")
         printCallstack()
     end
 end
@@ -94,7 +94,7 @@ function AutoDriveMessageEvent.sendNotification(vehicle, messageType, text, dura
     else
         -- Client have to send to server
         --g_client:getServerConnection():sendEvent(event)
-        g_logManager:error("A client is trying to send a notification event.")
+        Logging.error("A client is trying to send a notification event.")
         printCallstack()
     end
 end
@@ -109,7 +109,7 @@ function AutoDriveMessageEvent.sendMessageOrNotification(vehicle, messageType, t
             AutoDriveMessageEvent.sendNotification(vehicle, messageType, text, duration, ...)
         end
     else
-        g_logManager:error("A client is trying to send a message or notification event.")
+        Logging.error("A client is trying to send a message or notification event.")
         printCallstack()
     end
 end

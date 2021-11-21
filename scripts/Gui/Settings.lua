@@ -162,7 +162,7 @@ function ADSettings:applySettings()
             end
             if setting.new ~= nil and setting.new ~= setting.current then
                 -- We could even print this with our debug system, but since GIANTS itself prints every changed config, for the moment we will do the same
-                g_logManager:devInfo('Setting \'%s\' changed from "%s" to "%s"', settingName, setting.values[setting.current], setting.values[setting.new])
+                Logging.info('Setting \'%s\' changed from "%s" to "%s"', settingName, setting.values[setting.current], setting.values[setting.new])
                 setting.current = setting.new
                 if setting.isUserSpecific then
                     userSpecificHasChanges = true

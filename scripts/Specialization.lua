@@ -802,7 +802,7 @@ function AutoDrive:startAutoDrive()
             AutoDriveStartStopEvent:sendStartEvent(self)
         end
     else
-        g_logManager:devError("AutoDrive:startAutoDrive() must be called only on the server.")
+        Logging.devError("AutoDrive:startAutoDrive() must be called only on the server.")
     end
 end
 
@@ -929,7 +929,7 @@ function AutoDrive:stopAutoDrive()
             self.ad.onRouteToRefuel = false
         end
     else
-        g_logManager:devError("AutoDrive:stopAutoDrive() must be called only on the server.")
+        Logging.devError("AutoDrive:stopAutoDrive() must be called only on the server.")
     end
 end
 

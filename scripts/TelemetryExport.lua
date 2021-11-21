@@ -16,7 +16,7 @@ function AutoDrive.initTelemetry()
 	AutoDrive.xmlFileName_telemetry_static = getUserProfileAppPath() .. "autoDrive\\AD_telemetry_static_out.txt"
 	AutoDrive.xmlFileName_inputs = getUserProfileAppPath() .. "autoDrive\\AD_input"
 
-	g_logManager:info("[AD] AutoDrive.xmlFileName_telemetry " .. AutoDrive.xmlFileName_telemetry)
+	Logging.info("[AD] AutoDrive.xmlFileName_telemetry " .. AutoDrive.xmlFileName_telemetry)
 
 	
 	--AutoDrive:registerDestinationListener(AutoDrive, AutoDrive.triggerStaticOutput)
@@ -64,7 +64,7 @@ function AutoDrive.readNewInputs()
 	AutoDrive.lastReadChangeID = changeId
 
 	local selectedVehicle = getXMLInt(AutoDrive.xmlFile_inputs, "AutoDrive.currentVehicle")
-	--g_logManager:info("[AD] selectedVehicle " .. selectedVehicle)
+	--Logging.info("[AD] selectedVehicle " .. selectedVehicle)
 	local vehicle = g_currentMission.vehicles[selectedVehicle]
 
 	local showingHud = getXMLBool(AutoDrive.xmlFile_inputs, "AutoDrive.HudShow")
@@ -79,7 +79,7 @@ function AutoDrive.readNewInputs()
 
 	if vehicle ~= nil and vehicle.ad ~= nil then
 		
-		--g_logManager:info("[AD] found selectedVehicle " .. selectedVehicle)
+		--Logging.info("[AD] found selectedVehicle " .. selectedVehicle)
 		--local vehicle = g_currentMission.controlledVehicle
 
 		if showingHud ~= nil and showingHud ~= AutoDrive.Hud.showHud then

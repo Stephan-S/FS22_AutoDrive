@@ -145,17 +145,55 @@ if g_specializationManager:getSpecializationByName("AutoDrive") == nil then
     g_specializationManager:addSpecialization("AutoDrive", "AutoDrive", Utils.getFilename("scripts/AutoDrive.lua", g_currentModDirectory), nil)
 end
 
+function AutoDrive.dumpTable_temp(inputTable, name, maxDepth)
+    maxDepth = maxDepth or 5
+    print(name .. " = {}")
+    local function dumpTableRecursively(inputTable, name, depth, maxDepth)
+        if depth >= maxDepth then
+            return
+        end
+        for k, v in pairs(inputTable) do
+            local newName = string.format("%s.%s", name, k)
+            if type(k) == "number" then
+                newName = string.format("%s[%s]", name, k)
+            end
+            if type(v) ~= "table" and type(v) ~= "function" then
+                print(string.format("%s = %s", newName, v))
+            end
+            if type(v) == "table" then
+                print(newName .. " = {}")
+                dumpTableRecursively(v, newName, depth + 1, maxDepth)
+            end
+        end
+    end
+    for k, v in pairs(inputTable) do
+        local newName = string.format("%s.%s", name, k)
+        if type(k) == "number" then
+            newName = string.format("%s[%s]", name, k)
+        end
+        if type(v) ~= "table" and type(v) ~= "function" then
+            print(string.format("%s = %s", newName, v))
+        end
+        if type(v) == "table" then
+            print(newName .. " = {}")
+            dumpTableRecursively(v, newName, 1, maxDepth)
+        end
+    end
+end
+
+--AutoDrive.dumpTable_temp(TypeManager, "TypeManager", 2)
+
 function AutoDriveRegister.register()
 
     if AutoDrive == nil then
-        g_logManager:error("[AutoDrive] Unable to add specialization 'AutoDrive'")
+        Logging.error("[AD] Unable to add specialization 'AutoDrive'")
         return
     end
 
-    for vehicleType, typeDef in pairs(g_vehicleTypeManager.vehicleTypes) do
+    for vehicleType, typeDef in pairs(g_vehicleTypeManager.types) do
         if typeDef ~= nil and vehicleType ~= "locomotive" and vehicleType ~= "horse" and (not typeDef.hasADSpec == true) then
             if AutoDrive.prerequisitesPresent(typeDef.specializations) then
-                g_logManager:info('[AutoDrive] Attached to vehicleType "%s"', vehicleType)
+                Logging.info('[AD] Attached to vehicleType "%s"', vehicleType)
                 if typeDef.specializationsByName[AutoDrive.ADSpecName] == nil then
                     g_vehicleTypeManager:addSpecialization(vehicleType, AutoDrive.ADSpecName)
                     typeDef.hasADSpec = true
@@ -176,11 +214,11 @@ end
 function AutoDriveRegister.registerVehicleData()
 
 	if AutoDriveVehicleData == nil then
-		g_logManager:error("[AutoDriveVehicleData] Unable to add specialization 'AutoDriveVehicleData'")
+		Logging.error("[AutoDriveVehicleData] Unable to add specialization 'AutoDriveVehicleData'")
 		return
 	end
 
-	for vehicleType, typeDef in pairs(g_vehicleTypeManager.vehicleTypes) do
+	for vehicleType, typeDef in pairs(g_vehicleTypeManager.types) do
 		if typeDef ~= nil and vehicleType ~= "locomotive" and vehicleType ~= "horse" and (not typeDef.hasADVDSpec == true) then
 			if AutoDriveVehicleData.prerequisitesPresent(typeDef.specializations) then
 				if typeDef.specializationsByName[AutoDrive.ADVDSpecName] == nil then
@@ -202,7 +240,7 @@ for eName, eId in pairs(EventIds) do
 end
 
 function AutoDriveRegister:loadMap(name)
-	g_logManager:info("[AutoDrive] Loaded mod version %s (by Stephan). Full version number: %s", self.version, AutoDrive.version)
+	Logging.info("[AutoDrive] Loaded mod version %s (by Stephan). Full version number: %s", self.version, AutoDrive.version)
 end
 
 function AutoDriveRegister:deleteMap()
@@ -225,7 +263,7 @@ function AutoDriveRegister.onMissionWillLoad(i18n)
 	AutoDriveRegister.addModTranslations(i18n)
 end
 
-function AutoDriveValidateVehicleTypes(vehicleTypeManager)
+function AutoDriveValidateVehicleTypes(TypeManager)
 	AutoDriveRegister.onMissionWillLoad(g_i18n)
 	AutoDrive:onAllModsLoaded()
 end
@@ -250,7 +288,7 @@ function AutoDriveLoadedMission(mission, superFunc, node)
 end
 
 Mission00.loadMission00Finished = Utils.overwrittenFunction(Mission00.loadMission00Finished, AutoDriveLoadedMission)
-VehicleTypeManager.validateVehicleTypes = Utils.prependedFunction(VehicleTypeManager.validateVehicleTypes, AutoDriveValidateVehicleTypes)
+TypeManager.validateTypes = Utils.prependedFunction(TypeManager.validateTypes, AutoDriveValidateVehicleTypes)
 
 addModEventListener(AutoDriveRegister)
 

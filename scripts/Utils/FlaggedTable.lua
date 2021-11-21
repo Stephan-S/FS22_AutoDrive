@@ -11,7 +11,7 @@ end
 
 function FlaggedTable:Add(key, value)
     if self.items[key] ~= nil then
-        g_logManager:devError("FlaggedTable key %s with value %s will be replaced by %s", key, self.items[key], value)
+        Logging.devError("FlaggedTable key %s with value %s will be replaced by %s", key, self.items[key], value)
     end
     self.items[key] = {value = value, flag = false}
     self.itemsCount = self.itemsCount + 1

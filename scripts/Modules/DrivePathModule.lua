@@ -49,7 +49,7 @@ function ADDrivePathModule:setPathTo(waypointId)
 
     if self.wayPoints == nil or (self.wayPoints[2] == nil and (self.wayPoints[1] == nil or (self.wayPoints[1] ~= nil and self.wayPoints[1].id ~= waypointId))) then
         self.vehicle.ad.isStoppingWithError = true
-        g_logManager:devError("[AutoDrive] Encountered a problem during initialization 'setPathTo'")
+        Logging.devError("[AutoDrive] Encountered a problem during initialization 'setPathTo'")
         AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_reach; %s", 5000, self.vehicle.ad.stateModule:getName(), self.vehicle.ad.stateModule:getFirstMarker().name)
         self.vehicle.ad.taskModule:abortAllTasks()
         self.vehicle.ad.taskModule:addTask(StopAndDisableADTask:new(self.vehicle))
@@ -75,7 +75,7 @@ function ADDrivePathModule:appendPathTo(startWayPointId, wayPointId)
 
     if appendWayPoints == nil or (appendWayPoints[2] == nil and (appendWayPoints[1] == nil or (appendWayPoints[1] ~= nil and appendWayPoints[1].id ~= wayPointId))) then
         self.vehicle.ad.isStoppingWithError = true
-        g_logManager:devError("[AutoDrive] Encountered a problem during initialization 'appendPathTo'")
+        Logging.devError("[AutoDrive] Encountered a problem during initialization 'appendPathTo'")
         AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_reach; %s", 5000, self.vehicle.ad.stateModule:getName(), self.vehicle.ad.stateModule:getFirstMarker().name)
         self.vehicle.ad.taskModule:abortAllTasks()
         self.vehicle.ad.taskModule:addTask(StopAndDisableADTask:new(self.vehicle))

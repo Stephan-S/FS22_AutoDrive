@@ -148,13 +148,13 @@ function AutoDrive.boxesIntersect(a, b)
 			-- if there is no overlap between the projects, the edge we are looking at separates the two
 			-- polygons, and we know there is no overlap
 			if maxA < minB or maxB < minA then
-				--g_logManager:devInfo("polygons don't intersect!");
+				--Logging.info("polygons don't intersect!");
 				return false
 			end
 		end
 	end
 
-	--g_logManager:devInfo("polygons intersect!");
+	--Logging.info("polygons intersect!");
 	return true
 end
 
@@ -505,7 +505,7 @@ function AutoDrive.debugMsg(vehicle, debugText, ...)
         end
     end
 
-    g_logManager:info(printText .. debugText, ...)
+    Logging.info(printText .. debugText, ...)
 end
 
 AutoDrive.debug = {}

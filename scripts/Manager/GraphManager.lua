@@ -677,7 +677,7 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 		end
 	else
 		if sendEvent ~= false then
-			g_logManager:devWarning("ADGraphManager:recordWayPoint() must be called only on the server.")
+			Logging.warning("ADGraphManager:recordWayPoint() must be called only on the server.")
 			return
 		end
 	end

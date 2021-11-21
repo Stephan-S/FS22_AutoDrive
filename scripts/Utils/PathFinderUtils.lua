@@ -51,12 +51,12 @@ function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
     local ret = false
 
     if implement ~= nil and implement.object ~= nil and implement.object.spec_attachable ~= nil and implement.object.spec_attachable.attacherJoint ~= nil and implement.object.spec_attachable.attacherJoint.jointType ~= nil then
-        -- g_logManager:info("[AD] isImplementAllowedForReverseDriving implement.object.spec_attachable.attacherJoint.jointType %s ", tostring(implement.object.spec_attachable.attacherJoint.jointType))
+        -- Logging.info("[AD] isImplementAllowedForReverseDriving implement.object.spec_attachable.attacherJoint.jointType %s ", tostring(implement.object.spec_attachable.attacherJoint.jointType))
         for i, name in ipairs(AutoDrive.implementsAllowedForReverseDriving) do
             local key = "JOINTTYPE_"..string.upper(name)
             
             if AttacherJoints[key] ~= nil and AttacherJoints[key] == implement.object.spec_attachable.attacherJoint.jointType then
-                -- g_logManager:info("[AD] isImplementAllowedForReverseDriving implement allowed %s ", tostring(key))
+                -- Logging.info("[AD] isImplementAllowedForReverseDriving implement allowed %s ", tostring(key))
                 return true
             end
         end
@@ -66,7 +66,7 @@ function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
         and AttacherJoints.JOINTTYPE_IMPLEMENT == implement.object.spec_attachable.attacherJoint.jointType 
     then
         local breakforce = implement.object.spec_attachable:getBrakeForce()
-        -- g_logManager:info("[AD] isImplementAllowedForReverseDriving implement breakforce %s ", tostring(breakforce))
+        -- Logging.info("[AD] isImplementAllowedForReverseDriving implement breakforce %s ", tostring(breakforce))
         if breakforce ~= nil and breakforce > 0.07 * 10
             and not(implement.object ~= nil and implement.object.getName ~= nil and implement.object:getName() == "GL 420")     -- Grimme GL 420 needs special handling, as it has breakforce >0.07, but no trailed wheel
         then

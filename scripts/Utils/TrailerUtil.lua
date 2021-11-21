@@ -162,13 +162,13 @@ function AutoDrive.getTrailersOf(vehicle, onlyDischargeable)
 
     if (vehicle.spec_dischargeable ~= nil or not (onlyDischargeable == true)) and vehicle.getFillUnits ~= nil then
         local vehicleFillLevel, vehicleLeftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(vehicle, nil)
-        --g_logManager:devInfo("VehicleFillLevel: " .. vehicleFillLevel .. " vehicleLeftCapacity: " .. vehicleLeftCapacity);
+        --Logging.info("VehicleFillLevel: " .. vehicleFillLevel .. " vehicleLeftCapacity: " .. vehicleLeftCapacity);
         if not (vehicleFillLevel == 0 and vehicleLeftCapacity == 0) then
             AutoDrive.tempTrailerCount = AutoDrive.tempTrailerCount + 1
             AutoDrive.tempTrailers[AutoDrive.tempTrailerCount] = vehicle
         end
     end
-    --g_logManager:devInfo("AutoDrive.tempTrailerCount after vehicle: "  .. AutoDrive.tempTrailerCount);
+    --Logging.info("AutoDrive.tempTrailerCount after vehicle: "  .. AutoDrive.tempTrailerCount);
 
     if vehicle.getAttachedImplements ~= nil then
         for _, implement in pairs(vehicle:getAttachedImplements()) do
@@ -512,10 +512,10 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                         AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs gcFillLevels %s", tostring(gcFillLevels))
                     end
                     if table.getn(fillLevels) == 0 and table.getn(gcFillLevels) == 0 and trigger.source ~= nil and trigger.source.gcId ~= nil and trigger.source.fillLevels ~= nil then
-                        --g_logManager:devInfo("Adding gm fill levels now")
+                        --Logging.info("Adding gm fill levels now")
                         for index, fillLevel in pairs(trigger.source.fillLevels) do
                             if fillLevel ~= nil and fillLevel[1] ~= nil then
-                                --g_logManager:devInfo("Adding gm fill levels now - adding " .. index .. " with value: " .. fillLevel[1])
+                                --Logging.info("Adding gm fill levels now - adding " .. index .. " with value: " .. fillLevel[1])
                                 AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs Adding gm fill levels now - adding fillLevel[1] %s", tostring(fillLevel[1]))
                                 fillLevels[index] = fillLevel[1]
                             end

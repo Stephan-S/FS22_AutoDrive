@@ -53,7 +53,7 @@ function UnloadAtDestinationTask:update(dt)
                     self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.vehicle.ad.stateModule:getSecondWayPoint())
                 end
 
-                g_logManager:error("[AutoDrive] Could not calculate path - shutting down")
+                Logging.error("[AutoDrive] Could not calculate path - shutting down")
                 self.vehicle.ad.taskModule:abortAllTasks()
                 self.vehicle:stopAutoDrive()
                 AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_find_path;", 5000, self.vehicle.ad.stateModule:getName())

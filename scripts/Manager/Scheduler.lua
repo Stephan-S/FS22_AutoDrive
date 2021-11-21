@@ -2,7 +2,7 @@ ADScheduler = {}
 ADScheduler.UPDATE_TIME = 3000 -- time interval for calculation/check
 ADScheduler.FRAMES_TO_CHECK_FOR_ACTUAL_FPS = 10 -- number of frames to calculate actual FPS
 ADScheduler.FRAMES_TO_CHECK_FOR_AVERAGE_FPS = 60 * 60 -- number of frames to calculate average FPS
-ADScheduler.MIN_STEPS_PER_FRAME = 1 -- min steps for pathfinder per frame
+ADScheduler.MIN_STEPS_PER_FRAME = 8 -- min steps for pathfinder per frame
 ADScheduler.MAX_STEPS_PER_FRAME = 8 -- max steps for pathfinder per frame
 ADScheduler.FPS_DIFFERENCE = 0.1   -- 10 % difference to average for calculation/check
 ADScheduler.MIN_FPS = 20 -- min FPS where stepsPerFrame will always be decreased
@@ -17,7 +17,7 @@ function ADScheduler:load()
     self.average_counter = 0
     self.average_fps = 0
 
-    self.stepsPerFrame = ADScheduler.MAX_STEPS_PER_FRAME / 2
+    self.stepsPerFrame = ADScheduler.MAX_STEPS_PER_FRAME
     self.pathFinderVehicles = {}
     self.activePathFindervehicle = nil
     self.updateTimer = AutoDriveTON:new()

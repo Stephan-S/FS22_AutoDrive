@@ -368,7 +368,7 @@ function ADSensor:getCorners(box)
 end
 
 function ADSensor:updateSensor(dt)
-    --g_logManager:devInfo("updateSensor called")
+    --Logging.info("updateSensor called")
     if self:isEnabled() then
         self:onUpdate(dt)
     else
@@ -377,7 +377,7 @@ function ADSensor:updateSensor(dt)
 end
 
 function ADSensor:onUpdate()
-    g_logManager:devWarning("[AutoDrive] ADSensor:onUpdate() called - Please override this in instance class")
+    Logging.warning("[AutoDrive] ADSensor:onUpdate() called - Please override this in instance class")
 end
 
 
