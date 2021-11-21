@@ -148,17 +148,22 @@ function AutoDrive:onPostLoad(savegame)
 
     if self.isServer then
         if savegame ~= nil then
+
+            Logging.info("[AD] AutoDrive:onPostLoad savegame.xmlFile ->%s<-", tostring(savegame.xmlFile))
             local xmlFile = savegame.xmlFile
+            -- local xmlFile = loadXMLFile("vehicleXML", savegame.xmlFile)
             local key = savegame.key .. ".FS19_AutoDrive.AutoDrive"
+            Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
 
             self.ad.stateModule:readFromXMLFile(xmlFile, key)
             AutoDrive.readVehicleSettingsFromXML(self, xmlFile, key)
 
-            local groupString = getXMLString(xmlFile, key .. "#groups")
+            -- local groupString = getXMLString(xmlFile, key .. "#groups")
+            local groupString = xmlFile:getString(key .. "#groups", nil)
             if groupString ~= nil then
-                local groupTable = groupString:split(";")
+                local groupTable = groupString:AD_split(";")
                 for _, groupCombined in pairs(groupTable) do
-                    local groupNameAndBool = groupCombined:split(",")
+                    local groupNameAndBool = groupCombined:AD_split(",")
                     if tonumber(groupNameAndBool[2]) >= 1 then
                         self.ad.groups[groupNameAndBool[1]] = true
                     else
@@ -197,7 +202,7 @@ function AutoDrive:onPostLoad(savegame)
     -- Creating a new transform on front of the vehicle
     self.ad.frontNode = createTransformGroup(self:getName() .. "_frontNode")
     link(self.components[1].node, self.ad.frontNode)
-    setTranslation(self.ad.frontNode, 0, 0, self.sizeLength / 2 + self.lengthOffset + 0.75)
+    setTranslation(self.ad.frontNode, 0, 0, self.size.length / 2 + self.lengthOffset + 0.75)
     self.ad.frontNodeGizmo = DebugGizmo:new()
     self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
@@ -947,7 +952,7 @@ function AutoDrive:onStartAutoDrive()
 
         if self.spec_aiVehicle.currentHelper == nil then
             g_currentMission.maxNumHirables = g_currentMission.maxNumHirables + 1;
-            --g_helperManager:addHelper("AD_" .. math.random(100, 1000), "dataS2/character/helper/helper02.xml")
+            --g_helperManager:addHelper("AD_" .. math.AD_random(100, 1000), "dataS2/character/helper/helper02.xml")
             AutoDrive.AddHelper()
             self.spec_aiVehicle.currentHelper = g_helperManager:getRandomHelper()
         end
@@ -990,7 +995,7 @@ function AutoDrive.AddHelper()
     
     g_helperManager.numHelpers = g_helperManager.numHelpers + 1
     local helper = {}
-    helper.name = source.name .. "_" .. math.random(100, 1000)
+    helper.name = source.name .. "_" .. math.AD_random(100, 1000)
     helper.index = g_helperManager.numHelpers
     helper.title = helper.name
     helper.filename = source.filename

@@ -141,7 +141,7 @@ end
 
 function ADHudIcon:splitTextByLength(text, fontSize, maxLength)
     local lines = {}
-    local textParts = text:split("-")
+    local textParts = text:AD_split("-")
     local line = textParts[1]
     local index = 2
     while index <= #textParts do

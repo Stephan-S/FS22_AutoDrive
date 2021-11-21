@@ -332,7 +332,7 @@ function ADSpecialDrivingModule:getReverseNode()
                 local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, implementX, implementY, implementZ)
                 -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode diffZ %s ", tostring(diffZ))
                 if diffZ < 0 then
-                -- if diffZ < 0 and math.abs(diffZ) >= (self.vehicle.sizeLength / 2) then
+                -- if diffZ < 0 and math.abs(diffZ) >= (self.vehicle.size.length / 2) then
                 
                     local hasSynchronizedWheels = false
                     for _, wheel in pairs(implement.object.spec_wheels.wheels) do

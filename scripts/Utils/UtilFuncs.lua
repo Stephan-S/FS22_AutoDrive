@@ -268,10 +268,15 @@ function table:concatNil(sep, i, j)
 	return res
 end
 
-function string:split(sep)
+function string:AD_split(sep)
 	sep = sep or ":"
 	local fields = {}
 	local pattern = string.format("([^%s]+)", sep)
+
+if self == nil then
+printCallstack()
+end
+
 	self:gsub(
 		pattern,
 		function(c)
@@ -281,11 +286,11 @@ function string:split(sep)
 	return fields
 end
 
-function string.random(length)
+function string.AD_random(length)
 	if not length or length <= 0 then
 		return ""
 	end
-	return string.random(length - 1) .. string.randomCharset[math.random(1, #string.randomCharset)]
+	return string.AD_random(length - 1) .. string.randomCharset[math.AD_random(1, #string.randomCharset)]
 end
 
 function AutoDrive.localize(text)

@@ -162,10 +162,10 @@ function ADRoutesManager:remove(name)
 end
 
 function ADRoutesManager:getFileName()
-    local fileName = string.random(16)
+    local fileName = string.AD_random(16)
     -- finding a not used file name
     while fileExists(self.routesFolder .. fileName .. ".xml") do
-        fileName = string.random(16)
+        fileName = string.AD_random(16)
     end
     return fileName
 end

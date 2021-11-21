@@ -44,45 +44,45 @@ function ADSensor:addSensorsToVehicle(vehicle)
     local sensorParameters = {}
     sensorParameters.dynamicLength = true
     sensorParameters.position = ADSensor.POS_FRONT
-    sensorParameters.width = vehicle.sizeWidth * 0.75
+    sensorParameters.width = vehicle.size.width * 0.75
     local frontSensorDynamic = ADCollSensor:new(vehicle, sensorParameters)
     --frontSensorDynamic.drawDebug = true --test
     --frontSensorDynamic.enabled = true --test
     vehicle.ad.sensors["frontSensorDynamic"] = frontSensorDynamic
 
     sensorParameters.dynamicLength = false
-    sensorParameters.width = vehicle.sizeWidth * 0.65
+    sensorParameters.width = vehicle.size.width * 0.65
     sensorParameters.length = 0.1
     local frontSensor = ADCollSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["frontSensor"] = frontSensor
 
     sensorParameters.dynamicLength = false
-    sensorParameters.width = vehicle.sizeWidth * 1.3
-    sensorParameters.length = vehicle.sizeLength * 2
+    sensorParameters.width = vehicle.size.width * 1.3
+    sensorParameters.length = vehicle.size.length * 2
     local frontSensorLong = ADCollSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["frontSensorLong"] = frontSensorLong
 
     sensorParameters.dynamicLength = false
-    sensorParameters.width = vehicle.sizeWidth * 1.3
-    sensorParameters.length = vehicle.sizeLength * 2
+    sensorParameters.width = vehicle.size.width * 1.3
+    sensorParameters.length = vehicle.size.length * 2
     local frontSensorLongFruit = ADFruitSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["frontSensorLongFruit"] = frontSensorLongFruit
 
     sensorParameters.dynamicLength = false
-    sensorParameters.length = vehicle.sizeLength
-    sensorParameters.width = vehicle.sizeWidth * 2
+    sensorParameters.length = vehicle.size.length
+    sensorParameters.width = vehicle.size.width * 2
     local frontSensorFruit = ADFruitSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["frontSensorFruit"] = frontSensorFruit
 
     sensorParameters.dynamicLength = false
     sensorParameters.length = 2
-    sensorParameters.width = vehicle.sizeWidth * 0.5
+    sensorParameters.width = vehicle.size.width * 0.5
     local frontSensorField = ADFieldSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["frontSensorField"] = frontSensorField
 
     sensorParameters = {}
     sensorParameters.dynamicLength = true
-    sensorParameters.width = vehicle.sizeWidth * 0.75
+    sensorParameters.width = vehicle.size.width * 0.75
     sensorParameters.position = ADSensor.POS_REAR
     local rearSensor = ADCollSensor:new(vehicle, sensorParameters)
     local rearSensorFruit = ADFruitSensor:new(vehicle, sensorParameters)
@@ -94,7 +94,7 @@ function ADSensor:addSensorsToVehicle(vehicle)
     sensorParameters.dynamicLength = false
     sensorParameters.dynamicRotation = false
     sensorParameters.width = 6.5
-    sensorParameters.length = vehicle.sizeLength * 0.8
+    sensorParameters.length = vehicle.size.length * 0.8
     local leftSensor = ADCollSensor:new(vehicle, sensorParameters)
     local leftSensorFruit = ADFruitSensor:new(vehicle, sensorParameters)
     sensorParameters.width = 6.5
@@ -107,7 +107,7 @@ function ADSensor:addSensorsToVehicle(vehicle)
     sensorParameters.dynamicLength = false
     sensorParameters.dynamicRotation = false
     sensorParameters.width = 6.5
-    sensorParameters.length = vehicle.sizeLength * 0.8
+    sensorParameters.length = vehicle.size.length * 0.8
     local rightSensor = ADCollSensor:new(vehicle, sensorParameters)
     local rightSensorFruit = ADFruitSensor:new(vehicle, sensorParameters)
     sensorParameters.width = 6.5
@@ -120,7 +120,7 @@ function ADSensor:addSensorsToVehicle(vehicle)
     sensorParameters.dynamicLength = false
     sensorParameters.dynamicRotation = false
     sensorParameters.width = 4
-    sensorParameters.length = vehicle.sizeLength * 1
+    sensorParameters.length = vehicle.size.length * 1
     local leftFrontSensor = ADCollSensor:new(vehicle, sensorParameters)
     local leftFrontSensorFruit = ADFruitSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["leftFrontSensor"] = leftFrontSensor
@@ -130,7 +130,7 @@ function ADSensor:addSensorsToVehicle(vehicle)
     sensorParameters.dynamicLength = false
     sensorParameters.dynamicRotation = false
     sensorParameters.width = 4
-    sensorParameters.length = vehicle.sizeLength * 1
+    sensorParameters.length = vehicle.size.length * 1
     local rightFrontSensor = ADCollSensor:new(vehicle, sensorParameters)
     local rightFrontSensorFruit = ADFruitSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["rightFrontSensor"] = rightFrontSensor
@@ -139,8 +139,8 @@ function ADSensor:addSensorsToVehicle(vehicle)
     sensorParameters.position = ADSensor.POS_CENTER
     sensorParameters.dynamicLength = false
     sensorParameters.dynamicRotation = false
-    sensorParameters.width = vehicle.sizeWidth * 0.95
-    sensorParameters.length = vehicle.sizeLength * 1.4
+    sensorParameters.width = vehicle.size.width * 0.95
+    sensorParameters.length = vehicle.size.length * 1.4
     local centerSensorFruit = ADFruitSensor:new(vehicle, sensorParameters)
     vehicle.ad.sensors["centerSensorFruit"] = centerSensorFruit
 end
@@ -164,11 +164,11 @@ end
 
 function ADSensor:loadBaseParameters()
     local vehicle = self.vehicle
-    if vehicle ~= nil and vehicle.sizeLength ~= nil and vehicle.sizeWidth ~= nil then
+    if vehicle ~= nil and vehicle.size.length ~= nil and vehicle.size.width ~= nil then
         self.dynamicLength = true
         self.dynamicRotation = true
-        self.length = vehicle.sizeLength
-        self.width = vehicle.sizeWidth * ADSensor.WIDTH_FACTOR
+        self.length = vehicle.size.length
+        self.width = vehicle.size.width * ADSensor.WIDTH_FACTOR
         self.collisionMask = AIVehicleUtil.COLLISION_MASK
         self.position = ADSensor.POS_FRONT
         self.location = self:getLocationByPosition()
@@ -216,7 +216,7 @@ function ADSensor:getLocationByPosition()
     local location = {x = 0, z = 0}
 
     if self.position == ADSensor.POS_FRONT then
-        --location.z = vehicle.sizeLength / 2 + lengthOffset
+        --location.z = vehicle.size.length / 2 + lengthOffset
         --local lengthOffset = 1
         --if self.dynamicLength then
         --local frontToolLength = 0 --AutoDrive.getFrontToolLength(self.vehicle)
@@ -224,36 +224,36 @@ function ADSensor:getLocationByPosition()
         --end
         location = self:getRotatedFront()
         if location == nil then
-            location = {x = 0, z = vehicle.sizeLength / 2}
+            location = {x = 0, z = vehicle.size.length / 2}
         end
         --location.z = location.z + AutoDrive.getVehicleLeadingEdge(vehicle)
         --location.z = location.z + 2
     elseif self.position == ADSensor.POS_REAR then
-        location.z = - vehicle.sizeLength / 2
+        location.z = - vehicle.size.length / 2
         self.frontFactor = -1
     elseif self.position == ADSensor.POS_RIGHT then
-        location.x = -vehicle.sizeWidth / 2 - 1 - self.width / 2
-        location.z = -vehicle.sizeLength / 2 - 2
+        location.x = -vehicle.size.width / 2 - 1 - self.width / 2
+        location.z = -vehicle.size.length / 2 - 2
         self.sideFactor = -1
     elseif self.position == ADSensor.POS_LEFT then
-        location.x = vehicle.sizeWidth / 2 + 1 + self.width / 2
-        location.z = -vehicle.sizeLength / 2 - 2
+        location.x = vehicle.size.width / 2 + 1 + self.width / 2
+        location.z = -vehicle.size.length / 2 - 2
     elseif self.position == ADSensor.POS_FRONT_LEFT then
         local frontToolWidth = AutoDrive.getFrontToolWidth(vehicle)
         if frontToolWidth ~= nil and frontToolWidth > 0 then
             location.x = frontToolWidth / 2 + 0.5 + self.width / 2
         else
-            location.x = vehicle.sizeWidth + 1.5 + self.width / 2
+            location.x = vehicle.size.width + 1.5 + self.width / 2
         end
-        location.z = vehicle.sizeLength * 0.3 - 2
+        location.z = vehicle.size.length * 0.3 - 2
     elseif self.position == ADSensor.POS_FRONT_RIGHT then
         local frontToolWidth = AutoDrive.getFrontToolWidth(vehicle)
         if frontToolWidth ~= nil and frontToolWidth > 0 then
             location.x = -frontToolWidth / 2 - 0.5 - self.width / 2
         else
-            location.x = -vehicle.sizeWidth - 1.5 - self.width / 2
+            location.x = -vehicle.size.width - 1.5 - self.width / 2
         end
-        location.z = vehicle.sizeLength * 0.3 - 2
+        location.z = vehicle.size.length * 0.3 - 2
     elseif self.position == ADSensor.POS_FIXED and self.location ~= nil then
         return self.location
     elseif self.position == ADSensor.POS_CENTER then
@@ -507,7 +507,7 @@ function ADSensor:getRotatedFront()
             local axleCenterY = frontWheelY + 0.5 * (pairWheelY - frontWheelY)
             local axleCenterZ = frontWheelZ + 0.5 * (pairWheelZ - frontWheelZ)
             local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, axleCenterX, axleCenterY, axleCenterZ)
-            local wheelBaseToFront = self.vehicle.sizeLength / 2 - diffZ
+            local wheelBaseToFront = self.vehicle.size.length / 2 - diffZ
             local leadingEdge = AutoDrive.getVehicleLeadingEdge(self.vehicle)
             self.frontAxleLength = wheelBaseToFront + leadingEdge
             self.frontAxle = {}

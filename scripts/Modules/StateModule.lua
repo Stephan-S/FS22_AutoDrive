@@ -38,7 +38,7 @@ function ADStateModule:reset()
 
     self.parkDestination = -1
     self.parkDestinationAtJobFinished = -1
-
+    self.lastActive = false
     self.currentDestination = nil
 
     self.currentTaskInfo = ""
@@ -63,77 +63,109 @@ function ADStateModule:reset()
     self.calculateRemainingDriveTimeInterval = 0
     self.refuelFillType = 0
     self.activeBeforeSave = false
-    self.AIVEActiveBeforeSave = false
+    self.AIVElastActive = false
     self.bunkerUnloadType = ADStateModule.BUNKER_UNLOAD_TRIGGER
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
-    local mode = getXMLInt(xmlFile, key .. "#mode")
-    if mode ~= nil then
+
+    -- local mode = getXMLInt(xmlFile, key .. "#mode")
+    -- local mode = xmlFile:getXMLInt(key .. "#mode", AutoDrive.MODE_DRIVETO)
+
+    self.mode = AutoDrive.MODE_DRIVETO
+
+    self.mode = xmlFile:getInt(key .. "#mode", self.mode)
+    Logging.info("[AD] ADStateModule:readFromXMLFile self.mode ->%s<-", tostring(self.mode))
+    -- if xmlFile:hasProperty(key.."#mode") then
+        -- self.mode = xmlFile:getValue(key .. "#mode", self.mode)
+    -- end
+
+    -- if mode ~= nil then
         --if mode == AutoDrive.MODE_BGA then
             --mode = AutoDrive.MODE_DRIVETO
         --end
-        self.mode = mode
+        -- self.mode = mode
+    -- end
+
+    -- local firstMarker = getXMLInt(xmlFile, key .. "#firstMarker")
+    -- local firstMarker = xmlFile:getXMLInt(key .. "#firstMarker", 1)
+    
+    self.firstMarker = ADGraphManager:getMapMarkerById(1)
+    if xmlFile:hasProperty(key.."#firstMarker") then
+        self.firstMarker = xmlFile:getValue(key .. "#firstMarker", self.firstMarker)
     end
 
-    local firstMarker = getXMLInt(xmlFile, key .. "#firstMarker")
-    if firstMarker ~= nil then
-        self.firstMarker = ADGraphManager:getMapMarkerById(firstMarker)
-    else
-        self.firstMarker = ADGraphManager:getMapMarkerById(1)
-    end
+    Logging.info("[AD] ADStateModule:readFromXMLFile self.firstMarker ->%s<-", tostring(self.firstMarker))
 
-    local secondMarker = getXMLInt(xmlFile, key .. "#secondMarker")
-    if secondMarker ~= nil then
-        self.secondMarker = ADGraphManager:getMapMarkerById(secondMarker)
-    else
-        self.secondMarker = ADGraphManager:getMapMarkerById(1)
-    end
+    -- if firstMarker ~= nil then
+        -- self.firstMarker = ADGraphManager:getMapMarkerById(firstMarker)
+    -- else
+        -- self.firstMarker = ADGraphManager:getMapMarkerById(1)
+    -- end
 
-    local fillType = getXMLInt(xmlFile, key .. "#fillType")
-    if fillType ~= nil then
-        self.fillType = fillType
-    end
+    self.secondMarker = ADGraphManager:getMapMarkerById(xmlFile:getInt(key .. "#secondMarker", 1))
+    -- local secondMarker = getXMLInt(xmlFile, key .. "#secondMarker")
+    -- if secondMarker ~= nil then
+        -- self.secondMarker = ADGraphManager:getMapMarkerById(secondMarker)
+    -- else
+        -- self.secondMarker = ADGraphManager:getMapMarkerById(1)
+    -- end
 
-    local loopCounter = getXMLInt(xmlFile, key .. "#loopCounter")
-    if loopCounter ~= nil then
-        self.loopCounter = loopCounter
-    end
+    self.fillType = xmlFile:getInt(key .. "#fillType", self.fillType)
+    -- local fillType = getXMLInt(xmlFile, key .. "#fillType")
+    -- if fillType ~= nil then
+        -- self.fillType = fillType
+    -- end
 
-    local speedLimit = getXMLInt(xmlFile, key .. "#speedLimit")
-    if speedLimit ~= nil then
-        self.speedLimit = math.min(speedLimit, AutoDrive.getVehicleMaxSpeed(self.vehicle))
-    end
+    self.loopCounter = xmlFile:getInt(key .. "#loopCounter", self.loopCounter)
+    -- local loopCounter = getXMLInt(xmlFile, key .. "#loopCounter")
+    -- if loopCounter ~= nil then
+        -- self.loopCounter = loopCounter
+    -- end
 
-    local fieldSpeedLimit = getXMLInt(xmlFile, key .. "#fieldSpeedLimit")
-    if fieldSpeedLimit ~= nil then
-        self.fieldSpeedLimit = math.min(fieldSpeedLimit, AutoDrive.getVehicleMaxSpeed(self.vehicle))
-    end
+    self.speedLimit = xmlFile:getInt(key .. "#speedLimit", self.speedLimit)
+    -- local speedLimit = getXMLInt(xmlFile, key .. "#speedLimit")
+    -- if speedLimit ~= nil then
+        -- self.speedLimit = math.min(speedLimit, AutoDrive.getVehicleMaxSpeed(self.vehicle))
+    -- end
 
-    local parkDestination = getXMLInt(xmlFile, key .. "#parkDestination")
-    if parkDestination ~= nil then
-        self.parkDestination = parkDestination
-    end
+    self.fieldSpeedLimit = xmlFile:getInt(key .. "#fieldSpeedLimit", self.fieldSpeedLimit)
+    -- local fieldSpeedLimit = getXMLInt(xmlFile, key .. "#fieldSpeedLimit")
+    -- if fieldSpeedLimit ~= nil then
+        -- self.fieldSpeedLimit = math.min(fieldSpeedLimit, AutoDrive.getVehicleMaxSpeed(self.vehicle))
+    -- end
 
-    local driverName = getXMLString(xmlFile, key .. "#driverName")
-    if driverName ~= nil then
-        self.driverName = driverName
-    end
+    self.parkDestination = xmlFile:getInt(key .. "#parkDestination", self.parkDestination)
+    -- local parkDestination = getXMLInt(xmlFile, key .. "#parkDestination")
+    -- if parkDestination ~= nil then
+        -- self.parkDestination = parkDestination
+    -- end
 
-    local lastActive = getXMLBool(xmlFile, key .. "#lastActive")
-    if lastActive ~= nil then
-        self.activeBeforeSave = lastActive
-    end
+-- local fruitName = xmlFile:getString(key .. "#plannedFruit")
+    self.driverName = xmlFile:getString(key .. "#driverName", self.driverName)
+    -- local driverName = getXMLString(xmlFile, key .. "#driverName")
+    -- if driverName ~= nil then
+        -- self.driverName = driverName
+    -- end
 
-    local AIVElastActive = getXMLBool(xmlFile, key .. "#AIVElastActive")
-    if AIVElastActive ~= nil then
-        self.AIVEActiveBeforeSave = AIVElastActive
-    end
+-- local isMale = xmlFile:getBool(key .. "#isMale") or false
+    self.lastActive = xmlFile:getBool(key .. "#lastActive", self.lastActive)
+    -- local lastActive = getXMLBool(xmlFile, key .. "#lastActive")
+    -- if lastActive ~= nil then
+        -- self.activeBeforeSave = lastActive
+    -- end
 
-    local bunkerUnloadType = getXMLInt(xmlFile, key .. "#bunkerUnloadType")
-    if bunkerUnloadType ~= nil then
-        self.bunkerUnloadType = bunkerUnloadType
-    end
+    self.AIVElastActive = xmlFile:getBool(key .. "#AIVElastActive", self.AIVElastActive)
+    -- local AIVElastActive = getXMLBool(xmlFile, key .. "#AIVElastActive")
+    -- if AIVElastActive ~= nil then
+        -- self.AIVEActiveBeforeSave = AIVElastActive
+    -- end
+
+    self.bunkerUnloadType = xmlFile:getInt(key .. "#bunkerUnloadType", self.bunkerUnloadType)
+    -- local bunkerUnloadType = getXMLInt(xmlFile, key .. "#bunkerUnloadType")
+    -- if bunkerUnloadType ~= nil then
+        -- self.bunkerUnloadType = bunkerUnloadType
+    -- end
 end
 
 function ADStateModule:saveToXMLFile(xmlFile, key)

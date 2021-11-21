@@ -57,6 +57,9 @@ end
 
 function ADMessagesManager:loadHud(hud)
     local textSize = getCorrectTextSize(hud.textSize)
+    -- TODO - remove comment
+    return
+--[[
     hud.headerOverlay = Overlay:new(AutoDrive.directory .. "textures/Header.dds", hud.posX, hud.posY + (textSize * 1.6), 0, hud.headerOverlayHeight)
     hud.headerOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_CENTER)
     hud.backgroundOverlay = Overlay:new(AutoDrive.directory .. "textures/messageBackground.dds", hud.posX, hud.posY + (textSize / 2.5), 0, hud.backgroundOverlayHeight)
@@ -73,6 +76,7 @@ function ADMessagesManager:loadHud(hud)
     hud.errorIconOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
     hud.warnIconOverlay = Overlay:new(AutoDrive.directory .. "textures/warn_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
     hud.warnIconOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
+]]
 end
 
 function ADMessagesManager:addInfoMessage(text, duration)
@@ -221,23 +225,27 @@ function ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
     if isUp and button == 1 then
         if self.currentMessage ~= nil then
             local ov = self.huds.message.dismissOverlay
-            local x, y = ov:getPosition()
-			y = y + self.huds.cpYOffset
-            if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
-                self:removeCurrentMessage()
+            if ov ~= nil then
+                local x, y = ov:getPosition()
+                y = y + self.huds.cpYOffset
+                if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
+                    self:removeCurrentMessage()
+                end
             end
         end
         if self.currentNotification ~= nil then
             local ov = self.huds.notification.dismissOverlay
-            local x, y = ov:getPosition()
-            if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
-                self:removeCurrentNotification()
-            end
-            ov = self.huds.notification.goToOverlay
-            x, y = ov:getPosition()
-            if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
-                self:goToVehicle()
-                self:removeCurrentNotification()
+            if ov ~= nil then
+                local x, y = ov:getPosition()
+                if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
+                    self:removeCurrentNotification()
+                end
+                ov = self.huds.notification.goToOverlay
+                x, y = ov:getPosition()
+                if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
+                    self:goToVehicle()
+                    self:removeCurrentNotification()
+                end
             end
         end
     end
@@ -262,6 +270,8 @@ function ADMessagesManager:drawHud(hud)
     setTextBold(false)
     setTextColor(1, 1, 1, 1)
     renderText(hud.posX, hud.posY + cpYOffset, getCorrectTextSize(hud.textSize), hud.text)
+    -- TODO remove comment
+--[[
     hud.backgroundOverlay.y = hud.backgroundOverlay.y + cpYOffset
     hud.backgroundOverlay:render()
     hud.backgroundOverlay.y = hud.backgroundOverlay.y - cpYOffset
@@ -285,12 +295,15 @@ function ADMessagesManager:drawHud(hud)
     hud.errorIconOverlay.y = hud.errorIconOverlay.y + cpYOffset
     hud.errorIconOverlay:render()
     hud.errorIconOverlay.y = hud.errorIconOverlay.y - cpYOffset
+]]
 end
 
 function ADMessagesManager:updateHud(hud, text, mType)
     hud.text = text
     setTextBold(false)
     local textWidth = getTextWidth(getCorrectTextSize(hud.textSize), hud.text)
+    -- TODO remove comment
+--[[
     hud.backgroundOverlay:setDimension(textWidth + 0.03, nil)
     hud.headerOverlay:setDimension(textWidth + 0.03, nil)
     hud.dismissOverlay:setPosition(hud.posX + ((textWidth + 0.03) / 2), nil)
@@ -303,6 +316,7 @@ function ADMessagesManager:updateHud(hud, text, mType)
     hud.warnIconOverlay:setIsVisible(mType == self.messageTypes.WARN)
     hud.errorIconOverlay:setPosition(hud.posX - ((textWidth + 0.03) / 2), nil)
     hud.errorIconOverlay:setIsVisible(mType == self.messageTypes.ERROR)
+]]
 end
 
 function ADMessagesManager:goToVehicle()

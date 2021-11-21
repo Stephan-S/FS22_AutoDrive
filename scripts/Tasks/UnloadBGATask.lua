@@ -830,8 +830,8 @@ function UnloadBGATask:isAlmostInBunkerSiloArea(distanceToCheck)
     --create bounding box to check for vehicle
     local rx, _, rz = localDirectionToWorld(self.vehicle.components[1].node, math.sin(self.vehicle.rotatedTime), 0, math.cos(self.vehicle.rotatedTime))
     local vehicleVector = {x = rx, z = rz}
-    local width = self.vehicle.sizeWidth
-    local length = self.vehicle.sizeLength
+    local width = self.vehicle.size.width
+    local length = self.vehicle.size.length
     local ortho = {x = -vehicleVector.z, z = vehicleVector.x}
     local boundingBox = {}
     boundingBox[1] = {

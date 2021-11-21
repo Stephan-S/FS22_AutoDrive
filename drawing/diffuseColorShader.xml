@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CustomShader version="4">
+<CustomShader version="5">
 	<Parameters>
 		<Parameter name="color" target="color" type="float4" defaultValue="0 1 0 0" minValue="0 0 0 0" maxValue="1 1 1 1" />
 	</Parameters>
+    <UvUsages/>
 	<LodLevel startDistance="0">
 		<CodeInjections>
 			<CodeInjection position="MATERIALINFO">
@@ -12,7 +13,7 @@ uniform float4 color;
 			</CodeInjection>
 			<CodeInjection position="POST_DIFFUSE_COLOR_FS">
 <![CDATA[
-diffuseColor.rgb *= color.rgb;
+diffuseColor *= color.rgb;
 ]]>
 			</CodeInjection>
 			<CodeInjection position="EMISSIVE_FS">

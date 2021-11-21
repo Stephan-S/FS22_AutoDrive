@@ -136,7 +136,7 @@ function FollowCombineTask:update(dt)
         end
 
         if AutoDrive.combineIsTurning(self.combine) then
-            if not self.combine:getIsBufferCombine() and (self.distanceToCombine < ((self.vehicle.sizeLength + self.combine.sizeLength) / 2 + 10)) then
+            if not self.combine:getIsBufferCombine() and (self.distanceToCombine < ((self.vehicle.size.length + self.combine.size.length) / 2 + 10)) then
                 -- harvester
                 -- if combine drive reverse to turn -> reverse to keep distance
                 self:reverse(dt)

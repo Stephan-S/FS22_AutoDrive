@@ -95,7 +95,7 @@ function AutoDrive.getPipeLength(combine)
         local combineNode = combine.components[1].node
         local dischargeX, dichargeY, dischargeZ = getWorldTranslation(AutoDrive.getDischargeNode(combine))
         diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
-        length = math.abs(diffX) - combine.sizeWidth /2
+        length = math.abs(diffX) - combine.size.width /2
 
         -- Store pipe length for 'normal' harvesters
         if not (combine.typeName == "combineCutterFruitPreparer") then
@@ -216,12 +216,12 @@ function AutoDrive.getFrontToolWidth(vehicle, forced)
             -- if AIMarkers not available or returned 0, get tool size as defined in vehicle XML - the worst case, see rsmDS900.xml
             for _, impl in pairs(vehicle:getAttachedImplements()) do
                 local tool = impl.object
-                if tool ~= nil and tool.sizeWidth ~= nil then
+                if tool ~= nil and tool.size.width ~= nil then
                     --Check if tool is in front of vehicle
                     local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
                     local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
                     if offsetZ > 0 then
-                        widthOfFrontTool = math.abs(tool.sizeWidth)
+                        widthOfFrontTool = math.abs(tool.size.width)
                     end
                 end
             end
@@ -244,12 +244,12 @@ function AutoDrive.getFrontToolLength(vehicle)
     if vehicle.getAttachedImplements ~= nil then
         for _, impl in pairs(vehicle:getAttachedImplements()) do
             local tool = impl.object
-            if tool ~= nil and tool.sizeWidth ~= nil then
+            if tool ~= nil and tool.size.width ~= nil then
                 --Check if tool is in front of vehicle
                 local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
                 local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
                 if offsetZ > 0 then
-                    lengthOfFrontTool = math.abs(tool.sizeLength)
+                    lengthOfFrontTool = math.abs(tool.size.length)
                 end
             end
         end

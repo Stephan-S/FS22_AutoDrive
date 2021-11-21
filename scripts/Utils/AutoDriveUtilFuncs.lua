@@ -154,11 +154,11 @@ function AutoDrive.pointIsBetweenTwoPoints(x, z, startX, startZ, endX, endZ)
 end
 
 function AutoDrive.semanticVersionToValue(versionString)
-    local codes = versionString:split(".")
+    local codes = versionString:AD_split(".")
     local value = 0
     if codes ~= nil then
         for i, code in ipairs(codes) do
-            local subCodes = code:split("-")
+            local subCodes = code:AD_split("-")
             if subCodes ~= nil and subCodes[1] ~= nil then
                 value = value * 10 + tonumber(subCodes[1])
                 if subCodes[2] ~= nil then
@@ -309,8 +309,8 @@ function AutoDrive.getVehicleLeadingEdge(vehicle)
             if implement ~= nil and implement.object ~= nil then
                 local implementX, implementY, implementZ = getWorldTranslation(implement.object.components[1].node)
                 local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
-                if diffZ > 0 and implement.object.sizeLength ~= nil then                    
-                    leadingEdge = math.max(leadingEdge, diffZ + (implement.object.sizeLength / 2) - (vehicle.sizeLength / 2))
+                if diffZ > 0 and implement.object.size.length ~= nil then                    
+                    leadingEdge = math.max(leadingEdge, diffZ + (implement.object.size.length / 2) - (vehicle.size.length / 2))
                 end
             end
         end

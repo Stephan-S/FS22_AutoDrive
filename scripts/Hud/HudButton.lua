@@ -14,8 +14,8 @@ function ADHudButton:new(posX, posY, width, height, primaryAction, secondaryActi
     o.layer = 5
 
     o.images = o:readImages()
-
-    o.ov = Overlay:new(o.images[o.state], o.position.x, o.position.y, o.size.width, o.size.height)
+AutoDrive.debugMsg(nil, "[AD] ADHudButton:new o.state %s type o.images[o.state] %s", tostring(o.state), type(o.images[o.state]))
+    -- o.ov = Overlay:new(o.images[o.state], o.position.x, o.position.y, o.size.width, o.size.height)
 
     return o
 end
@@ -32,14 +32,16 @@ end
 
 function ADHudButton:onDraw(vehicle, uiScale)
     self:updateState(vehicle)
-    if self.isVisible then
+    if self.isVisible and self.ov ~= nil then
         self.ov:render()
     end
 end
 
 function ADHudButton:updateState(vehicle)
     local newState = self:getNewState(vehicle)
-    self.ov:setImage(self.images[newState])
+    if self.ov ~= nil then
+        self.ov:setImage(self.images[newState])
+    end
     self.state = newState
 end
 

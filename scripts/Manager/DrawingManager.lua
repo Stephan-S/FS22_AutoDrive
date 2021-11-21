@@ -64,12 +64,13 @@ ADDrawingManager.cross.lastDrawZero = true
 function ADDrawingManager:load()
     -- preloading and storing in chache I3D files
     self.i3DBaseDir = AutoDrive.directory .. self.i3DBaseDir
-    g_i3DManager:fillSharedI3DFileCache(self.lines.fileName, self.i3DBaseDir)
-    g_i3DManager:fillSharedI3DFileCache(self.arrows.fileName, self.i3DBaseDir)
-    g_i3DManager:fillSharedI3DFileCache(self.sSphere.fileName, self.i3DBaseDir)
-    g_i3DManager:fillSharedI3DFileCache(self.sphere.fileName, self.i3DBaseDir)
+-- local node, sharedLoadRequestId = g_i3DManager:loadSharedI3DFile(self.i3dFilename, false, false)
+    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.lines.fileName, false, false)
+    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.arrows.fileName, false, false)
+    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.sSphere.fileName, false, false)
+    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.sphere.fileName, false, false)
     for _, filename in ipairs(self.markers.fileNames) do
-        g_i3DManager:fillSharedI3DFileCache(filename, self.i3DBaseDir)
+        g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. filename, false, false)
     end
 end
 
@@ -212,7 +213,8 @@ function ADDrawingManager:drawObjects_alternative(obj, dFunc, iFunc)
     if taskCount > #obj.itemIDs then
         for i = 1, taskCount - #obj.itemIDs do
             -- loading new i3ds
-            local itemID = g_i3DManager:loadSharedI3DFile(fileToUse, self.i3DBaseDir)
+-- local node, sharedLoadRequestId = g_i3DManager:loadSharedI3DFile(self.i3dFilename, false, false)
+            local _, itemID = g_i3DManager:loadSharedI3DFile(fileToUse, self.i3DBaseDir)
             setVisibility(itemID, false)
             table.insert(obj.itemIDs,iFunc(itemID))
         end
@@ -294,7 +296,8 @@ function ADDrawingManager:drawObjects_original(obj, dFunc, iFunc)
             local baseDir = self.i3DBaseDir
             for i = 1, remainingTaskCount - bufferCount do
                 -- loading new i3ds
-                local id = g_i3DManager:loadSharedI3DFile(fileToUse, baseDir)
+-- local node, sharedLoadRequestId = g_i3DManager:loadSharedI3DFile(self.i3dFilename, false, false)
+                local _, id = g_i3DManager:loadSharedI3DFile(fileToUse, baseDir)
                 obj.buffer:Insert(iFunc(id))
             end
         end

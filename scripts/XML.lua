@@ -147,35 +147,35 @@ function AutoDrive.readFromXML(xmlFile)
 
 	ADGraphManager:resetWayPoints()
 
-	local idTable = idString:split(",")
+	local idTable = idString:AD_split(",")
 
 	local xString = getXMLString(xmlFile, "AutoDrive.waypoints.x")
 	if xString == nil or xString == "" then
 		xString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.x")
 	end
-	local xTable = xString:split(",")
+	local xTable = xString:AD_split(",")
 
 	local yString = getXMLString(xmlFile, "AutoDrive.waypoints.y")
 	if yString == nil or yString == "" then
 		yString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.y")
 	end
-	local yTable = yString:split(",")
+	local yTable = yString:AD_split(",")
 
 	local zString = getXMLString(xmlFile, "AutoDrive.waypoints.z")
 	if zString == nil or zString == "" then
 		zString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.z")
 	end
-	local zTable = zString:split(",")
+	local zTable = zString:AD_split(",")
 
 	local outString = getXMLString(xmlFile, "AutoDrive.waypoints.out")
 	if outString == nil or outString == "" then
 		outString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.out")
 	end
-	local outTable = outString:split(";")
+	local outTable = outString:AD_split(";")
 
 	local outSplitted = {}
 	for i, outer in pairs(outTable) do
-		local out = outer:split(",")
+		local out = outer:AD_split(",")
 		outSplitted[i] = out
 		if out == nil then
 			outSplitted[i] = {outer}
@@ -187,10 +187,10 @@ function AutoDrive.readFromXML(xmlFile)
 		incomingString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.incoming")
 	end
 
-	local incomingTable = incomingString:split(";")
+	local incomingTable = incomingString:AD_split(";")
 	local incomingSplitted = {}
 	for i, outer in pairs(incomingTable) do
-		local incoming = outer:split(",")
+		local incoming = outer:AD_split(",")
 		incomingSplitted[i] = incoming
 		if incoming == nil then
 			incomingSplitted[i] = {outer}
@@ -203,7 +203,7 @@ function AutoDrive.readFromXML(xmlFile)
 	end
 	local flagTable = nil
 	if flagString ~= nil and flagString ~= "" then
-		flagTable = flagString:split(",")
+		flagTable = flagString:AD_split(",")
 	end
 
 	local wp_counter = 0
@@ -441,7 +441,7 @@ function AutoDrive.readGraphFromXml(xmlId, rootNode)
 		local ft = nil
 		local flagsString = getXMLString(xmlId, key .. ".flags")
 		if flagsString ~= nil and flagsString ~= "" then
-			ft = flagsString:split(";")
+			ft = flagsString:AD_split(";")
 		end
 
 		-- localization for better performances
