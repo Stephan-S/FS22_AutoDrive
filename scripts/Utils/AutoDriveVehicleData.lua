@@ -277,17 +277,17 @@ AutoDriveVehicleDataEventAssignParkDestination_mt = Class(AutoDriveVehicleDataEv
 
 InitEventClass(AutoDriveVehicleDataEventAssignParkDestination, "AutoDriveVehicleDataEventAssignParkDestination")
 
-function AutoDriveVehicleDataEventAssignParkDestination:emptyNew()
-    local o = Event:new(AutoDriveVehicleDataEventAssignParkDestination_mt)
-    o.className = "AutoDriveVehicleDataEventAssignParkDestination"
-    return o
+function AutoDriveVehicleDataEventAssignParkDestination.emptyNew()
+	print("AutoDriveVehicleDataEventAssignParkDestination:emptyNew")
+    local self = Event.new(AutoDriveVehicleDataEventAssignParkDestination_mt)
+    return self
 end
 
-function AutoDriveVehicleDataEventAssignParkDestination:new(vehicle, parkDestination)
-    local o = AutoDriveVehicleDataEventAssignParkDestination:emptyNew()
-    o.vehicle = vehicle
-    o.parkDestination = parkDestination
-    return o
+function AutoDriveVehicleDataEventAssignParkDestination.new(vehicle, parkDestination)
+    local self = AutoDriveVehicleDataEventAssignParkDestination.emptyNew()
+    self.vehicle = vehicle
+    self.parkDestination = parkDestination
+    return self
 end
 
 function AutoDriveVehicleDataEventAssignParkDestination:writeStream(streamId, connection)
@@ -314,7 +314,7 @@ function AutoDriveVehicleDataEventAssignParkDestination:run(connection)
 end
 
 function AutoDriveVehicleDataEventAssignParkDestination.sendEvent(vehicle, parkDestination)
-	local event = AutoDriveVehicleDataEventAssignParkDestination:new(vehicle, parkDestination)
+	local event = AutoDriveVehicleDataEventAssignParkDestination.new(vehicle, parkDestination)
 
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
@@ -331,17 +331,16 @@ AutoDriveVehicleDataEventSetToolParkDestination_mt = Class(AutoDriveVehicleDataE
 
 InitEventClass(AutoDriveVehicleDataEventSetToolParkDestination, "AutoDriveVehicleDataEventSetToolParkDestination")
 
-function AutoDriveVehicleDataEventSetToolParkDestination:emptyNew()
-    local o = Event:new(AutoDriveVehicleDataEventSetToolParkDestination_mt)
-    o.className = "AutoDriveVehicleDataEventSetToolParkDestination"
-    return o
+function AutoDriveVehicleDataEventSetToolParkDestination.emptyNew()
+    local self = Event.new(AutoDriveVehicleDataEventSetToolParkDestination_mt)
+    return self
 end
 
-function AutoDriveVehicleDataEventSetToolParkDestination:new(vehicle, parkDestination)
-    local o = AutoDriveVehicleDataEventSetToolParkDestination:emptyNew()
-    o.vehicle = vehicle
-    o.parkDestination = parkDestination
-    return o
+function AutoDriveVehicleDataEventSetToolParkDestination.new(vehicle, parkDestination)
+    local self = AutoDriveVehicleDataEventSetToolParkDestination.emptyNew()
+    self.vehicle = vehicle
+    self.parkDestination = parkDestination
+    return self
 end
 
 function AutoDriveVehicleDataEventSetToolParkDestination:writeStream(streamId, connection)
@@ -368,7 +367,7 @@ function AutoDriveVehicleDataEventSetToolParkDestination:run(connection)
 end
 
 function AutoDriveVehicleDataEventSetToolParkDestination.sendEvent(vehicle, parkDestination)
-	local event = AutoDriveVehicleDataEventSetToolParkDestination:new(vehicle, parkDestination)
+	local event = AutoDriveVehicleDataEventSetToolParkDestination.new(vehicle, parkDestination)
 
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself

@@ -3,17 +3,17 @@ AutoDriveExperimentalFeaturesEvent_mt = Class(AutoDriveExperimentalFeaturesEvent
 
 InitEventClass(AutoDriveExperimentalFeaturesEvent, "AutoDriveExperimentalFeaturesEvent")
 
-function AutoDriveExperimentalFeaturesEvent:emptyNew()
-    local o = Event:new(AutoDriveExperimentalFeaturesEvent_mt)
-    o.className = "AutoDriveExperimentalFeaturesEvent"
-    return o
+function AutoDriveExperimentalFeaturesEvent.emptyNew()
+	print("AutoDriveExperimentalFeaturesEvent:emptyNew")
+    local self = Event.new(AutoDriveExperimentalFeaturesEvent_mt)
+    return self
 end
 
-function AutoDriveExperimentalFeaturesEvent:new(featureName, state)
-    local o = AutoDriveExperimentalFeaturesEvent:emptyNew()
-    o.featureName = featureName
-    o.state = state
-    return o
+function AutoDriveExperimentalFeaturesEvent.new(featureName, state)
+    local self = AutoDriveExperimentalFeaturesEvent.emptyNew()
+    self.featureName = featureName
+    self.state = state
+    return self
 end
 
 function AutoDriveExperimentalFeaturesEvent:writeStream(streamId)
@@ -41,7 +41,7 @@ function AutoDriveExperimentalFeaturesEvent:run(connection)
 end
 
 function AutoDriveExperimentalFeaturesEvent.sendEvent(featureName, state)
-    local event = AutoDriveExperimentalFeaturesEvent:new(featureName, state)
+    local event = AutoDriveExperimentalFeaturesEvent.new(featureName, state)
     if g_server ~= nil then
         -- Server have to broadcast to all clients and himself
         g_server:broadcastEvent(event, true)
@@ -53,6 +53,6 @@ end
 
 function AutoDriveExperimentalFeaturesEvent.sendToClient(connection, featureName, state)
     if g_server ~= nil then
-        connection:sendEvent(AutoDriveExperimentalFeaturesEvent:new(featureName, state))
+        connection:sendEvent(AutoDriveExperimentalFeaturesEvent.new(featureName, state))
     end
 end

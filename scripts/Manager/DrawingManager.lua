@@ -80,7 +80,7 @@ end
 function ADDrawingManager.initObject(id)
     local itemId = getChildAt(id, 0)
     link(getRootNode(), itemId)
-    setRigidBodyType(itemId, "NoRigidBody")
+    setRigidBodyType(itemId, RigidBodyType.NONE)
     setTranslation(itemId, 0, 0, 0)
     setVisibility(itemId, false)
     delete(id)
@@ -216,7 +216,7 @@ function ADDrawingManager:drawObjects_alternative(obj, dFunc, iFunc)
     if taskCount > #obj.itemIDs then
         for i = 1, taskCount - #obj.itemIDs do
             -- loading new i3ds
-            local itemID = g_i3DManager:loadSharedI3DFile(fileToUse, self.i3DBaseDir)
+            local itemID = g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. fileToUse, false, false)
             setVisibility(itemID, false)
             table.insert(obj.itemIDs,iFunc(itemID))
         end
@@ -298,7 +298,7 @@ function ADDrawingManager:drawObjects_original(obj, dFunc, iFunc)
             local baseDir = self.i3DBaseDir
             for i = 1, remainingTaskCount - bufferCount do
                 -- loading new i3ds
-                local id = g_i3DManager:loadSharedI3DFile(fileToUse, baseDir)
+                local id = g_i3DManager:loadSharedI3DFile(baseDir .. fileToUse, false, false)
                 obj.buffer:Insert(iFunc(id))
             end
         end

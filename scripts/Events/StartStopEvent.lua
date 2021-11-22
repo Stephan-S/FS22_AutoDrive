@@ -5,19 +5,19 @@ AutoDriveStartStopEvent_mt = Class(AutoDriveStartStopEvent, Event)
 
 InitEventClass(AutoDriveStartStopEvent, "AutoDriveStartStopEvent")
 
-function AutoDriveStartStopEvent:emptyNew()
-    local o = Event:new(AutoDriveStartStopEvent_mt)
-    o.className = "AutoDriveStartStopEvent"
-    return o
+function AutoDriveStartStopEvent.emptyNew()
+	print("AutoDriveStartStopEvent:emptyNew")
+    local self = Event.new(AutoDriveStartStopEvent_mt)
+    return self
 end
 
-function AutoDriveStartStopEvent:new(vehicle, eventType, hasCallbacks, isStartingAIVE)
-    local o = AutoDriveStartStopEvent:emptyNew()
-    o.eventType = eventType
-    o.vehicle = vehicle
-    o.hasCallbacks = hasCallbacks or false
-    o.isStartingAIVE = isStartingAIVE or false
-    return o
+function AutoDriveStartStopEvent.new(vehicle, eventType, hasCallbacks, isStartingAIVE)
+    local self = AutoDriveStartStopEvent.emptyNew()
+    self.eventType = eventType
+    self.vehicle = vehicle
+    self.hasCallbacks = hasCallbacks or false
+    self.isStartingAIVE = isStartingAIVE or false
+    return self
 end
 
 function AutoDriveStartStopEvent:writeStream(streamId, connection)
@@ -46,13 +46,13 @@ end
 function AutoDriveStartStopEvent:sendStartEvent(vehicle)
     if g_server ~= nil then
         -- Server have to broadcast to all clients and himself
-        g_server:broadcastEvent(AutoDriveStartStopEvent:new(vehicle, self.TYPE_START), true)
+        g_server:broadcastEvent(AutoDriveStartStopEvent.new(vehicle, self.TYPE_START), true)
     end
 end
 
 function AutoDriveStartStopEvent:sendStopEvent(vehicle, hasCallbacks, isStartingAIVE)
     if g_server ~= nil then
         -- Server have to broadcast to all clients and himself
-        g_server:broadcastEvent(AutoDriveStartStopEvent:new(vehicle, self.TYPE_STOP, hasCallbacks, isStartingAIVE), true)
+        g_server:broadcastEvent(AutoDriveStartStopEvent.new(vehicle, self.TYPE_STOP, hasCallbacks, isStartingAIVE), true)
     end
 end

@@ -108,8 +108,7 @@ AutoDrive.actions = {
 	{"AD_devAction", false, 0},
 	{"AD_open_tipOfTheDay", false, 0},
 	{"ADRefuelVehicle", false, 0},
-	{"ADToggleHudExtension", true, 1},
-	-- {"COURSEPLAY_MOUSEACTION_SECONDARY", true, 1}
+	{"ADToggleHudExtension", true, 1}
 }
 
 AutoDrive.colors = {
@@ -135,6 +134,12 @@ function AutoDrive:onAllModsLoaded()
 	ADThirdPartyModsManager:load()
 end
 
+function AutoDrive:restartMySavegame()
+	if g_server then
+		restartApplication(" -autoStartSavegameId 1")
+	end
+end
+
 function AutoDrive:loadMap(name)
 	local index = 0
 	Logging.info("[AD] Start register later loaded mods...")
@@ -144,6 +149,8 @@ function AutoDrive:loadMap(name)
 	Logging.info("[AD] Start register later loaded mods end")
 	index = index + 1
 	Logging.info("[AutoDrive] Index: %d",index)
+
+	addConsoleCommand('restartMySavegame', 'Restart my savegame', 'restartMySavegame', self)
 
 	-- if g_server ~= nil then
 		-- AutoDrive.AutoDriveSync = AutoDriveSync:new(g_server ~= nil, g_client ~= nil)

@@ -3,18 +3,18 @@ AutoDriveUserDataEvent_mt = Class(AutoDriveUserDataEvent, Event)
 
 InitEventClass(AutoDriveUserDataEvent, "AutoDriveUserDataEvent")
 
-function AutoDriveUserDataEvent:emptyNew()
-    local o = Event:new(AutoDriveUserDataEvent_mt)
-    o.className = "AutoDriveUserDataEvent"
-    return o
+function AutoDriveUserDataEvent.emptyNew()
+	print("AutoDriveUserDataEvent:emptyNew")
+    local self = Event.new(AutoDriveUserDataEvent_mt)
+    return self
 end
 
-function AutoDriveUserDataEvent:new(hudX, hudY, settings)
-    local o = AutoDriveUserDataEvent:emptyNew()
-    o.hudX = hudX
-    o.hudY = hudY
-    o.settings = settings
-    return o
+function AutoDriveUserDataEvent.new(hudX, hudY, settings)
+    local self = AutoDriveUserDataEvent.emptyNew()
+    self.hudX = hudX
+    self.hudY = hudY
+    self.settings = settings
+    return self
 end
 
 function AutoDriveUserDataEvent:writeStream(streamId, connection)
@@ -51,11 +51,11 @@ function AutoDriveUserDataEvent:run(connection)
 end
 
 function AutoDriveUserDataEvent.sendToClient(connection, hudX, hudY, settings)
-    connection:sendEvent(AutoDriveUserDataEvent:new(hudX, hudY, settings))
+    connection:sendEvent(AutoDriveUserDataEvent.new(hudX, hudY, settings))
 end
 
 function AutoDriveUserDataEvent.sendToServer(hudX, hudY, settings)
     if g_server == nil then
-        g_client:getServerConnection():sendEvent(AutoDriveUserDataEvent:new(hudX, hudY, settings))
+        g_client:getServerConnection():sendEvent(AutoDriveUserDataEvent.new(hudX, hudY, settings))
     end
 end

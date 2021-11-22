@@ -3,18 +3,18 @@ AutoDriveToggleConnectionEvent_mt = Class(AutoDriveToggleConnectionEvent, Event)
 
 InitEventClass(AutoDriveToggleConnectionEvent, "AutoDriveToggleConnectionEvent")
 
-function AutoDriveToggleConnectionEvent:emptyNew()
-    local o = Event:new(AutoDriveToggleConnectionEvent_mt)
-    o.className = "AutoDriveToggleConnectionEvent"
-    return o
+function AutoDriveToggleConnectionEvent.emptyNew()
+	print("AutoDriveToggleConnectionEvent.emptyNew")
+    local self = Event.new(AutoDriveToggleConnectionEvent_mt)
+    return self
 end
 
-function AutoDriveToggleConnectionEvent:new(startNode, endNode, reverseDirection)
-    local o = AutoDriveToggleConnectionEvent:emptyNew()
-    o.startNode = startNode
-    o.endNode = endNode
-    o.reverseDirection = reverseDirection
-    return o
+function AutoDriveToggleConnectionEvent.new(startNode, endNode, reverseDirection)
+    local self = AutoDriveToggleConnectionEvent.emptyNew()
+    self.startNode = startNode
+    self.endNode = endNode
+    self.reverseDirection = reverseDirection
+    return self
 end
 
 function AutoDriveToggleConnectionEvent:writeStream(streamId, connection)
@@ -40,7 +40,7 @@ function AutoDriveToggleConnectionEvent:run(connection)
 end
 
 function AutoDriveToggleConnectionEvent.sendEvent(startNode, endNode, reverseDirection)
-    local event = AutoDriveToggleConnectionEvent:new(startNode, endNode, reverseDirection)
+    local event = AutoDriveToggleConnectionEvent.new(startNode, endNode, reverseDirection)
     if g_server ~= nil then
         -- Server have to broadcast to all clients and himself
         g_server:broadcastEvent(event, true)

@@ -7,18 +7,18 @@ AutoDriveHudInputEventEvent_mt = Class(AutoDriveHudInputEventEvent, Event)
 
 InitEventClass(AutoDriveHudInputEventEvent, "AutoDriveHudInputEventEvent")
 
-function AutoDriveHudInputEventEvent:emptyNew()
-    local o = Event:new(AutoDriveHudInputEventEvent_mt)
-    o.className = "AutoDriveHudInputEventEvent"
-    return o
+function AutoDriveHudInputEventEvent.emptyNew()
+	print("AutoDriveHudInputEventEvent:emptyNew")
+    local self = Event.new(AutoDriveHudInputEventEvent_mt)
+    return self
 end
 
-function AutoDriveHudInputEventEvent:new(vehicle, eventType, value)
-    local o = AutoDriveHudInputEventEvent:emptyNew()
-    o.vehicle = vehicle
-    o.eventType = eventType
-    o.value = value
-    return o
+function AutoDriveHudInputEventEvent.new(vehicle, eventType, value)
+    local self = AutoDriveHudInputEventEvent.emptyNew()
+    self.vehicle = vehicle
+    self.eventType = eventType
+    self.value = value
+    return self
 end
 
 function AutoDriveHudInputEventEvent:writeStream(streamId, connection)
@@ -57,20 +57,20 @@ end
 function AutoDriveHudInputEventEvent:sendFirstMarkerEvent(vehicle, markerId)
     if g_client ~= nil then
         -- Client have to send to server
-        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent:new(vehicle, self.TYPE_FIRST_MARKER, markerId))
+        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent.new(vehicle, self.TYPE_FIRST_MARKER, markerId))
     end
 end
 
 function AutoDriveHudInputEventEvent:sendSecondMarkerEvent(vehicle, markerId)
     if g_client ~= nil then
         -- Client have to send to server
-        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent:new(vehicle, self.TYPE_SECOND_MARKER, markerId))
+        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent.new(vehicle, self.TYPE_SECOND_MARKER, markerId))
     end
 end
 
 function AutoDriveHudInputEventEvent:sendFillTypeEvent(vehicle, fillTypeId)
     if g_client ~= nil then
         -- Client have to send to server
-        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent:new(vehicle, self.TYPE_FILLTYPE, fillTypeId))
+        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent.new(vehicle, self.TYPE_FILLTYPE, fillTypeId))
     end
 end

@@ -3,16 +3,16 @@ AutoDriveDeleteWayPointEvent_mt = Class(AutoDriveDeleteWayPointEvent, Event)
 
 InitEventClass(AutoDriveDeleteWayPointEvent, "AutoDriveDeleteWayPointEvent")
 
-function AutoDriveDeleteWayPointEvent:emptyNew()
-	local o = Event:new(AutoDriveDeleteWayPointEvent_mt)
-	o.className = "AutoDriveDeleteWayPointEvent"
-	return o
+function AutoDriveDeleteWayPointEvent.emptyNew()
+	print("AutoDriveDeleteWayPointEvent.emptyNew")
+	local self = Event.new(AutoDriveDeleteWayPointEvent_mt)
+	return self
 end
 
-function AutoDriveDeleteWayPointEvent:new(wayPointId)
-	local o = AutoDriveDeleteWayPointEvent:emptyNew()
-	o.wayPointId = wayPointId
-	return o
+function AutoDriveDeleteWayPointEvent.new(wayPointId)
+	local self = AutoDriveDeleteWayPointEvent.emptyNew()
+	self.wayPointId = wayPointId
+	return self
 end
 
 function AutoDriveDeleteWayPointEvent:writeStream(streamId, connection)
@@ -35,7 +35,7 @@ function AutoDriveDeleteWayPointEvent:run(connection)
 end
 
 function AutoDriveDeleteWayPointEvent.sendEvent(wayPointId)
-	local event = AutoDriveDeleteWayPointEvent:new(wayPointId)
+	local event = AutoDriveDeleteWayPointEvent.new(wayPointId)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

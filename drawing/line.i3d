@@ -9,7 +9,7 @@
     <File fileId="3" filename="defaultPlastic_specular.dds"/>
     <File fileId="1" filename="default_diffuse.dds"/>
     <File fileId="2" filename="default_normal.dds"/>
-    <File fileId="4" filename="diffuseColorShader.xml"/>
+    <File fileId="4" filename="$data/shaders/colorShader.xml"/>
   </Files>
 
 
@@ -18,7 +18,7 @@
       <Texture fileId="1"/>
       <Normalmap fileId="2"/>
       <Glossmap fileId="3"/>
-      <CustomParameter name="color" value="0 1 0 0"/>
+      <CustomParameter name="color" value="0 1 0"/>
     </Material>
   </Materials>
 

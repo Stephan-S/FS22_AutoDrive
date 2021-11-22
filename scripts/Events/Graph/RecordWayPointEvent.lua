@@ -3,23 +3,23 @@ AutoDriveRecordWayPointEvent_mt = Class(AutoDriveRecordWayPointEvent, Event)
 
 InitEventClass(AutoDriveRecordWayPointEvent, "AutoDriveRecordWayPointEvent")
 
-function AutoDriveRecordWayPointEvent:emptyNew()
-	local o = Event:new(AutoDriveRecordWayPointEvent_mt)
-	o.className = "AutoDriveRecordWayPointEvent"
-	return o
+function AutoDriveRecordWayPointEvent.emptyNew()
+	print("AutoDriveRecordWayPointEvent.emptyNew")
+	local self = Event.new(AutoDriveRecordWayPointEvent_mt)
+	return self
 end
 
-function AutoDriveRecordWayPointEvent:new(x, y, z, connectPrevious, dual, isReverse, previousId, flags)
-	local o = AutoDriveRecordWayPointEvent:emptyNew()
-	o.x = x
-	o.y = y
-	o.z = z
-	o.connectPrevious = connectPrevious or false
-	o.dual = dual or false
-	o.isReverse = isReverse
-	o.previousId = previousId
-	o.flags = flags
-	return o
+function AutoDriveRecordWayPointEvent.new(x, y, z, connectPrevious, dual, isReverse, previousId, flags)
+	local self = AutoDriveRecordWayPointEvent.emptyNew()
+	self.x = x
+	self.y = y
+	self.z = z
+	self.connectPrevious = connectPrevious or false
+	self.dual = dual or false
+	self.isReverse = isReverse
+	self.previousId = previousId
+	self.flags = flags
+	return self
 end
 
 function AutoDriveRecordWayPointEvent:writeStream(streamId, connection)
@@ -55,6 +55,6 @@ end
 function AutoDriveRecordWayPointEvent.sendEvent(x, y, z, connectPrevious, dual, isReverse, previousId, flags)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients
-		g_server:broadcastEvent(AutoDriveRecordWayPointEvent:new(x, y, z, connectPrevious, dual, isReverse, previousId, flags))
+		g_server:broadcastEvent(AutoDriveRecordWayPointEvent.new(x, y, z, connectPrevious, dual, isReverse, previousId, flags))
 	end
 end

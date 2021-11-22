@@ -3,16 +3,16 @@ AutoDriveUpdateSettingsEvent_mt = Class(AutoDriveUpdateSettingsEvent, Event)
 
 InitEventClass(AutoDriveUpdateSettingsEvent, "AutoDriveUpdateSettingsEvent")
 
-function AutoDriveUpdateSettingsEvent:emptyNew()
-	local o = Event:new(AutoDriveUpdateSettingsEvent_mt)
-	o.className = "AutoDriveUpdateSettingsEvent"
-	return o
+function AutoDriveUpdateSettingsEvent.emptyNew()
+	print("AutoDriveUpdateSettingsEvent:emptyNew")
+	local self = Event.new(AutoDriveUpdateSettingsEvent_mt)
+	return self
 end
 
-function AutoDriveUpdateSettingsEvent:new(vehicle)
-	local o = AutoDriveUpdateSettingsEvent:emptyNew()
-	o.vehicle = vehicle
-	return o
+function AutoDriveUpdateSettingsEvent.new(vehicle)
+	local self = AutoDriveUpdateSettingsEvent.emptyNew()
+	self.vehicle = vehicle
+	return self
 end
 
 function AutoDriveUpdateSettingsEvent:writeStream(streamId, connection)
@@ -69,7 +69,7 @@ function AutoDriveUpdateSettingsEvent:readStream(streamId, connection)
 end
 
 function AutoDriveUpdateSettingsEvent.sendEvent(vehicle)
-	local event = AutoDriveUpdateSettingsEvent:new(vehicle)
+	local event = AutoDriveUpdateSettingsEvent.new(vehicle)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients
 		g_server:broadcastEvent(event)

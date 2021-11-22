@@ -142,21 +142,25 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
 end
 
 function ADStateModule:saveToXMLFile(xmlFile, key)
-    setXMLInt(xmlFile, key .. "#mode", self.mode)
+    if not xmlFile:hasProperty(key) then
+        return
+    end
+    
+    xmlFile:setValue(key .. "#mode", self.mode)
     if self.firstMarker ~= nil then
-        setXMLInt(xmlFile, key .. "#firstMarker", self.firstMarker.markerIndex)
+        xmlFile:setValue(key .. "#firstMarker", self.firstMarker.markerIndex)
     end
     if self.secondMarker ~= nil then
-        setXMLInt(xmlFile, key .. "#secondMarker", self.secondMarker.markerIndex)
+        xmlFile:setValue(key .. "#secondMarker", self.secondMarker.markerIndex)
     end
-    setXMLInt(xmlFile, key .. "#fillType", self.fillType)
-    setXMLInt(xmlFile, key .. "#loopCounter", self.loopCounter)
-    setXMLInt(xmlFile, key .. "#speedLimit", self.speedLimit)
-    setXMLInt(xmlFile, key .. "#fieldSpeedLimit", self.fieldSpeedLimit)
-    setXMLString(xmlFile, key .. "#driverName", self.driverName)
-    setXMLBool(xmlFile, key .. "#lastActive", self.active)
-    setXMLBool(xmlFile, key .. "#AIVElastActive", (self.vehicle.acParameters ~= nil and self.vehicle.acParameters.enabled and self.vehicle.spec_aiVehicle.isActive))
-    setXMLInt(xmlFile, key .. "#bunkerUnloadType", self.bunkerUnloadType)
+    xmlFile:setValue(key .. "#fillType", self.fillType)
+    xmlFile:setValue(key .. "#loopCounter", self.loopCounter)
+    xmlFile:setValue(key .. "#speedLimit", self.speedLimit)
+    xmlFile:setValue(key .. "#fieldSpeedLimit", self.fieldSpeedLimit)
+    xmlFile:setValue(key .. "#driverName", self.driverName)
+    xmlFile:setValue(key .. "#lastActive", self.active)
+    xmlFile:setValue(key .. "#AIVElastActive", (self.vehicle.acParameters ~= nil and self.vehicle.acParameters.enabled and self.vehicle.spec_aiVehicle.isActive))
+    xmlFile:setValue(key .. "#bunkerUnloadType", self.bunkerUnloadType)
 end
 
 function ADStateModule:writeStream(streamId)

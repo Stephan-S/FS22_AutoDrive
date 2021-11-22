@@ -4,7 +4,7 @@ function AutoDrive:loadGUI()
 	g_gui:loadProfiles(AutoDrive.directory .. "gui/guiProfiles.xml")
 	AutoDrive.gui = {}
 	AutoDrive.gui.ADEnterDriverNameGui = ADEnterDriverNameGui:new()
-	AutoDrive.gui.ADEnterTargetNameGui = ADEnterTargetNameGui:new()
+	AutoDrive.gui.ADEnterTargetNameGui = ADEnterTargetNameGui.new()
 	AutoDrive.gui.ADEnterGroupNameGui = ADEnterGroupNameGui:new()
 	AutoDrive.gui.ADEnterDestinationFilterGui = ADEnterDestinationFilterGui:new()
 	AutoDrive.gui.ADRoutesManagerGui = ADRoutesManagerGui:new()

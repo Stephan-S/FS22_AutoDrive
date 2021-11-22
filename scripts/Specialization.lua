@@ -316,7 +316,7 @@ function AutoDrive:saveToXMLFile(xmlFile, key)
 
     for settingName, setting in pairs(AutoDrive.settings) do
         if setting.isVehicleSpecific and self.ad.settings ~= nil and self.ad.settings[settingName] ~= nil then
-            setXMLInt(xmlFile, key .. "#" .. settingName, self.ad.settings[settingName].current)
+            xmlFile:setValue(key .. "#" .. settingName, self.ad.settings[settingName].current)
         end
     end
 
@@ -336,12 +336,11 @@ function AutoDrive:saveToXMLFile(xmlFile, key)
                 end
             end
         end
-        setXMLString(xmlFile, key .. "#groups", combinedString)
+        xmlFile:setValue(key .. "#groups", combinedString)
     end
 end
 
 function AutoDrive:onDraw()
-    print("------------AutoDrive:onDraw - 1")
     if self.ad.showingHud ~= AutoDrive.Hud.showHud then
         AutoDrive.Hud:toggleHud(self)
     end
@@ -433,7 +432,6 @@ function AutoDrive:onDraw()
             end
         end
     end
-    print("------------AutoDrive:onDraw - 2")
 end
 
 function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex)
@@ -788,9 +786,10 @@ function AutoDrive:startAutoDrive()
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
 
+            --[[
             if self.getAINeedsTrafficCollisionBox ~= nil then
                 if self:getAINeedsTrafficCollisionBox() then
-                    local collisionRoot = g_i3DManager:loadSharedI3DFile(AIVehicle.TRAFFIC_COLLISION_BOX_FILENAME, self.baseDirectory, false, true, false)
+                    local collisionRoot = g_i3DManager:loadSharedI3DFile(self.baseDirectory .. AIVehicle.TRAFFIC_COLLISION_BOX_FILENAME, false, true, false)
                     if collisionRoot ~= nil and collisionRoot ~= 0 then
                         local collision = getChildAt(collisionRoot, 0)
                         link(getRootNode(), collision)
@@ -801,6 +800,7 @@ function AutoDrive:startAutoDrive()
             end
             self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000
 
+            --]]
             g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
 
             AutoDriveStartStopEvent:sendStartEvent(self)

@@ -4,6 +4,7 @@
     <Parameters>
         <Parameter name = "scaleParameters" target = "scaleParameters" type = "float4" defaultValue = "0.75 1.0 2.5 1.0" />
     </Parameters>
+    <UvUsages/>
     <Variations>
         <Variation name = "SCALING">
 <![CDATA[
@@ -23,12 +24,12 @@
 {
 // this assumes z = 0
 
-float3 camToPos = float3(modelMatrix[0][3], modelMatrix[1][3], modelMatrix[2][3]);
+float3 camToPos = float3(object.modelMatrix[0][3], object.modelMatrix[1][3], object.modelMatrix[2][3]);
 
-float3 upVector = float3(modelMatrix[0][1], modelMatrix[1][1], modelMatrix[2][1]);
+float3 upVector = float3(object.modelMatrix[0][1], object.modelMatrix[1][1], object.modelMatrix[2][1]);
 float3 sideVector = normalize(cross(camToPos, upVector));
 // Allow scaling
-sideVector *= length(float3(modelMatrix[0][0], modelMatrix[1][0], modelMatrix[2][0]));
+sideVector *= length(float3(object.modelMatrix[0][0], object.modelMatrix[1][0], object.modelMatrix[2][0]));
 
 worldPosition = sideVector*In.position.x + upVector*In.position.y + camToPos;
 }
@@ -42,14 +43,14 @@ worldPosition = sideVector*In.position.x + upVector*In.position.y + camToPos;
 #endif
 ]]>
             </CodeInjection>				
-            <CodeInjection position = "MATERIALINFO">
+            <CodeInjection position = "OBJECT_PARAMETERS">
 <![CDATA[
     /*
     scaleParameters.x - 0 or 1 animation speed multiplier
     scaleParameters.y - lerpA scale value
     scaleParameters.z - lerpB scale value
     */
-    uniform float4 scaleParameters;
+    float4 scaleParameters;
 ]]>
             </CodeInjection>
             <CodeInjection position="GET_POSITION_VS">
@@ -57,9 +58,9 @@ worldPosition = sideVector*In.position.x + upVector*In.position.y + camToPos;
     float3   mPosition = In.position.xyz;
 	
 #if defined( SCALING )    
-    float    mSpeed         = scaleParameters.x * cTime_s;
+    float    mSpeed         = object.scaleParameters.x * cTime_s;
     float    mAlpha         = mSpeed - floor( mSpeed ); // 0..1
-    mPosition = mPosition.xyz * lerp( scaleParameters.y, scaleParameters.z, mAlpha );
+    mPosition = mPosition.xyz * lerp( object.scaleParameters.y, object.scaleParameters.z, mAlpha );
 #endif
 
     return   mPosition.xyz;
@@ -75,7 +76,7 @@ worldPosition = sideVector*In.position.x + upVector*In.position.y + camToPos;
             <CodeInjection position="ALPHA_FS">
 <![CDATA[
 #if defined( SCALING ) || defined( PULSATING )
-    float    mSpeed         = scaleParameters.x * cTime_s;
+    float    mSpeed         = object.scaleParameters.x * cTime_s;
     float    mAlpha         = mSpeed - floor( mSpeed ); // 0..1
     float    mAttuniation   = 1 - abs( 2 * mAlpha - 1 );
 #endif

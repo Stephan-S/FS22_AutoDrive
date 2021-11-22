@@ -171,6 +171,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	self.row4 = self.posY + (self.pullDownRowOffset + 3) * self.borderY + (self.pullDownRowOffset + 2) * self.buttonHeight
 	self.rowHeader = self.posY + (self.pullDownRowOffset + 4) * self.borderY + (self.pullDownRowOffset + 3) * self.buttonHeight
 
+	print("Background width: " .. self.width .. " height: " .. self.height)
 	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.posY - 2 * self.gapHeight, self.width, self.height + 5 * self.gapHeight, AutoDrive.directory .. "textures/Background.dds", 0, "background"))
 
 	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.rowHeader, self.width, self.headerHeight, AutoDrive.directory .. "textures/Header.dds", 1, "header"))
@@ -359,7 +360,7 @@ function AutoDriveHud:refreshHudElementsLayerSequence()
 	)
 end
 
-function AutoDriveHud:drawHud(vehicle)
+function AutoDriveHud:drawHud(vehicle)	
 	if vehicle == g_currentMission.controlledVehicle then
 		local uiScale = g_gameSettings:getValue("uiScale")
 		if AutoDrive.getSetting("guiScale") ~= 0 then
@@ -832,6 +833,7 @@ end
 
 --blatant copy of Courseplay's implementation. So all credit goes to their dev team :-)
 function AutoDriveHud:createMapHotspot(vehicle)
+	--[[
 	--local hotspotX, _, hotspotZ = getWorldTranslation(vehicle.rootNode)
 	local _, textSize = getNormalizedScreenValues(0, 6) --Textsize local _, textSize = getNormalizedScreenValues(0, 9)
 	local _, textOffsetY = getNormalizedScreenValues(0, 15) --Distance to icon -- local _, textOffsetY = getNormalizedScreenValues(0, 24)
@@ -851,6 +853,7 @@ function AutoDriveHud:createMapHotspot(vehicle)
 	vehicle.ad.mapHotspot:setColor({0.0, 0.569, 0.835, 1})
 
 	g_currentMission:addMapHotspot(vehicle.ad.mapHotspot)
+	--]]
 end
 
 function AutoDriveHud:deleteMapHotspot(vehicle)
@@ -900,6 +903,7 @@ function AutoDrive:MapHotspot_getIsVisible(superFunc)
 end
 
 function AutoDrive.updateDestinationsMapHotspots()
+	--[[
     AutoDrive.debugPrint(nil, AutoDrive.DC_DEVINFO, "AutoDrive.updateDestinationsMapHotspots()")
     local width, height = getNormalizedScreenValues(9, 9)
 
@@ -918,10 +922,10 @@ function AutoDrive.updateDestinationsMapHotspots()
         if marker.isADDebug == true then
             -- map hotspot debug
             mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
-            mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({780, 780, 234, 234}))
+            mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({780, 780, 234, 234}))
         else
             mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_DEFAULT)
-            mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({0, 512, 128, 128}))
+            mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({0, 512, 128, 128}))
         end
         mh:setSize(width, height)
         mh:setTextOptions(0)
@@ -936,6 +940,7 @@ function AutoDrive.updateDestinationsMapHotspots()
             table.insert(AutoDrive.mapHotspotsBuffer, mh)
         end
     end
+	--]]
 end
 
 function AutoDrive.createColorSelectionWayPoints(vehicle)

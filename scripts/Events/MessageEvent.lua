@@ -3,21 +3,21 @@ AutoDriveMessageEvent_mt = Class(AutoDriveMessageEvent, Event)
 
 InitEventClass(AutoDriveMessageEvent, "AutoDriveMessageEvent")
 
-function AutoDriveMessageEvent:emptyNew()
-    local o = Event:new(AutoDriveMessageEvent_mt)
-    o.className = "AutoDriveMessageEvent"
-    return o
+function AutoDriveMessageEvent.emptyNew()
+	print("AutoDriveMessageEvent:emptyNew")
+    local self = Event.new(AutoDriveMessageEvent_mt)
+    return self
 end
 
-function AutoDriveMessageEvent:new(vehicle, isNotification, messageType, text, duration, args)
-    local o = AutoDriveMessageEvent:emptyNew()
-    o.vehicle = vehicle
-    o.isNotification = isNotification
-    o.messageType = messageType
-    o.text = text
-    o.duration = duration
-    o.args = args
-    return o
+function AutoDriveMessageEvent.new(vehicle, isNotification, messageType, text, duration, args)
+    local self = AutoDriveMessageEvent.emptyNew()
+    self.vehicle = vehicle
+    self.isNotification = isNotification
+    self.messageType = messageType
+    self.text = text
+    self.duration = duration
+    self.args = args
+    return self
 end
 
 function AutoDriveMessageEvent:writeStream(streamId, connection)
@@ -78,7 +78,7 @@ function AutoDriveMessageEvent.sendMessage(vehicle, messageType, text, duration,
     if g_server ~= nil then
         -- Server have to send only to owner
         if vehicle.owner ~= nil then
-            vehicle.owner:sendEvent(AutoDriveMessageEvent:new(vehicle, false, messageType, text, duration, {...}))
+            vehicle.owner:sendEvent(AutoDriveMessageEvent.new(vehicle, false, messageType, text, duration, {...}))
         end
     else
         Logging.error("A client is trying to send a message event.")
@@ -90,7 +90,7 @@ end
 function AutoDriveMessageEvent.sendNotification(vehicle, messageType, text, duration, ...)
     if g_server ~= nil then
         -- Server have to broadcast to all clients and himself
-        g_server:broadcastEvent(AutoDriveMessageEvent:new(vehicle, true, messageType, text, duration, {...}), true)
+        g_server:broadcastEvent(AutoDriveMessageEvent.new(vehicle, true, messageType, text, duration, {...}), true)
     else
         -- Client have to send to server
         --g_client:getServerConnection():sendEvent(event)

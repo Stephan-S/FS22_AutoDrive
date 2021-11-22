@@ -637,6 +637,8 @@ function AutoDrive.checkIsOnField_old(worldX, worldY, worldZ)	-- kept only for r
 end
 
 function AutoDrive.checkIsOnField(startWorldX, worldY, startWorldZ)
+	return false
+	--[[
     local data = g_currentMission.densityMapModifiers.getAIDensityHeightArea
     local modifier = data.modifier
     local filter = data.filter
@@ -652,6 +654,7 @@ function AutoDrive.checkIsOnField(startWorldX, worldY, startWorldZ)
     else
         return true
     end
+	--]]
 end
 
 Sprayer.registerOverwrittenFunctions =

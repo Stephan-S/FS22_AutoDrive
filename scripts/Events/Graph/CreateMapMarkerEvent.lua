@@ -3,17 +3,17 @@ AutoDriveCreateMapMarkerEvent_mt = Class(AutoDriveCreateMapMarkerEvent, Event)
 
 InitEventClass(AutoDriveCreateMapMarkerEvent, "AutoDriveCreateMapMarkerEvent")
 
-function AutoDriveCreateMapMarkerEvent:emptyNew()
-	local o = Event:new(AutoDriveCreateMapMarkerEvent_mt)
-	o.className = "AutoDriveCreateMapMarkerEvent"
-	return o
+function AutoDriveCreateMapMarkerEvent.emptyNew()
+	print("AutoDriveCreateMapMarkerEvent.emptyNew")
+	local self = Event.new(AutoDriveCreateMapMarkerEvent_mt)
+	return self
 end
 
-function AutoDriveCreateMapMarkerEvent:new(wayPointId, markerName)
-	local o = AutoDriveCreateMapMarkerEvent:emptyNew()
-	o.wayPointId = wayPointId
-	o.markerName = markerName
-	return o
+function AutoDriveCreateMapMarkerEvent.new(wayPointId, markerName)
+	local self = AutoDriveCreateMapMarkerEvent.emptyNew()
+	self.wayPointId = wayPointId
+	self.markerName = markerName
+	return self
 end
 
 function AutoDriveCreateMapMarkerEvent:writeStream(streamId, connection)
@@ -37,7 +37,7 @@ function AutoDriveCreateMapMarkerEvent:run(connection)
 end
 
 function AutoDriveCreateMapMarkerEvent.sendEvent(wayPointId, markerName)
-	local event = AutoDriveCreateMapMarkerEvent:new(wayPointId, markerName)
+	local event = AutoDriveCreateMapMarkerEvent.new(wayPointId, markerName)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)
