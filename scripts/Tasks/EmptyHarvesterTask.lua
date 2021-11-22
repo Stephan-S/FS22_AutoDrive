@@ -127,7 +127,7 @@ function EmptyHarvesterTask:update(dt)
         local distanceToReversStart = MathUtil.vector2Length(x - self.reverseStartLocation.x, z - self.reverseStartLocation.z)
         local overallLength
         if self.trailercount <= 1 then
-            overallLength = math.max(self.vehicle.sizeLength * 2, 15) -- 2x tractor length, min. 15m
+            overallLength = math.max(self.vehicle.size.length * 2, 15) -- 2x tractor length, min. 15m
         else
             overallLength = self.tractorTrainLength -- complete train length
         end

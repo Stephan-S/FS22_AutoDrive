@@ -309,8 +309,8 @@ function AutoDrive.getVehicleLeadingEdge(vehicle)
             if implement ~= nil and implement.object ~= nil then
                 local implementX, implementY, implementZ = getWorldTranslation(implement.object.components[1].node)
                 local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
-                if diffZ > 0 and implement.object.sizeLength ~= nil then                    
-                    leadingEdge = math.max(leadingEdge, diffZ + (implement.object.sizeLength / 2) - (vehicle.sizeLength / 2))
+                if diffZ > 0 and implement.object.size.length ~= nil then                    
+                    leadingEdge = math.max(leadingEdge, diffZ + (implement.object.size.length / 2) - (vehicle.size.length / 2))
                 end
             end
         end

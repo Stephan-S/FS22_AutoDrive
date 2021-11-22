@@ -137,14 +137,13 @@ end
 
 function AutoDrive:loadMap(name)
 	local index = 0
-Logging.info("[AD] Start register later loaded mods...")
--- second iteration to register AD to vehicle types which where loaded after AD
+	Logging.info("[AD] Start register later loaded mods...")
+	-- second iteration to register AD to vehicle types which where loaded after AD
     AutoDriveRegister.register()
     AutoDriveRegister.registerVehicleData()
-Logging.info("[AD] Start register later loaded mods end")
+	Logging.info("[AD] Start register later loaded mods end")
 	index = index + 1
 	Logging.info("[AutoDrive] Index: %d",index)
-
 
 	-- if g_server ~= nil then
 		-- AutoDrive.AutoDriveSync = AutoDriveSync:new(g_server ~= nil, g_client ~= nil)
@@ -152,7 +151,6 @@ Logging.info("[AD] Start register later loaded mods end")
 	-- end
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
-
 
 	AutoDrive:loadGUI()
 
@@ -259,13 +257,13 @@ Logging.info("[AD] Start register later loaded mods end")
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	--LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
+	--index = index + 1
+	--Logging.info("[AD] Index: %d",index)
 
-	LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	--LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
+	--index = index + 1
+	--Logging.info("[AD] Index: %d",index)
 
 	Placeable.onBuy = Utils.appendedFunction(Placeable.onBuy, ADTriggerManager.onPlaceableBuy)
 	index = index + 1
@@ -283,13 +281,13 @@ Logging.info("[AD] Start register later loaded mods end")
 	Logging.info("[AD] Index: %d",index)
 
 
-	FarmStats.saveToXMLFile = Utils.appendedFunction(FarmStats.saveToXMLFile, AutoDrive.FarmStats_saveToXMLFile)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	--FarmStats.saveToXMLFile = Utils.appendedFunction(FarmStats.saveToXMLFile, AutoDrive.FarmStats_saveToXMLFile)
+	--index = index + 1
+	--Logging.info("[AD] Index: %d",index)
 
-	FarmStats.loadFromXMLFile = Utils.appendedFunction(FarmStats.loadFromXMLFile, AutoDrive.FarmStats_loadFromXMLFile)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	--FarmStats.loadFromXMLFile = Utils.appendedFunction(FarmStats.loadFromXMLFile, AutoDrive.FarmStats_loadFromXMLFile)
+	--index = index + 1
+	--Logging.info("[AD] Index: %d",index)
 
 	FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
 	index = index + 1
@@ -435,7 +433,7 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
 end
 
-function AutoDrive:update(dt)
+function AutoDrive:update(dt)	
 	if AutoDrive.isFirstRun == nil then
 		AutoDrive.isFirstRun = false
 		self:init()
@@ -486,14 +484,21 @@ function AutoDrive:preRemoveVehicle(vehicle)
 	end
 end
 
-function AutoDrive:FarmStats_saveToXMLFile(xmlFile, key)
+function AutoDrive:FarmStats_saveToXMLFile(xmlFileName, key)
+	local xmlFile = createXMLFile("AdStatsXML", xmlFileName, "key")
+	
 	key = key .. ".statistics"
 	if self.statistics.driversTraveledDistance ~= nil then
 		setXMLFloat(xmlFile, key .. ".driversTraveledDistance", self.statistics.driversTraveledDistance.total)
 	end
 end
 
-function AutoDrive:FarmStats_loadFromXMLFile(xmlFile, key)
+function AutoDrive:FarmStats_loadFromXMLFile(xmlFileName, key)
+	local xmlFile = XMLFile.load("TempXML", xmlFileName)
+    if xmlFile == nil then
+        return false
+    end
+
 	key = key .. ".statistics"
 	self.statistics["driversTraveledDistance"].total = Utils.getNoNil(getXMLFloat(xmlFile, key .. ".driversTraveledDistance"), 0)
 end

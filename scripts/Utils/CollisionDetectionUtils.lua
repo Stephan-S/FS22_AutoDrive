@@ -17,7 +17,7 @@ function AutoDrive.checkForVehiclesInBox(boundingBox, excludedVehicles)
             end
         end
 
-        if (not isExcluded) and otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.sizeWidth ~= nil and otherVehicle.sizeLength ~= nil and otherVehicle.rootNode ~= nil then
+        if (not isExcluded) and otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then
             local x, _, z = getWorldTranslation(otherVehicle.components[1].node)
             local distance = MathUtil.vector2Length(boundingBox[1].x - x, boundingBox[1].z - z)
             if distance < 50 then
@@ -33,7 +33,7 @@ end
 
 function AutoDrive.checkForVehiclePathInBox(boundingBox, minTurnRadius, searchingVehicle, currentVec)
     for _, otherVehicle in pairs(g_currentMission.vehicles) do
-        if otherVehicle ~= nil and otherVehicle ~= searchingVehicle and otherVehicle.components ~= nil and otherVehicle.sizeWidth ~= nil and otherVehicle.sizeLength ~= nil and otherVehicle.rootNode ~= nil then                            
+        if otherVehicle ~= nil and otherVehicle ~= searchingVehicle and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then                            
             if minTurnRadius ~= nil and otherVehicle.ad ~= nil and otherVehicle.ad.drivePathModule ~= nil and otherVehicle.ad.stateModule:isActive() then
                 local otherWPs, otherCurrentWp = otherVehicle.ad.drivePathModule:getWayPoints()
                 local lastWp = nil
@@ -90,8 +90,8 @@ end
 function AutoDrive.getBoundingBoxForVehicleAtPosition(vehicle, position)
     local x, y, z = position.x, position.y, position.z
     local rx, _, rz = localDirectionToWorld(vehicle.components[1].node, 0, 0, 1)
-    local width = vehicle.sizeWidth
-    local length = vehicle.sizeLength
+    local width = vehicle.size.width
+    local length = vehicle.size.length
     local frontToolLength = 0 --AutoDrive.getFrontToolLength(vehicle)
     local vehicleVector = {x = rx, z = rz}
     local ortho = {x = -vehicleVector.z, z = vehicleVector.x}
@@ -147,7 +147,7 @@ function AutoDrive.debugDrawBoundingBoxForVehicles()
         local PosX, _, PosZ = getWorldTranslation(vehicle.components[1].node)
         local maxDistance = AutoDrive.drawDistance
         for _, otherVehicle in pairs(g_currentMission.vehicles) do
-            if otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.components[1].node ~= nil and otherVehicle.sizeWidth ~= nil and otherVehicle.sizeLength ~= nil and otherVehicle.rootNode ~= nil then
+            if otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.components[1].node ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then
                 local x, _, z = getWorldTranslation(otherVehicle.components[1].node)
                 local distance = MathUtil.vector2Length(PosX - x, PosZ - z)
                 if distance < maxDistance then

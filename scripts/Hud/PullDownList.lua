@@ -26,7 +26,7 @@ ADPullDownList.ICON_DELETE_FOLDER = 1
 function ADPullDownList:initReusableOverlaysOnlyOnce()
     local function overlayReuseOrNew(overlay, imageFilename)
         if overlay == nil then
-            overlay = Overlay:new(imageFilename, 0, 0, self.iconSize.width, self.iconSize.height)
+            overlay = Overlay.new(imageFilename, 0, 0, self.iconSize.width, self.iconSize.height)
         end
         return overlay
     end
@@ -82,10 +82,10 @@ function ADPullDownList:new(posX, posY, width, height, type, selected)
     -- o.imageRight = AutoDrive.directory .. "textures/arrowRight.dds"
     o.imageFilter = AutoDrive.directory .. "textures/zoom.dds"
 
-    o.ovBG = Overlay:new(o.imageBG, o.position.x, o.position.y, o.size.width, o.size.height)
+    o.ovBG = Overlay.new(o.imageBG, o.position.x, o.position.y, o.size.width, o.size.height)
 -- expand icon if collapsed
 -- ovExpand used double: o. / ADPullDownList.
-    o.ovExpand = Overlay:new(o.imageExpand, o.rightIconPos.x, o.rightIconPos.y, o.iconSize.width, o.iconSize.height)
+    o.ovExpand = Overlay.new(o.imageExpand, o.rightIconPos.x, o.rightIconPos.y, o.iconSize.width, o.iconSize.height)
 
     o.state = ADPullDownList.STATE_COLLAPSED
     o.isVisible = true
@@ -725,13 +725,13 @@ function ADPullDownList:expand(vehicle)
         self.expandedSize.height = math.min(itemCount + ADPullDownList.MIN_SHOWN, ADPullDownList.MAX_SHOWN) * AutoDrive.Hud.listItemHeight + self.size.height / 2
 
         if self.direction == ADPullDownList.EXPANDED_UP then
-            self.ovTop = Overlay:new(self.imageBGTop, self.position.x, self.position.y + self.expandedSize.height - self.size.height / 2, self.size.width, self.size.height / 2)
-            self.ovStretch = Overlay:new(self.imageBGStretch, self.position.x, self.position.y + (self.size.height / 2), self.size.width, self.expandedSize.height - self.size.height)
-            self.ovBottom = Overlay:new(self.imageBGBottom, self.position.x, self.position.y, self.size.width, self.size.height / 2)
+            self.ovTop = Overlay.new(self.imageBGTop, self.position.x, self.position.y + self.expandedSize.height - self.size.height / 2, self.size.width, self.size.height / 2)
+            self.ovStretch = Overlay.new(self.imageBGStretch, self.position.x, self.position.y + (self.size.height / 2), self.size.width, self.expandedSize.height - self.size.height)
+            self.ovBottom = Overlay.new(self.imageBGBottom, self.position.x, self.position.y, self.size.width, self.size.height / 2)
         else
-            self.ovTop = Overlay:new(self.imageBGTop, self.position.x, self.position.y + self.size.height / 2, self.size.width, self.size.height / 2)
-            self.ovStretch = Overlay:new(self.imageBGStretch, self.position.x, self.position.y + (self.size.height / 2) * 3 - self.expandedSize.height, self.size.width, self.expandedSize.height - self.size.height)
-            self.ovBottom = Overlay:new(self.imageBGBottom, self.position.x, self.position.y - self.expandedSize.height + self.size.height, self.size.width, self.size.height / 2)
+            self.ovTop = Overlay.new(self.imageBGTop, self.position.x, self.position.y + self.size.height / 2, self.size.width, self.size.height / 2)
+            self.ovStretch = Overlay.new(self.imageBGStretch, self.position.x, self.position.y + (self.size.height / 2) * 3 - self.expandedSize.height, self.size.width, self.expandedSize.height - self.size.height)
+            self.ovBottom = Overlay.new(self.imageBGBottom, self.position.x, self.position.y - self.expandedSize.height + self.size.height, self.size.width, self.size.height / 2)
         end
 
         self:setSelected(vehicle)

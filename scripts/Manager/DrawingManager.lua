@@ -64,13 +64,17 @@ ADDrawingManager.cross.lastDrawZero = true
 function ADDrawingManager:load()
     -- preloading and storing in chache I3D files
     self.i3DBaseDir = AutoDrive.directory .. self.i3DBaseDir
-    g_i3DManager:fillSharedI3DFileCache(self.lines.fileName, self.i3DBaseDir)
-    g_i3DManager:fillSharedI3DFileCache(self.arrows.fileName, self.i3DBaseDir)
-    g_i3DManager:fillSharedI3DFileCache(self.sSphere.fileName, self.i3DBaseDir)
-    g_i3DManager:fillSharedI3DFileCache(self.sphere.fileName, self.i3DBaseDir)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.lines.fileName, false, false, self.loadedi3d, self, nil)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.arrows.fileName, false, false, self.loadedi3d, self, nil)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.sSphere.fileName, false, false, self.loadedi3d, self, nil)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.sphere.fileName, false, false, self.loadedi3d, self, nil)
     for _, filename in ipairs(self.markers.fileNames) do
-        g_i3DManager:fillSharedI3DFileCache(filename, self.i3DBaseDir)
+        g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. filename, false, false, self.loadedi3d, self, nil)
     end
+end
+
+function ADDrawingManager:loadedi3d()
+    return
 end
 
 function ADDrawingManager.initObject(id)
@@ -134,7 +138,7 @@ function ADDrawingManager:draw()
 
     -- update emittivity only once every 600 frames
     if self.emittivityNextUpdate <= 0 then
-        local r, g, b = getLightColor(g_currentMission.environment.sunLightId)
+        local r, g, b = 1, 1, 1 --getLightColor(g_currentMission.environment.sunLightId)
         local light = (r + g + b) / 3
         self.emittivity = 1 - light
         if self.emittivity > 0.9 then

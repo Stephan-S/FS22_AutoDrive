@@ -72,11 +72,14 @@ function AutoDriveVehicleData:onPostLoad(savegame)
             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.onPostLoad self.isServer")
             local xmlFile = savegame.xmlFile
             local key = savegame.key .. ".FS19_AutoDrive.AutoDriveVehicleData"
-            self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#WorkToolParkDestination"), -1)
-            if self.advd.parkDestination == -1 then
-                -- change tag in vehicles.xml from WorkToolParkDestination to parkDestination as all park destinations are in vehicle data now
-                self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#parkDestination"), -1)
-            end
+
+            if xmlFile:hasProperty(key) then
+                self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#WorkToolParkDestination"), -1)
+                if self.advd.parkDestination == -1 then
+                    -- change tag in vehicles.xml from WorkToolParkDestination to parkDestination as all park destinations are in vehicle data now
+                    self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#parkDestination"), -1)
+                end
+            end            
         end
     end
 end

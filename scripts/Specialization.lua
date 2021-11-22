@@ -154,18 +154,20 @@ function AutoDrive:onPostLoad(savegame)
             self.ad.stateModule:readFromXMLFile(xmlFile, key)
             AutoDrive.readVehicleSettingsFromXML(self, xmlFile, key)
 
-            local groupString = getXMLString(xmlFile, key .. "#groups")
-            if groupString ~= nil then
-                local groupTable = groupString:split(";")
-                for _, groupCombined in pairs(groupTable) do
-                    local groupNameAndBool = groupCombined:split(",")
-                    if tonumber(groupNameAndBool[2]) >= 1 then
-                        self.ad.groups[groupNameAndBool[1]] = true
-                    else
-                        self.ad.groups[groupNameAndBool[1]] = false
+            if xmlFile:hasProperty(key) then
+                local groupString = getXMLString(xmlFile, key .. "#groups")
+                if groupString ~= nil then
+                    local groupTable = groupString:split(";")
+                    for _, groupCombined in pairs(groupTable) do
+                        local groupNameAndBool = groupCombined:split(",")
+                        if tonumber(groupNameAndBool[2]) >= 1 then
+                            self.ad.groups[groupNameAndBool[1]] = true
+                        else
+                            self.ad.groups[groupNameAndBool[1]] = false
+                        end
                     end
                 end
-            end
+            end            
         end
 
         self.ad.noMovementTimer = AutoDriveTON:new()
@@ -197,7 +199,7 @@ function AutoDrive:onPostLoad(savegame)
     -- Creating a new transform on front of the vehicle
     self.ad.frontNode = createTransformGroup(self:getName() .. "_frontNode")
     link(self.components[1].node, self.ad.frontNode)
-    setTranslation(self.ad.frontNode, 0, 0, self.sizeLength / 2 + self.lengthOffset + 0.75)
+    setTranslation(self.ad.frontNode, 0, 0, self.size.length / 2 + self.size.lengthOffset + 0.75)
     self.ad.frontNodeGizmo = DebugGizmo:new()
     self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
@@ -339,6 +341,7 @@ function AutoDrive:saveToXMLFile(xmlFile, key)
 end
 
 function AutoDrive:onDraw()
+    print("------------AutoDrive:onDraw - 1")
     if self.ad.showingHud ~= AutoDrive.Hud.showHud then
         AutoDrive.Hud:toggleHud(self)
     end
@@ -430,6 +433,7 @@ function AutoDrive:onDraw()
             end
         end
     end
+    print("------------AutoDrive:onDraw - 2")
 end
 
 function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex)

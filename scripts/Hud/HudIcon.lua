@@ -11,7 +11,7 @@ function ADHudIcon:new(posX, posY, width, height, image, layer, name)
     
 Logging.info("[AD] ADHudIcon:new type image %s type o.image %s", type(image), type(o.image))
 return o
-    -- o.ov = Overlay:new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
+    -- o.ov = Overlay.new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
 
     -- return o
 end

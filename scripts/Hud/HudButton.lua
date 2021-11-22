@@ -15,7 +15,7 @@ function ADHudButton:new(posX, posY, width, height, primaryAction, secondaryActi
 
     o.images = o:readImages()
 
-    o.ov = Overlay:new(o.images[o.state], o.position.x, o.position.y, o.size.width, o.size.height)
+    o.ov = Overlay.new(o.images[o.state], o.position.x, o.position.y, o.size.width, o.size.height)
 
     return o
 end

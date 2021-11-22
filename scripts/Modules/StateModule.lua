@@ -68,7 +68,12 @@ function ADStateModule:reset()
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
-    local mode = getXMLInt(xmlFile, key .. "#mode")
+    if not xmlFile:hasProperty(key) then
+        return
+    end
+    
+    local mode = xmlFile:getValue(key .. "#mode")
+    --local mode = getXMLInt(xmlFile, key .. "#mode")
     if mode ~= nil then
         --if mode == AutoDrive.MODE_BGA then
             --mode = AutoDrive.MODE_DRIVETO

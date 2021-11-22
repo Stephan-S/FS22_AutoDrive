@@ -268,6 +268,7 @@ function table:concatNil(sep, i, j)
 	return res
 end
 
+--[[
 function string:split(sep)
 	sep = sep or ":"
 	local fields = {}
@@ -280,6 +281,7 @@ function string:split(sep)
 	)
 	return fields
 end
+--]]
 
 function string.random(length)
 	if not length or length <= 0 then

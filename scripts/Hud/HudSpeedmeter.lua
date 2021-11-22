@@ -16,7 +16,7 @@ function ADHudSpeedmeter:new(posX, posY, width, height, fieldSpeed)
     o.layer = 5
     o.isFieldSpeed = fieldSpeed
 
-    o.ov = Overlay:new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
+    o.ov = Overlay.new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
 
     return o
 end

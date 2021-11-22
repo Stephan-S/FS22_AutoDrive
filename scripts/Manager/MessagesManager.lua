@@ -57,21 +57,21 @@ end
 
 function ADMessagesManager:loadHud(hud)
     local textSize = getCorrectTextSize(hud.textSize)
-    hud.headerOverlay = Overlay:new(AutoDrive.directory .. "textures/Header.dds", hud.posX, hud.posY + (textSize * 1.6), 0, hud.headerOverlayHeight)
+    hud.headerOverlay = Overlay.new(AutoDrive.directory .. "textures/Header.dds", hud.posX, hud.posY + (textSize * 1.6), 0, hud.headerOverlayHeight)
     hud.headerOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_CENTER)
-    hud.backgroundOverlay = Overlay:new(AutoDrive.directory .. "textures/messageBackground.dds", hud.posX, hud.posY + (textSize / 2.5), 0, hud.backgroundOverlayHeight)
+    hud.backgroundOverlay = Overlay.new(AutoDrive.directory .. "textures/messageBackground.dds", hud.posX, hud.posY + (textSize / 2.5), 0, hud.backgroundOverlayHeight)
     hud.backgroundOverlay:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER)
-    hud.dismissOverlay = Overlay:new(AutoDrive.directory .. "textures/input_toggleHud_1.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
+    hud.dismissOverlay = Overlay.new(AutoDrive.directory .. "textures/input_toggleHud_1.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
     hud.dismissOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_RIGHT)
     if hud.goToOverlay ~= nil then
-        hud.goToOverlay = Overlay:new(AutoDrive.directory .. "textures/input_goTo_1.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
+        hud.goToOverlay = Overlay.new(AutoDrive.directory .. "textures/input_goTo_1.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
         hud.goToOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_RIGHT)
     end
-    hud.infoIconOverlay = Overlay:new(AutoDrive.directory .. "textures/info_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
+    hud.infoIconOverlay = Overlay.new(AutoDrive.directory .. "textures/info_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
     hud.infoIconOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
-    hud.errorIconOverlay = Overlay:new(AutoDrive.directory .. "textures/error_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
+    hud.errorIconOverlay = Overlay.new(AutoDrive.directory .. "textures/error_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
     hud.errorIconOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
-    hud.warnIconOverlay = Overlay:new(AutoDrive.directory .. "textures/warn_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
+    hud.warnIconOverlay = Overlay.new(AutoDrive.directory .. "textures/warn_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
     hud.warnIconOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
 end
 

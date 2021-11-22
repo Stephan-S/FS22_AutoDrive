@@ -210,7 +210,7 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
     -- the trailer.
     -- 2*math.sin(math.pi/8)) is the third side of a 45-67.5-67.5 isosceles triangle with the
     -- equal sides being the length of the tractor train
-    local lengthOffset = combine.sizeLength / 2 + 
+    local lengthOffset = combine.size.length / 2 + 
                             AutoDrive.getTractorTrainLength(self.vehicle, true, false) * (2 * math.sin(math.pi / 8))
     -- A bit of a sanity check, in case the vehicle is absurdly long.
     --if lengthOffset > self.PATHFINDER_FOLLOW_DISTANCE then
@@ -243,7 +243,7 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
         if pipeChaseSide ~= AutoDrive.CHASEPOS_REAR then
             pathFinderTarget = {x = pipeChasePos.x - (lengthOffset) * rx, y = worldY, z = pipeChasePos.z - (lengthOffset) * rz}
         end
-        local appendedNode = {x = pipeChasePos.x - (combine.sizeLength / 2 * rx), y = worldY, z = pipeChasePos.z - (combine.sizeLength / 2 * rz)}
+        local appendedNode = {x = pipeChasePos.x - (combine.size.length / 2 * rx), y = worldY, z = pipeChasePos.z - (combine.size.length / 2 * rz)}
 
         self:startPathPlanningTo(pathFinderTarget, combineVector)
 
