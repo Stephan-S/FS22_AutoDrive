@@ -60,7 +60,7 @@ function FollowCombineTask:update(dt)
         self.chaseTimer:timer(true, 4000, dt)
         self.stuckTimer:timer(self.vehicle.lastSpeedReal <= 0.0002, self.MAX_STUCK_TIME, dt)
 
-        if self.combine:getIsBufferCombine() then
+        if AutoDrive.getIsBufferCombine(self.combine) then
             if self.filled and self.chaseSide ~= nil and self.chaseSide ~= AutoDrive.CHASEPOS_REAR then
                 --skip reversing
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "I am filled and driving on the side - skip reversing and finish now")
@@ -72,7 +72,7 @@ function FollowCombineTask:update(dt)
                 self.state = FollowCombineTask.STATE_REVERSING -- reverse to get room from harvester
                 return
             end
-        elseif self.filled or ( not self.combine:getIsBufferCombine() and self.combineFillPercent <= 0.1 and self.combinePreCallLevel > 0) then
+        elseif self.filled or ( not AutoDrive.getIsBufferCombine(self.combine) and self.combineFillPercent <= 0.1 and self.combinePreCallLevel > 0) then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "I am filled - reversing now")
             self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH -- unload after some time to let harvester drive away
             return
@@ -98,7 +98,7 @@ function FollowCombineTask:update(dt)
             return
         end
 
-        if (not self.combine:getIsBufferCombine()) and self.combineFillPercent > 90 
+        if (not AutoDrive.getIsBufferCombine(self.combine)) and self.combineFillPercent > 90 
             and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE -- if to close -> reverse
             then
             -- Stop chasing and wait for a normal unload call while standing
@@ -136,7 +136,7 @@ function FollowCombineTask:update(dt)
         end
 
         if AutoDrive.combineIsTurning(self.combine) then
-            if not self.combine:getIsBufferCombine() and (self.distanceToCombine < ((self.vehicle.size.length + self.combine.size.length) / 2 + 10)) then
+            if not AutoDrive.getIsBufferCombine(self.combine) and (self.distanceToCombine < ((self.vehicle.size.length + self.combine.size.length) / 2 + 10)) then
                 -- harvester
                 -- if combine drive reverse to turn -> reverse to keep distance
                 self:reverse(dt)
@@ -153,7 +153,7 @@ function FollowCombineTask:update(dt)
                 (
                     self.combine.ad.sensors.frontSensorFruit:pollInfo() and 
                     (
-                        self.combine:getIsBufferCombine() -- chopper
+                        AutoDrive.getIsBufferCombine(self.combine) -- chopper
                         or self.combine.ad.driveForwardTimer.elapsedTime > 8000 -- Harvester moves
                     ) 
                 ) 

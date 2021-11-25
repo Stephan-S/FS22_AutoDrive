@@ -12,11 +12,11 @@ local ADSettingsPage_mt = Class(ADSettingsPage, TabbedMenuFrameElement)
 ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox", "headerIcon"}
 
 function ADSettingsPage:new(target)
-    local o = TabbedMenuFrameElement:new(target, ADSettingsPage_mt)
-    o.returnScreenName = ""
-    o.settingElements = {}
-    o:registerControls(ADSettingsPage.CONTROLS)
-    return o
+    local element = TabbedMenuFrameElement.new(target, ADSettingsPage_mt)
+    element.returnScreenName = ""
+    element.settingElements = {}
+    element:registerControls(ADSettingsPage.CONTROLS)
+    return element
 end
 
 function ADSettingsPage:onFrameOpen()
@@ -51,11 +51,14 @@ function ADSettingsPage:onCreateAutoDriveSetting(element)
     local iconElem = element.elements[6]
     if iconElem ~= nil then
         if setting.isUserSpecific then
-            iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.USER)))
+            -- iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.USER)))
+            iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.USER)))
         elseif setting.isVehicleSpecific then
-            iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.VEHICLE)))
+            -- iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.VEHICLE)))
+            iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.VEHICLE)))
         else
-            iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.GLOBAL)))
+            -- iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.GLOBAL)))
+            iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.GLOBAL)))
         end
     end
 end

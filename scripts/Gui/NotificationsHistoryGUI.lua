@@ -10,11 +10,11 @@ ADNotificationsHistoryGui.ICON_UVS = {
 local ADNotificationsHistoryGui_mt = Class(ADNotificationsHistoryGui, ScreenElement)
 
 function ADNotificationsHistoryGui:new(target)
-    local o = ScreenElement:new(target, ADNotificationsHistoryGui_mt)
-    o.returnScreenName = ""
-    o.history = {}
-    o:registerControls(ADNotificationsHistoryGui.CONTROLS)
-    return o
+    local element = ScreenElement.new(target, ADNotificationsHistoryGui_mt)
+    element.returnScreenName = ""
+    element.history = {}
+    element:registerControls(ADNotificationsHistoryGui.CONTROLS)
+    return element
 end
 
 function ADNotificationsHistoryGui:onCreate()

@@ -73,7 +73,7 @@ function ADDrawingManager:load()
     end
 end
 
-function ADDrawingManager:loadedi3d()
+function ADDrawingManager:loadedi3d(rootNode, failedReason, arguments)
     return
 end
 
@@ -216,6 +216,7 @@ function ADDrawingManager:drawObjects_alternative(obj, dFunc, iFunc)
     if taskCount > #obj.itemIDs then
         for i = 1, taskCount - #obj.itemIDs do
             -- loading new i3ds
+-- local node, sharedLoadRequestId = g_i3DManager:loadSharedI3DFile(self.i3dFilename, false, false)
             local itemID = g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. fileToUse, false, false)
             setVisibility(itemID, false)
             table.insert(obj.itemIDs,iFunc(itemID))

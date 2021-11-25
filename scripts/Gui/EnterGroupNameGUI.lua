@@ -11,11 +11,11 @@ ADEnterGroupNameGui.CONTROLS = {"textInputElement"}
 local ADEnterGroupNameGui_mt = Class(ADEnterGroupNameGui, ScreenElement)
 
 function ADEnterGroupNameGui:new(target)
-    local o = ScreenElement:new(target, ADEnterGroupNameGui_mt)
-    o.returnScreenName = ""
-    o.textInputElement = nil
-    o:registerControls(ADEnterGroupNameGui.CONTROLS)
-    return o
+    local element = ScreenElement.new(target, ADEnterGroupNameGui_mt)
+    element.returnScreenName = ""
+    element.textInputElement = nil
+    element:registerControls(ADEnterGroupNameGui.CONTROLS)
+    return element
 end
 
 function ADEnterGroupNameGui:onOpen()

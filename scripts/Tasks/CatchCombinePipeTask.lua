@@ -179,7 +179,7 @@ function CatchCombinePipeTask:startNewPathFinding()
 
     self.newPathFindingCounter = self.newPathFindingCounter + 1 -- used to prevent deadlock
 
-    if self.combine:getIsBufferCombine() or (pipeChaseSide ~= AutoDrive.CHASEPOS_REAR or (targetFieldId == combineFieldId and cFillRatio <= 0.85)) then
+    if AutoDrive.getIsBufferCombine(self.combine) or (pipeChaseSide ~= AutoDrive.CHASEPOS_REAR or (targetFieldId == combineFieldId and cFillRatio <= 0.85)) then
     -- if self.combine:getIsBufferCombine() or (pipeChaseSide ~= AutoDrive.CHASEPOS_REAR and targetFieldId == combineFieldId and cFillRatio <= 0.85) then
         -- is chopper or chase not rear and harvester on correct field and filled < 85% - i.e. combine pipe not in fruit
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:startNewPathFinding() - chase pos looks good - calculate path to it...")

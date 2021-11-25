@@ -12,14 +12,15 @@ local ADExperimentalFeaturesSettingsPage_mt = Class(ADExperimentalFeaturesSettin
 ADExperimentalFeaturesSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "cloneElement"}
 
 function ADExperimentalFeaturesSettingsPage:new(target)
-    local o = TabbedMenuFrameElement:new(target, ADExperimentalFeaturesSettingsPage_mt)
-    o.returnScreenName = ""
-    o.experimentalFeaturesElements = {}
-    o:registerControls(ADExperimentalFeaturesSettingsPage.CONTROLS)
-    return o
+    local element = TabbedMenuFrameElement.new(target, ADExperimentalFeaturesSettingsPage_mt)
+    element.returnScreenName = ""
+    element.experimentalFeaturesElements = {}
+    element:registerControls(ADExperimentalFeaturesSettingsPage.CONTROLS)
+    return element
 end
 
 function ADExperimentalFeaturesSettingsPage:setupMenuButtonInfo(parent)
+    -- AutoDrive.debugMsg(nil, "[AD] ADExperimentalFeaturesSettingsPage:setupMenuButtonInfo parent self %s", tostring(parent))
     self.menuButtonInfo = {{inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = parent:makeSelfCallback(parent.onClickBack), showWhenPaused = true}}
     self.hasCustomMenuButtons = true
 end

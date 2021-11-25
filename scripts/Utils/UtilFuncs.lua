@@ -620,7 +620,7 @@ function AutoDrive.renderColoredTextAtWorldPosition(x, y, z, text, textSize, col
 	end
 end
 
-function AutoDrive.checkIsOnField_old(worldX, worldY, worldZ)	-- kept only for reference in case the new detection causes issues
+function AutoDrive.checkIsOnField(worldX, worldY, worldZ)	-- kept only for reference in case the new detection causes issues
 	local densityBits = 0
 
 	if worldY == 0 then
@@ -636,9 +636,7 @@ function AutoDrive.checkIsOnField_old(worldX, worldY, worldZ)	-- kept only for r
 	return false
 end
 
-function AutoDrive.checkIsOnField(startWorldX, worldY, startWorldZ)
-	return false
-	--[[
+function AutoDrive.checkIsOnField_notFS22(startWorldX, worldY, startWorldZ)
     local data = g_currentMission.densityMapModifiers.getAIDensityHeightArea
     local modifier = data.modifier
     local filter = data.filter
@@ -654,7 +652,6 @@ function AutoDrive.checkIsOnField(startWorldX, worldY, startWorldZ)
     else
         return true
     end
-	--]]
 end
 
 Sprayer.registerOverwrittenFunctions =

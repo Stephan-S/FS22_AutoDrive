@@ -139,7 +139,7 @@
     </Profile>
 
     <Profile name="autoDriveButtonBoxDocked" extends="buttonBoxDocked">
-        <Value name="position" value="10px 20px" />
+        <Value name="position" value="200px 100px" />
     </Profile>
 
     <Profile name="autoDriveingameMenuHelpRowBg" extends="ingameMenuHelpRowBg">
@@ -173,6 +173,17 @@
         <Value name="frameThickness" value="0 0 1dp 0" />
     </Profile>
 
+    <Profile name="autoDriveSettingsHeaderIcon" extends="baseReference">
+        <Value name="debugEnabled" value="false"/>
+        <Value name="imageFilename" value="g_iconsUIFilename"/>
+        <!-- <Value name="imageFilename" value="g_autoDriveDebugUIFilename_BC7"/> -->
+        <Value name="imageSize" value="1024 1024"/>
+        <Value name="size" value="64px 64px"/>
+        <Value name="visible" value="false"/>
+        <Value name="imageUVs" value="650px 0px 64px 64px"/>
+    </Profile>
+
+<!-- used -->
     <Profile name="autoDriveDebugSettingsCheckboxToggleText" extends="textDefault" with="anchorMiddleLeft">
         <Value name="position" value="109px 0px" />
     </Profile>

@@ -12,6 +12,8 @@ local ADSettings_mt = Class(ADSettings, TabbedMenu)
 ADSettings.CONTROLS = {"autoDriveSettings", "autoDriveUserSettings", "autoDriveVehicleSettings", "autoDriveCombineUnloadSettings", "autoDriveDebugSettings", "autoDriveExperimentalFeaturesSettings", "autoDriveEnvironmentSettings"}
 
 --- Page tab UV coordinates for display elements.
+--AD specific iconUVs
+--[[
 ADSettings.TAB_UV = {
     SETTINGS_GENERAL = {385, 0, 128, 128},
     SETTINGS_VEHICLE = {0, 209, 65, 65},
@@ -23,11 +25,31 @@ ADSettings.TAB_UV = {
     SETTINGS_EXPFEAT = {128, 128, 128, 128},
     SETTINGS_ENVIRONMENT = {65, 144, 65, 65}
 }
+]]
 
-ADSettings.ICON_UV = {
+ADSettings.TAB_UV = {
+    SETTINGS_GENERAL = {720, 0, 64, 64},
+    SETTINGS_VEHICLE = {650, 0, 64, 64},
+    SETTINGS_USER = {0, 130, 64, 64},
+    SETTINGS_UNLOAD = {128, 76, 64, 64},
+    SETTINGS_DEBUG = {588, 140, 64, 64},
+    SETTINGS_EXPFEAT = {0, 270, 64, 64},
+    SETTINGS_ENVIRONMENT = {134, 0, 64, 64}
+}
+
+-- AD specific iconUVs
+--[[
+ADSettings.ICON_UVa= {
     GLOBAL = {12, 157, 40, 40},
     VEHICLE = {136, 151, 51, 51},
     USER = {462, 215, 50, 50}
+}
+]]
+
+ADSettings.ICON_UV = {
+    GLOBAL = {720, 0, 64, 64},
+    VEHICLE = {650, 0, 64, 64},
+    USER = {0, 130, 64, 64}
 }
 
 ADSettings.ICON_COLOR = {
@@ -36,10 +58,10 @@ ADSettings.ICON_COLOR = {
 }
 
 function ADSettings:new()
-    local o = TabbedMenu:new(nil, ADSettings_mt, g_messageCenter, g_i18n, g_gui.inputManager)
-    o.returnScreenName = ""
-    o:registerControls(ADSettings.CONTROLS)
-    return o
+    local element = TabbedMenu.new(nil, ADSettings_mt, g_messageCenter, g_i18n, g_gui.inputManager)
+    element.returnScreenName = ""
+    element:registerControls(ADSettings.CONTROLS)
+    return element
 end
 
 function ADSettings:onGuiSetupFinished()
@@ -69,7 +91,7 @@ function ADSettings:setupPages()
         end
         return false
     end
-
+--[[
     local orderedPages = {
         {self.autoDriveSettings, alwaysEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_GENERAL, false},
         {self.autoDriveUserSettings, alwaysEnabled, g_baseUIFilename, ADSettings.TAB_UV.SETTINGS_USER, false},
@@ -79,15 +101,26 @@ function ADSettings:setupPages()
         {self.autoDriveDebugSettings, developmentControlsEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_DEBUG, true},
         {self.autoDriveExperimentalFeaturesSettings, alwaysEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_EXPFEAT, true}
     }
+]]
+    local orderedPages = {
+        {self.autoDriveVehicleSettings, vehicleEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_VEHICLE, false},
+        {self.autoDriveCombineUnloadSettings, combineEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
+        {self.autoDriveUserSettings, alwaysEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_USER, false},
+        {self.autoDriveSettings, alwaysEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_GENERAL, false},
+        {self.autoDriveEnvironmentSettings, vehicleEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_ENVIRONMENT, false},
+        {self.autoDriveDebugSettings, developmentControlsEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_DEBUG, true},
+        {self.autoDriveExperimentalFeaturesSettings, alwaysEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_EXPFEAT, true}
+    }
 
     for i, pageDef in ipairs(orderedPages) do
         local page, predicate, uiFilename, iconUVs, isAutonomous = unpack(pageDef)
-        local normalizedIconUVs = getNormalizedUVs(iconUVs)
+        --local normalizedIconUVs = getNormalizedUVs(iconUVs)
+        local normalizedIconUVs = GuiUtils.getUVs(iconUVs)
         self:registerPage(page, i, predicate)
         self:addPageTab(page, uiFilename, normalizedIconUVs) -- use the global here because the value changes with resolution settings
         page.isAutonomous = isAutonomous
-        page.headerIcon:setImageFilename(uiFilename)
-        page.headerIcon:setImageUVs(nil, unpack(normalizedIconUVs))
+        --page.headerIcon:setImageFilename(uiFilename)
+        --page.headerIcon:setImageUVs(nil, unpack(normalizedIconUVs))
         if page.setupMenuButtonInfo ~= nil then
             page:setupMenuButtonInfo(self)
         end

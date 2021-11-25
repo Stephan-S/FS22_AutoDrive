@@ -230,7 +230,7 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
     --else
     --    self:startPathPlanningTo(target, combineVector)
     --end
-    if combine.getIsBufferCombine ~= nil and combine:getIsBufferCombine() then
+    if combine.spec_combine ~= nil and AutoDrive.getIsBufferCombine(combine) then
         local pathFinderTarget = {x = pipeChasePos.x - (self.PATHFINDER_TARGET_DISTANCE) * rx, y = worldY, z = pipeChasePos.z - (self.PATHFINDER_TARGET_DISTANCE) * rz}
         --local appendTarget = {x = pipeChasePos.x - (lengthOffset/2) * rx, y = worldY, z = pipeChasePos.z - (lengthOffset/2) * rz}
 
@@ -256,7 +256,7 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
     if combine.spec_combine ~= nil then
         if combine.spec_combine.fillUnitIndex ~= nil and combine.spec_combine.fillUnitIndex ~= 0 then
             local fillType = g_fruitTypeManager:getFruitTypeIndexByFillTypeIndex(combine:getFillUnitFillType(combine.spec_combine.fillUnitIndex))
-            if fillType ~= nil and (not combine:getIsBufferCombine()) then
+            if fillType ~= nil and (not AutoDrive.getIsBufferCombine(combine)) then
                 self.fruitToCheck = fillType
                 local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fillType)
 

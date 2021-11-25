@@ -83,6 +83,8 @@ end
 function AutoDrive:onPreLoad(savegame)
     if self.spec_autodrive == nil then
         self.spec_autodrive = AutoDrive
+        AutoDrive.debugMsg(self, "AutoDrive:onPreLoad")
+        -- AutoDriveRegister.addModTranslations(g_i18n)
     end
 end
 
@@ -148,8 +150,12 @@ function AutoDrive:onPostLoad(savegame)
 
     if self.isServer then
         if savegame ~= nil then
+
+-- Logging.info("[AD] AutoDrive:onPostLoad savegame.xmlFile ->%s<-", tostring(savegame.xmlFile))
             local xmlFile = savegame.xmlFile
+            -- local xmlFile = loadXMLFile("vehicleXML", savegame.xmlFile)
             local key = savegame.key .. ".FS19_AutoDrive.AutoDrive"
+-- Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
 
             self.ad.stateModule:readFromXMLFile(xmlFile, key)
             AutoDrive.readVehicleSettingsFromXML(self, xmlFile, key)
@@ -174,7 +180,7 @@ function AutoDrive:onPostLoad(savegame)
         self.ad.driveForwardTimer = AutoDriveTON:new()
     end
 
-    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.getIsBufferCombine ~= nil then
+    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         ADHarvestManager:registerHarvester(self)
     end
 
@@ -312,6 +318,9 @@ function AutoDrive:saveToXMLFile(xmlFile, key)
     if self.ad == nil then
         return
     end
+    if not xmlFile:hasProperty(key) then
+        return
+    end
     self.ad.stateModule:saveToXMLFile(xmlFile, key)
 
     for settingName, setting in pairs(AutoDrive.settings) do
@@ -437,11 +446,11 @@ end
 function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex)
     if attachable["spec_FS19_addon_strawHarvest.strawHarvestPelletizer"] ~= nil then
         attachable.isPremos = true
-        attachable.getIsBufferCombine = function()
-            return false
-        end
+        -- attachable.getIsBufferCombine = function()
+            -- return false
+        -- end
     end
-    if (attachable.spec_pipe ~= nil and attachable.getIsBufferCombine ~= nil) or attachable.isPremos then
+    if (attachable.spec_pipe ~= nil and attachable.spec_combine ~= nil) or attachable.isPremos then
         attachable.isTrailedHarvester = true
         attachable.trailingVehicle = self
         ADHarvestManager:registerHarvester(attachable)
@@ -496,7 +505,7 @@ function AutoDrive:onPreDetachImplement(implement)
         attachable.isTrailedHarvester = false
         attachable.trailingVehicle = nil
         if attachable.isPremos then
-            attachable.getIsBufferCombine = nil
+            -- attachable.getIsBufferCombine = nil
         end
     end
     if self.ad ~= nil then
@@ -951,7 +960,7 @@ function AutoDrive:onStartAutoDrive()
 
         if self.spec_aiVehicle.currentHelper == nil then
             g_currentMission.maxNumHirables = g_currentMission.maxNumHirables + 1;
-            --g_helperManager:addHelper("AD_" .. math.random(100, 1000), "dataS2/character/helper/helper02.xml")
+            --g_helperManager:addHelper("AD_" .. math.AD_random(100, 1000), "dataS2/character/helper/helper02.xml")
             AutoDrive.AddHelper()
             self.spec_aiVehicle.currentHelper = g_helperManager:getRandomHelper()
         end
