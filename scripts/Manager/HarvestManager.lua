@@ -97,7 +97,7 @@ function ADHarvestManager:update(dt)
         if vehicle.isTrailedHarvester then
             vehicle = vehicle.trailingVehicle
         end
-        if (vehicle.spec_aiVehicle ~= nil and vehicle.spec_aiVehicle.isActive) or AutoDrive:getIsEntered(vehicle) then
+        if (vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or AutoDrive:getIsEntered(vehicle) then
             table.insert(self.harvesters, idleHarvester)
             table.removeValue(self.idleHarvesters, idleHarvester)
         end
@@ -107,7 +107,7 @@ function ADHarvestManager:update(dt)
         if vehicle.isTrailedHarvester then
             vehicle = vehicle.trailingVehicle
         end
-        if not ((vehicle.spec_aiVehicle ~= nil and vehicle.spec_aiVehicle.isActive) or AutoDrive:getIsEntered(vehicle)) then
+        if not ((vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or AutoDrive:getIsEntered(vehicle)) then
             table.insert(self.idleHarvesters, harvester)
             table.removeValue(self.harvesters, harvester)
 
