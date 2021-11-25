@@ -3,17 +3,17 @@ AutoDriveRenameMapMarkerEvent_mt = Class(AutoDriveRenameMapMarkerEvent, Event)
 
 InitEventClass(AutoDriveRenameMapMarkerEvent, "AutoDriveRenameMapMarkerEvent")
 
-function AutoDriveRenameMapMarkerEvent:emptyNew()
-	local o = Event:new(AutoDriveRenameMapMarkerEvent_mt)
-	o.className = "AutoDriveRenameMapMarkerEvent"
-	return o
+function AutoDriveRenameMapMarkerEvent.emptyNew()
+	print("AutoDriveRenameMapMarkerEvent.emptyNew")
+	local self = Event.new(AutoDriveRenameMapMarkerEvent_mt)
+	return self
 end
 
-function AutoDriveRenameMapMarkerEvent:new(newName, markerId)
-	local o = AutoDriveRenameMapMarkerEvent:emptyNew()
-	o.newName = newName
-	o.markerId = markerId
-	return o
+function AutoDriveRenameMapMarkerEvent.new(newName, markerId)
+	local self = AutoDriveRenameMapMarkerEvent.emptyNew()
+	self.newName = newName
+	self.markerId = markerId
+	return self
 end
 
 function AutoDriveRenameMapMarkerEvent:writeStream(streamId, connection)
@@ -38,7 +38,7 @@ function AutoDriveRenameMapMarkerEvent:run(connection)
 end
 
 function AutoDriveRenameMapMarkerEvent.sendEvent(newName, markerId)
-	local event = AutoDriveRenameMapMarkerEvent:new(newName, markerId)
+	local event = AutoDriveRenameMapMarkerEvent.new(newName, markerId)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

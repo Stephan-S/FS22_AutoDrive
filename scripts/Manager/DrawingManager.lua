@@ -64,20 +64,23 @@ ADDrawingManager.cross.lastDrawZero = true
 function ADDrawingManager:load()
     -- preloading and storing in chache I3D files
     self.i3DBaseDir = AutoDrive.directory .. self.i3DBaseDir
--- local node, sharedLoadRequestId = g_i3DManager:loadSharedI3DFile(self.i3dFilename, false, false)
-    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.lines.fileName, false, false)
-    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.arrows.fileName, false, false)
-    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.sSphere.fileName, false, false)
-    g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. self.sphere.fileName, false, false)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.lines.fileName, false, false, self.loadedi3d, self, nil)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.arrows.fileName, false, false, self.loadedi3d, self, nil)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.sSphere.fileName, false, false, self.loadedi3d, self, nil)
+    g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. self.sphere.fileName, false, false, self.loadedi3d, self, nil)
     for _, filename in ipairs(self.markers.fileNames) do
-        g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. filename, false, false)
+        g_i3DManager:loadSharedI3DFileAsync(self.i3DBaseDir .. filename, false, false, self.loadedi3d, self, nil)
     end
+end
+
+function ADDrawingManager:loadedi3d(rootNode, failedReason, arguments)
+    return
 end
 
 function ADDrawingManager.initObject(id)
     local itemId = getChildAt(id, 0)
     link(getRootNode(), itemId)
-    setRigidBodyType(itemId, "NoRigidBody")
+    setRigidBodyType(itemId, RigidBodyType.NONE)
     setTranslation(itemId, 0, 0, 0)
     setVisibility(itemId, false)
     delete(id)
@@ -135,7 +138,7 @@ function ADDrawingManager:draw()
 
     -- update emittivity only once every 600 frames
     if self.emittivityNextUpdate <= 0 then
-        local r, g, b = getLightColor(g_currentMission.environment.sunLightId)
+        local r, g, b = 1, 1, 1 --getLightColor(g_currentMission.environment.sunLightId)
         local light = (r + g + b) / 3
         self.emittivity = 1 - light
         if self.emittivity > 0.9 then
@@ -214,7 +217,7 @@ function ADDrawingManager:drawObjects_alternative(obj, dFunc, iFunc)
         for i = 1, taskCount - #obj.itemIDs do
             -- loading new i3ds
 -- local node, sharedLoadRequestId = g_i3DManager:loadSharedI3DFile(self.i3dFilename, false, false)
-            local _, itemID = g_i3DManager:loadSharedI3DFile(fileToUse, self.i3DBaseDir)
+            local itemID = g_i3DManager:loadSharedI3DFile(self.i3DBaseDir .. fileToUse, false, false)
             setVisibility(itemID, false)
             table.insert(obj.itemIDs,iFunc(itemID))
         end
@@ -296,8 +299,7 @@ function ADDrawingManager:drawObjects_original(obj, dFunc, iFunc)
             local baseDir = self.i3DBaseDir
             for i = 1, remainingTaskCount - bufferCount do
                 -- loading new i3ds
--- local node, sharedLoadRequestId = g_i3DManager:loadSharedI3DFile(self.i3dFilename, false, false)
-                local _, id = g_i3DManager:loadSharedI3DFile(fileToUse, baseDir)
+                local id = g_i3DManager:loadSharedI3DFile(baseDir .. fileToUse, false, false)
                 obj.buffer:Insert(iFunc(id))
             end
         end

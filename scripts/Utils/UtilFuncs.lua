@@ -268,15 +268,11 @@ function table:concatNil(sep, i, j)
 	return res
 end
 
-function string:AD_split(sep)
+--[[
+function string:split(sep)
 	sep = sep or ":"
 	local fields = {}
 	local pattern = string.format("([^%s]+)", sep)
-
-if self == nil then
-printCallstack()
-end
-
 	self:gsub(
 		pattern,
 		function(c)
@@ -285,12 +281,13 @@ end
 	)
 	return fields
 end
+--]]
 
-function string.AD_random(length)
+function string.random(length)
 	if not length or length <= 0 then
 		return ""
 	end
-	return string.AD_random(length - 1) .. string.randomCharset[math.AD_random(1, #string.randomCharset)]
+	return string.random(length - 1) .. string.randomCharset[math.random(1, #string.randomCharset)]
 end
 
 function AutoDrive.localize(text)
@@ -623,7 +620,7 @@ function AutoDrive.renderColoredTextAtWorldPosition(x, y, z, text, textSize, col
 	end
 end
 
-function AutoDrive.checkIsOnField_old(worldX, worldY, worldZ)	-- kept only for reference in case the new detection causes issues
+function AutoDrive.checkIsOnField(worldX, worldY, worldZ)	-- kept only for reference in case the new detection causes issues
 	local densityBits = 0
 
 	if worldY == 0 then
@@ -639,7 +636,7 @@ function AutoDrive.checkIsOnField_old(worldX, worldY, worldZ)	-- kept only for r
 	return false
 end
 
-function AutoDrive.checkIsOnField(startWorldX, worldY, startWorldZ)
+function AutoDrive.checkIsOnField_notFS22(startWorldX, worldY, startWorldZ)
     local data = g_currentMission.densityMapModifiers.getAIDensityHeightArea
     local modifier = data.modifier
     local filter = data.filter

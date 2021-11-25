@@ -6,12 +6,12 @@ local ADColorSettingsGui_mt = Class(ADColorSettingsGui, ScreenElement)
 
 function ADColorSettingsGui:new(target)
     ADColorSettingsGui.debugMsg("ADColorSettingsGui:new") -- 1
-    local o = ScreenElement:new(target, ADColorSettingsGui_mt)
-    o.returnScreenName = ""
-    o.listItems = {}
-    o.rowIndex = 0
-    o:registerControls(ADColorSettingsGui.CONTROLS)
-    return o
+    local element = ScreenElement.new(target, ADColorSettingsGui_mt)
+    element.returnScreenName = ""
+    element.listItems = {}
+    element.rowIndex = 0
+    element:registerControls(ADColorSettingsGui.CONTROLS)
+    return element
 end
 
 function ADColorSettingsGui:onCreate()

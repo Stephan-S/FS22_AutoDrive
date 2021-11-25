@@ -12,15 +12,16 @@ local ADDebugSettingsPage_mt = Class(ADDebugSettingsPage, TabbedMenuFrameElement
 ADDebugSettingsPage.CONTROLS = {"settingsContainer", "headerIcon"}
 
 function ADDebugSettingsPage:new(target)
-    local o = TabbedMenuFrameElement:new(target, ADDebugSettingsPage_mt)
-    o.returnScreenName = ""
-    o.debugElements = {}
-    o.lastDebugChannelMask = AutoDrive.currentDebugChannelMask
-    o:registerControls(ADDebugSettingsPage.CONTROLS)
-    return o
+    local element = TabbedMenuFrameElement.new(target, ADDebugSettingsPage_mt)
+    element.returnScreenName = ""
+    element.debugElements = {}
+    element.lastDebugChannelMask = AutoDrive.currentDebugChannelMask
+    element:registerControls(ADDebugSettingsPage.CONTROLS)
+    return element
 end
 
 function ADDebugSettingsPage:setupMenuButtonInfo(parent)
+    -- AutoDrive.debugMsg(nil, "[AD] ADDebugSettingsPage:setupMenuButtonInfo parent self %s", tostring(parent))
     self.menuButtonInfo = {{inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = parent:makeSelfCallback(parent.onClickBack), showWhenPaused = true}}
     self.hasCustomMenuButtons = true
 end

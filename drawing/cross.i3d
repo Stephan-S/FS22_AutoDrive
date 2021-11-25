@@ -6,7 +6,7 @@
   </Asset>
 
   <Files>
-    <File fileId="2" filename="$data/shaders/fxCircleShader.xml"/>
+    <File fileId="2" filename="fxCircleShader.xml"/>
     <File fileId="1" filename="cross_diffuse.dds"/>
   </Files>
 

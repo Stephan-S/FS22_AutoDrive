@@ -5,6 +5,7 @@ AutoDrive.directory = g_currentModDirectory
 
 g_autoDriveUIFilename = AutoDrive.directory .. "textures/GUI_Icons.dds"
 g_autoDriveDebugUIFilename = AutoDrive.directory .. "textures/gui_debug_Icons.dds"
+g_autoDriveDebugUIFilename_BC7 = AutoDrive.directory .. "textures/gui_debug_Icons_BC7.dds"
 g_autoDriveTipOfTheDayUIFilename = AutoDrive.directory .. "textures/tipOfTheDay_icons.dds"
 
 AutoDrive.experimentalFeatures = {}
@@ -108,8 +109,7 @@ AutoDrive.actions = {
 	{"AD_devAction", false, 0},
 	{"AD_open_tipOfTheDay", false, 0},
 	{"ADRefuelVehicle", false, 0},
-	{"ADToggleHudExtension", true, 1},
-	-- {"COURSEPLAY_MOUSEACTION_SECONDARY", true, 1}
+	{"ADToggleHudExtension", true, 1}
 }
 
 AutoDrive.colors = {
@@ -132,19 +132,27 @@ AutoDrive.colors = {
 AutoDrive.currentColors = {} -- this will hold the current colors, derived from default colors above, overwritten by local settings
 
 function AutoDrive:onAllModsLoaded()
-	ADThirdPartyModsManager:load()
+	-- ADThirdPartyModsManager:load()
+end
+
+function AutoDrive:restartMySavegame()
+	if g_server then
+		restartApplication(" -autoStartSavegameId 1")
+	end
 end
 
 function AutoDrive:loadMap(name)
 	local index = 0
-Logging.info("[AD] Start register later loaded mods...")
--- second iteration to register AD to vehicle types which where loaded after AD
+	Logging.info("[AD] Start register later loaded mods...")
+    ADThirdPartyModsManager:load()
+	-- second iteration to register AD to vehicle types which where loaded after AD
     AutoDriveRegister.register()
     AutoDriveRegister.registerVehicleData()
 Logging.info("[AD] Start register later loaded mods end")
 	index = index + 1
 	Logging.info("[AutoDrive] Index: %d",index)
 
+	addConsoleCommand('restartMySavegame', 'Restart my savegame', 'restartMySavegame', self)
 
 	-- if g_server ~= nil then
 		-- AutoDrive.AutoDriveSync = AutoDriveSync:new(g_server ~= nil, g_client ~= nil)
@@ -259,11 +267,13 @@ Logging.info("[AD] Start register later loaded mods end")
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
+	-- LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
+    -- LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
+	-- LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
+    -- LoadTrigger.delete = Utils.prependedFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
@@ -487,15 +497,20 @@ function AutoDrive:preRemoveVehicle(vehicle)
 end
 
 function AutoDrive:FarmStats_saveToXMLFile(xmlFile, key)
-	key = key .. ".statistics"
-	if self.statistics.driversTraveledDistance ~= nil then
-		setXMLFloat(xmlFile, key .. ".driversTraveledDistance", self.statistics.driversTraveledDistance.total)
-	end
+    if not xmlFile:hasProperty(key) then
+        return
+    end
+	-- key = key .. ".statistics"
+	-- if self.statistics.driversTraveledDistance ~= nil then
+		-- setXMLFloat(xmlFile, key .. ".driversTraveledDistance", self.statistics.driversTraveledDistance.total)
+	-- end
 end
 
 function AutoDrive:FarmStats_loadFromXMLFile(xmlFile, key)
 	key = key .. ".statistics"
-	self.statistics["driversTraveledDistance"].total = Utils.getNoNil(getXMLFloat(xmlFile, key .. ".driversTraveledDistance"), 0)
+	-- self.statistics["driversTraveledDistance"].total = Utils.getNoNil(getXMLFloat(xmlFile, key .. ".driversTraveledDistance"), 0)
+    
+	self.statistics["driversTraveledDistance"].total = xmlFile:getFloat(key .. ".driversTraveledDistance", 0)
 end
 
 function AutoDrive:FarmStats_getStatisticData(superFunc)

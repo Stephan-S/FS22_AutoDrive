@@ -3,16 +3,16 @@ AutoDriveDebugSettingsEvent_mt = Class(AutoDriveDebugSettingsEvent, Event)
 
 InitEventClass(AutoDriveDebugSettingsEvent, "AutoDriveDebugSettingsEvent")
 
-function AutoDriveDebugSettingsEvent:emptyNew()
-    local o = Event:new(AutoDriveDebugSettingsEvent_mt)
-    o.className = "AutoDriveDebugSettingsEvent"
-    return o
+function AutoDriveDebugSettingsEvent.emptyNew()
+	print("AutoDriveDebugSettingsEvent:emptyNew")
+    local self = Event.new(AutoDriveDebugSettingsEvent_mt)
+    return self
 end
 
-function AutoDriveDebugSettingsEvent:new(currentDebugChannelMask)
-    local o = AutoDriveDebugSettingsEvent:emptyNew()
-    o.currentDebugChannelMask = currentDebugChannelMask
-    return o
+function AutoDriveDebugSettingsEvent.new(currentDebugChannelMask)
+    local self = AutoDriveDebugSettingsEvent.emptyNew()
+    self.currentDebugChannelMask = currentDebugChannelMask
+    return self
 end
 
 function AutoDriveDebugSettingsEvent:writeStream(streamId)
@@ -46,7 +46,7 @@ function AutoDriveDebugSettingsEvent:run(connection)
 end
 
 function AutoDriveDebugSettingsEvent.sendEvent(currentDebugChannelMask)
-    local event = AutoDriveDebugSettingsEvent:new(currentDebugChannelMask)
+    local event = AutoDriveDebugSettingsEvent.new(currentDebugChannelMask)
     if g_server ~= nil then
         -- Server have to broadcast to all clients and himself
         -- Logging.info("[AD] AutoDriveDebugSettingsEvent.sendEvent Server have to broadcast to all clients and himself currentDebugChannelMask %s", tostring(currentDebugChannelMask))
@@ -61,6 +61,6 @@ end
 function AutoDriveDebugSettingsEvent.sendToClient(connection, currentDebugChannelMask)
     if g_server ~= nil then
         -- Logging.info("[AD] AutoDriveDebugSettingsEvent.sendToClient g_server ~= nil currentDebugChannelMask %s", tostring(currentDebugChannelMask))
-        connection:sendEvent(AutoDriveDebugSettingsEvent:new(currentDebugChannelMask))
+        connection:sendEvent(AutoDriveDebugSettingsEvent.new(currentDebugChannelMask))
     end
 end

@@ -3,18 +3,18 @@ AutoDriveCreateWayPointEvent_mt = Class(AutoDriveCreateWayPointEvent, Event)
 
 InitEventClass(AutoDriveCreateWayPointEvent, "AutoDriveCreateWayPointEvent")
 
-function AutoDriveCreateWayPointEvent:emptyNew()
-	local o = Event:new(AutoDriveCreateWayPointEvent_mt)
-	o.className = "AutoDriveCreateWayPointEvent"
-	return o
+function AutoDriveCreateWayPointEvent.emptyNew()
+	print("AutoDriveCreateWayPointEvent.emptyNew")
+	local self = Event.new(AutoDriveCreateWayPointEvent_mt)
+	return self
 end
 
-function AutoDriveCreateWayPointEvent:new(x, y, z)
-	local o = AutoDriveCreateWayPointEvent:emptyNew()
-	o.x = x
-	o.y = y
-	o.z = z
-	return o
+function AutoDriveCreateWayPointEvent.new(x, y, z)
+	local self = AutoDriveCreateWayPointEvent.emptyNew()
+	self.x = x
+	self.y = y
+	self.z = z
+	return self
 end
 
 function AutoDriveCreateWayPointEvent:writeStream(streamId, connection)
@@ -41,7 +41,7 @@ function AutoDriveCreateWayPointEvent:run(connection)
 end
 
 function AutoDriveCreateWayPointEvent.sendEvent(x, y, z)
-	local event = AutoDriveCreateWayPointEvent:new(x, y, z)
+	local event = AutoDriveCreateWayPointEvent.new(x, y, z)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

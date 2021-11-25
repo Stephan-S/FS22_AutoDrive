@@ -231,7 +231,7 @@ function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
 end
 
 function ADHarvestManager.isHarvesterActive(harvester)
-    if harvester:getIsBufferCombine() then
+    if AutoDrive.getIsBufferCombine(harvester) then
         return true
     else
         local fillLevel, leftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(harvester)

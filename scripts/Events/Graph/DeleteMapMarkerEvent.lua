@@ -3,16 +3,16 @@ AutoDriveDeleteMapMarkerEvent_mt = Class(AutoDriveDeleteMapMarkerEvent, Event)
 
 InitEventClass(AutoDriveDeleteMapMarkerEvent, "AutoDriveDeleteMapMarkerEvent")
 
-function AutoDriveDeleteMapMarkerEvent:emptyNew()
-	local o = Event:new(AutoDriveDeleteMapMarkerEvent_mt)
-	o.className = "AutoDriveDeleteMapMarkerEvent"
-	return o
+function AutoDriveDeleteMapMarkerEvent.emptyNew()
+	print("AutoDriveDeleteMapMarkerEvent.emptyNew")
+	local self = Event.new(AutoDriveDeleteMapMarkerEvent_mt)
+	return self
 end
 
-function AutoDriveDeleteMapMarkerEvent:new(markerId)
-	local o = AutoDriveDeleteMapMarkerEvent:emptyNew()
-	o.markerId = markerId
-	return o
+function AutoDriveDeleteMapMarkerEvent.new(markerId)
+	local self = AutoDriveDeleteMapMarkerEvent.emptyNew()
+	self.markerId = markerId
+	return self
 end
 
 function AutoDriveDeleteMapMarkerEvent:writeStream(streamId, connection)
@@ -35,7 +35,7 @@ function AutoDriveDeleteMapMarkerEvent:run(connection)
 end
 
 function AutoDriveDeleteMapMarkerEvent.sendEvent(markerId)
-	local event = AutoDriveDeleteMapMarkerEvent:new(markerId)
+	local event = AutoDriveDeleteMapMarkerEvent.new(markerId)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

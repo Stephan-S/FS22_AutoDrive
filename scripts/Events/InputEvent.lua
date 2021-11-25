@@ -3,17 +3,17 @@ AutoDriveInputEventEvent_mt = Class(AutoDriveInputEventEvent, Event)
 
 InitEventClass(AutoDriveInputEventEvent, "AutoDriveInputEventEvent")
 
-function AutoDriveInputEventEvent:emptyNew()
-    local o = Event:new(AutoDriveInputEventEvent_mt)
-    o.className = "AutoDriveInputEventEvent"
-    return o
+function AutoDriveInputEventEvent.emptyNew()
+	print("AutoDriveInputEventEvent:emptyNew")
+    local self = Event.new(AutoDriveInputEventEvent_mt)
+    return self
 end
 
-function AutoDriveInputEventEvent:new(vehicle, inputId)
-    local o = AutoDriveInputEventEvent:emptyNew()
-    o.vehicle = vehicle
-    o.inputId = inputId
-    return o
+function AutoDriveInputEventEvent.new(vehicle, inputId)
+    local self = AutoDriveInputEventEvent.emptyNew()
+    self.vehicle = vehicle
+    self.inputId = inputId
+    return self
 end
 
 function AutoDriveInputEventEvent:writeStream(streamId, connection)
@@ -38,6 +38,6 @@ end
 function AutoDriveInputEventEvent.sendEvent(vehicle, inputId)
     if g_client ~= nil then
         -- Client have to send to server
-        g_client:getServerConnection():sendEvent(AutoDriveInputEventEvent:new(vehicle, inputId))
+        g_client:getServerConnection():sendEvent(AutoDriveInputEventEvent.new(vehicle, inputId))
     end
 end

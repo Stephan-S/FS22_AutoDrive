@@ -154,11 +154,11 @@ function AutoDrive.pointIsBetweenTwoPoints(x, z, startX, startZ, endX, endZ)
 end
 
 function AutoDrive.semanticVersionToValue(versionString)
-    local codes = versionString:AD_split(".")
+    local codes = versionString:split(".")
     local value = 0
     if codes ~= nil then
         for i, code in ipairs(codes) do
-            local subCodes = code:AD_split("-")
+            local subCodes = code:split("-")
             if subCodes ~= nil and subCodes[1] ~= nil then
                 value = value * 10 + tonumber(subCodes[1])
                 if subCodes[2] ~= nil then

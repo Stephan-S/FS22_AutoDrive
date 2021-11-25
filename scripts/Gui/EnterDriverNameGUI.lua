@@ -11,11 +11,11 @@ ADEnterDriverNameGui.CONTROLS = {"textInputElement"}
 local ADEnterDriverNameGui_mt = Class(ADEnterDriverNameGui, ScreenElement)
 
 function ADEnterDriverNameGui:new(target)
-    local o = ScreenElement:new(target, ADEnterDriverNameGui_mt)
-    o.returnScreenName = ""
-    o.textInputElement = nil
-    o:registerControls(ADEnterDriverNameGui.CONTROLS)
-    return o
+    local element = ScreenElement.new(target, ADEnterDriverNameGui_mt)
+    element.returnScreenName = ""
+    element.textInputElement = nil
+    element:registerControls(ADEnterDriverNameGui.CONTROLS)
+    return element
 end
 
 function ADEnterDriverNameGui:onOpen()

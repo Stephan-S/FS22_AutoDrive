@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<CustomShader version="5">
+    <Parameters>
+        <Parameter name = "scaleParameters" target = "scaleParameters" type = "float4" defaultValue = "0.75 1.0 2.5 1.0" />
+    </Parameters>
+    <UvUsages/>
+    <Variations>
+        <Variation name = "SCALING">
+<![CDATA[
+    #define SCALING 
+]]>
+        </Variation>
+        <Variation name = "PULSATING">
+<![CDATA[
+    #define PULSATING 
+]]>
+        </Variation>
+    </Variations>
+    <LodLevel startDistance="0">
+        <CodeInjections>
+            <CodeInjection position="POST_GET_WORLD_POSE_VS">
+<![CDATA[
+{
+// this assumes z = 0
+
+float3 camToPos = float3(object.modelMatrix[0][3], object.modelMatrix[1][3], object.modelMatrix[2][3]);
+
+float3 upVector = float3(object.modelMatrix[0][1], object.modelMatrix[1][1], object.modelMatrix[2][1]);
+float3 sideVector = normalize(cross(camToPos, upVector));
+// Allow scaling
+sideVector *= length(float3(object.modelMatrix[0][0], object.modelMatrix[1][0], object.modelMatrix[2][0]));
+
+worldPosition = sideVector*In.position.x + upVector*In.position.y + camToPos;
+}
+]]>
+            </CodeInjection>
+            <CodeInjection position="CONFIG_DEFINES">
+<![CDATA[
+#if defined(ALPHA_BLENDED)
+// In additive blending mode, we only apply the fog extinction
+#undef FOG_INSCATTERING
+#endif
+]]>
+            </CodeInjection>				
+            <CodeInjection position = "OBJECT_PARAMETERS">
+<![CDATA[
+    /*
+    scaleParameters.x - 0 or 1 animation speed multiplier
+    scaleParameters.y - lerpA scale value
+    scaleParameters.z - lerpB scale value
+    */
+    float4 scaleParameters;
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_POSITION_VS">
+<![CDATA[
+    float3   mPosition = In.position.xyz;
+	
+#if defined( SCALING )    
+    float    mSpeed         = object.scaleParameters.x * cTime_s;
+    float    mAlpha         = mSpeed - floor( mSpeed ); // 0..1
+    mPosition = mPosition.xyz * lerp( object.scaleParameters.y, object.scaleParameters.z, mAlpha );
+#endif
+
+    return   mPosition.xyz;
+]]>
+            </CodeInjection>
+            <CodeInjection position="POST_GLOSS_COLOR_FS">
+<![CDATA[
+#if defined( SPECULAR ) && defined( ALPHA_BLENDED )
+    #undef SPECULAR // Disable specular color for alphaBlended billboards
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="ALPHA_FS">
+<![CDATA[
+#if defined( SCALING ) || defined( PULSATING )
+    float    mSpeed         = object.scaleParameters.x * cTime_s;
+    float    mAlpha         = mSpeed - floor( mSpeed ); // 0..1
+    float    mAttuniation   = 1 - abs( 2 * mAlpha - 1 );
+#endif
+#if defined( SCALING )     
+    alpha *= mAttuniation;
+#endif
+#if defined( PULSATING )  
+    alpha = lerp (alpha, alpha*2, mAttuniation);
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="FINAL_POS_FS">
+<![CDATA[
+#if defined(ALPHA_BLENDED)
+    oColor.a = 0.0; // additive blending
+#endif
+]]>
+            </CodeInjection>
+        </CodeInjections>
+    </LodLevel>
+</CustomShader>

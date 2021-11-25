@@ -9,11 +9,8 @@ function ADHudIcon:new(posX, posY, width, height, image, layer, name)
     o.isVisible = true
     o.lastLineCount = 1
     
-Logging.info("[AD] ADHudIcon:new type image %s type o.image %s", type(image), type(o.image))
-return o
-    -- o.ov = Overlay:new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
-
-    -- return o
+    o.ov = Overlay.new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
+    return o
 end
 
 function ADHudIcon:onDraw(vehicle, uiScale)
@@ -141,7 +138,7 @@ end
 
 function ADHudIcon:splitTextByLength(text, fontSize, maxLength)
     local lines = {}
-    local textParts = text:AD_split("-")
+    local textParts = text:split("-")
     local line = textParts[1]
     local index = 2
     while index <= #textParts do

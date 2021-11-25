@@ -900,6 +900,7 @@ function AutoDrive:MapHotspot_getIsVisible(superFunc)
 end
 
 function AutoDrive.updateDestinationsMapHotspots()
+	--[[
     AutoDrive.debugPrint(nil, AutoDrive.DC_DEVINFO, "AutoDrive.updateDestinationsMapHotspots()")
     local width, height = getNormalizedScreenValues(9, 9)
 
@@ -918,10 +919,13 @@ function AutoDrive.updateDestinationsMapHotspots()
         if marker.isADDebug == true then
             -- map hotspot debug
             mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
-            mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({780, 780, 234, 234}))
+            --mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({780, 780, 234, 234}))
+--function GuiUtils.getUVs(str, ref, defaultValue, rotation)
+			mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({780, 780, 234, 234}))
         else
-            mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_DEFAULT)
-            mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({0, 512, 128, 128}))
+            mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_OTHER)
+            --mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({0, 512, 128, 128}))
+			mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({0, 512, 128, 128}))
         end
         mh:setSize(width, height)
         mh:setTextOptions(0)
@@ -936,6 +940,7 @@ function AutoDrive.updateDestinationsMapHotspots()
             table.insert(AutoDrive.mapHotspotsBuffer, mh)
         end
     end
+	--]]
 end
 
 function AutoDrive.createColorSelectionWayPoints(vehicle)

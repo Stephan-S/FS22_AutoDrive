@@ -11,11 +11,11 @@ ADEnterDestinationFilterGui.CONTROLS = {"textInputElement"}
 local ADEnterDestinationFilterGui_mt = Class(ADEnterDestinationFilterGui, ScreenElement)
 
 function ADEnterDestinationFilterGui:new(target)
-    local o = ScreenElement:new(target, ADEnterDestinationFilterGui_mt)
-    o.returnScreenName = ""
-    o.textInputElement = nil
-    o:registerControls(ADEnterDestinationFilterGui.CONTROLS)
-    return o
+    local element = ScreenElement.new(target, ADEnterDestinationFilterGui_mt)
+    element.returnScreenName = ""
+    element.textInputElement = nil
+    element:registerControls(ADEnterDestinationFilterGui.CONTROLS)
+    return element
 end
 
 function ADEnterDestinationFilterGui:onOpen()

@@ -3,20 +3,20 @@ AutoDriveMoveWayPointEvent_mt = Class(AutoDriveMoveWayPointEvent, Event)
 
 InitEventClass(AutoDriveMoveWayPointEvent, "AutoDriveMoveWayPointEvent")
 
-function AutoDriveMoveWayPointEvent:emptyNew()
-    local o = Event:new(AutoDriveMoveWayPointEvent_mt)
-    o.className = "AutoDriveMoveWayPointEvent"
-    return o
+function AutoDriveMoveWayPointEvent.emptyNew()
+	print("AutoDriveMoveWayPointEvent.emptyNew")
+    local self = Event.new(AutoDriveMoveWayPointEvent_mt)
+    return self
 end
 
-function AutoDriveMoveWayPointEvent:new(wayPointId, x, y, z, flags)
-    local o = AutoDriveMoveWayPointEvent:emptyNew()
-    o.wayPointId = wayPointId
-    o.x = x
-    o.y = y
-    o.z = z
-    o.flags = flags
-    return o
+function AutoDriveMoveWayPointEvent.new(wayPointId, x, y, z, flags)
+    local self = AutoDriveMoveWayPointEvent.emptyNew()
+    self.wayPointId = wayPointId
+    self.x = x
+    self.y = y
+    self.z = z
+    self.flags = flags
+    return self
 end
 
 function AutoDriveMoveWayPointEvent:writeStream(streamId, connection)
@@ -47,7 +47,7 @@ function AutoDriveMoveWayPointEvent:run(connection)
 end
 
 function AutoDriveMoveWayPointEvent.sendEvent(wayPointId, x, y, z, flags)
-    local event = AutoDriveMoveWayPointEvent:new(wayPointId, x, y, z, flags)
+    local event = AutoDriveMoveWayPointEvent.new(wayPointId, x, y, z, flags)
     if g_server ~= nil then
         -- Server have to broadcast to all clients and himself
         g_server:broadcastEvent(event, true)

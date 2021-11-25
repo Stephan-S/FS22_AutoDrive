@@ -4,11 +4,11 @@ ADRoutesManagerGui.CONTROLS = {"textInputElement", "listItemTemplate", "autoDriv
 local ADRoutesManagerGui_mt = Class(ADRoutesManagerGui, ScreenElement)
 
 function ADRoutesManagerGui:new(target)
-    local o = ScreenElement:new(target, ADRoutesManagerGui_mt)
-    o.returnScreenName = ""
-    o.routes = {}
-    o:registerControls(ADRoutesManagerGui.CONTROLS)
-    return o
+    local element = ScreenElement.new(target, ADRoutesManagerGui_mt)
+    element.returnScreenName = ""
+    element.routes = {}
+    element:registerControls(ADRoutesManagerGui.CONTROLS)
+    return element
 end
 
 function ADRoutesManagerGui:onCreate()

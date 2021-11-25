@@ -83,6 +83,8 @@ end
 function AutoDrive:onPreLoad(savegame)
     if self.spec_autodrive == nil then
         self.spec_autodrive = AutoDrive
+        AutoDrive.debugMsg(self, "AutoDrive:onPreLoad")
+        -- AutoDriveRegister.addModTranslations(g_i18n)
     end
 end
 
@@ -149,25 +151,26 @@ function AutoDrive:onPostLoad(savegame)
     if self.isServer then
         if savegame ~= nil then
 
-            Logging.info("[AD] AutoDrive:onPostLoad savegame.xmlFile ->%s<-", tostring(savegame.xmlFile))
+-- Logging.info("[AD] AutoDrive:onPostLoad savegame.xmlFile ->%s<-", tostring(savegame.xmlFile))
             local xmlFile = savegame.xmlFile
             -- local xmlFile = loadXMLFile("vehicleXML", savegame.xmlFile)
             local key = savegame.key .. ".FS19_AutoDrive.AutoDrive"
-            Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
+-- Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
 
             self.ad.stateModule:readFromXMLFile(xmlFile, key)
             AutoDrive.readVehicleSettingsFromXML(self, xmlFile, key)
 
-            -- local groupString = getXMLString(xmlFile, key .. "#groups")
-            local groupString = xmlFile:getString(key .. "#groups", nil)
-            if groupString ~= nil then
-                local groupTable = groupString:AD_split(";")
-                for _, groupCombined in pairs(groupTable) do
-                    local groupNameAndBool = groupCombined:AD_split(",")
-                    if tonumber(groupNameAndBool[2]) >= 1 then
-                        self.ad.groups[groupNameAndBool[1]] = true
-                    else
-                        self.ad.groups[groupNameAndBool[1]] = false
+            if xmlFile:hasProperty(key) then
+                local groupString = getXMLString(xmlFile, key .. "#groups")
+                if groupString ~= nil then
+                    local groupTable = groupString:split(";")
+                    for _, groupCombined in pairs(groupTable) do
+                        local groupNameAndBool = groupCombined:split(",")
+                        if tonumber(groupNameAndBool[2]) >= 1 then
+                            self.ad.groups[groupNameAndBool[1]] = true
+                        else
+                            self.ad.groups[groupNameAndBool[1]] = false
+                        end
                     end
                 end
             end
@@ -177,7 +180,7 @@ function AutoDrive:onPostLoad(savegame)
         self.ad.driveForwardTimer = AutoDriveTON:new()
     end
 
-    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.getIsBufferCombine ~= nil then
+    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         ADHarvestManager:registerHarvester(self)
     end
 
@@ -202,7 +205,7 @@ function AutoDrive:onPostLoad(savegame)
     -- Creating a new transform on front of the vehicle
     self.ad.frontNode = createTransformGroup(self:getName() .. "_frontNode")
     link(self.components[1].node, self.ad.frontNode)
-    setTranslation(self.ad.frontNode, 0, 0, self.size.length / 2 + self.lengthOffset + 0.75)
+    setTranslation(self.ad.frontNode, 0, 0, self.size.length / 2 + self.size.lengthOffset + 0.75)
     self.ad.frontNodeGizmo = DebugGizmo:new()
     self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
@@ -315,11 +318,14 @@ function AutoDrive:saveToXMLFile(xmlFile, key)
     if self.ad == nil then
         return
     end
+    if not xmlFile:hasProperty(key) then
+        return
+    end
     self.ad.stateModule:saveToXMLFile(xmlFile, key)
 
     for settingName, setting in pairs(AutoDrive.settings) do
         if setting.isVehicleSpecific and self.ad.settings ~= nil and self.ad.settings[settingName] ~= nil then
-            setXMLInt(xmlFile, key .. "#" .. settingName, self.ad.settings[settingName].current)
+            xmlFile:setValue(key .. "#" .. settingName, self.ad.settings[settingName].current)
         end
     end
 
@@ -339,7 +345,7 @@ function AutoDrive:saveToXMLFile(xmlFile, key)
                 end
             end
         end
-        setXMLString(xmlFile, key .. "#groups", combinedString)
+        xmlFile:setValue(key .. "#groups", combinedString)
     end
 end
 
@@ -440,11 +446,11 @@ end
 function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex)
     if attachable["spec_FS19_addon_strawHarvest.strawHarvestPelletizer"] ~= nil then
         attachable.isPremos = true
-        attachable.getIsBufferCombine = function()
-            return false
-        end
+        -- attachable.getIsBufferCombine = function()
+            -- return false
+        -- end
     end
-    if (attachable.spec_pipe ~= nil and attachable.getIsBufferCombine ~= nil) or attachable.isPremos then
+    if (attachable.spec_pipe ~= nil and attachable.spec_combine ~= nil) or attachable.isPremos then
         attachable.isTrailedHarvester = true
         attachable.trailingVehicle = self
         ADHarvestManager:registerHarvester(attachable)
@@ -499,7 +505,7 @@ function AutoDrive:onPreDetachImplement(implement)
         attachable.isTrailedHarvester = false
         attachable.trailingVehicle = nil
         if attachable.isPremos then
-            attachable.getIsBufferCombine = nil
+            -- attachable.getIsBufferCombine = nil
         end
     end
     if self.ad ~= nil then
@@ -791,7 +797,7 @@ function AutoDrive:startAutoDrive()
 
             if self.getAINeedsTrafficCollisionBox ~= nil then
                 if self:getAINeedsTrafficCollisionBox() then
-                    local collisionRoot = g_i3DManager:loadSharedI3DFile(AIVehicle.TRAFFIC_COLLISION_BOX_FILENAME, self.baseDirectory, false, true, false)
+                    local collisionRoot = g_i3DManager:loadSharedI3DFile(self.baseDirectory .. AIVehicle.TRAFFIC_COLLISION_BOX_FILENAME, false, true, false)
                     if collisionRoot ~= nil and collisionRoot ~= 0 then
                         local collision = getChildAt(collisionRoot, 0)
                         link(getRootNode(), collision)
@@ -995,7 +1001,7 @@ function AutoDrive.AddHelper()
     
     g_helperManager.numHelpers = g_helperManager.numHelpers + 1
     local helper = {}
-    helper.name = source.name .. "_" .. math.AD_random(100, 1000)
+    helper.name = source.name .. "_" .. math.random(100, 1000)
     helper.index = g_helperManager.numHelpers
     helper.title = helper.name
     helper.filename = source.filename

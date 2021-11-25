@@ -4,11 +4,11 @@ ADTipOfTheDayGUI.CONTROLS = {"tipOfTheDayTemplate"}
 local ADTipOfTheDayGUI_mt = Class(ADTipOfTheDayGUI, ScreenElement)
 
 function ADTipOfTheDayGUI:new(target)
-    local o = ScreenElement:new(target, ADTipOfTheDayGUI_mt)
-    o.returnScreenName = ""
+    local element = ScreenElement.new(target, ADTipOfTheDayGUI_mt)
+    element.returnScreenName = ""
     --o.history = {}
-    o:registerControls(ADTipOfTheDayGUI.CONTROLS)
-    return o
+    element:registerControls(ADTipOfTheDayGUI.CONTROLS)
+    return element
 end
 
 function ADTipOfTheDayGUI:onCreate()

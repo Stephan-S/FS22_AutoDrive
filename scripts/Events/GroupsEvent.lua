@@ -5,17 +5,17 @@ AutoDriveGroupsEvent_mt = Class(AutoDriveGroupsEvent, Event)
 
 InitEventClass(AutoDriveGroupsEvent, "AutoDriveGroupsEvent")
 
-function AutoDriveGroupsEvent:emptyNew()
-	local o = Event:new(AutoDriveGroupsEvent_mt)
-	o.className = "AutoDriveGroupsEvent"
-	return o
+function AutoDriveGroupsEvent.emptyNew()
+	print("AutoDriveGroupsEvent:emptyNew")
+	local self = Event.new(AutoDriveGroupsEvent_mt)
+	return self
 end
 
-function AutoDriveGroupsEvent:new(groupName, eventType)
-	local o = AutoDriveGroupsEvent:emptyNew()
-	o.groupName = groupName
-	o.eventType = eventType
-	return o
+function AutoDriveGroupsEvent.new(groupName, eventType)
+	local self = AutoDriveGroupsEvent.emptyNew()
+	self.groupName = groupName
+	self.eventType = eventType
+	return self
 end
 
 function AutoDriveGroupsEvent:writeStream(streamId, connection)
@@ -44,7 +44,7 @@ function AutoDriveGroupsEvent:run(connection)
 end
 
 function AutoDriveGroupsEvent.sendEvent(groupName, eventType)
-	local event = AutoDriveGroupsEvent:new(groupName, eventType)
+	local event = AutoDriveGroupsEvent.new(groupName, eventType)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

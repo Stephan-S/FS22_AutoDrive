@@ -3,17 +3,17 @@ AutoDriveChangeMapMarkerGroupEvent_mt = Class(AutoDriveChangeMapMarkerGroupEvent
 
 InitEventClass(AutoDriveChangeMapMarkerGroupEvent, "AutoDriveChangeMapMarkerGroupEvent")
 
-function AutoDriveChangeMapMarkerGroupEvent:emptyNew()
-	local o = Event:new(AutoDriveChangeMapMarkerGroupEvent_mt)
-	o.className = "AutoDriveChangeMapMarkerGroupEvent"
-	return o
+function AutoDriveChangeMapMarkerGroupEvent.emptyNew()
+	print("AutoDriveChangeMapMarkerGroupEvent:emptyNew")
+	local self = Event.new(AutoDriveChangeMapMarkerGroupEvent_mt)
+	return self
 end
 
-function AutoDriveChangeMapMarkerGroupEvent:new(groupName, markerId)
-	local o = AutoDriveChangeMapMarkerGroupEvent:emptyNew()
-	o.groupName = groupName
-	o.markerId = markerId
-	return o
+function AutoDriveChangeMapMarkerGroupEvent.new(groupName, markerId)
+	local self = AutoDriveChangeMapMarkerGroupEvent.emptyNew()
+	self.groupName = groupName
+	self.markerId = markerId
+	return self
 end
 
 function AutoDriveChangeMapMarkerGroupEvent:writeStream(streamId, connection)
@@ -38,7 +38,7 @@ function AutoDriveChangeMapMarkerGroupEvent:run(connection)
 end
 
 function AutoDriveChangeMapMarkerGroupEvent.sendEvent(groupName, markerId)
-	local event = AutoDriveChangeMapMarkerGroupEvent:new(groupName, markerId)
+	local event = AutoDriveChangeMapMarkerGroupEvent.new(groupName, markerId)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

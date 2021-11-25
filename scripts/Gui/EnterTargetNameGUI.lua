@@ -10,14 +10,14 @@ ADEnterTargetNameGui.CONTROLS = {"titleElement", "textInputElement", "buttonsCre
 
 local ADEnterTargetNameGui_mt = Class(ADEnterTargetNameGui, ScreenElement)
 
-function ADEnterTargetNameGui:new(target)
-    local o = ScreenElement:new(target, ADEnterTargetNameGui_mt)
-    o.returnScreenName = ""
-    o.editName = nil
-    o.editId = nil
-    o.edit = false
-    o:registerControls(ADEnterTargetNameGui.CONTROLS)
-    return o
+function ADEnterTargetNameGui.new(target)
+    local self = ScreenElement.new(target, ADEnterTargetNameGui_mt)
+    self.returnScreenName = ""
+    self.editName = nil
+    self.editId = nil
+    self.edit = false
+    self:registerControls(ADEnterTargetNameGui.CONTROLS)
+    return self
 end
 
 function ADEnterTargetNameGui:onOpen()

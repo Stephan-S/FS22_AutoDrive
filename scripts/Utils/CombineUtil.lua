@@ -12,6 +12,10 @@ function AutoDrive.getNodeName(node)
     end
 end
 
+function AutoDrive.getIsBufferCombine(vehicle)
+    return vehicle.spec_combine ~= nil and vehicle.spec_combine.isBufferCombine == true
+end
+
 function AutoDrive.getDischargeNode(combine)
     local dischargeNode = nil
     if combine.spec_dischargeable ~= nil then
@@ -56,7 +60,7 @@ function AutoDrive.getPipeRoot(combine)
             translationMagnitude = MathUtil.vector3Length(pipeRootX, pipeRootY, pipeRootZ)
         end
     until ((translationMagnitude > 0.01 and translationMagnitude < 100) and
-           (combine:getIsBufferCombine() or AutoDrive.sign(pipeRootX) == AutoDrive.getPipeSide(combine)) and
+           (AutoDrive.getIsBufferCombine(combine) or AutoDrive.sign(pipeRootX) == AutoDrive.getPipeSide(combine)) and
            (pipeRootY > 0) or
            parentStack:Count() == 0
           )
@@ -91,7 +95,7 @@ function AutoDrive.getPipeLength(combine)
                                         0, 
                                         pipeRootZ - dischargeZ)
     --AutoDrive.debugPrint(combine, AutoDrive.DC_COMBINEINFO, "AutoDrive.getPipeLength - " .. length)
-    if AutoDrive.isPipeOut(combine) and not combine:getIsBufferCombine() then
+    if AutoDrive.isPipeOut(combine) and not AutoDrive.getIsBufferCombine(combine) then
         local combineNode = combine.components[1].node
         local dischargeX, dichargeY, dischargeZ = getWorldTranslation(AutoDrive.getDischargeNode(combine))
         diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
@@ -111,14 +115,14 @@ end
 function AutoDrive.isPipeOut(combine)
     local spec = combine.spec_pipe
 
-    if (spec ~= nil and combine.getIsBufferCombine ~= nil) then
+    if (spec ~= nil and combine.spec_combine ~= nil) then
         if spec.currentState == spec.targetState and (spec.currentState == 2 or combine.typeName == "combineCutterFruitPreparer") then
             return true
         end
     else
         if combine.getAttachedImplements ~= nil then
             for _, implement in pairs(combine:getAttachedImplements()) do
-                if (implement.object.spec_pipe ~= nil and implement.object.getIsBufferCombine ~= nil) then
+                if (implement.object.spec_pipe ~= nil and implement.object.spec_combine ~= nil) then
                     if implement.object.spec_pipe.currentState == implement.object.spec_pipe.targetState and (implement.object.spec_pipe.currentState == 2 or implement.object.typeName == "combineCutterFruitPreparer") then
                         return true
                     end

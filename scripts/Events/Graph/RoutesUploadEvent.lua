@@ -3,18 +3,18 @@ AutoDriveRoutesUploadEvent_mt = Class(AutoDriveRoutesUploadEvent, Event)
 
 InitEventClass(AutoDriveRoutesUploadEvent, "AutoDriveRoutesUploadEvent")
 
-function AutoDriveRoutesUploadEvent:emptyNew()
-	local o = Event:new(AutoDriveRoutesUploadEvent_mt)
-	o.className = "AutoDriveRoutesUploadEvent"
-	return o
+function AutoDriveRoutesUploadEvent.emptyNew()
+	print("AutoDriveRoutesUploadEvent:emptyNew")
+	local self = Event.new(AutoDriveRoutesUploadEvent_mt)
+	return self
 end
 
-function AutoDriveRoutesUploadEvent:new(wayPoints, mapMarkers, groups)
-	local o = AutoDriveRoutesUploadEvent:emptyNew()
-	o.wayPoints = wayPoints
-	o.mapMarkers = mapMarkers
-	o.groups = groups
-	return o
+function AutoDriveRoutesUploadEvent.new(wayPoints, mapMarkers, groups)
+	local self = AutoDriveRoutesUploadEvent.emptyNew()
+	self.wayPoints = wayPoints
+	self.mapMarkers = mapMarkers
+	self.groups = groups
+	return self
 end
 
 function AutoDriveRoutesUploadEvent:writeStream(streamId, connection)
@@ -50,7 +50,7 @@ function AutoDriveRoutesUploadEvent:run(connection)
 end
 
 function AutoDriveRoutesUploadEvent.sendEvent(wayPoints, mapMarkers, groups)
-	local event = AutoDriveRoutesUploadEvent:new(wayPoints, mapMarkers, groups)
+	local event = AutoDriveRoutesUploadEvent.new(wayPoints, mapMarkers, groups)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

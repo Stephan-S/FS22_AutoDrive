@@ -16,16 +16,13 @@ function ADHudSpeedmeter:new(posX, posY, width, height, fieldSpeed)
     o.layer = 5
     o.isFieldSpeed = fieldSpeed
 
-AutoDrive.debugMsg(nil, "[AD] ADHudSpeedmeter:new type o.image %s", type(o.image))
-    -- o.ov = Overlay:new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
+    o.ov = Overlay.new(o.image, o.position.x, o.position.y, o.size.width, o.size.height)
 
     return o
 end
 
 function ADHudSpeedmeter:onDraw(vehicle, uiScale)
-    if self.ov ~= nil then
-        self.ov:render()
-    end
+    self.ov:render()
 
     if AutoDrive.pullDownListExpanded == 0 or AutoDrive.Hud.targetPullDownList.direction == ADPullDownList.EXPANDED_UP then
         local adFontSize = AutoDrive.FONT_SCALE * uiScale

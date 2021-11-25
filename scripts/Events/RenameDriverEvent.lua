@@ -3,17 +3,17 @@ AutoDriveRenameDriverEvent_mt = Class(AutoDriveRenameDriverEvent, Event)
 
 InitEventClass(AutoDriveRenameDriverEvent, "AutoDriveRenameDriverEvent")
 
-function AutoDriveRenameDriverEvent:emptyNew()
-	local o = Event:new(AutoDriveRenameDriverEvent_mt)
-	o.className = "AutoDriveRenameDriverEvent"
-	return o
+function AutoDriveRenameDriverEvent.emptyNew()
+	print("AutoDriveRenameDriverEvent.emptyNew")
+	local self = Event.new(AutoDriveRenameDriverEvent_mt)
+	return self
 end
 
-function AutoDriveRenameDriverEvent:new(vehicle, name)
-	local o = AutoDriveRenameDriverEvent:emptyNew()
-	o.vehicle = vehicle
-	o.name = name
-	return o
+function AutoDriveRenameDriverEvent.new(vehicle, name)
+	local self = AutoDriveRenameDriverEvent.emptyNew()
+	self.vehicle = vehicle
+	self.name = name
+	return self
 end
 
 function AutoDriveRenameDriverEvent:writeStream(streamId, connection)
@@ -38,7 +38,7 @@ function AutoDriveRenameDriverEvent:run(connection)
 end
 
 function AutoDriveRenameDriverEvent.sendEvent(vehicle, name)
-	local event = AutoDriveRenameDriverEvent:new(vehicle, name)
+	local event = AutoDriveRenameDriverEvent.new(vehicle, name)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

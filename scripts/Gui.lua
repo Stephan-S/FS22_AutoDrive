@@ -4,13 +4,13 @@ function AutoDrive:loadGUI()
 	g_gui:loadProfiles(AutoDrive.directory .. "gui/guiProfiles.xml")
 	AutoDrive.gui = {}
 	AutoDrive.gui.ADEnterDriverNameGui = ADEnterDriverNameGui:new()
-	AutoDrive.gui.ADEnterTargetNameGui = ADEnterTargetNameGui:new()
+	AutoDrive.gui.ADEnterTargetNameGui = ADEnterTargetNameGui.new()
 	AutoDrive.gui.ADEnterGroupNameGui = ADEnterGroupNameGui:new()
 	AutoDrive.gui.ADEnterDestinationFilterGui = ADEnterDestinationFilterGui:new()
 	AutoDrive.gui.ADRoutesManagerGui = ADRoutesManagerGui:new()
 	AutoDrive.gui.ADNotificationsHistoryGui = ADNotificationsHistoryGui:new()
 	AutoDrive.gui.ADColorSettingsGui = ADColorSettingsGui:new()
-	AutoDrive.gui.ADTipOfTheDayGUI = ADTipOfTheDayGUI:new()
+    AutoDrive.gui.ADTipOfTheDayGUI = ADTipOfTheDayGUI:new()
 
 	g_gui:loadGui(AutoDrive.directory .. "gui/enterDriverNameGUI.xml", "ADEnterDriverNameGui", AutoDrive.gui.ADEnterDriverNameGui)
 	g_gui:loadGui(AutoDrive.directory .. "gui/enterTargetNameGUI.xml", "ADEnterTargetNameGui", AutoDrive.gui.ADEnterTargetNameGui)
@@ -46,7 +46,9 @@ function AutoDrive.GuiOverlay_loadOverlay(superFunc, ...)
 		return nil
 	end
 
-	if overlay.filename == "g_autoDriveDebugUIFilename" then
+	if overlay.filename == "g_autoDriveDebugUIFilename_BC7" then
+		overlay.filename = g_autoDriveDebugUIFilename_BC7
+	elseif overlay.filename == "g_autoDriveDebugUIFilename" then
 		overlay.filename = g_autoDriveDebugUIFilename
 	elseif overlay.filename == "g_autoDriveUIFilename" then
 		overlay.filename = g_autoDriveUIFilename

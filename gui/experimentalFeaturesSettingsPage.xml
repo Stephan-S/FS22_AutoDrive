@@ -2,12 +2,12 @@
 <GUI name="autoDriveExperimentalFeaturesSettings" onCreate="onCreate">
 	<GuiElement type="empty" profile="uiInGameMenuFrame">
 		<!-- Static page header -->
-		<GuiElement type="empty" profile="ingameMenuFrameHeaderPanel" position="130px -60px">
-			<GuiElement type="bitmap" profile="ingameMenuGeneralSettingsHeaderIcon" position="0px 0px" id="headerIcon" />
+		<GuiElement type="empty" profile="ingameMenuFrameHeaderPanel" >
+			<GuiElement type="bitmap" profile="ingameMenuGeneralSettingsHeaderIcon" />
 			<GuiElement type="text" profile="ingameMenuFrameHeaderText" position="80px 0px" text="$l10n_gui_ad_eFeaturesSettingsPage_title" />
 		</GuiElement>
 
-		<GuiElement type="bitmap" profile="ingameMenuSettingsBox" position="130px -124px" id="settingsContainer">
+		<GuiElement type="bitmap" profile="ingameMenuSettingsBox" id="settingsContainer">
 			<GuiElement type="boxLayout" profile="ingameMenuSettingsLayout" position="50px -50px">
 				<GuiElement type="multiTextOption" profile="multiTextOptionSettings" onClick="onOptionChange" onCreate="onCreateElement" id="cloneElement">
 					<GuiElement type="button" profile="multiTextOptionSettingsLeft" />

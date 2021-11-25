@@ -12,8 +12,7 @@ function ADHudSettingsButton:new(posX, posY, width, height, setting, toolTip, st
 
     o.images = o:readImages()
 
-AutoDrive.debugMsg(nil, "[AD] ADHudSettingsButton:new o.state %s type o.images[o.state] %s", tostring(o.state), type(o.images[o.state]))
-    -- o.ov = Overlay:new(o.images[o.state], o.position.x, o.position.y, o.size.width, o.size.height)
+    o.ov = Overlay.new(o.images[o.state], o.position.x, o.position.y, o.size.width, o.size.height)
 
     return o
 end
@@ -30,7 +29,7 @@ end
 
 function ADHudSettingsButton:onDraw(vehicle, uiScale)
     self:updateState(vehicle)
-    if self.isVisible and self.ov ~= nil then
+    if self.isVisible then
         self.ov:render()
     end
 end
@@ -38,9 +37,7 @@ end
 function ADHudSettingsButton:updateState(vehicle)
     local newState = AutoDrive.getSettingState(self.setting, vehicle)
     self.isVisible = not AutoDrive.isEditorModeEnabled() or AutoDrive.getSetting("wideHUD")
-    if self.ov ~= nil then
-        self.ov:setImage(self.images[newState])
-    end
+    self.ov:setImage(self.images[newState])
     self.state = newState
 end
 
