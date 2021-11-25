@@ -1211,7 +1211,7 @@ function UnloadBGATask:reverseFromBGALoad(dt)
     local node = self.vehicle.components[1].node
     local x, y, z = getWorldTranslation(node)
     local lx, lz = AIVehicleUtil.getDriveDirection(node, self.targetPoint.x, y, self.targetPoint.z)
-    AIVehicleUtil.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, allowedToDrive, false, -lx, -lz, finalSpeed, 1)
+    AutoDrive.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, allowedToDrive, false, -lx, -lz, finalSpeed, 1)
 
     if math.sqrt(math.pow(x - self.targetPointClose.x, 2) + math.pow(z - self.targetPointClose.z, 2)) < 5 then
         self.action = self.ACTION_DRIVETOUNLOAD_INIT
@@ -1337,7 +1337,7 @@ function UnloadBGATask:reverseFromBGAUnload(dt)
     x = x + rx
     z = z + rz
     --local lx, lz = AIVehicleUtil.getDriveDirection(node, x, y, z)
-    AIVehicleUtil.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, allowedToDrive, false, nil, nil, finalSpeed, 1)
+    AutoDrive.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, allowedToDrive, false, nil, nil, finalSpeed, 1)
 
     if self.shovelUnloadPosition ~= nil then
         if MathUtil.vector2Length(x - self.shovelUnloadPosition.x, z - self.shovelUnloadPosition.z) >= 6 then
@@ -1477,7 +1477,7 @@ function UnloadBGATask:driveInDirection(dt, steeringAngleLimit, acceleration, sl
             maxSpeed = 1
         end
 
-        AIVehicleUtil.driveInDirection(self.vehicle, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
+        AutoDrive.driveInDirection(self.vehicle, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
     end
 end
 

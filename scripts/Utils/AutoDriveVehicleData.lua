@@ -71,7 +71,7 @@ function AutoDriveVehicleData:onPostLoad(savegame)
         if savegame ~= nil then
             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.onPostLoad self.isServer")
             local xmlFile = savegame.xmlFile
-            local key = savegame.key .. ".FS19_AutoDrive.AutoDriveVehicleData"
+            local key = savegame.key .. ".FS22_AutoDrive.AutoDriveVehicleData"
 
             if xmlFile:hasProperty(key) then
                 self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#WorkToolParkDestination"), -1)

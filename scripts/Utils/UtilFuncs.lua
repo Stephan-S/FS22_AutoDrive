@@ -902,9 +902,22 @@ function AutoDrive:getDriveData(superFunc,dt, vX,vY,vZ)		--combine helper functi
     end
 end
 
+function AutoDrive.driveInDirection(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
+	self.motor = self:getMotor()
+	self.cruiseControl = {}
+	self.cruiseControl.state = self:getCruiseControlState()
+	AIVehicleUtil.driveInDirection(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
+end
+
+--[[
 AIVehicleUtil.driveInDirection = function(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
 	if self.getMotorStartTime ~= nil then
 		allowedToDrive = allowedToDrive and (self:getMotorStartTime() <= g_currentMission.time)
+	end
+
+	if not self.firstTimeRun and not self.ad.firstTimeRun then
+		self.firstTimeRun = true
+		self.ad.firstTimeRun = true
 	end
 
 	if self.ad ~= nil and AutoDrive.smootherDriving then
@@ -963,6 +976,7 @@ AIVehicleUtil.driveInDirection = function(self, dt, steeringAngleLimit, accelera
 			end
 			self.spec_motorized.motor:setSpeedLimit(maxSpeed)
 			if self.spec_drivable.cruiseControl.state ~= Drivable.CRUISECONTROL_STATE_ACTIVE then
+				print("AutoDrive.driveInDirection - setCruiseControl")
 				self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_ACTIVE)
 			end
 		else
@@ -980,6 +994,7 @@ AIVehicleUtil.driveInDirection = function(self, dt, steeringAngleLimit, accelera
 		WheelsUtil.updateWheelsPhysics(self, dt, self.lastSpeedReal * self.movingDirection, acc, not allowedToDrive, true)
 	end
 end
+--]]
 
 function AIVehicle:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
 	local spec = self.spec_aiVehicle

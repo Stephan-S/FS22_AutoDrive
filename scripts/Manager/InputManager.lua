@@ -288,6 +288,8 @@ function ADInputManager:input_start_stop(vehicle)
             g_currentMission:requestToEnterVehicle(vehicle)
         end
     end
+
+    --AutoDrive.dumpTable(g_currentMission.aiSystem.roadSplines, "g_currentMission.aiSystem.roadSplines", 4)
 end
 
 function ADInputManager:input_incLoopCounter(vehicle)

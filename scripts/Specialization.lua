@@ -32,9 +32,11 @@ function AutoDrive.registerEventListeners(vehicleType)
 end
 
 function AutoDrive.registerOverwrittenFunctions(vehicleType)
-    SpecializationUtil.registerOverwrittenFunction(vehicleType, "updateAILights", AutoDrive.updateAILights)
-    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getCanMotorRun", AutoDrive.getCanMotorRun)
-    SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle", AutoDrive.leaveVehicle)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "updateAILights",                       AutoDrive.updateAILights)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getCanMotorRun",                       AutoDrive.getCanMotorRun)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle",                         AutoDrive.leaveVehicle)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
 end
 
 function AutoDrive.registerFunctions(vehicleType)
@@ -78,6 +80,36 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
             end
         end
     end
+end
+
+function AutoDrive.initSpecialization()
+    print("Calling AutoDrive initSpecialization")
+    local schema = Vehicle.xmlSchema
+    schema:setXMLSpecializationType("AutoDrive")
+
+    schema:register(XMLValueType.FLOAT, "vehicle.AutoDrive#followDistance", "Follow distance for harveste unloading", 1)
+    schema:setXMLSpecializationType()
+
+    
+    local schemaSavegame = Vehicle.xmlSchemaSavegame
+
+    for settingName, setting in pairs(AutoDrive.settings) do
+        if setting.isVehicleSpecific then
+            schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#" .. settingName, setting.text, setting.default)
+        end
+    end
+    
+    schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#groups", "groups")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#mode", "mode")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#firstMarker", "firstMarker")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#secondMarker", "secondMarker")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#fillType", "fillType")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#loopCounter", "loopCounter")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#speedLimit", "speedLimit")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#fieldSpeedLimit", "fieldSpeedLimit")
+    schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#driverName", "driverName")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#AIVElastActive", "AIVElastActive")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#bunkerUnloadType", "bunkerUnloadType")
 end
 
 function AutoDrive:onPreLoad(savegame)
@@ -154,14 +186,15 @@ function AutoDrive:onPostLoad(savegame)
 -- Logging.info("[AD] AutoDrive:onPostLoad savegame.xmlFile ->%s<-", tostring(savegame.xmlFile))
             local xmlFile = savegame.xmlFile
             -- local xmlFile = loadXMLFile("vehicleXML", savegame.xmlFile)
-            local key = savegame.key .. ".FS19_AutoDrive.AutoDrive"
+            local key = savegame.key .. ".AutoDrive"
 -- Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
+            print("Trying to load xml keys from: " .. key)
 
             self.ad.stateModule:readFromXMLFile(xmlFile, key)
             AutoDrive.readVehicleSettingsFromXML(self, xmlFile, key)
 
             if xmlFile:hasProperty(key) then
-                local groupString = getXMLString(xmlFile, key .. "#groups")
+                local groupString = xmlFile:getValue(key .. "#groups")
                 if groupString ~= nil then
                     local groupTable = groupString:split(";")
                     for _, groupCombined in pairs(groupTable) do
@@ -259,8 +292,8 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
         if self:getIsAIActive() and spec.startedFarmId ~= nil and spec.startedFarmId > 0 and self.ad.stateModule:isActive() then
             local driverWages = AutoDrive.getSetting("driverWages")
             local difficultyMultiplier = g_currentMission.missionInfo.buyPriceMultiplier
-            local price = -dt * difficultyMultiplier * (driverWages) * spec.pricePerMS
-            price = price + (dt * difficultyMultiplier * spec.pricePerMS)   -- add the price which AI internal already substracted
+            local price = -dt * difficultyMultiplier * (driverWages) * 0.001 --spec.pricePerMS
+            price = price + (dt * difficultyMultiplier * 0.001)   -- add the price which AI internal already substracted
             g_currentMission:addMoney(price, spec.startedFarmId, MoneyType.AI, true)
         end
     end
@@ -314,18 +347,22 @@ function AutoDrive:onUpdate(dt)
     self.ad.mapMarkerSelected_Unload = self.ad.stateModule:getSecondMarkerId()
 end
 
-function AutoDrive:saveToXMLFile(xmlFile, key)
+function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
     if self.ad == nil then
         return
     end
-    if not xmlFile:hasProperty(key) then
-        return
-    end
-    self.ad.stateModule:saveToXMLFile(xmlFile, key)
+    local adKey = string.gsub(key, "FS22_AutoDrive.AutoDrive", "AutoDrive")
+    
+    --if not xmlFile:hasProperty(key) then
+        --xmlFile:setValue(adKey, {})
+        --return
+    --end
+    
+    self.ad.stateModule:saveToXMLFile(xmlFile, adKey)
 
     for settingName, setting in pairs(AutoDrive.settings) do
         if setting.isVehicleSpecific and self.ad.settings ~= nil and self.ad.settings[settingName] ~= nil then
-            xmlFile:setValue(key .. "#" .. settingName, self.ad.settings[settingName].current)
+            xmlFile:setValue(adKey .. "#" .. settingName, self.ad.settings[settingName].current)
         end
     end
 
@@ -345,7 +382,7 @@ function AutoDrive:saveToXMLFile(xmlFile, key)
                 end
             end
         end
-        xmlFile:setValue(key .. "#groups", combinedString)
+        xmlFile:setValue(adKey .. "#groups", combinedString)
     end
 end
 
@@ -893,7 +930,7 @@ function AutoDrive:stopAutoDrive()
                     end
                 end
             else
-                AIVehicleUtil.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
+                AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
 
                 if self.ad.onRouteToPark and not self.ad.isStoppingWithError then
@@ -1245,4 +1282,12 @@ function AutoDrive:getCanMotorRun(superFunc)
     else
         return superFunc(self)
     end
+end
+
+function AutoDrive:getIsAIActive(superFunc)
+    return superFunc(self) or self.ad.stateModule:isActive()
+end
+
+function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
+    return superFunc(self) and not self.ad.stateModule:isActive()
 end

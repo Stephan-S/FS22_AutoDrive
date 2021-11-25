@@ -1040,7 +1040,7 @@ function AutoDrive.readVehicleSettingsFromXML(vehicle, xmlFile, key)
             vehicle.ad.settings[settingName] = settingVehicle
 
             if xmlFile:hasProperty(key) then
-                local storedSetting = getXMLInt(xmlFile, key .. "#" .. settingName)
+                local storedSetting = xmlFile:getValue(key .. "#" .. settingName)
                 if storedSetting ~= nil then
                     vehicle.ad.settings[settingName].current = storedSetting
                 end

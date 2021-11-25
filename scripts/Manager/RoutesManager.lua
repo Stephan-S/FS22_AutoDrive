@@ -206,7 +206,7 @@ end
 
 function ADRoutesManager:exportRoutesAsExternalMod()
     local mapName = AutoDrive.loadedMap
-    local exportRootFolder = string.format("%sFS19_AutoDrive_Routes_%s/", self.rootFolder, mapName)
+    local exportRootFolder = string.format("%sFS22_AutoDrive_Routes_%s/", self.rootFolder, mapName)
     createFolder(exportRootFolder)
     local exportRoutesFolder = string.format("%sroutes/", exportRootFolder)
     createFolder(exportRoutesFolder)

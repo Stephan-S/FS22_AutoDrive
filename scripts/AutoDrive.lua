@@ -150,7 +150,7 @@ end
 function AutoDrive:loadMap(name)
 	local index = 0
 	Logging.info("[AD] Start register later loaded mods...")
-    ADThirdPartyModsManager:load()
+    --ADThirdPartyModsManager:load()
 	-- second iteration to register AD to vehicle types which where loaded after AD
     AutoDriveRegister.register()
     AutoDriveRegister.registerVehicleData()

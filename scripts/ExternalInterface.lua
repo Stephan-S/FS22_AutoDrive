@@ -145,7 +145,7 @@ function AutoDrive:StartDriving(vehicle, destinationID, unloadDestinationID, cal
                 else
                     AutoDriveMessageEvent.sendMessage(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
                     -- stop vehicle movement
-                    AIVehicleUtil.driveInDirection(vehicle, 16, 30, 0, 0.2, 20, false, false, 0, 0, 0, 1)
+                    AutoDrive.driveInDirection(vehicle, 16, 30, 0, 0.2, 20, false, false, 0, 0, 0, 1)
                     vehicle:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
                     if vehicle.stopMotor ~= nil then
                         vehicle:stopMotor()
