@@ -263,10 +263,10 @@ function ADSpecialDrivingModule:handleReverseDriving(dt)
 end
 
 function ADSpecialDrivingModule:getBasicStates()
-    self.x, self.y, self.z = getWorldTranslation(self.vehicle:getAIVehicleDirectionNode())
-    self.vehicleVecX, _, self.vehicleVecZ = localDirectionToWorld(self.vehicle:getAIVehicleDirectionNode(), 0, 0, 1)
+    self.x, self.y, self.z = getWorldTranslation(self.vehicle:getAIDirectionNode())
+    self.vehicleVecX, _, self.vehicleVecZ = localDirectionToWorld(self.vehicle:getAIDirectionNode(), 0, 0, 1)
     self.rNx, self.rNy, self.rNz = getWorldTranslation(self.reverseNode)
-    self.targetX, self.targetY, self.targetZ = localToWorld(self.vehicle:getAIVehicleDirectionNode(), 0, 0, 5)
+    self.targetX, self.targetY, self.targetZ = localToWorld(self.vehicle:getAIDirectionNode(), 0, 0, 5)
     self.trailerVecX, _, self.trailerVecZ = localDirectionToWorld(self.reverseNode, 0, 0, 1)
     self.trailerRearVecX, _, self.trailerRearVecZ = localDirectionToWorld(self.reverseNode, 0, 0, -1)
     self.vecToPoint = {x = self.reverseTarget.x - self.rNx, z = self.reverseTarget.z - self.rNz}
@@ -407,7 +407,7 @@ function ADSpecialDrivingModule:reverseToPoint(dt, maxSpeed)
         speed = 3
     end
 
-    local node = self.vehicle:getAIVehicleDirectionNode()
+    local node = self.vehicle:getAIDirectionNode()
 
     local rx, _, rz = localDirectionToWorld(node, offsetX, 0, offsetZ)
     local targetX = self.x + rx

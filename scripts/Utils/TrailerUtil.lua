@@ -86,27 +86,12 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
                 for index, _ in pairs(workTool:getFillUnitSupportedFillTypes(i)) do
                     --loadTriggers
                     -- standard silo
-                    if fillTrigger.source ~= nil and fillTrigger.source.providedFillTypes ~= nil and fillTrigger.source.providedFillTypes[index] then
-                        typesMatch = true
-                        matchInThisUnit = true
-                    end
-                    if fillTrigger.source ~= nil and fillTrigger.source.gcId ~= nil and fillTrigger.source.fillLevels ~= nil and fillTrigger.source.fillLevels[index] then
+                    if fillTrigger.source ~= nil and fillTrigger.source.aiSupportedFillTypes ~= nil and fillTrigger.source.aiSupportedFillTypes[index] then
                         typesMatch = true
                         matchInThisUnit = true
                     end
                     
                     --fillTriggers
-                    if fillTrigger.source ~= nil and fillTrigger.source.productLines ~= nil then --is gc trigger
-                        for _, subSource in pairs(fillTrigger.source.providedFillTypes) do
-                            --if type(subSource) == "table" then
-                                if subSource[index] ~= nil then
-                                    typesMatch = true
-                                    matchInThisUnit = true
-                                end
-                            --end
-                        end
-                    end
-
                     if fillTrigger.sourceObject ~= nil then
                         local fillTypes = fillTrigger.sourceObject:getFillUnitSupportedFillTypes(1)
                         if fillTypes[index] then
@@ -121,6 +106,7 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
                         end
                     end
                 end
+                
                 if matchInThisUnit and selectedFillTypeIsNotInMyFillUnit then
                     return false
                 end
@@ -137,14 +123,12 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
             local isFillType = false
             for _, allowedFillType in pairs(fillTypesToCheck) do
                 if fillTrigger.source then
-                    if fillTrigger.source.productLines ~= nil then --is gc trigger
-                        return true
-                    else
-                        if (fillTrigger.source.providedFillTypes ~= nil and fillTrigger.source.providedFillTypes[allowedFillType]) or 
-                            (fillTrigger.source.fillLevels ~= nil and fillTrigger.source.fillLevels[allowedFillType]) then
+                    for _, sourceStorage in pairs(fillTrigger.source.sourceStorages) do
+                        if (sourceStorage.fillTypes ~= nil and sourceStorage.fillTypes[allowedFillType]) or 
+                            (sourceStorage.fillLevels ~= nil and sourceStorage.fillLevels[allowedFillType]) then
                             return true
-                        end
-                    end
+                        end    
+                    end                
                 elseif fillTrigger.sourceObject ~= nil then
                     local fillType = fillTrigger.sourceObject:getFillUnitFillType(1)
                     isFillType = (fillType == selectedFillType)
@@ -181,7 +165,7 @@ end
 
 function AutoDrive.getTrailersOfImplement(attachedImplement, onlyDischargeable)
     if (((attachedImplement.typeDesc == g_i18n:getText("typeDesc_tipper") or attachedImplement.spec_dischargeable ~= nil) or not (onlyDischargeable == true)) and attachedImplement.getFillUnits ~= nil) or AutoDrive:hasAL(attachedImplement) then
-        if not (attachedImplement.vehicleType.specializationsByName["leveler"] ~= nil or attachedImplement.typeDesc == g_i18n:getText("typeDesc_frontloaderTool") or attachedImplement.typeDesc == g_i18n:getText("typeDesc_wheelLoaderTool")) then --avoid trying to fill shovels and levellers atached
+        if not (g_vehicleTypeManager:getTypeByName(attachedImplement.typeName).specializationsByName["leveler"] ~= nil or attachedImplement.typeDesc == g_i18n:getText("typeDesc_frontloaderTool") or attachedImplement.typeDesc == g_i18n:getText("typeDesc_wheelLoaderTool")) then --avoid trying to fill shovels and levellers atached
             local trailer = attachedImplement
             AutoDrive.tempTrailerCount = AutoDrive.tempTrailerCount + 1
             AutoDrive.tempTrailers[AutoDrive.tempTrailerCount] = trailer
@@ -567,15 +551,16 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
 end
 
 function AutoDrive.trailerIsInTriggerList(trailer, trigger, fillUnitIndex)
-    --[[
+    
     if trigger ~= nil and trigger.fillableObjects ~= nil then
         for _, fillableObject in pairs(trigger.fillableObjects) do
             if fillableObject == trailer or (fillableObject.object ~= nil and fillableObject.object == trailer and fillableObject.fillUnitIndex == fillUnitIndex) then
+                --print("trailerIsInTriggerList")
                 return true
             end
         end
     end
-    --]]
+    
     local activatable = true
     if trigger.getIsActivatable ~= nil then
         activatable = trigger:getIsActivatable(trailer)
@@ -589,6 +574,12 @@ function AutoDrive.trailerIsInTriggerList(trailer, trigger, fillUnitIndex)
         end
     end
 
+    --[[
+    if not trigger.printed then
+        AutoDrive.dumpTable(trigger, "Trigger", 4)
+        trigger.printed = true
+    end
+    --]]
     return false
 end
 

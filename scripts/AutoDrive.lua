@@ -247,14 +247,14 @@ function AutoDrive:loadMap(name)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	AIDriveStrategyCombine.getDriveData = Utils.overwrittenFunction(AIDriveStrategyCombine.getDriveData, AutoDrive.getDriveData)
+	--AIDriveStrategyCombine.getDriveData = Utils.overwrittenFunction(AIDriveStrategyCombine.getDriveData, AutoDrive.getDriveData)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
+	--LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
-	LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
+	--LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 

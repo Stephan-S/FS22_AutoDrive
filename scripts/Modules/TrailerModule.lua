@@ -524,7 +524,7 @@ function ADTrailerModule:tryLoadingAtTrigger(trailer, trigger, fillUnitIndex)
         -- activate load trigger
         local trailerIsInRange = AutoDrive.trailerIsInTriggerList(trailer, trigger, fillUnitIndex)
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:tryLoadingAtTrigger trailerIsInRange %s", tostring(trailerIsInRange))
-        if trigger:getIsActivatable(trailer) and trailerIsInRange then --and not self.isLoading then
+        if trailerIsInRange then --and not self.isLoading then
             if #fillUnits > 1 then
                 --print("startLoadingCorrectFillTypeAtTrigger now - " .. fillUnitIndex)
                 self:startLoadingCorrectFillTypeAtTrigger(trailer, trigger, fillUnitIndex)

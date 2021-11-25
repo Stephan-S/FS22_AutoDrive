@@ -68,7 +68,7 @@ function ADStateModule:reset()
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
-    if xmlFile:hasProperty(key) then
+    if not xmlFile:hasProperty(key) then
         return
     end
     
@@ -141,12 +141,7 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     end
 end
 
-function ADStateModule:saveToXMLFile(xmlFile, key)
-    print("ADStateModule saveToXML now at: " .. key)
-    if not xmlFile:hasProperty(key) then
-        return
-    end
-    
+function ADStateModule:saveToXMLFile(xmlFile, key)    
     xmlFile:setValue(key .. "#mode", self.mode)
     if self.firstMarker ~= nil then
         xmlFile:setValue(key .. "#firstMarker", self.firstMarker.markerIndex)
@@ -162,7 +157,6 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
     xmlFile:setValue(key .. "#lastActive", self.active)
     xmlFile:setValue(key .. "#AIVElastActive", (self.vehicle.acParameters ~= nil and self.vehicle.acParameters.enabled and self.vehicle.spec_aiVehicle.isActive))
     xmlFile:setValue(key .. "#bunkerUnloadType", self.bunkerUnloadType)
-    print("ADStateModule saveToXML done")
 end
 
 function ADStateModule:writeStream(streamId)

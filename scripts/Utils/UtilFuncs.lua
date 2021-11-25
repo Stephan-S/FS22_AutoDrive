@@ -442,6 +442,9 @@ function AutoDrive.dumpTable(inputTable, name, maxDepth)
 			if type(v) ~= "table" and type(v) ~= "function" then
 				print(string.format("%s = %s", newName, v))
 			end
+			if type(v) == "function" then				
+				print(string.format("%s = %s", newName, v))
+			end
 			if type(v) == "table" then
 				print(newName .. " = {}")
 				dumpTableRecursively(v, newName, depth + 1, maxDepth)
@@ -454,6 +457,10 @@ function AutoDrive.dumpTable(inputTable, name, maxDepth)
 			newName = string.format("%s[%s]", name, k)
 		end
 		if type(v) ~= "table" and type(v) ~= "function" then
+			print(string.format("%s = %s", newName, v))
+		end
+		if type(v) == "function" then
+			print("Detected function")		
 			print(string.format("%s = %s", newName, v))
 		end
 		if type(v) == "table" then
@@ -890,7 +897,7 @@ function AutoDrive:getDriveData(superFunc,dt, vX,vY,vZ)		--combine helper functi
             self.vehicle:addAIDebugText("COMBINE -> Waiting for straw to drop")
         end
         local h = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, self.vehicle.aiDriveTarget[1],0,self.vehicle.aiDriveTarget[2])
-        local x,_,z = worldToLocal(self.vehicle:getAIVehicleDirectionNode(), self.vehicle.aiDriveTarget[1],h,self.vehicle.aiDriveTarget[2])
+        local x,_,z = worldToLocal(self.vehicle:getAIDirectionNode(), self.vehicle.aiDriveTarget[1],h,self.vehicle.aiDriveTarget[2])
         local dist = MathUtil.vector2Length(vX-x, vZ-z)
         return x, z, false, 10, dist
     else
