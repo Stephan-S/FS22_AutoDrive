@@ -5,7 +5,7 @@
 
     <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter">
         <GuiElement type="bitmap" profile="dialogHeaderDocked">
-            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_notificationHistoryTitle" />
+            <GuiElement type="text" profile="dialogHeaderText" text="gui_ad_notificationHistoryTitle" textUpperCase="false" id="headerText" visible="true" onCreate="onCreateAutoDriveHeaderText" />
         </GuiElement>
 
         <GuiElement type="empty" profile="autoDriveNotificationHistoryNavigationBox">
@@ -25,7 +25,7 @@
         <GuiElement type="flowLayout" profile="buttonBoxDocked">
             <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
             <GuiElement type="button" profile="buttonCancel" text="$l10n_button_delete" onClick="onClickCancel" />
-            <GuiElement type="button" profile="buttonActivate" text="$l10n_button_delete_all" onClick="onClickActivate" />
+            <GuiElement type="button" profile="buttonActivate" text="button_delete_all" onClick="onClickActivate" />
         </GuiElement>
     </GuiElement>
 </GUI>

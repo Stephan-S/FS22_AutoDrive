@@ -31,7 +31,7 @@ ADSettings.TAB_UV = {
     SETTINGS_GENERAL = {720, 0, 64, 64},
     SETTINGS_VEHICLE = {650, 0, 64, 64},
     SETTINGS_USER = {0, 130, 64, 64},
-    SETTINGS_UNLOAD = {128, 76, 64, 64},
+    SETTINGS_UNLOAD = {128, 70, 64, 64},
     SETTINGS_DEBUG = {588, 140, 64, 64},
     SETTINGS_EXPFEAT = {0, 270, 64, 64},
     SETTINGS_ENVIRONMENT = {134, 0, 64, 64}
@@ -91,17 +91,6 @@ function ADSettings:setupPages()
         end
         return false
     end
---[[
-    local orderedPages = {
-        {self.autoDriveSettings, alwaysEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_GENERAL, false},
-        {self.autoDriveUserSettings, alwaysEnabled, g_baseUIFilename, ADSettings.TAB_UV.SETTINGS_USER, false},
-        {self.autoDriveVehicleSettings, vehicleEnabled, g_baseUIFilename, ADSettings.TAB_UV.SETTINGS_VEHICLE, false},
-        {self.autoDriveCombineUnloadSettings, combineEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
-        {self.autoDriveEnvironmentSettings, vehicleEnabled, g_baseUIFilename, ADSettings.TAB_UV.SETTINGS_ENVIRONMENT, false},
-        {self.autoDriveDebugSettings, developmentControlsEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_DEBUG, true},
-        {self.autoDriveExperimentalFeaturesSettings, alwaysEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_EXPFEAT, true}
-    }
-]]
     local orderedPages = {
         {self.autoDriveVehicleSettings, vehicleEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_VEHICLE, false},
         {self.autoDriveCombineUnloadSettings, combineEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
@@ -114,13 +103,12 @@ function ADSettings:setupPages()
 
     for i, pageDef in ipairs(orderedPages) do
         local page, predicate, uiFilename, iconUVs, isAutonomous = unpack(pageDef)
-        --local normalizedIconUVs = getNormalizedUVs(iconUVs)
         local normalizedIconUVs = GuiUtils.getUVs(iconUVs)
-        self:registerPage(page, i, predicate)
+        local pageRoot, position = self:registerPage(page, i, predicate)
         self:addPageTab(page, uiFilename, normalizedIconUVs) -- use the global here because the value changes with resolution settings
         page.isAutonomous = isAutonomous
-        --page.headerIcon:setImageFilename(uiFilename)
-        --page.headerIcon:setImageUVs(nil, unpack(normalizedIconUVs))
+        -- page.headerIcon:setImageFilename(uiFilename)
+        -- page.headerIcon:setImageUVs(nil, unpack(normalizedIconUVs))
         if page.setupMenuButtonInfo ~= nil then
             page:setupMenuButtonInfo(self)
         end
@@ -143,10 +131,10 @@ end
 --- Define default properties and retrieval collections for menu buttons.
 function ADSettings:setupMenuButtonInfo()
     self.defaultMenuButtonInfo = {
-        {inputAction = InputAction.MENU_BACK, text = self.l10n:getText("button_back"), callback = self:makeSelfCallback(self.onClickBack), showWhenPaused = true},
-        {inputAction = InputAction.MENU_ACCEPT, text = self.l10n:getText("button_apply"), callback = self:makeSelfCallback(self.onClickOK), showWhenPaused = true},
-        {inputAction = InputAction.MENU_CANCEL, text = self.l10n:getText("button_reset"), callback = self:makeSelfCallback(self.onClickReset), showWhenPaused = true},
-        {inputAction = InputAction.MENU_ACTIVATE, text = self.l10n:getText("gui_ad_restoreButtonText"), callback = self:makeSelfCallback(self.onClickRestore), showWhenPaused = true}
+        {inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = self:makeSelfCallback(self.onClickBack), showWhenPaused = true},
+        {inputAction = InputAction.MENU_ACCEPT, text = g_i18n:getText("button_apply"), callback = self:makeSelfCallback(self.onClickOK), showWhenPaused = true},
+        {inputAction = InputAction.MENU_CANCEL, text = g_i18n:getText("button_reset"), callback = self:makeSelfCallback(self.onClickReset), showWhenPaused = true},
+        {inputAction = InputAction.MENU_ACTIVATE, text = g_i18n:getText("gui_ad_restoreButtonText"), callback = self:makeSelfCallback(self.onClickRestore), showWhenPaused = true}
     }
 end
 

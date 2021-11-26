@@ -9,6 +9,7 @@ ADDebugSettingsPage = {}
 
 local ADDebugSettingsPage_mt = Class(ADDebugSettingsPage, TabbedMenuFrameElement)
 
+-- ADDebugSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "headerText"}
 ADDebugSettingsPage.CONTROLS = {"settingsContainer", "headerIcon"}
 
 function ADDebugSettingsPage:new(target)
@@ -21,9 +22,8 @@ function ADDebugSettingsPage:new(target)
 end
 
 function ADDebugSettingsPage:setupMenuButtonInfo(parent)
-    -- AutoDrive.debugMsg(nil, "[AD] ADDebugSettingsPage:setupMenuButtonInfo parent self %s", tostring(parent))
-    self.menuButtonInfo = {{inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = parent:makeSelfCallback(parent.onClickBack), showWhenPaused = true}}
-    self.hasCustomMenuButtons = true
+    local menuButtonInfo = {{inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = parent:makeSelfCallback(parent.onButtonBack), showWhenPaused = true}}
+    self:setMenuButtonInfo(menuButtonInfo)
 end
 
 function ADDebugSettingsPage:onFrameOpen()
@@ -74,4 +74,27 @@ function ADDebugSettingsPage:updateDebugElements()
             element.checkbox:setIsChecked(AutoDrive.currentDebugChannelMask == AutoDrive.DC_ALL)
         end
     end
+end
+
+function ADDebugSettingsPage:onCreateAutoDriveHeaderText(box)
+    if self.storedHeaderText == nil then
+        self.storedHeaderText = box.text
+    end
+    if self.storedHeaderText ~= nil then
+
+        local hasText = self.storedHeaderText ~= nil and self.storedHeaderText ~= ""
+        if hasText then
+            local text = self.storedHeaderText
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
+function ADDebugSettingsPage:copyAttributes(src)
+	ADDebugSettingsPage:superClass().copyAttributes(self, src)
+    self.storedHeaderText = src.storedHeaderText
 end

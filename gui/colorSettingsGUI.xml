@@ -5,7 +5,7 @@
 
     <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter">
         <GuiElement type="bitmap" profile="dialogHeaderDocked">
-            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_colorSettingsTitle" />
+            <GuiElement type="text" profile="dialogHeaderText" text="gui_ad_colorSettingsTitle" textUpperCase="false" id="headerText" visible="true" onCreate="onCreateAutoDriveHeaderText" />
         </GuiElement>
 
         <GuiElement type="empty" profile="autoDriveColorSettingsNavigationBox">
@@ -23,9 +23,9 @@
 
         <GuiElement type="flowLayout" profile="buttonBoxDocked">
             <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
-            <GuiElement type="button" profile="buttonOK" text="$l10n_gui_ad_button_export" onClick="onClickOk" />
+            <GuiElement type="button" profile="buttonOK" text="gui_ad_button_export" onClick="onClickOk" />
             <!-- <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset" onClick="onClickReset" /> -->
-            <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset_selected" onClick="onClickReset" />
+            <GuiElement type="button" profile="buttonCancel" text="button_reset_selected" onClick="onClickReset" />
             
         </GuiElement>
     </GuiElement>

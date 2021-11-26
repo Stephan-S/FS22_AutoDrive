@@ -5,10 +5,10 @@
 
     <GuiElement type="bitmap" profile="yesNoDialogBg">
         <GuiElement type="bitmap" profile="dialogHeaderDocked">
-            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_enterDestinationFilterTitle" />
+            <GuiElement type="text" profile="dialogHeaderText" text="gui_ad_enterDestinationFilterTitle" textUpperCase="false" id="headerText" visible="true" onCreate="onCreateAutoDriveHeaderText" />
         </GuiElement>
 
-        <GuiElement type="text" profile="sleepDialogText" text="$l10n_gui_ad_enterDestinationFilterText" />
+        <GuiElement type="text" profile="sleepDialogText" text="gui_ad_enterDestinationFilterText" />
 
         <GuiElement type="textInput" profile="dialogTextInput" id="textInputElement" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" focusInit="onOpen" maxCharacters="10" />
 

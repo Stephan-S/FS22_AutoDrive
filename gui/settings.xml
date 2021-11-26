@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
 
-    <GuiElement type="bitmap" profile="uiFullInGameBackground"/>
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <GuiElement type="bitmap" profile="uiFullInGameBackground" />
 
     <GuiElement type="bitmap" profile="uiInGameMenuHeader" id="header">
         <GuiElement type="multiTextOption" profile="uiInGameMenuHeaderSelector" onClick="onClickPageSelection" id="pageSelector" soundDisabled="true">
@@ -16,12 +16,13 @@
             </GuiElement>
         </GuiElement>
 
-        <GuiElement type="button" profile="uiInGameMenuPagingTabPrevious" id="pagingTabPrevious" onClick="onTabPagingPrevious">
-            <GuiElement type="bitmap" profile="uiInGameMenuPagingTabPrevIcon" />
-        </GuiElement>
-        <GuiElement type="button" profile="uiInGameMenuPagingTabNext" id="pagingTabNext" onClick="onTabPagingNext">
-            <GuiElement type="bitmap" profile="uiInGameMenuPagingTabNextIcon" />
-        </GuiElement>
+<!-- axel - fs19 -->
+        <!-- <GuiElement type="button" profile="uiInGameMenuPagingTabPrevious" id="pagingTabPrevious" onClick="onTabPagingPrevious"> -->
+            <!-- <GuiElement type="bitmap" profile="uiInGameMenuPagingTabPrevIcon" /> -->
+        <!-- </GuiElement> -->
+        <!-- <GuiElement type="button" profile="uiInGameMenuPagingTabNext" id="pagingTabNext" onClick="onTabPagingNext"> -->
+            <!-- <GuiElement type="bitmap" profile="uiInGameMenuPagingTabNextIcon" /> -->
+        <!-- </GuiElement> -->
 
     </GuiElement>
 
@@ -37,11 +38,19 @@
         </GuiElement>
     </GuiElement>
 
-    <GuiElement type="flowLayout" profile="buttonBoxDocked" id="buttonsPanel">
+
+    <!-- <GuiElement type="bitmap" profile="ingameMenuHelpRowBg" position="210px -64px" id="ingameMenuHelpBox" visible="false"> -->
+        <!-- <GuiElement type="bitmap" profile="ingameMenuHelpRowIcon" /> -->
+    <!-- <Profile name="autoDriveingameMenuHelpRowBg" extends="ingameMenuHelpRowBg"> -->
+        <!-- <Value name="size" value="700px 50px" /> -->
+        <!-- <Value name="position" value="80px 20px" /> -->
+    <!-- </Profile> -->
+<!-- buttonBoxDocked -->
+    <GuiElement type="flowLayout" profile="autoDriveButtonBoxDocked" id="buttonsPanel" >
         <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" id="menuButton[1]" />
-        <GuiElement type="button" profile="buttonOK" text="$l10n_button_apply" onClick="onClickOk" id="menuButton[2]" />
+        <GuiElement type="button" profile="buttonOK" text="button_apply" onClick="onClickOk" id="menuButton[2]" />
         <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset" onClick="onClickReset" id="menuButton[3]" />
-        <GuiElement type="button" profile="buttonActivate" text="$l10n_gui_ad_restoreButtonText" onClick="onClickRestore" id="menuButton[4]" />
+        <GuiElement type="button" profile="buttonActivate" text="gui_ad_restoreButtonText" onClick="onClickRestore" id="menuButton[4]" />
     </GuiElement>
 
 

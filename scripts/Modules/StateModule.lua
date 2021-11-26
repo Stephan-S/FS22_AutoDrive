@@ -289,8 +289,12 @@ function ADStateModule:update(dt)
         local debug = {}
         debug.active = self.active
         debug.mode = self.mode
-        debug.firstMarker = self.firstMarker.name
-        debug.secondMarker = self.secondMarker.name
+        if self.firstMarker ~= nil then
+            debug.firstMarker = self.firstMarker.name
+        end
+        if self.secondMarker ~= nil then
+            debug.secondMarker = self.secondMarker.name
+        end
         debug.creationMode = self.creationMode
         debug.fillType = self.fillType
         debug.loopCounter = self.loopCounter

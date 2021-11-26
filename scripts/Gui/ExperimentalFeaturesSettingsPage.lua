@@ -9,7 +9,7 @@ ADExperimentalFeaturesSettingsPage = {}
 
 local ADExperimentalFeaturesSettingsPage_mt = Class(ADExperimentalFeaturesSettingsPage, TabbedMenuFrameElement)
 
-ADExperimentalFeaturesSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "cloneElement"}
+ADExperimentalFeaturesSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "cloneElement", "headerText"}
 
 function ADExperimentalFeaturesSettingsPage:new(target)
     local element = TabbedMenuFrameElement.new(target, ADExperimentalFeaturesSettingsPage_mt)
@@ -20,9 +20,8 @@ function ADExperimentalFeaturesSettingsPage:new(target)
 end
 
 function ADExperimentalFeaturesSettingsPage:setupMenuButtonInfo(parent)
-    -- AutoDrive.debugMsg(nil, "[AD] ADExperimentalFeaturesSettingsPage:setupMenuButtonInfo parent self %s", tostring(parent))
-    self.menuButtonInfo = {{inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = parent:makeSelfCallback(parent.onClickBack), showWhenPaused = true}}
-    self.hasCustomMenuButtons = true
+    local menuButtonInfo = {{inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = parent:makeSelfCallback(parent.onButtonBack), showWhenPaused = true}}
+    self:setMenuButtonInfo(menuButtonInfo)
 end
 
 function ADExperimentalFeaturesSettingsPage:onCreate()
@@ -85,4 +84,27 @@ end
 function ADExperimentalFeaturesSettingsPage:onOptionChange(state, element)
     state = state == 2
     AutoDriveExperimentalFeaturesEvent.sendEvent(element.name, state)
+end
+
+function ADExperimentalFeaturesSettingsPage:onCreateAutoDriveHeaderText(box)
+    if self.storedHeaderText == nil then
+        self.storedHeaderText = box.text
+    end
+    if self.storedHeaderText ~= nil then
+
+        local hasText = self.storedHeaderText ~= nil and self.storedHeaderText ~= ""
+        if hasText then
+            local text = self.storedHeaderText
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
+function ADExperimentalFeaturesSettingsPage:copyAttributes(src)
+	ADExperimentalFeaturesSettingsPage:superClass().copyAttributes(self, src)
+    self.storedHeaderText = src.storedHeaderText
 end

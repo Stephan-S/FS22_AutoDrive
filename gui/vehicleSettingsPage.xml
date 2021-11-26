@@ -2,10 +2,26 @@
 <GUI name="autoDriveVehicleSettings">
 	<GuiElement type="empty" profile="uiInGameMenuFrame">
 		<!-- Static page header -->
+
+        <!-- Static page header -->
+        <!-- <GuiElement type="empty" profile="ingameMenuFrameHeaderPanel"> -->
+            <!-- <GuiElement type="bitmap" profile="ingameMenuCalendarHeaderIcon" /> -->
+            <!-- <GuiElement type="text" profile="ingameMenuFrameHeaderText" text="$l10n_ui_cropCalendar"/> -->
+        <!-- </GuiElement> -->
+
+
+		<!-- <GuiElement type="empty" profile="ingameMenuFrameHeaderPanel" > -->
+			<!-- <GuiElement type="bitmap" profile="ingameMenuGeneralSettingsHeaderIcon" /> -->
+			<!-- <GuiElement type="text" profile="ingameMenuFrameHeaderText" position="80px 0px" text="$l10n_gui_ad_vehicleSettingsPage_title" /> -->
+		<!-- </GuiElement> -->
+
+
 		<GuiElement type="empty" profile="ingameMenuFrameHeaderPanel" >
 			<GuiElement type="bitmap" profile="ingameMenuGeneralSettingsHeaderIcon" />
-			<GuiElement type="text" profile="ingameMenuFrameHeaderText" position="80px 0px" text="$l10n_gui_ad_vehicleSettingsPage_title" />
+			<GuiElement type="text" profile="ingameMenuFrameHeaderText" position="80px 0px" text="gui_ad_vehicleSettingsPage_title" textUpperCase="false" id="headerText" visible="true" onCreate="onCreateAutoDriveHeaderText" />
 		</GuiElement>
+
+
 
 		<GuiElement type="bitmap" profile="ingameMenuSettingsBox" id="settingsContainer">
             <GuiElement type="scrollingLayout" profile="ingameMenuSettingsLayout" id="boxLayout" >

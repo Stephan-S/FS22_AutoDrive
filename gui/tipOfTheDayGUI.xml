@@ -4,7 +4,7 @@
 
     <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter">
         <GuiElement type="bitmap" profile="dialogHeaderDocked">
-            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_tipOfTheDayTitle" />
+            <GuiElement type="text" profile="dialogHeaderText" text="gui_ad_tipOfTheDayTitle" textUpperCase="false" id="headerText" visible="true" onCreate="onCreateAutoDriveHeaderText" />
         </GuiElement>
 
         <GuiElement type="empty" profile="autoDriveTipOfTheDayNavigationBox" id="tipOfTheDayTemplate">
@@ -17,13 +17,13 @@
             <GuiElement type="toggleButton" profile="autoDriveTipOfTheDayCheckboxToggle" onClick="onClickToggle">
                 <GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
                 <GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
-                <GuiElement type="text" profile="autoDriveTipOfTheDayCheckboxToggleText" text="$l10n_gui_ad_tipOfTheDayActive" />
+                <GuiElement type="text" profile="autoDriveTipOfTheDayCheckboxToggleText" text="gui_ad_tipOfTheDayActive" />
             </GuiElement>
         </GuiElement>
 
         <GuiElement type="flowLayout" profile="buttonBoxDocked">
             <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
-            <GuiElement type="button" profile="buttonActivate" text="$l10n_ad_next_tip" onClick="onClickActivate" />
+            <GuiElement type="button" profile="buttonActivate" text="ad_next_tip" onClick="onClickActivate" />
         </GuiElement>
     </GuiElement>
 </GUI>

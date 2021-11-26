@@ -5,10 +5,10 @@
 
     <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter">
         <GuiElement type="bitmap" profile="dialogHeaderDocked">
-            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_routesManagerTitle" />
+            <GuiElement type="text" profile="dialogHeaderText" text="gui_ad_routesManagerTitle" textUpperCase="false" id="headerText" visible="true" onCreate="onCreateAutoDriveHeaderText" />
         </GuiElement>
 
-        <GuiElement type="text" profile="sleepDialogText" position="0px -25px" size="714px 20px" textAlignment="left" screenAlign="topCenter" positionOrigin="topCenter" text="$l10n_gui_ad_routesManagerTextTitle" />
+        <GuiElement type="text" profile="sleepDialogText" position="0px -25px" size="714px 20px" textAlignment="left" screenAlign="topCenter" positionOrigin="topCenter" text="gui_ad_routesManagerTextTitle" textUpperCase="false" visible="true" onCreate="onCreateAutoDriveText1" />
 
         <GuiElement type="textInput" profile="dialogTextInput" id="textInputElement" position="0px -60px" size = "720px 42px" screenAlign="topCenter" positionOrigin="topCenter" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" maxCharacters="20" text="Route 1" />
 
@@ -28,8 +28,8 @@
 
         <GuiElement type="flowLayout" profile="buttonBoxDocked">
             <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
-            <GuiElement type="button" profile="buttonOK" text="$l10n_gui_ad_button_export" onClick="onClickOk" />
-            <GuiElement type="button" profile="buttonCancel" text="$l10n_gui_ad_button_import" onClick="onClickCancel" />
+            <GuiElement type="button" profile="buttonOK" text="gui_ad_button_export" onClick="onClickOk" />
+            <GuiElement type="button" profile="buttonCancel" text="gui_ad_button_import" onClick="onClickCancel" />
             <GuiElement type="button" profile="buttonActivate" text="$l10n_button_delete" onClick="onClickActivate" />
         </GuiElement>
     </GuiElement>
