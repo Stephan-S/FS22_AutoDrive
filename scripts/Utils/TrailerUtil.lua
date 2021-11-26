@@ -490,21 +490,6 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                         fillLevels, _ = trigger.source:getAllFillLevels(vehicle:getOwnerFarmId())
                         AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs fillLevels %s", tostring(fillLevels))
                     end
-                    local gcFillLevels = {}
-                    if trigger.source ~= nil and trigger.source.getAllProvidedFillLevels ~= nil then
-                        gcFillLevels, _ = trigger.source:getAllProvidedFillLevels(vehicle:getOwnerFarmId(), trigger.managerId)
-                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs gcFillLevels %s", tostring(gcFillLevels))
-                    end
-                    if table.getn(fillLevels) == 0 and table.getn(gcFillLevels) == 0 and trigger.source ~= nil and trigger.source.gcId ~= nil and trigger.source.fillLevels ~= nil then
-                        --Logging.info("Adding gm fill levels now")
-                        for index, fillLevel in pairs(trigger.source.fillLevels) do
-                            if fillLevel ~= nil and fillLevel[1] ~= nil then
-                                --Logging.info("Adding gm fill levels now - adding " .. index .. " with value: " .. fillLevel[1])
-                                AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs Adding gm fill levels now - adding fillLevel[1] %s", tostring(fillLevel[1]))
-                                fillLevels[index] = fillLevel[1]
-                            end
-                        end
-                    end
                     local hasRequiredFillType = false
                     for i = 1, #fillUnits do
                         local hasFill = trigger.hasInfiniteCapacity 

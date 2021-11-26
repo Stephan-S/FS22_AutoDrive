@@ -52,6 +52,11 @@ function ADTrailerModule:reset()
     else
         self.unloadRetryTimer:timer(false)      -- clear timer
     end
+    if self.stuckInBunkerTimer == nil then
+        self.stuckInBunkerTimer = AutoDriveTON:new()
+    else
+        self.stuckInBunkerTimer:timer(false)      -- clear timer
+    end    
     self:clearTrailerUnloadTimers()
     self.trailers, self.trailerCount = AutoDrive.getTrailersOf(self.vehicle, false)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
@@ -458,7 +463,6 @@ function ADTrailerModule:updateUnload(dt)
                 local unloadTrigger = self:lookForPossibleUnloadTrigger(trailer)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload not self.isUnloading unloadTrigger %s", tostring(unloadTrigger))
                 if unloadTrigger ~= nil then
-
                     if trailer.unloadDelayTimer == nil then
                         trailer.unloadDelayTimer = AutoDriveTON:new()
                     end
@@ -481,10 +485,10 @@ function ADTrailerModule:updateUnload(dt)
         -- end
     else
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload Monitor unloading")
-        --print("Monitor unloading")
         local _, _, fillUnitEmpty = AutoDrive.getIsEmpty(self.vehicle, self.isUnloadingWithTrailer, self.isUnloadingWithFillUnit)
         local allTrailersClosed = self:areAllTrailersClosed(dt)
         self.unloadDelayTimer:timer(self.isUnloading, 250, dt)
+        self.stuckInBunkerTimer:timer((self.vehicle.lastSpeedReal * 3600 < 1 and (self.waitForTrailerOpening == nil or not self.waitForTrailerOpening)), 2000, dt)
         if self.unloadDelayTimer:done() then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload Monitor unloading unloadDelayTimer:done areAllTrailersClosed %s", tostring(allTrailersClosed))
             self.unloadRetryTimer:timer(self.isUnloading, ADTrailerModule.UNLOAD_RETRY_TIME, dt)
@@ -502,7 +506,19 @@ function ADTrailerModule:updateUnload(dt)
             elseif self.unloadRetryTimer:done() and self.isUnloadingWithTrailer ~= nil and self.unloadingToBunkerSilo == false then
                 self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
                 self.unloadRetryTimer:timer(false)      -- clear timer
-            elseif not (self.vehicle.ad.drivePathModule:getIsReversing()) and self.unloadingToBunkerSilo == true and (self.vehicle.lastSpeedReal * 3600 < 1) then
+            elseif self.unloadingToBunkerSilo and self.waitForTrailerOpening then
+                local tipState = Trailer.TIPSTATE_OPEN
+                if self.bunkerTrailer.getTipState ~= nil then
+                    tipState = self.bunkerTrailer:getTipState()
+                end
+
+                if (tipState ~= Trailer.TIPSTATE_OPENING and tipState ~= Trailer.TIPSTATE_CLOSED) or (self.bunkerStartFillLevel > (self.fillLevel+10)) then
+                    self.vehicle.ad.drivePathModule:setUnPaused()        
+                    self.waitForTrailerOpening = false            
+                else
+                    self.vehicle.ad.drivePathModule:setPaused()
+                end
+            elseif not (self.vehicle.ad.drivePathModule:getIsReversing()) and self.unloadingToBunkerSilo and self.stuckInBunkerTimer:done() then
                 -- stuck in silo bunker
                 self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
                 self.unloadDelayTimer:timer(false)      -- clear timer
@@ -628,14 +644,15 @@ function ADTrailerModule:startUnloadingIntoTrigger(trailer, trigger)
             or (self.vehicle.ad.drivePathModule:getIsReversing() and self.vehicle:getLastSpeed() < 1) then -- reverse into bunker silo
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "Start unloading into bunkersilo - fillUnitIndex: %s", tostring(trailer:getCurrentDischargeNode().fillUnitIndex))
             trailer:setDischargeState(Dischargeable.DISCHARGE_STATE_GROUND)
-            if self.unloadingToBunkerSilo == false then
+            --if self.unloadingToBunkerSilo == false then
                 self.bunkerStartFillLevel = self.fillLevel
-            end 
+            --end 
             self.isUnloading = true
             self.unloadingToBunkerSilo = true
             self.bunkerTrailer = trailer
             self.isUnloadingWithTrailer = trailer
             self.isUnloadingWithFillUnit = trailer:getCurrentDischargeNode().fillUnitIndex
+            self.waitForTrailerOpening = true
         end
     end
 end

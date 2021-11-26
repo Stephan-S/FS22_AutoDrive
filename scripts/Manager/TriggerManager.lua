@@ -90,11 +90,9 @@ function ADTriggerManager.loadAllTriggers()
         if ownedItem.storeItem ~= nil then
             if ownedItem.storeItem.categoryName == "SILOS" then
                 for _, item in pairs(ownedItem.items) do
-                    if item.unloadingStation ~= nil then
-                        for _, unloadTrigger in pairs(item.unloadingStation.unloadTriggers) do
-                            if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                                table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                            end
+                    if item.spec_bunkerSilo ~= nil then
+                        if not table.contains(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo) then
+                            table.insert(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo)
                         end
                     end
 
@@ -196,24 +194,6 @@ function ADTriggerManager.loadAllTriggers()
             if trigger.bunkerSilo then
                 if not table.contains(ADTriggerManager.tipTriggers, trigger) then
                     table.insert(ADTriggerManager.tipTriggers, trigger)
-                end
-            end
-        end
-    end
-
-    if g_company ~= nil and g_company.triggerManagerList ~= nil then
-        for i = 1, #g_company.triggerManagerList do
-            local triggerManager = g_company.triggerManagerList[i]
-            for _, trigger in pairs(triggerManager.registeredTriggers) do
-                if trigger.exactFillRootNode then
-                    if not table.contains(ADTriggerManager.tipTriggers, trigger) then
-                        table.insert(ADTriggerManager.tipTriggers, trigger)
-                    end
-                end
-                if trigger.triggerNode then
-                    if not table.contains(ADTriggerManager.siloTriggers, trigger) then
-                        table.insert(ADTriggerManager.siloTriggers, trigger)
-                    end
                 end
             end
         end
@@ -355,6 +335,9 @@ function ADTriggerManager.getTriggerPos(trigger)
     end
     if trigger.exactFillRootNode ~= nil and g_currentMission.nodeToObject[trigger.exactFillRootNode] ~= nil and entityExists(trigger.exactFillRootNode) then
         x, y, z = getWorldTranslation(trigger.exactFillRootNode)
+    end
+    if trigger.interactionTriggerNode ~= nil and g_currentMission.nodeToObject[trigger.interactionTriggerNode] ~= nil and entityExists(trigger.interactionTriggerNode) then
+        x, y, z = getWorldTranslation(trigger.interactionTriggerNode)
     end
     return x, y, z
 end

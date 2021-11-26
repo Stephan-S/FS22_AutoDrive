@@ -137,13 +137,7 @@ end
 
 function AutoDrive:restartMySavegame()
 	if g_server then
-		restartApplication(" -autoStartSavegameId 1")
-	end
-end
-
-function AutoDrive:restartMySavegame()
-	if g_server then
-		restartApplication(" -autoStartSavegameId 1")
+		restartApplication(" -autoStartSavegameId 1", true)
 	end
 end
 

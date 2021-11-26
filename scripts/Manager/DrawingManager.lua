@@ -346,7 +346,7 @@ function ADDrawingManager:drawLine(id, task)
     setRotation(id, rotX, rotY, 0)
 
     -- Update line color
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity, false)
 
     -- Update line visibility
     setVisibility(id, true)
@@ -382,7 +382,7 @@ function ADDrawingManager:drawArrow(id, task)
     setRotation(id, rotX, rotY, 0)
 
     -- Update arrow color
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity, false)
 
     -- Update arrow visibility
     setVisibility(id, true)
@@ -390,7 +390,7 @@ end
 
 function ADDrawingManager:drawSmallSphere(id, task)
     setTranslation(id, task.x, task.y + self.yOffset, task.z)
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity, false)
     setVisibility(id, true)
 end
 
@@ -407,6 +407,6 @@ end
 function ADDrawingManager:drawSphere(id, task)
     setTranslation(id, task.x, task.y + self.yOffset, task.z)
     setScale(id, task.scale, task.scale, task.scale)
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity + task.a, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity + task.a, false)
     setVisibility(id, true)
 end

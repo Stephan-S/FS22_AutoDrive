@@ -289,7 +289,7 @@ function ADInputManager:input_start_stop(vehicle)
         end
     end
 
-    --AutoDrive.dumpTable(g_currentMission.aiSystem.roadSplines, "g_currentMission.aiSystem.roadSplines", 4)
+    --AutoDrive.dumpTable(ADTriggerManager.tipTriggers, "ADTriggerManager.tipTriggers", 4)
 end
 
 function ADInputManager:input_incLoopCounter(vehicle)
