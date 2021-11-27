@@ -245,20 +245,11 @@ function AutoDrive:loadMap(name)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	--LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-	--LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
+	LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-    if g_company then
-        if g_company.loadingTrigger then 
-            if g_company.loadingTrigger.onFillTypeSelection then
-                g_company.loadingTrigger.onFillTypeSelection = Utils.appendedFunction(g_company.loadingTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection);
-            end
-        end
-    end
+	LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
@@ -266,12 +257,12 @@ function AutoDrive:loadMap(name)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	-- LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
-    -- LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
+	LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
+    --LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	-- LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
+	LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
     -- LoadTrigger.delete = Utils.prependedFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)

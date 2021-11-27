@@ -342,10 +342,10 @@ function ADTriggerManager.getTriggerPos(trigger)
     return x, y, z
 end
 
-function ADTriggerManager:loadTriggerLoad(superFunc, rootNode, xmlFile, xmlNode)
-    local result = superFunc(self, rootNode, xmlFile, xmlNode)
+function ADTriggerManager:loadTriggerLoad(superFunc, ...)
+    local result = superFunc(self, ...)
 
-    if result and ADTriggerManager ~= nil and ADTriggerManager.siloTriggers ~= nil then
+    if ADTriggerManager ~= nil and ADTriggerManager.siloTriggers ~= nil then
         if not table.contains(ADTriggerManager.siloTriggers, self) then
             table.insert(ADTriggerManager.siloTriggers, self)
         end

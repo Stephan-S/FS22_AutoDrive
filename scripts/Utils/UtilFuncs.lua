@@ -427,45 +427,48 @@ function AutoDrive.renderTable(posX, posY, textSize, inputTable, maxDepth)
 	end
 end
 
-function AutoDrive.dumpTable(inputTable, name, maxDepth)
+function AutoDrive.dumpTable(inputTable, name, maxDepth, currentDepth)
 	maxDepth = maxDepth or 5
-	print(name .. " = {}")
-	local function dumpTableRecursively(inputTable, name, depth, maxDepth)
-		if depth >= maxDepth then
-			return
-		end
-		for k, v in pairs(inputTable) do
-			local newName = string.format("%s.%s", name, k)
-			if type(k) == "number" then
-				newName = string.format("%s[%s]", name, k)
-			end
-			if type(v) ~= "table" and type(v) ~= "function" then
-				print(string.format("%s = %s", newName, v))
-			end
-			if type(v) == "function" then				
-				print(string.format("%s = %s", newName, v))
-			end
-			if type(v) == "table" then
-				print(newName .. " = {}")
-				dumpTableRecursively(v, newName, depth + 1, maxDepth)
-			end
-		end
+	currentDepth = currentDepth or 0
+	if currentDepth > maxDepth then
+		return
 	end
+	if currentDepth == 0 then
+		AutoDrive.seenTables = {}
+		print(name .. " = {}")
+	end
+
+	table.insert(AutoDrive.seenTables, inputTable)
+
 	for k, v in pairs(inputTable) do
 		local newName = string.format("%s.%s", name, k)
 		if type(k) == "number" then
 			newName = string.format("%s[%s]", name, k)
 		end
-		if type(v) ~= "table" and type(v) ~= "function" then
-			print(string.format("%s = %s", newName, v))
-		end
-		if type(v) == "function" then
-			print("Detected function")		
-			print(string.format("%s = %s", newName, v))
-		end
+
 		if type(v) == "table" then
-			print(newName .. " = {}")
-			dumpTableRecursively(v, newName, 1, maxDepth)
+			if not AutoDrive.seenTables[v] then
+				print(newName .. " = {}")
+				AutoDrive.dumpTable(v, newName, maxDepth, currentDepth+1)
+			end
+		else
+			print(string.format("%s = %s", newName, v))
+		end
+	end
+
+	if getmetatable(inputTable) ~= nil then
+		for k, v in pairs(getmetatable(inputTable)) do
+			local newName = string.format("%s.%s", name, k)
+			if type(k) == "number" then
+				newName = string.format("%s[%s]", name, k)
+			end
+
+			if type(v) == "table" then
+				print(newName .. " = {}")
+				AutoDrive.dumpTable(v, newName, maxDepth, currentDepth+1)
+			else
+				print(string.format("%s = %s", newName, v))
+			end
 		end
 	end
 end
@@ -692,15 +695,21 @@ function AutoDrive:getIsActivatable(superFunc, objectToFill)
 				local oldControlledVehicle = g_currentMission.controlledVehicle
 
 				g_currentMission.controlledVehicle = vehicle
-
-				local result = superFunc(self, objectToFill)
+				local result = true
+				if superFunc ~= nil then
+					result = superFunc(self, objectToFill)
+				end
 
                 g_currentMission.controlledVehicle = oldControlledVehicle
 				return result
 			end
 		end
 	end
-	return superFunc(self, objectToFill)
+	local result = true
+	if superFunc ~= nil then
+		result = superFunc(self, objectToFill)
+	end
+	return result
 end
 
 function AutoDrive:zoomSmoothly(superFunc, offset)
@@ -728,24 +737,24 @@ end
 
 function AutoDrive:onFillTypeSelection(fillType)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... fillType %s self.validFillableObject %s self.isLoading %s", tostring(fillType), tostring(self.validFillableObject), tostring(self.isLoading))
-    if not self.isLoading then
+	if not self.isLoading then
         if fillType ~= nil and fillType ~= FillType.UNKNOWN then
-            if self.validFillableObject == nil then
+            if self.currentFillableObject == nil then
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.validFillableObject == nil")
                 for _, fillableObject in pairs(self.fillableObjects) do --copied from gdn getIsActivatable to get a valid Fillable Object even without entering vehicle (needed for refuel first time)
                     if fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
                         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
-                        self.validFillableObject = fillableObject.object
-                        self.validFillableFillUnitIndex = fillableObject.fillUnitIndex
+                        self.currentFillableObject = fillableObject.object
+                        self.currentFillableFillUnitIndex = fillableObject.fillUnitIndex
                     end
                 end
             end
-            local validFillableObject = self.validFillableObject
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection validFillableObject %s", tostring(validFillableObject))
-            if validFillableObject ~= nil then --and validFillableObject:getRootVehicle() == g_currentMission.controlledVehicle
-                local fillUnitIndex = self.validFillableFillUnitIndex
+            local currentFillableObject = self.currentFillableObject
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection currentFillableObject %s", tostring(currentFillableObject))
+            if currentFillableObject ~= nil then --and validFillableObject:getRootVehicle() == g_currentMission.controlledVehicle
+                local fillUnitIndex = self.currentFillableFillUnitIndex
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection setIsLoading")
-                self:setIsLoading(true, validFillableObject, fillUnitIndex, fillType)
+                self:setIsLoading(true, currentFillableObject, fillUnitIndex, fillType)
             end
         end
     end

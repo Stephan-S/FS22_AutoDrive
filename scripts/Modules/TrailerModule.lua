@@ -580,20 +580,22 @@ end
 
 function ADTrailerModule:startLoadingAtTrigger(trigger, fillType, fillUnitIndex, trailer)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:startLoadingAtTrigger start")
-    --print("Start loading at trigger with fillType: " .. fillType .. " and fillUnit: " .. fillUnitIndex)
     trigger.autoStart = true
     trigger.selectedFillType = fillType
     trigger:onFillTypeSelection(fillType)
-    trigger.selectedFillType = fillType
-    g_effectManager:setFillType(trigger.effects, trigger.selectedFillType)
-    trigger.autoStart = false
-    -- reset trigger load timer
-    trigger.stoppedTimer:timer(false, 300)
+    if trigger.isLoading then
+        trigger.selectedFillType = fillType
+        g_effectManager:setFillType(trigger.effects, trigger.selectedFillType)
+        trigger.autoStart = false
+        -- reset trigger load timer
+        trigger.stoppedTimer:timer(false, 300)
 
-    self.isLoading = true
-    self.trigger = trigger
-    self.isLoadingToFillUnitIndex = fillUnitIndex
-    self.isLoadingToTrailer = trailer
+        self.isLoading = true
+        self.trigger = trigger
+        self.isLoadingToFillUnitIndex = fillUnitIndex
+        self.isLoadingToTrailer = trailer
+    end
+    
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:startLoadingAtTrigger end")
 end
 

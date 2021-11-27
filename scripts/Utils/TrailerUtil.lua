@@ -500,8 +500,8 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
 
                         for _, allowedFillType in pairs(allowedFillTypes) do
                             if trailer:getFillUnitSupportsFillType(i, allowedFillType) then
-                                isFillAllowed = isFillAllowed or (fillLevels[allowedFillType] ~= nil) or (gcFillLevels[allowedFillType] ~= nil)
-                                hasFill = hasFill or (fillLevels[allowedFillType] ~= nil and fillLevels[allowedFillType] > 0) or (gcFillLevels[allowedFillType] ~= nil and gcFillLevels[allowedFillType] > 0)
+                                isFillAllowed = isFillAllowed or (fillLevels[allowedFillType] ~= nil)
+                                hasFill = hasFill or (fillLevels[allowedFillType] ~= nil and fillLevels[allowedFillType] > 0)
                             end
                         end
                         AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs isFillAllowed %s hasFill %s", tostring(isFillAllowed), tostring(hasFill))

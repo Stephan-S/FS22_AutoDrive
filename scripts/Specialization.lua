@@ -37,6 +37,7 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle",                         AutoDrive.leaveVehicle)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
 end
 
 function AutoDrive.registerFunctions(vehicleType)
@@ -1013,6 +1014,9 @@ function AutoDrive:onStartAutoDrive()
             self:setRandomVehicleCharacter()
             self.ad.vehicleCharacter = self.spec_enterable.vehicleCharacter
         end
+        if self.spec_aiJobVehicle ~= nil then
+            self.spec_aiJobVehicle.currentHelper = self.spec_aiVehicle.currentHelper
+        end
         if self.spec_enterable.controllerFarmId ~= nil and self.spec_enterable.controllerFarmId ~= 0 then
             self.spec_aiVehicle.startedFarmId = self.spec_enterable.controllerFarmId
         else
@@ -1294,4 +1298,12 @@ end
 
 function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
     return superFunc(self) and not self.ad.stateModule:isActive()
+end
+
+function AutoDrive:getActiveFarm(superFunc)
+    if self.spec_aiVehicle ~= 0 and self.spec_aiVehicle.startedFarmId and self.ad.stateModule:isActive() then
+        return self.spec_aiVehicle.startedFarmId
+    else
+        return superFunc(self)
+    end
 end
