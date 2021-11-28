@@ -15,7 +15,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="0px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelVehicle" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelVehicle" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelVehicle" onCreate="onCreateAutoDriveText1" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="2">
@@ -24,7 +24,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="128px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelCombine" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelCombine" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelCombine" onCreate="onCreateAutoDriveText2" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="4">
@@ -33,7 +33,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="256px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelTrailer" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelTrailer" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelTrailer" onCreate="onCreateAutoDriveText3" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="8">
@@ -42,7 +42,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="384px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelDev" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelDev" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelDev" onCreate="onCreateAutoDriveText4" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="16">
@@ -51,7 +51,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="512px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelPath" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelPath" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelPath" onCreate="onCreateAutoDriveText5" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="32">
@@ -60,7 +60,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="640px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelSensor" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelSensor" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelSensor" onCreate="onCreateAutoDriveText6" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="64">
@@ -69,7 +69,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="768px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelNetwork" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelNetwork" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelNetwork" onCreate="onCreateAutoDriveText7" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="128">
@@ -78,7 +78,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="896px 0px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelExternalInterface" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelExternalInterface" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelExternalInterface" onCreate="onCreateAutoDriveText8" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="256">
@@ -87,7 +87,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="128px 128px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelRender" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelRender" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelRender" onCreate="onCreateAutoDriveText9" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="512">
@@ -96,7 +96,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="256px 128px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelRoadNetwork" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelRoadNetwork" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelRoadNetwork" onCreate="onCreateAutoDriveText10" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="1024">
@@ -105,7 +105,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="256px 128px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelBGA" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelBGA" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelBGA" onCreate="onCreateAutoDriveText11" />
 					</GuiElement>
 				</GuiElement>
 				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="65535">
@@ -114,7 +114,7 @@
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
 						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="0px 128px 128px 128px" />
 						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="$l10n_gui_ad_debugChannelAll" /> -->
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelAll" />
+						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelAll" onCreate="onCreateAutoDriveText12" />
 					</GuiElement>
 				</GuiElement>
 			</GuiElement>

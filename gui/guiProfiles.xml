@@ -203,6 +203,7 @@
 <!-- used -->
     <Profile name="autoDriveDebugSettingsCheckboxToggleText" extends="textDefault" with="anchorMiddleLeft">
         <Value name="position" value="109px 0px" />
+        <Value name="size" value="180px 64px"/>
     </Profile>
 
 <!-- used -->
