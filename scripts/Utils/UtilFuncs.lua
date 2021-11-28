@@ -502,57 +502,123 @@ function AutoDrive:dumpTableToLog(input, ...)
 	AutoDrive.dumpTable(f(), "Table:", 1)
 end
 
-addConsoleCommand("adTest", "Test one function", "testFunction", AutoDrive)
-function AutoDrive:testFunction()
-	--g_currentMission.aiSystem:consoleCommandAIToggleSplineVisibility(true)
+addConsoleCommand("adRemoveSplines", "Remove parsed traffic spline nodes", "removeTrafficSplineNodes", AutoDrive)
+
+function AutoDrive:removeTrafficSplineNodes()
+	ADGraphManager:removeNodesWithFlag(AutoDrive.FLAG_TRAFFIC_SYSTEM)
+end
+
+
+addConsoleCommand("adParseSplines", "Parse traffic splines into waypoints", "adParseSplines", AutoDrive)
+
+function AutoDrive:adParseSplines()
 	local startNodes = {}
 	local endNodes = {}
 
+	local aiSplineNode = self:getAiSplinesParentNode()
 	local hasSplines = true
 	local splineIndex = 1
 	while hasSplines do
-		local spline = g_currentMission.trafficSystem:getSplineByIndex(splineIndex)
 		hasSplines = false
+
+		local spline = g_currentMission.trafficSystem:getSplineByIndex(splineIndex)		
 		if spline ~= nil then
 			hasSplines = true
 			splineIndex = splineIndex + 1
-			local lastX, lastY, lastZ = 0,0,0
-			local length = getSplineLength(spline)
-			if length > 0 then
-				for i=0, 1, 1.0/length do
-					local posX, posY, posZ = getSplinePosition(spline, i)
-					if posX ~= nil then
-						if lastX == 0 or MathUtil.vector3Length(lastX - posX, lastY - posY, lastZ - posZ) > 3 then
-							--print("[AD] splinePosition " .. i .. ": " .. posX .. " / " .. posZ)
-							local connectLast = false
-							if lastX ~= 0 then
-								connectLast = true
-							end
-							ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, false, false, 0, 0)
-
-							if lastX == 0 then
-								local wpId = ADGraphManager:getWayPointsCount()
-								local wp = ADGraphManager:getWayPointById(wpId)
-								table.insert(startNodes, wp)
-							end
-
-							lastX, lastY, lastZ = posX, posY, posZ
-						end
-					end
-				end
-
-				local wpId = ADGraphManager:getWayPointsCount()
-				local wp = ADGraphManager:getWayPointById(wpId)
-				table.insert(endNodes, wp)
-			end   
+			self:createWaypointsForSpline(startNodes, endNodes, spline)
 		end
 	end
 
-	self:createJunctions(startNodes, endNodes, 100, 60)
+	if aiSplineNode ~= nil then
+		for i=0, getNumOfChildren(aiSplineNode)-1, 1 do
+			local spline = getChildAt(aiSplineNode, i)
+			if spline ~= nil then
+				self:createWaypointsForSpline(startNodes, endNodes, spline)
+			end
+		end
+	end
+
+	AutoDrive.startNodes = startNodes
+	AutoDrive.endNodes = endNodes
+
+	--self:createJunctions(startNodes, endNodes, 100, 60)
+end
+
+function AutoDrive:getAiSplinesParentNode()
+	local aiSplineNode = nil
+	local hasSplines = true
+	local splineIndex = 1
+	while hasSplines and aiSplineNode == nil do
+		local spline = g_currentMission.trafficSystem:getSplineByIndex(splineIndex)
+
+		if aiSplineNode == nil then
+			local parent = getParent(spline) --now we are at trafficSystem
+			if parent ~= nil then
+				print("Parent name: " .. getName(parent))
+				parent = getParent(parent) -- now we are at "Splines"
+				if parent ~= nil then
+					print("Parent parent name: " .. getName(parent))
+					for i=0, getNumOfChildren(parent)-1, 1 do
+						if string.find(getName(getChildAt(parent, i)), "ai") then
+							aiSplineNode = getChildAt(parent, i)
+							print("aiSplineNode name: " .. getName(aiSplineNode))
+						end
+					end
+				end				
+			end
+		end
+	end
+
+	return aiSplineNode
+end
+
+function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
+	local lastX, lastY, lastZ = 0,0,0
+	local length = getSplineLength(spline)
+	if length > 0 then
+		for i=0, 1, 1.0/length do
+			local posX, posY, posZ = getSplinePosition(spline, i)
+			if posX ~= nil then
+				if lastX == 0 or MathUtil.vector3Length(lastX - posX, lastY - posY, lastZ - posZ) > 3 then
+					--print("[AD] splinePosition " .. i .. ": " .. posX .. " / " .. posZ)
+					local connectLast = false
+					if lastX ~= 0 then
+						connectLast = true
+					end
+					if lastY - posY > 1 and lastY ~= 0 then -- prevent point dropping into the ground in case of bridges etc
+						posY = lastY
+					end
+					ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
+
+					if lastX == 0 then
+						local wpId = ADGraphManager:getWayPointsCount()
+						local wp = ADGraphManager:getWayPointById(wpId)
+						table.insert(startNodes, wp)
+					end
+
+					lastX, lastY, lastZ = posX, posY, posZ
+				end
+			end
+		end
+
+		local wpId = ADGraphManager:getWayPointsCount()
+		local wp = ADGraphManager:getWayPointById(wpId)
+		table.insert(endNodes, wp)
+	end	
+end
+
+addConsoleCommand("adCreateJunctions", "Create junctions", "createJunctionCommand", AutoDrive)
+function AutoDrive:createJunctionCommand()
+	self:createJunctions(AutoDrive.startNodes, AutoDrive.endNodes, 150, 60)
+end
+
+addConsoleCommand("adRemoveJunctions", "Remove junctions", "removeJunctionCommand", AutoDrive)
+function AutoDrive:removeJunctionCommand()
+	ADGraphManager:removeNodesWithFlag(AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION)
 end
 
 function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
-	print("AutoDrive:createJunctions")
+	--print("AutoDrive:createJunctions")
 	for _, endNode in pairs(endNodes) do
 		if endNode.incoming ~= nil and #endNode.incoming > 0 then
 			local incomingNode = ADGraphManager:getWayPointById(endNode.incoming[1])
@@ -563,22 +629,30 @@ function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
 					
 					local angle = math.abs(AutoDrive.angleBetween({x = outNode.x - startNode.x, z = outNode.z - startNode.z}, {x = endNode.x - incomingNode.x, z = endNode.z - incomingNode.z}))
 					local angle2 = math.abs(AutoDrive.angleBetween({x = startNode.x - endNode.x, z = startNode.z - endNode.z}, {x = endNode.x - incomingNode.x, z = endNode.z - incomingNode.z}))
+					local angle3 = math.abs(AutoDrive.angleBetween({x = startNode.x - endNode.x, z = startNode.z - endNode.z}, {x = outNode.x - startNode.x, z = outNode.z - startNode.z}))
 					local dist = ADGraphManager:getDistanceBetweenNodes(startNode.id, endNode.id)
 
-					if angle < maxAngle and angle2 < maxAngle and dist < maxDist then
+					if angle < maxAngle and angle2 < 85 and angle3 < 85 and dist < maxDist then
 						self.splineInterpolation = nil
 						AutoDrive:createSplineInterpolationBetween(endNode, startNode, false)
+						-- Todo: check validity of path by checking for collision along created path
 						if self.splineInterpolation ~= nil and self.splineInterpolation.waypoints ~= nil and #self.splineInterpolation.waypoints > 2 then
-							local lastId = endNode.id
-							for wpId, wp in pairs(self.splineInterpolation.waypoints) do
-								if wpId ~= 1 and wpId < (#self.splineInterpolation.waypoints - 1) then							
-									ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, 0)
-									lastId = ADGraphManager:getWayPointsCount()
+							if AutoDrive:checkForCollisionOnSpline() then
+								local lastId = endNode.id
+								local lastHeight = endNode.y
+								for wpId, wp in pairs(self.splineInterpolation.waypoints) do
+									if wpId ~= 1 and wpId < (#self.splineInterpolation.waypoints - 1) then
+										if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+											wp.y = lastHeight
+										end			
+										ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION)
+										lastId = ADGraphManager:getWayPointsCount()
+									end
 								end
+
+								local wp = ADGraphManager:getWayPointById(lastId)
+								ADGraphManager:toggleConnectionBetween(wp, startNode, false)
 							end
-							
-							local wp = ADGraphManager:getWayPointById(lastId)
-							ADGraphManager:toggleConnectionBetween(wp, startNode, false)
 						else
 							--print("AutoDrive:createJunctions - Fallback to toggle connections")
 							ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
@@ -590,6 +664,25 @@ function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
 		end
 	end
 	
+end
+
+function AutoDrive:checkForCollisionOnSpline()
+	local widthX = 5
+	local height = 2.65
+	for wpId, wp in pairs(self.splineInterpolation.waypoints) do
+		if wpId > 1 and wpId < (#self.splineInterpolation.waypoints - 1) then
+			local wpLast = self.splineInterpolation.waypoints[wpId - 1]
+			local deltaX, deltaY, deltaZ = wp.x - wpLast.x, wp.y - wpLast.y, wp.z - wpLast.z
+			local centerX, centerY, centerZ = wpLast.x + deltaX/2,  wpLast.y + deltaY/2,  wpLast.z + deltaZ/2
+			local angleRad = math.atan2(-deltaZ, deltaX)
+    		angleRad = AutoDrive.normalizeAngle(angleRad)
+			local shapes = overlapBox(centerX, centerY+3, centerZ, 0, angleRad, 0, widthX, height, deltaZ, "collisionTestCallbackIgnore", nil, self.mask, true, true, true)
+			if shapes > 0 then
+				return false
+			end
+		end
+	end
+	return true
 end
 
 function AutoDrive:createSplineInterpolationBetween(startNode, endNode, reuseParams)
@@ -702,6 +795,44 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode, reusePar
 	end
 end
 
+function AutoDrive:CatmullRomInterpolate(index, p0, p1, p2, p3, segments)
+	local px = {x=nil, y=nil, z=nil}
+	local x = {p0.x, p1.x, p2.x, p3.x}
+	local z = {p0.z, p1.z, p2.z, p3.z}
+	local time = {0, 1, 2, 3} -- linear at start... calculate weights over time
+	local total = 0.0
+
+	for i = 2, 4 do
+		local dx = x[i] - x[i - 1]
+		local dz = z[i] - z[i - 1]
+		-- the .9 is giving the wideness and roundness of the curve,
+		-- lower values (like .25 will be more straight, while high values like .95 will be wider and rounder)
+		total = total + math.pow(dx * dx + dz * dz, 0.95)
+		time[i] = total
+	end
+    local tstart = time[2]
+	local tend = time[3]
+	local t = tstart + (index * (tend - tstart)) / segments
+
+	local L01 = p0.x * (time[2] - t) / (time[2] - time[1]) + p1.x * (t - time[1]) / (time[2] - time[1])
+	local L12 = p1.x * (time[3] - t) / (time[3] - time[2]) + p2.x * (t - time[2]) / (time[3] - time[2])
+	local L23 = p2.x * (time[4] - t) / (time[4] - time[3]) + p3.x * (t - time[3]) / (time[4] - time[3])
+	local L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
+	local L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
+	local C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
+	px.x = C12
+
+	L01 = p0.z * (time[2] - t) / (time[2] - time[1]) + p1.z * (t - time[1]) / (time[2] - time[1])
+	L12 = p1.z * (time[3] - t) / (time[3] - time[2]) + p2.z * (t - time[2]) / (time[3] - time[2])
+	L23 = p2.z * (time[4] - t) / (time[4] - time[3]) + p3.z * (t - time[3]) / (time[4] - time[3])
+	L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
+	L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
+	C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
+	px.z = C12
+
+	return px
+end
+
 ADVectorUtils = {}
 
 --- Calculates the unit vector on a given vector.
@@ -773,45 +904,6 @@ function ADVectorUtils.linterp(inMin, inMax, inValue, outMin, outMax)
 	local omax = outMax - outMin
 	local oval = outMin + ( omax * nval )
 	return oval, nval
-end
-
-
-function AutoDrive:CatmullRomInterpolate(index, p0, p1, p2, p3, segments)
-	local px = {x=nil, y=nil, z=nil}
-	local x = {p0.x, p1.x, p2.x, p3.x}
-	local z = {p0.z, p1.z, p2.z, p3.z}
-	local time = {0, 1, 2, 3} -- linear at start... calculate weights over time
-	local total = 0.0
-
-	for i = 2, 4 do
-		local dx = x[i] - x[i - 1]
-		local dz = z[i] - z[i - 1]
-		-- the .9 is giving the wideness and roundness of the curve,
-		-- lower values (like .25 will be more straight, while high values like .95 will be wider and rounder)
-		total = total + math.pow(dx * dx + dz * dz, 0.95)
-		time[i] = total
-	end
-    local tstart = time[2]
-	local tend = time[3]
-	local t = tstart + (index * (tend - tstart)) / segments
-
-	local L01 = p0.x * (time[2] - t) / (time[2] - time[1]) + p1.x * (t - time[1]) / (time[2] - time[1])
-	local L12 = p1.x * (time[3] - t) / (time[3] - time[2]) + p2.x * (t - time[2]) / (time[3] - time[2])
-	local L23 = p2.x * (time[4] - t) / (time[4] - time[3]) + p3.x * (t - time[3]) / (time[4] - time[3])
-	local L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
-	local L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
-	local C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
-	px.x = C12
-
-	L01 = p0.z * (time[2] - t) / (time[2] - time[1]) + p1.z * (t - time[1]) / (time[2] - time[1])
-	L12 = p1.z * (time[3] - t) / (time[3] - time[2]) + p2.z * (t - time[2]) / (time[3] - time[2])
-	L23 = p2.z * (time[4] - t) / (time[4] - time[3]) + p3.z * (t - time[3]) / (time[4] - time[3])
-	L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
-	L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
-	C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
-	px.z = C12
-
-	return px
 end
 
 function AutoDrive.getDebugChannelIsSet(debugChannel)

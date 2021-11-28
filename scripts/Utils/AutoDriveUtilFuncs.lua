@@ -115,13 +115,13 @@ function AutoDrive.getRequiredRefuel(vehicle, ignoreFillLevel)
     local ret = 0
 
     if spec ~= nil and spec.consumersByFillTypeName ~= nil then
-        if spec.consumersByFillTypeName.diesel ~= nil and spec.consumersByFillTypeName.diesel.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.diesel.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
+        if spec.consumersByFillTypeName.DIESEL ~= nil and spec.consumersByFillTypeName.DIESEL.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.DIESEL.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
             ret = g_fillTypeManager:getFillTypeIndexByName('DIESEL')
         end
-        if spec.consumersByFillTypeName.def ~= nil and spec.consumersByFillTypeName.def.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.def.fillUnitIndex) < AutoDrive.REFUEL_LEVEL) then
+        if spec.consumersByFillTypeName.DEF ~= nil and spec.consumersByFillTypeName.DEF.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.DEF.fillUnitIndex) < AutoDrive.REFUEL_LEVEL) then
             ret = g_fillTypeManager:getFillTypeIndexByName('DEF')
         end
-        if spec.consumersByFillTypeName.electricCharge ~= nil and spec.consumersByFillTypeName.electricCharge.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.electricCharge.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
+        if spec.consumersByFillTypeName.ELECTRICCHARGE ~= nil and spec.consumersByFillTypeName.ELECTRICCHARGE.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.ELECTRICCHARGE.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
             ret = g_fillTypeManager:getFillTypeIndexByName('ELECTRICCHARGE')
         end
     end

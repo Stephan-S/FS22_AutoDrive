@@ -223,26 +223,6 @@ function ADGraphManager:checkYPositionIntegrity()
 	end
 end
 
-function ADGraphManager:checkSubPrioIntegrity()
-	for _, wp in pairs(self.wayPoints) do
-		if wp.x >= -1.01 and wp.x <= -0.99 and wp.z >= -1.01 and wp.z <= -0.99 then
-			-- Found old sub prio marker
-			-- Transfer to new style now
-			for __, wpInner in pairs(self.wayPoints) do
-				if wpInner.id ~= wp.id then
-					for _, neighborId in pairs(wpInner.out) do
-						if neighborId == wp.id then
-							self:toggleWayPointAsSubPrio(wpInner.id)
-						end
-					end
-				end
-			end
-
-			self:removeWayPoint(wp.id)
-		end
-	end
-end
-
 function ADGraphManager:removeWayPoint(wayPointId, sendEvent)
 	if wayPointId ~= nil and wayPointId >= 0 and self.wayPoints[wayPointId] ~= nil then
 		if sendEvent == nil or sendEvent == true then
@@ -1375,4 +1355,24 @@ function ADGraphManager:deleteColorSelectionWayPoints()
             actualID = actualID - 1
         end
     end
+end
+
+function ADGraphManager:removeNodesWithFlag(flagToRemove)
+	local network = self:getWayPoints()	
+	local pointsToDelete = {}
+	for i, wp in pairs(network) do
+		if bitAND(wp.flags, flagToRemove) > 0 then
+			table.insert(pointsToDelete, wp.id)
+		end
+	end
+
+	-- sort the wayPoints to delete in descant order to ensure correct linkage deletion
+	local sort_func = function(a, b)
+		return a > b
+	end
+	table.sort(pointsToDelete, sort_func)
+
+	for i = 1, #pointsToDelete do
+		ADGraphManager:removeWayPoint(pointsToDelete[i])
+	end
 end

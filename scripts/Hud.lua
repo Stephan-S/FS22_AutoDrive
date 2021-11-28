@@ -514,11 +514,45 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 					if vehicle.ad.selectedNodeId ~= nil then
 						if vehicle.ad.selectedNodeId ~= vehicle.ad.hoveredNodeId then
 							-- connect selected point with hovered point
-							AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
-							ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
-							if AutoDrive.leftLSHIFTmodifierKeyPressed then
-								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleWayPointAsSubPrio 1 selectedNodeId %d", vehicle.ad.selectedNodeId)
-								ADGraphManager:toggleWayPointAsSubPrio(vehicle.ad.selectedNodeId)
+
+							if AutoDrive.rightSHIFTmodifierKeyPressed then
+								print("AutoDrive:mouseAction - AutoDrive.rightSHIFTmodifierKeyPressed")
+								AutoDrive.splineInterpolation = nil
+								AutoDrive:createSplineInterpolationBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), false)
+								
+								print("AutoDrive:mouseAction -AutoDrive.splineInterpolation ~= nil: " .. tostring(AutoDrive.splineInterpolation ~= nil))
+								print("AutoDrive:mouseAction -AutoDrive.splineInterpolation.waypoints: " .. tostring(AutoDrive.splineInterpolation.waypoints))
+								print("AutoDrive:mouseAction -#AutoDrive.splineInterpolation.waypoints: " .. #AutoDrive.splineInterpolation.waypoints)
+								if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.waypoints ~= nil and #AutoDrive.splineInterpolation.waypoints > 2 then
+									if AutoDrive:checkForCollisionOnSpline() then
+										local lastId = vehicle.ad.selectedNodeId
+										local lastHeight = ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId).y
+										for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
+											if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
+												if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+													wp.y = lastHeight
+												end			
+												ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, 0)
+												lastId = ADGraphManager:getWayPointsCount()
+											end
+										end
+		
+										local wp = ADGraphManager:getWayPointById(lastId)
+										ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), false)
+									else										
+										print("AutoDrive:mouseAction - found collision")
+									end
+								else
+									print("AutoDrive:mouseAction - Fallback to toggle connections")
+									--ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), false)
+								end
+							else
+								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
+								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
+								if AutoDrive.leftLSHIFTmodifierKeyPressed then
+									AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleWayPointAsSubPrio 1 selectedNodeId %d", vehicle.ad.selectedNodeId)
+									ADGraphManager:toggleWayPointAsSubPrio(vehicle.ad.selectedNodeId)
+								end
 							end
 						end
 
