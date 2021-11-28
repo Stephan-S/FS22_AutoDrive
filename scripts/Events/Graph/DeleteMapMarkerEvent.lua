@@ -4,7 +4,6 @@ AutoDriveDeleteMapMarkerEvent_mt = Class(AutoDriveDeleteMapMarkerEvent, Event)
 InitEventClass(AutoDriveDeleteMapMarkerEvent, "AutoDriveDeleteMapMarkerEvent")
 
 function AutoDriveDeleteMapMarkerEvent.emptyNew()
-	print("AutoDriveDeleteMapMarkerEvent.emptyNew")
 	local self = Event.new(AutoDriveDeleteMapMarkerEvent_mt)
 	return self
 end

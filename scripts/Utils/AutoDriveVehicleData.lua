@@ -278,7 +278,6 @@ AutoDriveVehicleDataEventAssignParkDestination_mt = Class(AutoDriveVehicleDataEv
 InitEventClass(AutoDriveVehicleDataEventAssignParkDestination, "AutoDriveVehicleDataEventAssignParkDestination")
 
 function AutoDriveVehicleDataEventAssignParkDestination.emptyNew()
-	-- print("AutoDriveVehicleDataEventAssignParkDestination:emptyNew")
     local self = Event.new(AutoDriveVehicleDataEventAssignParkDestination_mt)
     return self
 end

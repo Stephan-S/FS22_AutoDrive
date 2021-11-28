@@ -4,7 +4,6 @@ AutoDriveRenameDriverEvent_mt = Class(AutoDriveRenameDriverEvent, Event)
 InitEventClass(AutoDriveRenameDriverEvent, "AutoDriveRenameDriverEvent")
 
 function AutoDriveRenameDriverEvent.emptyNew()
-	print("AutoDriveRenameDriverEvent.emptyNew")
 	local self = Event.new(AutoDriveRenameDriverEvent_mt)
 	return self
 end

@@ -4,7 +4,6 @@ AutoDriveUserConnectedEvent_mt = Class(AutoDriveUserConnectedEvent, Event)
 InitEventClass(AutoDriveUserConnectedEvent, "AutoDriveUserConnectedEvent")
 
 function AutoDriveUserConnectedEvent.emptyNew()
-	print("AutoDriveUserConnectedEvent:emptyNew")
 	local self = Event.new(AutoDriveUserConnectedEvent_mt)
 	return self
 end

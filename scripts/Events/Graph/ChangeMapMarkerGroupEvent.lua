@@ -4,7 +4,6 @@ AutoDriveChangeMapMarkerGroupEvent_mt = Class(AutoDriveChangeMapMarkerGroupEvent
 InitEventClass(AutoDriveChangeMapMarkerGroupEvent, "AutoDriveChangeMapMarkerGroupEvent")
 
 function AutoDriveChangeMapMarkerGroupEvent.emptyNew()
-	print("AutoDriveChangeMapMarkerGroupEvent:emptyNew")
 	local self = Event.new(AutoDriveChangeMapMarkerGroupEvent_mt)
 	return self
 end

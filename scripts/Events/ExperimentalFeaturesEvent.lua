@@ -4,7 +4,6 @@ AutoDriveExperimentalFeaturesEvent_mt = Class(AutoDriveExperimentalFeaturesEvent
 InitEventClass(AutoDriveExperimentalFeaturesEvent, "AutoDriveExperimentalFeaturesEvent")
 
 function AutoDriveExperimentalFeaturesEvent.emptyNew()
-	print("AutoDriveExperimentalFeaturesEvent:emptyNew")
     local self = Event.new(AutoDriveExperimentalFeaturesEvent_mt)
     return self
 end

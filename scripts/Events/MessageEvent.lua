@@ -4,7 +4,6 @@ AutoDriveMessageEvent_mt = Class(AutoDriveMessageEvent, Event)
 InitEventClass(AutoDriveMessageEvent, "AutoDriveMessageEvent")
 
 function AutoDriveMessageEvent.emptyNew()
-	print("AutoDriveMessageEvent:emptyNew")
     local self = Event.new(AutoDriveMessageEvent_mt)
     return self
 end

@@ -4,7 +4,6 @@ AutoDriveCreateWayPointEvent_mt = Class(AutoDriveCreateWayPointEvent, Event)
 InitEventClass(AutoDriveCreateWayPointEvent, "AutoDriveCreateWayPointEvent")
 
 function AutoDriveCreateWayPointEvent.emptyNew()
-	print("AutoDriveCreateWayPointEvent.emptyNew")
 	local self = Event.new(AutoDriveCreateWayPointEvent_mt)
 	return self
 end

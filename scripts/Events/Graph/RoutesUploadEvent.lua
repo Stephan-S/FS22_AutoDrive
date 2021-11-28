@@ -4,7 +4,6 @@ AutoDriveRoutesUploadEvent_mt = Class(AutoDriveRoutesUploadEvent, Event)
 InitEventClass(AutoDriveRoutesUploadEvent, "AutoDriveRoutesUploadEvent")
 
 function AutoDriveRoutesUploadEvent.emptyNew()
-	print("AutoDriveRoutesUploadEvent:emptyNew")
 	local self = Event.new(AutoDriveRoutesUploadEvent_mt)
 	return self
 end

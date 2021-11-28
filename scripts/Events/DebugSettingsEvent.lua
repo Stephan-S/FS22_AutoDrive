@@ -4,7 +4,6 @@ AutoDriveDebugSettingsEvent_mt = Class(AutoDriveDebugSettingsEvent, Event)
 InitEventClass(AutoDriveDebugSettingsEvent, "AutoDriveDebugSettingsEvent")
 
 function AutoDriveDebugSettingsEvent.emptyNew()
-	print("AutoDriveDebugSettingsEvent:emptyNew")
     local self = Event.new(AutoDriveDebugSettingsEvent_mt)
     return self
 end

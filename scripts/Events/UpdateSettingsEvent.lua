@@ -4,7 +4,6 @@ AutoDriveUpdateSettingsEvent_mt = Class(AutoDriveUpdateSettingsEvent, Event)
 InitEventClass(AutoDriveUpdateSettingsEvent, "AutoDriveUpdateSettingsEvent")
 
 function AutoDriveUpdateSettingsEvent.emptyNew()
-	print("AutoDriveUpdateSettingsEvent:emptyNew")
 	local self = Event.new(AutoDriveUpdateSettingsEvent_mt)
 	return self
 end

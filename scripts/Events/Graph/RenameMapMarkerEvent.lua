@@ -4,7 +4,6 @@ AutoDriveRenameMapMarkerEvent_mt = Class(AutoDriveRenameMapMarkerEvent, Event)
 InitEventClass(AutoDriveRenameMapMarkerEvent, "AutoDriveRenameMapMarkerEvent")
 
 function AutoDriveRenameMapMarkerEvent.emptyNew()
-	print("AutoDriveRenameMapMarkerEvent.emptyNew")
 	local self = Event.new(AutoDriveRenameMapMarkerEvent_mt)
 	return self
 end

@@ -4,7 +4,6 @@ AutoDriveToggleConnectionEvent_mt = Class(AutoDriveToggleConnectionEvent, Event)
 InitEventClass(AutoDriveToggleConnectionEvent, "AutoDriveToggleConnectionEvent")
 
 function AutoDriveToggleConnectionEvent.emptyNew()
-	print("AutoDriveToggleConnectionEvent.emptyNew")
     local self = Event.new(AutoDriveToggleConnectionEvent_mt)
     return self
 end

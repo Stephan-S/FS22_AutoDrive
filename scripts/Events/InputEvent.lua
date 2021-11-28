@@ -4,7 +4,6 @@ AutoDriveInputEventEvent_mt = Class(AutoDriveInputEventEvent, Event)
 InitEventClass(AutoDriveInputEventEvent, "AutoDriveInputEventEvent")
 
 function AutoDriveInputEventEvent.emptyNew()
-	print("AutoDriveInputEventEvent:emptyNew")
     local self = Event.new(AutoDriveInputEventEvent_mt)
     return self
 end
