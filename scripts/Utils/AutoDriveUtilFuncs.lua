@@ -118,6 +118,9 @@ function AutoDrive.getRequiredRefuel(vehicle, ignoreFillLevel)
         if spec.consumersByFillTypeName.DIESEL ~= nil and spec.consumersByFillTypeName.DIESEL.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.DIESEL.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
             ret = g_fillTypeManager:getFillTypeIndexByName('DIESEL')
         end
+        if spec.consumersByFillTypeName.METHANE ~= nil and spec.consumersByFillTypeName.METHANE.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.METHANE.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
+            ret = g_fillTypeManager:getFillTypeIndexByName('METHANE')
+        end
         if spec.consumersByFillTypeName.DEF ~= nil and spec.consumersByFillTypeName.DEF.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.DEF.fillUnitIndex) < AutoDrive.REFUEL_LEVEL) then
             ret = g_fillTypeManager:getFillTypeIndexByName('DEF')
         end

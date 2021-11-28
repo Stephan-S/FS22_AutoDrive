@@ -910,20 +910,34 @@ end
 
 function AutoDrive:ingameMapElementMouseEvent(superFunc, posX, posY, isDown, isUp, button, eventUsed)
 	eventUsed = superFunc(self, posX, posY, isDown, isUp, button, eventUsed)
-	if not eventUsed then
-		if isUp and button == Input.MOUSE_BUTTON_RIGHT then
-			for _, hotspot in pairs(self.ingameMap.hotspots) do
-				if self.ingameMap.filter[hotspot.category] and hotspot.visible and hotspot.category ~= MapHotspot.CATEGORY_FIELD_DEFINITION and hotspot.category ~= MapHotspot.CATEGORY_COLLECTABLE and hotspot:getIsActive() then
-					if GuiUtils.checkOverlayOverlap(posX, posY, hotspot.x, hotspot.y, hotspot:getWidth(), hotspot:getHeight(), nil) then
-						if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") and hotspot.isADMarker and g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil then
-							AutoDriveHudInputEventEvent:sendSecondMarkerEvent(g_currentMission.controlledVehicle, hotspot.markerID)
-						end
-						break
-					end
-				end
-			end
-		end
-	end
+
+    if isUp and button == Input.MOUSE_BUTTON_LEFT then
+        local hotspot = g_currentMission.hud.ingameMap.selectedHotspot
+        if hotspot ~= nil and hotspot.isADMarker then
+            if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+                if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil then
+                    AutoDriveHudInputEventEvent:sendFirstMarkerEvent(g_currentMission.controlledVehicle, hotspot.markerID)
+                    return
+                end
+            end
+        end
+    end
+
+    if isUp and button == Input.MOUSE_BUTTON_RIGHT then
+        for _, hotspot in pairs(self.ingameMap.hotspots) do
+            if hotspot.isADMarker then
+                local hotspotPosX, hotspotPosY =  hotspot.icon:getPosition()
+                if GuiUtils.checkOverlayOverlap(posX, posY, hotspotPosX, hotspotPosY, hotspot:getWidth(), hotspot:getHeight(), nil) then
+                    if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+                        if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil then
+                            AutoDriveHudInputEventEvent:sendSecondMarkerEvent(g_currentMission.controlledVehicle, hotspot.markerID)
+                        end
+                    end
+                    break
+                end
+            end
+        end
+    end
 
 	return eventUsed
 end
@@ -936,48 +950,183 @@ function AutoDrive:MapHotspot_getIsVisible(superFunc)
 	return superReturn and ((not self.isADMarker) or AutoDrive.getSetting("showMarkersOnMap"))
 end
 
+function AutoDrive.getPlayerHotspot()
+--[[
+    spec.playerHotspot = PlayerHotspot.new()
+    spec.playerHotspot:setVehicle(self)
+
+    g_currentMission:addInteractiveVehicle(self)
+    g_currentMission:addEnterableVehicle(self)
+
+    if spec.playerHotspot ~= nil then
+        spec.playerHotspot:setOwnerFarmId(self:getActiveFarm())
+        g_currentMission:addMapHotspot(spec.playerHotspot)
+    end
+]]
+        local mapHotspot = PlayerHotspot.new()
+
+        -- mapHotspot:setOwnerFarmId(self:getActiveFarm())
+        -- mapHotspot:setOwnerFarmId(0) -- all, visitor etc. ???
+
+--[[
+        mapHotspot.ownerFarmId = g_currentMission.player.farmId
+        mapHotspot.clickArea.area[1] = 0.13
+        mapHotspot.clickArea.area[2] = 0.13
+        mapHotspot.clickArea.area[3] = 0.74
+        mapHotspot.clickArea.area[4] = 0.74
+]]
+
+        -- mapHotspot.isHotspotSelectionActive = true ???
+    return mapHotspot
+end
+
+function AutoDrive.getTourHotspot()
+--[[
+    if self.mapHotspot == nil then
+        self.mapHotspot = TourHotspot.new()
+        g_currentMission:addMapHotspot(self.mapHotspot)
+    end
+
+    self.mapHotspot:setWorldPosition(x, z)
+
+    -- Find 'hidden' icon used internally only
+    local h = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x,y,z)
+    if y > h then
+        g_currentMission:setMapTargetHotspot(self.mapHotspot)
+        g_currentMission.disableMapTargetHotspotHiding = true
+    else
+        g_currentMission:setMapTargetHotspot(nil)
+        g_currentMission.disableMapTargetHotspotHiding = false
+    end
+]]
+        local mapHotspot = TourHotspot.new()
+
+--[[
+        mapHotspot.ownerFarmId = g_currentMission.player.farmId
+        mapHotspot.clickArea.area[1] = 0.13
+        mapHotspot.clickArea.area[2] = 0.13
+        mapHotspot.clickArea.area[3] = 0.74
+        mapHotspot.clickArea.area[4] = 0.74
+]]
+        -- mapHotspot.isHotspotSelectionActive = true ???
+    return mapHotspot
+end
+
+function AutoDrive.getPlaceableHotspot()
+--[[
+        local hotspot = PlaceableHotspot.new()
+        hotspot:setPlaceable(self)
+
+        local hotspotTypeName = self.xmlFile:getValue(key .. "#type", "UNLOADING")
+        local hotspotType = PlaceableHotspot.getTypeByName(hotspotTypeName)
+        if hotspotType == nil then
+            Logging.xmlWarning(self.xmlFile, "Unknown placeable hotspot type '%s'. Falling back to type 'UNLOADING'\nAvailable types: %s", hotspotTypeName, table.concatKeys(PlaceableHotspot.TYPE, " "))
+            hotspotType = PlaceableHotspot.TYPE.UNLOADING
+        end
+        hotspot:setPlaceableType(hotspotType)
+
+        local linkNode = self.xmlFile:getValue(key .. "#linkNode", nil, self.components, self.i3dMappings) or self.rootNode
+        if linkNode ~= nil then
+            local x, _, z = getWorldTranslation(linkNode)
+            hotspot:setWorldPosition(x, z)
+        end
+
+        local teleportNode = self.xmlFile:getValue(key .. "#teleportNode", nil, self.components, self.i3dMappings)
+        if teleportNode ~= nil then
+            local x, y, z = getWorldTranslation(teleportNode)
+            hotspot:setTeleportWorldPosition(x, y, z)
+        end
+
+        local worldPositionX, worldPositionZ = self.xmlFile:getValue(key .. "#worldPosition", nil)
+        if worldPositionX ~= nil then
+            hotspot:setWorldPosition(worldPositionX, worldPositionZ)
+        end
+
+        local teleportX, teleportY, teleportZ = self.xmlFile:getValue(key .. "#teleportWorldPosition", nil)
+        if teleportX ~= nil then
+            if g_currentMission ~= nil then
+                teleportY = math.max(teleportY, getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, teleportX, 0, teleportZ))
+            end
+            hotspot:setTeleportWorldPosition(teleportX, teleportY, teleportZ)
+        end
+
+        local text = self.xmlFile:getValue(key.."#text", nil)
+        if text ~= nil then
+            text = g_i18n:convertText(text, self.customEnvironment)
+            hotspot:setName(text)
+        end
+]]
+        local mapHotspot = PlaceableHotspot.new()
+
+--[[
+        mapHotspot.ownerFarmId = g_currentMission.player.farmId
+        mapHotspot.clickArea.area[1] = 0.13
+        mapHotspot.clickArea.area[2] = 0.13
+        mapHotspot.clickArea.area[3] = 0.74
+        mapHotspot.clickArea.area[4] = 0.74
+]]
+        -- mapHotspot.isHotspotSelectionActive = true ???
+
+        mapHotspot:setPlaceableType(PlaceableHotspot.TYPE.UNLOADING)
+        -- mapHotspot:setTeleportWorldPosition(x, y, z)
+
+
+    return mapHotspot
+end
+
 function AutoDrive.updateDestinationsMapHotspots()
-	--[[
     AutoDrive.debugPrint(nil, AutoDrive.DC_DEVINFO, "AutoDrive.updateDestinationsMapHotspots()")
+
     local width, height = getNormalizedScreenValues(9, 9)
 
     if AutoDrive.mapHotspotsBuffer ~= nil then
         -- Removing all old map hotspots
-        for _, mh in pairs(AutoDrive.mapHotspotsBuffer) do
-            g_currentMission:removeMapHotspot(mh)
-            mh:delete()
+        for _, mapHotspot in pairs(AutoDrive.mapHotspotsBuffer) do
+            g_currentMission:removeMapHotspot(mapHotspot)
+            mapHotspot:delete()
         end
     end
     AutoDrive.mapHotspotsBuffer = {}
-    
+
     -- Updating and adding hotspots
     for index, marker in ipairs(ADGraphManager:getMapMarkers()) do
-        local mh
+        -- local mapHotspot = TourHotspot.new()
+        local mapHotspot = PlaceableHotspot.new()
+        -- local mapHotspot = AutoDrive.getPlayerHotspot()
+
+        mapHotspot.width, mapHotspot.height = getNormalizedScreenValues(40, 40)
+        mapHotspot.isVisible = true
+        mapHotspot.icon = Overlay.new(g_autoDriveUIFilename, 0, 0, mapHotspot.width, mapHotspot.height )
+        mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
+        -- mapHotspot.  = MapHotspot.CATEGORY_OTHER ???
+
         if marker.isADDebug == true then
             -- map hotspot debug
-            mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
-            --mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({780, 780, 234, 234}))
---function GuiUtils.getUVs(str, ref, defaultValue, rotation)
-			mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({780, 780, 234, 234}))
+            mapHotspot.isADDebug = true
+            -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
+			mapHotspot.icon:setUVs(GuiUtils.getUVs({780, 780, 234, 234}))
         else
-            mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_OTHER)
-            --mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({0, 512, 128, 128}))
-			mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({0, 512, 128, 128}))
+            -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_OTHER)
+			mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
         end
-        mh:setSize(width, height)
-        mh:setTextOptions(0)
-        mh.isADMarker = true
-        mh:setText(marker.name)
+
+        mapHotspot.isADMarker = true
+        mapHotspot.markerID = index
+        
         local wp = ADGraphManager:getWayPointById(marker.id)
         if wp ~= nil then
-            mh:setWorldPosition(wp.x, wp.z)
-            mh.enabled = true
-            mh.markerID = index
-            g_currentMission:addMapHotspot(mh)
-            table.insert(AutoDrive.mapHotspotsBuffer, mh)
+
+            g_currentMission:addMapHotspot(mapHotspot)
+            table.insert(AutoDrive.mapHotspotsBuffer, mapHotspot)
+
+            mapHotspot:setWorldPosition(wp.x, wp.z)
+
+            mapHotspot:setTeleportWorldPosition(wp.x, wp.y + 2, wp.z)
+
+            mapHotspot:setName(marker.name)
+
         end
     end
-	--]]
 end
 
 function AutoDrive.createColorSelectionWayPoints(vehicle)

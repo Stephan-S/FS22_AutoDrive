@@ -273,10 +273,6 @@ function AutoDrive:loadMap(name)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 
-	MapHotspot.getHasDetails = Utils.overwrittenFunction(MapHotspot.getHasDetails, AutoDrive.mapHotSpotClicked)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 	MapHotspot.getIsVisible = Utils.overwrittenFunction(MapHotspot.getIsVisible, AutoDrive.MapHotspot_getIsVisible)
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)

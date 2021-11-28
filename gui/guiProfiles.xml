@@ -265,7 +265,7 @@
 <!-- used -->
     <Profile name="autoDriveNotificationHistoryNavigationBox" extends="emptyPanel" with="lightFrame">
         <Value name="size" value="720px 692px" />
-        <Value name="position" value="0px -45px" />
+        <Value name="position" value="0px -455px" />
         <Value name="screenAlign" value="topCenter" />
         <Value name="positionOrigin" value="topCenter" />
     </Profile>
@@ -278,10 +278,11 @@
         <Value name="positionOrigin" value="topLeft" />
         <Value name="isHorizontalList" value="false" />
         <Value name="itemsPerCol" value="15" />
-        <Value name="listItemHeight" value="46px" />
-        <Value name="listItemWidth" value="690px" />
+        <Value name="listItemHeight" value="26px" />
+        <Value name="listItemWidth" value="580px" />
         <Value name="rowBackgroundProfile" value="autoDriveRoutesManagerListItem" />
         <Value name="rowBackgroundProfileAlternate" value="autoDriveRoutesManagerListItemAlternate" />
+        <Value name="position" value="0px -380px" />
     </Profile>
 
 <!-- used -->
@@ -289,8 +290,8 @@
         <Value name="imageColor" value="$preset_colorListRowBackground" />
         <Value name="imageFocusedColor" value="$preset_colorMainUI" />
         <Value name="imageSelectedColor" value="$preset_colorMainUI" />
-        <Value name="size" value="690px 46px" />
-        <Value name="position" value="0px 0px" />
+        <Value name="size" value="550px 25px" />
+        <Value name="position" value="0px -380px" />
     </Profile>
 
 <!-- TODO: used? -->
@@ -298,7 +299,7 @@
 
 <!-- used -->
     <Profile name="autoDriveNotificationHistoryItemIcon" extends="baseReference">
-        <Value name="size" value="46px 46px" />
+        <Value name="size" value="26px 26px" />
         <Value name="position" value="0px 0px" />
         <Value name="imageFilename" value="g_autoDriveUIFilename" />
         <Value name="imageUVs" value="0px 768px 256px 256px" />
@@ -307,13 +308,13 @@
 
 <!-- used -->
     <Profile name="autoDriveNotificationHistoryItemText" extends="textDefault">
-        <Value name="size" value="692px 46px" />
+        <Value name="size" value="590px 26px" />
         <Value name="textMaxWidth" value="586px" />
         <Value name="textVerticalAlignment" value="middle" />
         <Value name="textSize" value="16px" />
         <Value name="textBold" value="true" />
-        <Value name="textOffset" value="46px 2px" />
-        <Value name="textFocusedOffset" value="46px 2px" />
+        <Value name="textOffset" value="26px 2px" />
+        <Value name="textFocusedOffset" value="26px 2px" />
     </Profile>
 
 <!-- used -->
@@ -384,7 +385,7 @@
 
 <!-- used -->
     <Profile name="autoDriveNotificationHistoryItemIcon" extends="baseReference">
-        <Value name="size" value="128px 128px" />
+        <Value name="size" value="12px 12px" />
         <Value name="position" value="10px -10px" />
         <Value name="imageFilename" value="g_autoDriveTipOfTheDayUIFilename" />
         <Value name="imageUVs" value="0px 0px 128px 128px" />

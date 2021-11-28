@@ -253,7 +253,7 @@
 		<text name="gui_ad_debugChannelBGA"						text="BGA Modus" />
 		<text name="gui_ad_debugChannelAll" 					text="Alles" />
 		
-		<text name="gui_ad_notificationHistoryTitle" 			text="Notifications" />
+		<text name="gui_ad_notificationHistoryTitle" 			text="Benachrichtigungen" />
 
 		<text name="gui_ad_colorSettingsTitle" 			        text="Farbzuweisungen" />
         <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->

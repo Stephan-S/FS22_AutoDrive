@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
-    <GuiElement type="empty" profile="newLayer" />
-    <GuiElement type="bitmap" profile="dialogFullscreenBg" />
+    <!-- <GuiElement type="empty" profile="newLayer" /> -->
+    <!-- <GuiElement type="bitmap" profile="dialogFullscreenBg" /> -->
 
-    <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter">
+    <!-- <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter"> -->
+    <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px 250px" screenAlign="topCenter" positionOrigin="topCenter">
         <GuiElement type="bitmap" profile="dialogHeaderDocked">
             <GuiElement type="text" profile="dialogHeaderText" text="gui_ad_notificationHistoryTitle" textUpperCase="false" id="headerText" visible="true" onCreate="onCreateAutoDriveHeaderText" />
         </GuiElement>
 
-        <GuiElement type="empty" profile="autoDriveNotificationHistoryNavigationBox">
+        <GuiElement type="empty" profile="autoDriveNotificationHistoryNavigationBox" >
 
             <GuiElement type="list" profile="autoDriveNotificationHistoryList" position="1px -1px" onSelectionChanged="onListSelectionChanged" onDoubleClick="onDoubleClick" id="autoDriveNotificationsList">
                 <GuiElement type="listItem" profile="autoDriveNotificationHistoryListItem" id="listItemTemplate">
@@ -17,7 +18,7 @@
                 </GuiElement>
             </GuiElement>
 
-            <GuiElement type="bitmap" profile="verticalGlassListSliderBackground" size="28px 690px" position="-1px -1px">
+            <GuiElement type="bitmap" profile="verticalGlassListSliderBackground" size="28px 680px" position="-1px -1px">
                 <GuiElement type="slider" profile="verticalGlassListSlider" size="16px 678px" dataElementId="autoDriveNotificationsList" handleFocus="false" />
             </GuiElement>
         </GuiElement>
