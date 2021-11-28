@@ -429,7 +429,7 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 		end
 	end
 
-	if isDown or AutoDrive.lastButtonDown == button then
+	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 then
 		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and AutoDrive.Hud.showHud == true then
 			AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 		end
