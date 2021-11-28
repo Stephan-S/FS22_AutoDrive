@@ -495,6 +495,325 @@ function AutoDrive:setDebugChannel(newDebugChannel)
 	AutoDrive.showNetworkEvents()
 end
 
+addConsoleCommand("adDumpTable", "Dump Table to log", "dumpTableToLog", AutoDrive)
+
+function AutoDrive:dumpTableToLog(input, ...)
+	local f = getfenv(0).loadstring('return ' .. input)
+	AutoDrive.dumpTable(f(), "Table:", 1)
+end
+
+addConsoleCommand("adTest", "Test one function", "testFunction", AutoDrive)
+function AutoDrive:testFunction()
+	--g_currentMission.aiSystem:consoleCommandAIToggleSplineVisibility(true)
+	local startNodes = {}
+	local endNodes = {}
+
+	local hasSplines = true
+	local splineIndex = 1
+	while hasSplines do
+		local spline = g_currentMission.trafficSystem:getSplineByIndex(splineIndex)
+		hasSplines = false
+		if spline ~= nil then
+			hasSplines = true
+			splineIndex = splineIndex + 1
+			local lastX, lastY, lastZ = 0,0,0
+			local length = getSplineLength(spline)
+			if length > 0 then
+				for i=0, 1, 1.0/length do
+					local posX, posY, posZ = getSplinePosition(spline, i)
+					if posX ~= nil then
+						if lastX == 0 or MathUtil.vector3Length(lastX - posX, lastY - posY, lastZ - posZ) > 3 then
+							--print("[AD] splinePosition " .. i .. ": " .. posX .. " / " .. posZ)
+							local connectLast = false
+							if lastX ~= 0 then
+								connectLast = true
+							end
+							ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, false, false, 0, 0)
+
+							if lastX == 0 then
+								local wpId = ADGraphManager:getWayPointsCount()
+								local wp = ADGraphManager:getWayPointById(wpId)
+								table.insert(startNodes, wp)
+							end
+
+							lastX, lastY, lastZ = posX, posY, posZ
+						end
+					end
+				end
+
+				local wpId = ADGraphManager:getWayPointsCount()
+				local wp = ADGraphManager:getWayPointById(wpId)
+				table.insert(endNodes, wp)
+			end   
+		end
+	end
+
+	self:createJunctions(startNodes, endNodes, 100, 60)
+end
+
+function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
+	print("AutoDrive:createJunctions")
+	for _, endNode in pairs(endNodes) do
+		if endNode.incoming ~= nil and #endNode.incoming > 0 then
+			local incomingNode = ADGraphManager:getWayPointById(endNode.incoming[1])
+
+			for __, startNode in pairs(startNodes) do
+				if startNode.out ~= nil and #startNode.out > 0 then
+					local outNode = ADGraphManager:getWayPointById(startNode.out[1])
+					
+					local angle = math.abs(AutoDrive.angleBetween({x = outNode.x - startNode.x, z = outNode.z - startNode.z}, {x = endNode.x - incomingNode.x, z = endNode.z - incomingNode.z}))
+					local angle2 = math.abs(AutoDrive.angleBetween({x = startNode.x - endNode.x, z = startNode.z - endNode.z}, {x = endNode.x - incomingNode.x, z = endNode.z - incomingNode.z}))
+					local dist = ADGraphManager:getDistanceBetweenNodes(startNode.id, endNode.id)
+
+					if angle < maxAngle and angle2 < maxAngle and dist < maxDist then
+						self.splineInterpolation = nil
+						AutoDrive:createSplineInterpolationBetween(endNode, startNode, false)
+						if self.splineInterpolation ~= nil and self.splineInterpolation.waypoints ~= nil and #self.splineInterpolation.waypoints > 2 then
+							local lastId = endNode.id
+							for wpId, wp in pairs(self.splineInterpolation.waypoints) do
+								if wpId ~= 1 and wpId < (#self.splineInterpolation.waypoints - 1) then							
+									ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, 0)
+									lastId = ADGraphManager:getWayPointsCount()
+								end
+							end
+							
+							local wp = ADGraphManager:getWayPointById(lastId)
+							ADGraphManager:toggleConnectionBetween(wp, startNode, false)
+						else
+							--print("AutoDrive:createJunctions - Fallback to toggle connections")
+							ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
+						end
+						--ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
+					end
+				end				
+			end
+		end
+	end
+	
+end
+
+function AutoDrive:createSplineInterpolationBetween(startNode, endNode, reuseParams)
+	if startNode == nil or endNode == nil then
+		return
+	end
+
+	if self.splineInterpolation ~= nil and startNode == self.splineInterpolation.startNode and endNode == self.splineInterpolation.endNode then
+		reuseParams = true
+	end
+
+	if table.contains(startNode.out, endNode.id) or table.contains(endNode.incoming, startNode.id) then
+		-- nodes are already connected - do not create preview
+		return
+	end
+
+	-- TODO: if we have more then one inbound or outbound connections, get the avg. vector
+	if #startNode.incoming >= 1 and #endNode.out >= 1 then
+		if reuseParams == nil or reuseParams == false then
+			self.splineInterpolation = {
+				MIN_CURVATURE = 0.5,
+				MAX_CURVATURE = 3.5,
+				startNode = startNode,
+				p0 = nil,
+				endNode = endNode,
+				p3 = nil,
+				curvature = 1,
+				waypoints = { startNode }
+			}
+		else
+			-- fallback to straight line
+			if self.splineInterpolation.curvature <= 0 then
+				self.splineInterpolation.waypoints = { startNode, endNode }
+				return
+			end
+			self.splineInterpolation.waypoints = { startNode }
+		end
+
+		local p0 = nil
+		for _, px in pairs(startNode.incoming) do
+			p0 = ADGraphManager:getWayPointById(px)
+			self.splineInterpolation.p0 = p0
+			break
+		end
+		local p3 = nil
+		for _, px in pairs(endNode.out) do
+			p3 = ADGraphManager:getWayPointById(px)
+			self.splineInterpolation.p3 = p3
+			break
+		end
+
+		if reuseParams == nil or reuseParams == false then
+			-- calculate the angle between start tangent and end tangent
+			local dAngle = math.abs(AutoDrive.angleBetween(
+				ADVectorUtils.subtract2D(p0, startNode),
+				ADVectorUtils.subtract2D(endNode, p3)
+			))
+			self.splineInterpolation.curvature = ADVectorUtils.linterp(0, 180, dAngle, 1.5, 2.5)
+		end
+
+		-- distance from start to end, divided by two to give it more roundness...
+		local dStartEnd = ADVectorUtils.distance2D(startNode, endNode) / self.splineInterpolation.curvature
+
+		-- we need to normalize the length of p0-start and end-p3, otherwise their length will influence the curve
+		-- get vector from p0->start
+		local vp0Start = ADVectorUtils.subtract2D(p0, startNode)
+		-- calculate unit vector of vp0Start
+		vp0Start = ADVectorUtils.unitVector2D(vp0Start)
+		-- scale it like start->end
+		vp0Start = ADVectorUtils.scaleVector2D(vp0Start, dStartEnd)
+		-- invert it
+		vp0Start = ADVectorUtils.invert2D(vp0Start)
+		-- add it to the start Vector so that we get new p0
+		p0 = ADVectorUtils.add2D(startNode, vp0Start)
+		-- make sure p0 has a y value
+		p0.y = startNode.y
+
+		-- same for end->p3, except that we do not need to invert it, but just add it to the endNode
+		local vEndp3 = ADVectorUtils.subtract2D(endNode, p3)
+		vEndp3 = ADVectorUtils.unitVector2D(vEndp3)
+		vEndp3 = ADVectorUtils.scaleVector2D(vEndp3, dStartEnd)
+		p3  = ADVectorUtils.add2D(endNode, vEndp3)
+		p3.y = endNode.y
+
+		local prevWP = startNode
+		local prevV = ADVectorUtils.subtract2D(p0, startNode)
+		-- we're calculting a VERY smooth curve and whenever the new point on the curve has a good distance to the last one create a new waypoint
+		-- but make sure that the last point also has a good distance to the endNode
+		for i = 1, 200 do
+			local px = AutoDrive:CatmullRomInterpolate(i, p0, startNode, endNode, p3, 200)
+			local newV = ADVectorUtils.subtract2D(prevWP, px)
+			local dAngle = math.abs(AutoDrive.angleBetween(prevV, newV))
+
+			-- only create new WP if distance to last one is > 1.5m and distance to target > 1.5m and angle to last one > 3°
+			-- or at least every 4m 
+			local distPrev = ADVectorUtils.distance2D(prevWP, px)
+			local distEnd = ADVectorUtils.distance2D(px, endNode)
+			if ( distPrev >= 1.5 and distEnd >= 1.5 and dAngle >= 3 ) or (distPrev >= 4 and distEnd >= 4) then
+				-- get height at terrain
+				px.y = AutoDrive:getTerrainHeightAtWorldPos(px.x, px.z)
+				table.insert(self.splineInterpolation.waypoints, px)
+				prevWP = px -- newWP
+				prevV = newV
+			end
+		end
+		table.insert(self.splineInterpolation.waypoints, endNode)
+
+	else -- fallback to straight line connection behaviour
+		return
+	end
+end
+
+ADVectorUtils = {}
+
+--- Calculates the unit vector on a given vector.
+--- @param vector table Table with x and z properties.
+--- @return table Unitvector as table with x and z properties.
+function ADVectorUtils.unitVector2D(vector)
+	local x, z = vector.x or 0, vector.z or 0
+	local q = math.sqrt( (x * x) + ( z * z ) )
+	return {x = x / q, z = z / q}
+end
+
+--- Scales a vector by a given scalar.
+--- @param vector table Table with x and z properties. 
+--- @param scale number Scale
+--- @return table Vector
+function ADVectorUtils.scaleVector2D(vector, scale)
+	scale = scale or 1.0
+	vector.x = ( vector.x * scale ) or 0
+	vector.z = ( vector.z * scale ) or 0
+	return vector
+end
+
+--- Returns the distance between zwo vectors using their x and z coordinates.
+--- @param vectorA table with x and z property
+--- @param vectorB table with x and z property
+--- @return number Distance between vectorA and vectorB
+function ADVectorUtils.distance2D(vectorA, vectorB)
+	return MathUtil.vector2Length(vectorA.x - vectorB.x, vectorA.z - vectorB.z)
+end
+
+--- Returns a new vector pointing from vectorA to vectorB by subtracting A from B
+--- @param vectorA table with x and z property
+--- @param vectorB table with x and z property
+--- @return table Vector pointing from A to B
+function ADVectorUtils.subtract2D(vectorA, vectorB)
+	return {x = vectorB.x - vectorA.x, z = vectorB.z - vectorA.z}
+end
+
+--- Inverts a vector with x and z properties. 
+--- @param vector table with x and z property
+--- @return table Vector inverted
+function ADVectorUtils.invert2D(vector)
+	vector.x = vector.x * -1
+	vector.z = vector.z * -1
+	return vector
+end
+
+--- Adds x and z values of two given vectors and returns a new vector with x and z properties.
+--- @param vectorA table with x and z property
+--- @param vectorB table with x and z property
+--- @return table Vector
+function ADVectorUtils.add2D(vectorA, vectorB)
+	return {x = vectorA.x + vectorB.x, z = vectorA.z + vectorB.z}
+end
+
+--- Does a linear interpolation based on the in* range and value, and returns a new value
+--- fitting in the out range. Second return value is the interpolated value between 0..1.
+--- @param inMin number Minimum value for input range
+--- @param inMax number Maximum number for input range
+--- @param inValue number Current value for input range
+--- @param outMin number Minimum value vor output range
+--- @param outMax number Maximum value for output range
+--- @return number, number Interpolated value in output range, value in range 0..1
+function ADVectorUtils.linterp(inMin, inMax, inValue, outMin, outMax)
+	-- normalize input, make min range boundary = 0, nval is between 0..1
+	local imax = inMax - inMin
+	local nval = math.clamp(0, inValue - inMin, imax) / imax
+	-- normalize output
+	local omax = outMax - outMin
+	local oval = outMin + ( omax * nval )
+	return oval, nval
+end
+
+
+function AutoDrive:CatmullRomInterpolate(index, p0, p1, p2, p3, segments)
+	local px = {x=nil, y=nil, z=nil}
+	local x = {p0.x, p1.x, p2.x, p3.x}
+	local z = {p0.z, p1.z, p2.z, p3.z}
+	local time = {0, 1, 2, 3} -- linear at start... calculate weights over time
+	local total = 0.0
+
+	for i = 2, 4 do
+		local dx = x[i] - x[i - 1]
+		local dz = z[i] - z[i - 1]
+		-- the .9 is giving the wideness and roundness of the curve,
+		-- lower values (like .25 will be more straight, while high values like .95 will be wider and rounder)
+		total = total + math.pow(dx * dx + dz * dz, 0.95)
+		time[i] = total
+	end
+    local tstart = time[2]
+	local tend = time[3]
+	local t = tstart + (index * (tend - tstart)) / segments
+
+	local L01 = p0.x * (time[2] - t) / (time[2] - time[1]) + p1.x * (t - time[1]) / (time[2] - time[1])
+	local L12 = p1.x * (time[3] - t) / (time[3] - time[2]) + p2.x * (t - time[2]) / (time[3] - time[2])
+	local L23 = p2.x * (time[4] - t) / (time[4] - time[3]) + p3.x * (t - time[3]) / (time[4] - time[3])
+	local L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
+	local L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
+	local C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
+	px.x = C12
+
+	L01 = p0.z * (time[2] - t) / (time[2] - time[1]) + p1.z * (t - time[1]) / (time[2] - time[1])
+	L12 = p1.z * (time[3] - t) / (time[3] - time[2]) + p2.z * (t - time[2]) / (time[3] - time[2])
+	L23 = p2.z * (time[4] - t) / (time[4] - time[3]) + p3.z * (t - time[3]) / (time[4] - time[3])
+	L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
+	L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
+	C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
+	px.z = C12
+
+	return px
+end
+
 function AutoDrive.getDebugChannelIsSet(debugChannel)
 	return bitAND(AutoDrive.currentDebugChannelMask, debugChannel) > 0
 end
