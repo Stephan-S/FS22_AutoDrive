@@ -32,7 +32,6 @@ function AutoDrive.registerEventListeners(vehicleType)
 end
 
 function AutoDrive.registerOverwrittenFunctions(vehicleType)
-    SpecializationUtil.registerOverwrittenFunction(vehicleType, "updateAILights",                       AutoDrive.updateAILights)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getCanMotorRun",                       AutoDrive.getCanMotorRun)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle",                         AutoDrive.leaveVehicle)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
@@ -346,6 +345,8 @@ function AutoDrive:onUpdate(dt)
     if not self.ad.stateModule:isActive() and self.ad.taskModule:getNumberOfTasks() > 0 then
         self.ad.taskModule:abortAllTasks()
     end
+
+    AutoDrive.updateAutoDriveLights(self)
 
     --For 'legacy' purposes, this value should be kept since other mods already test for this:
     self.ad.mapMarkerSelected = self.ad.stateModule:getFirstMarkerId()
@@ -1259,17 +1260,24 @@ function AutoDrive:leaveVehicle(superFunc)
     superFunc(self)
 end
 
-function AutoDrive:updateAILights(superFunc)
+function AutoDrive:updateAutoDriveLights()
     if self.ad ~= nil and self.ad.stateModule:isActive() then
         -- If AutoDrive is active, then we take care of lights our self
         local spec = self.spec_lights
         local dayMinutes = g_currentMission.environment.dayTime / (1000 * 60)
-        local needLights = (dayMinutes > g_currentMission.environment.nightStartMinutes or dayMinutes < g_currentMission.environment.nightEndMinutes)
+        local needLights = not g_currentMission.environment.isSunOn -- (dayMinutes > g_currentMission.environment.nightStartMinutes or dayMinutes < g_currentMission.environment.nightEndMinutes)
         if needLights then
-            local x, y, z = getWorldTranslation(self.components[1].node)
-            if spec.lightsTypesMask ~= spec.aiLightsTypesMask and AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(spec.aiLightsTypesMask)
+            local x, y, z = getWorldTranslation(self.components[1].node)            
+            if spec.aiLightsTypesMaskWork ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMaskWork and AutoDrive.checkIsOnField(x, y, z) then
+                self:setLightsTypesMask(spec.aiLightsTypesMaskWork)
+                return
             end
+            
+            if spec.aiLightsTypesMask ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMask and not AutoDrive.checkIsOnField(x, y, z) then
+                self:setLightsTypesMask(spec.aiLightsTypesMask)
+                return
+            end
+
             if spec.lightsTypesMask ~= 1 and not AutoDrive.checkIsOnField(x, y, z) then
                 self:setLightsTypesMask(1)
             end
@@ -1278,9 +1286,6 @@ function AutoDrive:updateAILights(superFunc)
                 self:setLightsTypesMask(0)
             end
         end
-        return
-    else
-        superFunc(self)
     end
 end
 
