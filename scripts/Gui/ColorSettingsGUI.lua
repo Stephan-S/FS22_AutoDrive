@@ -143,8 +143,27 @@ function ADColorSettingsGui:onCreateAutoDriveText1(box)
     end
 end
 
+function ADColorSettingsGui:onCreateAutoDriveText2(box)
+    if self.storedKey2 == nil then
+        self.storedKey2 = box.text
+    end
+    if self.storedKey2 ~= nil then
+
+        local hasText = self.storedKey2 ~= nil and self.storedKey2 ~= ""
+        if hasText then
+            local text = self.storedKey2
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
 function ADColorSettingsGui:copyAttributes(src)
 	ADColorSettingsGui:superClass().copyAttributes(self, src)
     self.storedHeaderKey = src.storedHeaderKey
     self.storedKey1 = src.storedKey1
+    self.storedKey2 = src.storedKey2
 end

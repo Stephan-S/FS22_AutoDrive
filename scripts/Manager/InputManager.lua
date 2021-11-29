@@ -50,7 +50,6 @@ ADInputManager.actionsToInputs = {
     ADParkVehicle = "input_parkVehicle",
     ADSetParkDestination = "input_setParkDestination",
     AD_devAction = "input_devAction",
-    AD_open_tipOfTheDay = "input_openTipOfTheDay",
     ADRefuelVehicle = "input_refuelVehicle",
     ADToggleHudExtension = "input_toggleHudExtension"
 }
@@ -140,12 +139,6 @@ end
 function ADInputManager:input_openColorSettings()
     AutoDrive.onOpenColorSettings()
 end
-
-function ADInputManager:input_openTipOfTheDay(vehicle)
-    AutoDrive.onOpenTipOfTheDay()
-end
-
-
 
 function ADInputManager:input_editMapMarker(vehicle)
     if AutoDrive.isEditorModeEnabled() then

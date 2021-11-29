@@ -935,17 +935,6 @@ AutoDrive.settings.autoTrailerCover = {
     isVehicleSpecific = true
 }
 
-AutoDrive.settings.showTipOfTheDay = {
-    values = {false, true},
-    texts = {"gui_ad_no", "gui_ad_yes"},
-    default = 2,
-    current = 2,
-    text = "gui_ad_showTipOfTheDay",
-    tooltip = "gui_ad_showTipOfTheDay_tooltip",
-    translate = true,
-    isVehicleSpecific = false
-}
-
 AutoDrive.settings.ALUnload = {
     values = {0, 1, 2, 3, 4},
     texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},

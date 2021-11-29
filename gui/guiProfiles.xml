@@ -180,6 +180,14 @@
     <Profile name="autoDriveDebugSettingsCheckboxToggleUntick" extends="ingameMenuMPActionsListPermissionCheckboxUntick">
     </Profile>
 
+<!-- new used -->
+    <Profile name="autoDriveDebugSettingsCheckboxToggleIcon2" extends="baseReference" with="lightFrame">
+        <Value name="size" value="48px 48px" />
+        <Value name="position" value="48px 0px" />
+        <Value name="imageFilename" value="g_autoDriveUIFilename" />
+        <Value name="frameThickness" value="0 0 1dp 0" />
+    </Profile>
+
 <!-- used -->
     <Profile name="autoDriveDebugSettingsCheckboxToggleIcon" extends="baseReference" with="lightFrame">
         <Value name="size" value="48px 48px" />
@@ -265,25 +273,25 @@
 
 <!-- used -->
     <Profile name="autoDriveNotificationHistoryNavigationBox" extends="emptyPanel" with="lightFrame">
-        <Value name="size" value="720px 692px" />
-        <Value name="position" value="0px -455px" />
+        <Value name="size" value="740px 540px" />
         <Value name="screenAlign" value="topCenter" />
         <Value name="positionOrigin" value="topCenter" />
     </Profile>
 
 <!-- used -->
     <Profile name="autoDriveNotificationHistoryList" extends="list">
-        <Value name="size" value="692px 692px" />
+        <Value name="size" value="740px 692px" />
         <Value name="selectOnScroll" value="true" />
         <Value name="screenAlign" value="topLeft" />
         <Value name="positionOrigin" value="topLeft" />
         <Value name="isHorizontalList" value="false" />
-        <Value name="itemsPerCol" value="15" />
+        <Value name="itemsPerCol" value="20" />
         <Value name="listItemHeight" value="26px" />
-        <Value name="listItemWidth" value="580px" />
-        <Value name="rowBackgroundProfile" value="autoDriveRoutesManagerListItem" />
-        <Value name="rowBackgroundProfileAlternate" value="autoDriveRoutesManagerListItemAlternate" />
-        <Value name="position" value="0px -380px" />
+        <Value name="listItemWidth" value="630px" />
+        <!-- <Value name="rowBackgroundProfile" value="autoDriveRoutesManagerListItem" /> -->
+        <!-- <Value name="rowBackgroundProfileAlternate" value="autoDriveRoutesManagerListItemAlternate" /> -->
+        <!-- <Value name="position" value="0px -380px" /> -->
+        <Value name="position" value="0px 0px" />
     </Profile>
 
 <!-- used -->
@@ -291,9 +299,10 @@
         <Value name="imageColor" value="$preset_colorListRowBackground" />
         <Value name="imageFocusedColor" value="$preset_colorMainUI" />
         <Value name="imageSelectedColor" value="$preset_colorMainUI" />
-        <Value name="size" value="550px 25px" />
-        <Value name="position" value="0px -380px" />
+        <Value name="size" value="690px 25px" />
+        <Value name="position" value="0px 0px" />
     </Profile>
+
 
 <!-- TODO: used? -->
     <Profile name="autoDriveNotificationHistoryListItemAlternate" extends="autoDriveRoutesManagerListItem" with="alternateRow anchorMiddleLeft" />
@@ -320,8 +329,7 @@
 
 <!-- used -->
     <Profile name="autoDriveColorSettingsNavigationBox" extends="emptyPanel" with="lightFrame">
-        <Value name="size" value="720px 692px" />
-        <Value name="position" value="0px -45px" />
+        <Value name="size" value="640px 540px" />
         <Value name="screenAlign" value="topCenter" />
         <Value name="positionOrigin" value="topCenter" />
     </Profile>
@@ -363,7 +371,6 @@
 <!-- used -->
     <Profile name="autoDriveTipOfTheDayNavigationBox" extends="emptyPanel" with="lightFrame">
         <Value name="size" value="720px 662px" />
-        <Value name="position" value="0px -45px" />
         <Value name="screenAlign" value="topCenter" />
         <Value name="positionOrigin" value="topCenter" />
     </Profile>
@@ -384,16 +391,6 @@
         <Value name="position" value="130px -10px" />
     </Profile>
 
-<!-- used -->
-    <Profile name="autoDriveNotificationHistoryItemIcon" extends="baseReference">
-        <Value name="size" value="12px 12px" />
-        <Value name="position" value="10px -10px" />
-        <Value name="imageFilename" value="g_autoDriveTipOfTheDayUIFilename" />
-        <Value name="imageUVs" value="0px 0px 128px 128px" />
-        <Value name="frameThickness" value="0 0 0 0" />
-        <Value name="positionOrigin" value="topLeft" />
-        <Value name="screenAlign" value="topLeft" />
-    </Profile>  
 
 <!-- used -->
     <Profile name="autoDriveTipOfTheDayTitleText" extends="textDefault">

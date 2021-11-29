@@ -6,7 +6,6 @@ AutoDrive.directory = g_currentModDirectory
 g_autoDriveUIFilename = AutoDrive.directory .. "textures/GUI_Icons.dds"
 g_autoDriveDebugUIFilename = AutoDrive.directory .. "textures/gui_debug_Icons.dds"
 g_autoDriveDebugUIFilename_BC7 = AutoDrive.directory .. "textures/gui_debug_Icons_BC7.dds"
-g_autoDriveTipOfTheDayUIFilename = AutoDrive.directory .. "textures/tipOfTheDay_icons.dds"
 
 AutoDrive.experimentalFeatures = {}
 AutoDrive.experimentalFeatures.redLinePosition = false
@@ -109,7 +108,6 @@ AutoDrive.actions = {
 	{"AD_continue", false, 3},
 	{"ADParkVehicle", false, 0},
 	{"AD_devAction", false, 0},
-	{"AD_open_tipOfTheDay", false, 0},
 	{"ADRefuelVehicle", false, 0},
 	{"ADToggleHudExtension", true, 1}
 }
@@ -326,11 +324,7 @@ function AutoDrive:loadMap(name)
 	Logging.info("[AD] Index: %d",index)
 
 	AutoDrive.initTelemetry()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-	AutoDrive.initTipOfTheDay()
-	index = index + 1
 	Logging.info("[AD] load map end: %d",index)
 end
 
@@ -472,7 +466,6 @@ function AutoDrive:update(dt)
 	ADRoutesManager:update(dt)
 
 	AutoDrive.handleTelemetry(dt)
-	AutoDrive.handleTipOfTheDay(dt)
 end
 
 function AutoDrive:draw()

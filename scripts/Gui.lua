@@ -10,7 +10,6 @@ function AutoDrive:loadGUI()
 	AutoDrive.gui.ADRoutesManagerGui = ADRoutesManagerGui:new()
 	AutoDrive.gui.ADNotificationsHistoryGui = ADNotificationsHistoryGui:new()
 	AutoDrive.gui.ADColorSettingsGui = ADColorSettingsGui:new()
-    AutoDrive.gui.ADTipOfTheDayGUI = ADTipOfTheDayGUI:new()
     local count = 1
     local result = nil
 	result = g_gui:loadGui(AutoDrive.directory .. "gui/enterDriverNameGUI.xml", "ADEnterDriverNameGui", AutoDrive.gui.ADEnterDriverNameGui)
@@ -50,12 +49,6 @@ function AutoDrive:loadGUI()
         AutoDrive.debugMsg(nil, "AutoDrive:loadGUI failed count %d", count)
     end
 	result = g_gui:loadGui(AutoDrive.directory .. "gui/colorSettingsGUI.xml", "ADColorSettingsGui", AutoDrive.gui.ADColorSettingsGui)
-
-    count = count + 1
-    if result == nil then
-        AutoDrive.debugMsg(nil, "AutoDrive:loadGUI failed count %d", count)
-    end
-	result = g_gui:loadGui(AutoDrive.directory .. "gui/tipOfTheDayGUI.xml", "ADTipOfTheDayGui", AutoDrive.gui.ADTipOfTheDayGUI)
 
     count = count + 1
     if result == nil then
@@ -124,8 +117,6 @@ function AutoDrive.GuiOverlay_loadOverlay(superFunc, ...)
 		overlay.filename = g_autoDriveDebugUIFilename
 	elseif overlay.filename == "g_autoDriveUIFilename" then
 		overlay.filename = g_autoDriveUIFilename
-	elseif overlay.filename == "g_autoDriveTipOfTheDayUIFilename" then
-		overlay.filename = g_autoDriveTipOfTheDayUIFilename
 	end
 
 	return overlay
@@ -178,11 +169,5 @@ end
 function AutoDrive.onOpenColorSettings()
 	if not AutoDrive.gui.ADColorSettingsGui.isOpen then
 		g_gui:showGui("ADColorSettingsGui")
-	end
-end
-
-function AutoDrive.onOpenTipOfTheDay()
-	if not AutoDrive.gui.ADTipOfTheDayGUI.isOpen then
-		g_gui:showGui("ADTipOfTheDayGui")
 	end
 end

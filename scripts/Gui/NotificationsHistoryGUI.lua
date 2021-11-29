@@ -33,9 +33,7 @@ function ADNotificationsHistoryGui:refreshItems()
     for _, n in pairs(self.history) do
         local new = self.listItemTemplate:clone(self.autoDriveNotificationsList)
         new:setVisible(true)
-        -- new.elements[1]:setImageUVs(nil, unpack(getNormalizedUVs(self.ICON_UVS[n.messageType])))
-        local normalizedIconUVs = GuiUtils.getUVs(self.ICON_UVS[n.messageType])
-        new.elements[1]:setImageUVs(nil, unpack(normalizedIconUVs))
+        new.elements[1]:setImageUVs(nil, unpack(GuiUtils.getUVs(self.ICON_UVS[n.messageType])))
         new.elements[2]:setText(n.text)
         new:updateAbsolutePosition()
     end

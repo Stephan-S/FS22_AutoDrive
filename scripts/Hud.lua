@@ -187,9 +187,6 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	posX = posX - closeWidth - self.gapWidth
 	table.insert(self.hudElements, ADHudButton:new(posX, posY, closeWidth, closeHeight, "input_toggleHudExtension", nil, nil, nil, "", 1, true))
 
-	posX = posX - closeWidth - self.gapWidth
-	table.insert(self.hudElements, ADHudButton:new(posX, posY, closeWidth, closeHeight, "input_openTipOfTheDay", nil, nil, nil, "", 1, true))
-
 	-- axel - is this used?
 	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.row4, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/destination.dds", 1, "destinationOverlay"))
 	-- 1st destination
