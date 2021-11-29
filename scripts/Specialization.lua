@@ -297,7 +297,7 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
             local driverWages = AutoDrive.getSetting("driverWages")
             local difficultyMultiplier = g_currentMission.missionInfo.buyPriceMultiplier
             local price = -dt * difficultyMultiplier * (driverWages) * 0.001 --spec.pricePerMS
-            price = price + (dt * difficultyMultiplier * 0.001)   -- add the price which AI internal already substracted
+            --price = price + (dt * difficultyMultiplier * 0.001)   -- add the price which AI internal already substracted - no longer required for FS22
             g_currentMission:addMoney(price, spec.startedFarmId, MoneyType.AI, true)
         end
     end
