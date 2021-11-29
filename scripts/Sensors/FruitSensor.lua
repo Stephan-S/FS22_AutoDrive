@@ -31,7 +31,7 @@ end
 
 function ADFruitSensor:checkForFruitInArea(corners)
     for i = 1, #g_fruitTypeManager.fruitTypes do
-        if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] then
+        if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
             local fruitTypeToCheck = g_fruitTypeManager.fruitTypes[i].index
             if self:checkForFruitTypeInArea(fruitTypeToCheck, corners) then
                 return true, fruitTypeToCheck
