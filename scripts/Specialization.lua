@@ -838,21 +838,22 @@ function AutoDrive:startAutoDrive()
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
 
-            --[[
-            if self.getAINeedsTrafficCollisionBox ~= nil then
-                if self:getAINeedsTrafficCollisionBox() then
-                    local collisionRoot = g_i3DManager:loadSharedI3DFile(self.baseDirectory .. AIVehicle.TRAFFIC_COLLISION_BOX_FILENAME, false, true, false)
-                    if collisionRoot ~= nil and collisionRoot ~= 0 then
-                        local collision = getChildAt(collisionRoot, 0)
-                        link(getRootNode(), collision)
-                        self.spec_aiVehicle.aiTrafficCollision = collision
-                        delete(collisionRoot)
+
+            
+            if self.spec_aiVehicle ~= nil then
+                if self.getAINeedsTrafficCollisionBox ~= nil then
+                    if self:getAINeedsTrafficCollisionBox() then                    
+                        if AIFieldWorker.TRAFFIC_COLLISION ~= nil and AIFieldWorker.TRAFFIC_COLLISION ~= 0 then
+                            self.spec_aiVehicle.aiTrafficCollision = AIFieldWorker.TRAFFIC_COLLISION
+                        end
                     end
                 end
+                if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+                    self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000
+                end
             end
-            self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000
 
-            --]]
+            
             g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
 
             AutoDriveStartStopEvent:sendStartEvent(self)
@@ -939,7 +940,7 @@ function AutoDrive:stopAutoDrive()
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
 
-                if self.ad.onRouteToPark and not self.ad.isStoppingWithError then
+                if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
                     self.ad.onRouteToPark = false
                     if self.deactivateLights ~= nil then
                         self:deactivateLights()
@@ -953,6 +954,10 @@ function AutoDrive:stopAutoDrive()
                     for _, sensor in pairs(self.ad.sensors) do
                         sensor:setEnabled(false)
                     end
+                end
+
+                if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+                    self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
                 end
             end
 
