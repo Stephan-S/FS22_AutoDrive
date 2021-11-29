@@ -424,7 +424,11 @@ function ADSensor:onDrawDebug(box)
                 AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[4].x, corners[4].y, corners[4].z, 0, green, blue)
             end
         else
-            DebugUtil.drawOverlapBox(box.x, box.y + 0.5, box.z, box.rx, box.ry, 0, box.size[1], box.size[2], box.size[3], 1, 1, 1)
+            if isTriggered then
+                DebugUtil.drawOverlapBox(box.x, box.y, box.z, box.rx, box.ry, 0, box.size[1], box.size[2], box.size[3], 1, 0, 0)
+            else
+                DebugUtil.drawOverlapBox(box.x, box.y, box.z, box.rx, box.ry, 0, box.size[1], box.size[2], box.size[3], 1, 1, 1)
+            end
         end
     end
 end

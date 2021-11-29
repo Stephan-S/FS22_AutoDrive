@@ -84,8 +84,8 @@ AutoDrive.settings.collisionHeigth = {
         "3.75 m",
         "4.0 m"
     },
-    default = 8,
-    current = 8,
+    default = 5,
+    current = 5,
     text = "gui_ad_collisionHeigth",
     tooltip = "gui_ad_collisionHeigth_tooltip",
     translate = false,

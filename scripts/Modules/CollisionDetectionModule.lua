@@ -215,7 +215,7 @@ function ADCollisionDetectionModule:checkReverseCollision()
             trailer.ad = {}
         end
         ADSensor:handleSensors(trailer, 0)
-        trailer.ad.sensors.rearSensor.drawDebug = true
+        --trailer.ad.sensors.rearSensor.drawDebug = true
         trailer.ad.sensors.rearSensor.enabled = true
         return trailer.ad.sensors.rearSensor:pollInfo()
     end

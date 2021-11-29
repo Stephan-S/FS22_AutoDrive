@@ -26,7 +26,7 @@ function ADCollSensor:new(vehicle, sensorParameters)
     o.newHit = false
     o.collisionHits = 0
     o.timeOut = AutoDriveTON:new()
-    --o.vehicle = vehicle; --test collbox and coll bits mode
+    o.vehicle = vehicle; --test collbox and coll bits mode
 
     o.mask = ADCollSensor:buildMask()
 
@@ -52,6 +52,7 @@ function ADCollSensor:buildMask()
 end
 
 function ADCollSensor:onUpdate(dt)
+    self.mask = self:buildMask()
     local box = self:getBoxShape()
     if self.collisionHits == 0 or self.timeOut:timer(true, 20000, dt) then
         self.timeOut:timer(false)
@@ -68,8 +69,8 @@ function ADCollSensor:onUpdate(dt)
         if self.collisionHits > 0 then
             overlapBox(box.x, box.y, box.z, box.rx, box.ry, 0, box.size[1], box.size[2], box.size[3], "collisionTestCallback", self, self.mask, true, true, true)
         end
-    end
-
+    end 
+    
     self:onDrawDebug(box)
 end
 
