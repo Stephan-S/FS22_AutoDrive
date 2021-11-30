@@ -236,26 +236,32 @@ function ADGraphManager:removeWayPoint(wayPointId, sendEvent)
 
 			-- Removing incoming node reference on all out nodes
 			for _, id in pairs(wayPoint.out) do
-				local incomingId = table.indexOf(self.wayPoints[id].incoming, wayPoint.id)
-				if incomingId ~= nil then
-					table.remove(self.wayPoints[id].incoming, incomingId)
-				end
+                if self.wayPoints[id] ~= nil and self.wayPoints[id].incoming ~= nil and wayPoint.id ~= nil then
+                    local incomingId = table.indexOf(self.wayPoints[id].incoming, wayPoint.id)
+                    if incomingId ~= nil then
+                        table.remove(self.wayPoints[id].incoming, incomingId)
+                    end
+                end
 			end
 
 			-- Removing out node reference on all incoming nodes
 			for _, id in pairs(wayPoint.incoming) do
-				local outId = table.indexOf(self.wayPoints[id].out, wayPoint.id)
-				if outId ~= nil then
-					table.remove(self.wayPoints[id].out, outId)
-				end
+                if self.wayPoints[id] ~= nil and self.wayPoints[id].out ~= nil and wayPoint.id ~= nil then
+                    local outId = table.indexOf(self.wayPoints[id].out, wayPoint.id)
+                    if outId ~= nil then
+                        table.remove(self.wayPoints[id].out, outId)
+                    end
+                end
 			end
 
 			if #wayPoint.incoming == 0 then
 				-- This is a reverse node, so we can't rely on the incoming table
 				for _, wp in pairs(self.wayPoints) do
-					if table.contains(wp.out, wayPoint.id) then
-						table.removeValue(wp.out, wayPoint.id)
-					end
+                    if wp.out ~= nil and wayPoint.id ~= nil then
+                        if table.contains(wp.out, wayPoint.id) then
+                            table.removeValue(wp.out, wayPoint.id)
+                        end
+                    end
 				end
 			end
 

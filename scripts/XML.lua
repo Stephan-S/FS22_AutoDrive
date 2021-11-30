@@ -1,4 +1,4 @@
-function AutoDrive.loadStoredXML()
+function AutoDrive.loadStoredXML(loadInitConfig)
 	if g_server == nil then
 		return
 	end
@@ -16,7 +16,7 @@ function AutoDrive.loadStoredXML()
 		local adXml = loadXMLFile("AutoDrive_XML", xmlFile)
 		AutoDrive.readFromXML(adXml)
 		delete(adXml)
-	else
+	elseif loadInitConfig then
 		AutoDrive.loadInitConfig(xmlFile_new)
 	end
 end

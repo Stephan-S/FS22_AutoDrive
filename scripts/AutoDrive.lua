@@ -63,6 +63,14 @@ AutoDrive.EDITOR_ON = 2
 AutoDrive.EDITOR_EXTENDED = 3
 AutoDrive.EDITOR_SHOW = 4
 
+AutoDrive.SCAN_DIALOG_NONE = 0
+AutoDrive.SCAN_DIALOG_OPEN = 1
+AutoDrive.SCAN_DIALOG_RESULT_YES = 2
+AutoDrive.SCAN_DIALOG_RESULT_NO = 3
+AutoDrive.SCAN_DIALOG_RESULT_DONE = 4
+AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_NONE
+
+
 AutoDrive.MAX_BUNKERSILO_LENGTH = 100 -- length of bunker silo where speed should be lowered
 
 -- number of frames for performance modulo operation
@@ -433,6 +441,31 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 end
 
 function AutoDrive:update(dt)	
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_NONE and ADGraphManager:getWayPointsCount() == 0 then
+        AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_OPEN
+        -- open dialog
+        AutoDrive.onOpenScanConfirmation()
+        return
+    end
+
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_OPEN then
+        -- dialog still open
+        return
+    end
+
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_YES then
+        AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
+        -- dialog closed with yes
+        AutoDrive:adParseSplines()
+        AutoDrive:createJunctionCommand()
+    end
+
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_NO then
+        AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
+        -- dialog closed with no
+        AutoDrive.loadStoredXML(true)
+    end
+
 	if AutoDrive.isFirstRun == nil then
 		AutoDrive.isFirstRun = false
 		self:init()
