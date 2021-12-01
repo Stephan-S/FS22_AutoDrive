@@ -54,7 +54,7 @@ function AutoDriveMessageEvent:run(connection)
         end
     else
         -- If the event is coming from the server
-        if g_dedicatedServerInfo == nil then
+        if g_dedicatedServer == nil then
             -- localization
             self.text = AutoDrive.localize(self.text)
 

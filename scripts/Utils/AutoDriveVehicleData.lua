@@ -91,7 +91,7 @@ onEnterVehicle is used here to detect an already selected worktool and send it's
 ]]
 function AutoDriveVehicleData:onEnterVehicle()
     local actualparkDestination = -1
-    if g_dedicatedServerInfo == nil then
+    if g_dedicatedServer == nil then
         -- only send the client event to server
         local selectedWorkTool = AutoDrive.getSelectedWorkTool(self, true)
         if selectedWorkTool ~= nil and selectedWorkTool.advd ~= nil then
@@ -117,7 +117,7 @@ onSelect is used here to detect an actualy selected worktool and send it's park 
 ]]
 function AutoDriveVehicleData:onSelect()
     local actualparkDestination = -1
-    if g_dedicatedServerInfo == nil then
+    if g_dedicatedServer == nil then
         -- only send the client event to server
         if self.advd ~= nil then
             actualparkDestination = self.advd.parkDestination
@@ -142,7 +142,7 @@ onPreDetach is used here, as with automatic engine start the vehicle is not sele
 ]]
 function AutoDriveVehicleData:onPreDetach(attacherVehicle, implement)
     local actualparkDestination = -1
-    if g_dedicatedServerInfo == nil then
+    if g_dedicatedServer == nil then
         -- only send the client event to server
         if attacherVehicle.advd ~= nil then
             actualparkDestination = attacherVehicle.advd.parkDestination

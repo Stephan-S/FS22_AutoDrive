@@ -224,7 +224,7 @@ function AutoDriveSync.streamReadGraph(streamId)
 end
 
 function AutoDriveSync.print(text, ...)
-    if g_dedicatedServerInfo ~= nil then
+    if g_dedicatedServer ~= nil then
         Logging.info(text, ...)
     else
         Logging.info(text, ...)
