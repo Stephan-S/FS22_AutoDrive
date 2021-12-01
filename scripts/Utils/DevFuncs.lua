@@ -29,7 +29,7 @@ function AutoDrive.devAction(vehicle)
 end
 
 function AutoDrive.devAutoDriveInit()
-    Logging.info("[AD] Info: g_server %s g_client %s g_dedicatedServerInfo %s getUserProfileAppPath %s getIsClient %s getIsServer %s isMasterUser %s", tostring(g_server), tostring(g_client), tostring(g_dedicatedServerInfo), tostring(getUserProfileAppPath()), tostring(g_currentMission:getIsClient()), tostring(g_currentMission:getIsServer()), tostring(g_currentMission.isMasterUser))
+    Logging.info("[AD] Info: g_server %s g_client %s g_dedicatedServer %s g_dedicatedServerInfo %s getUserProfileAppPath %s getIsClient %s getIsServer %s isMasterUser %s", tostring(g_server), tostring(g_client), tostring(g_dedicatedServer), tostring(g_dedicatedServerInfo), tostring(getUserProfileAppPath()), tostring(g_currentMission:getIsClient()), tostring(g_currentMission:getIsServer()), tostring(g_currentMission.isMasterUser))
 
     Logging.info("[AD] AutoDrive.devAutoDriveInit roadSplines...")
     --[[

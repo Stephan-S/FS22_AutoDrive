@@ -563,7 +563,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
                         AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent select point selectedNodeId %d", vehicle.ad.selectedNodeId)
 
                         -- color assignment goes in here
-                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServerInfo == nil then
+                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServer == nil then
                             local colorPoint = ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId)
                             if colorPoint ~= nil and colorPoint.colors ~= nil then
                                 AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent point.colors %.3f %.3f %.3f", colorPoint.colors[1], colorPoint.colors[2], colorPoint.colors[3])
@@ -673,7 +673,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 							end
 						end
 
-                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServerInfo == nil then
+                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServer == nil then
                             -- only allowed in single player game to create the color selection
                             AutoDrive.createColorSelectionWayPoints(vehicle)
                         else

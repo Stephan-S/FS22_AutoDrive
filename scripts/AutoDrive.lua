@@ -337,6 +337,9 @@ function AutoDrive:loadMap(name)
 end
 
 function AutoDrive:init()
+
+    AutoDrive.debugMsg(nil, "[AD] AutoDrive:init start...")
+
 	if g_server == nil then
 		-- Here we could ask to server the initial sync
 		AutoDriveUserConnectedEvent.sendEvent()
@@ -443,9 +446,15 @@ end
 function AutoDrive:update(dt)	
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_NONE and ADGraphManager:getWayPointsCount() == 0 then
         AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_OPEN
-        -- open dialog
-        AutoDrive.onOpenScanConfirmation()
-        return
+        if g_server ~= nil and g_dedicatedServer == nil then
+            -- open dialog
+            AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_OPEN")
+            AutoDrive.onOpenScanConfirmation()
+            return
+        else
+            AutoDrive.debugMsg(nil, "[AD] AutoDrive:update dedi -> SCAN_DIALOG_RESULT_YES")
+            AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_YES
+        end
     end
 
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_OPEN then
@@ -456,6 +465,7 @@ function AutoDrive:update(dt)
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_YES then
         AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
         -- dialog closed with yes
+        AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_YES")
         AutoDrive:adParseSplines()
         AutoDrive:createJunctionCommand()
     end
@@ -463,6 +473,7 @@ function AutoDrive:update(dt)
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_NO then
         AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
         -- dialog closed with no
+        AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_NO")
         AutoDrive.loadStoredXML(true)
     end
 

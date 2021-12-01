@@ -73,9 +73,19 @@ function AutoDrive.readFromXML(xmlFile)
 		return
 	end
 
-	AutoDrive.HudX = getXMLFloat(xmlFile, "AutoDrive.HudX")
-	AutoDrive.HudY = getXMLFloat(xmlFile, "AutoDrive.HudY")
-	AutoDrive.showingHud = getXMLBool(xmlFile, "AutoDrive.HudShow")
+	local idString = getXMLString(xmlFile, "AutoDrive.waypoints.id")
+	if idString == nil or idString == "" then
+		idString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.id")
+	end
+
+	--maybe map was opened and saved, but no waypoints recorded with AutoDrive!
+	if idString == nil then
+		return
+	end
+
+	AutoDrive.HudX = Utils.getNoNil(getXMLFloat(xmlFile, "AutoDrive.HudX"), AutoDrive.HudX)
+	AutoDrive.HudY = Utils.getNoNil(getXMLFloat(xmlFile, "AutoDrive.HudY"), AutoDrive.HudY)
+	AutoDrive.showingHud = Utils.getNoNil(getXMLBool(xmlFile, "AutoDrive.HudShow"), AutoDrive.showingHud)
 
 	AutoDrive.currentDebugChannelMask = getXMLInt(xmlFile, "AutoDrive.currentDebugChannelMask") or 0
 
@@ -134,16 +144,6 @@ function AutoDrive.readFromXML(xmlFile)
 		mapMarkerCounter = mapMarkerCounter + 1
 	end
 	-- done loading Map Markers
-
-	local idString = getXMLString(xmlFile, "AutoDrive.waypoints.id")
-	if idString == nil or idString == "" then
-		idString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.id")
-	end
-
-	--maybe map was opened and saved, but no waypoints recorded with AutoDrive!
-	if idString == nil then
-		return
-	end
 
 	ADGraphManager:resetWayPoints()
 
