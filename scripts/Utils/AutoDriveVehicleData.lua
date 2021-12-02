@@ -71,14 +71,9 @@ function AutoDriveVehicleData:onPostLoad(savegame)
         if savegame ~= nil then
             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.onPostLoad self.isServer")
             local xmlFile = savegame.xmlFile
-            local key = savegame.key .. ".FS22_AutoDrive.AutoDriveVehicleData"
-
-            if xmlFile:hasProperty(key) then
-                self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#WorkToolParkDestination"), -1)
-                if self.advd.parkDestination == -1 then
-                    -- change tag in vehicles.xml from WorkToolParkDestination to parkDestination as all park destinations are in vehicle data now
-                    self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#parkDestination"), -1)
-                end
+            local adkey = savegame.key .. ".AutoDrive"
+            if xmlFile:hasProperty(adkey) then
+                self.advd.parkDestination = Utils.getNoNil(xmlFile:getValue(adkey .. "#parkDestination"), -1)
             end            
         end
     end
@@ -171,11 +166,9 @@ function AutoDriveVehicleData:saveToXMLFile(xmlFile, key)
         actualparkDestination = -1
     end
     if actualparkDestination ~= nil and actualparkDestination > 0 then
-        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.saveToXMLFile parkDestination %s", tostring(self.advd.parkDestination))
-        if self.isServer then
-            setXMLInt(xmlFile, key .. "#saved_by_server", 1)
-        end
-        setXMLInt(xmlFile, key .. "#parkDestination", actualparkDestination)
+        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.saveToXMLFile actualparkDestination %s", tostring(actualparkDestination))
+        local adKey = string.gsub(key, "FS22_AutoDrive.AutoDriveVehicleData", "AutoDrive")
+        xmlFile:setValue(adKey .. "#parkDestination", actualparkDestination)
     end
 end
 
