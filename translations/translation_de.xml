@@ -217,7 +217,7 @@
 		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: Wartezeit für Abladen" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Nach Abladen warten bevor weitergefahren wird - meist sinnvoll bei Abladen mittig: 0-kein Warten, sonst Wartezeit wie ausgewählt" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Streckengenerierung" />
-		<text name="gui_ad_scanConfirmationText"                text="Wegpunkte aus Karte generieren?" />
+		<text name="gui_ad_scanConfirmationText"                text="Soll AutoDrive aus den Verkehrs- und Helferdaten der Karte ein Wegenetz erzeugen?" />
 
 		<text name="gui_ad_settingsPage_title"					text="Einstellungen - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Benutzereinstellungen - AutoDrive" />

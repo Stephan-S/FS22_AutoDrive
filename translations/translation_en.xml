@@ -217,7 +217,7 @@
 		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
-		<text name="gui_ad_scanConfirmationText"                text="Generate initial Waypoints from Map?" />
+		<text name="gui_ad_scanConfirmationText"                text="Should AutoDrive generate a route network from the traffic and helper data on the map?" />
 
 		<text name="gui_ad_settingsPage_title"					text="Settings - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="User Settings - AutoDrive" />

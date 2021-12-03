@@ -8,7 +8,7 @@
             <GuiElement type="text" profile="dialogHeaderText" id="titleElement" text="gui_ad_scanConfirmationTextTitle" textUpperCase="false" onCreate="onCreateAutoDriveText1" />
         </GuiElement>
 
-        <GuiElement type="text" profile="sleepDialogText" text="gui_ad_scanConfirmationText" textUpperCase="false" onCreate="onCreateAutoDriveText2" />
+        <GuiElement type="text" profile="sleepDialogText" text="gui_ad_scanConfirmationText" textUpperCase="false" textSize="20px" onCreate="onCreateAutoDriveText2" />
 
         <GuiElement type="flowLayout" profile="buttonBoxDocked" id="buttonsCreateElement">
             <GuiElement type="button" profile="buttonBack" text="gui_ad_no" onClick="onClickCancel" textUpperCase="false" onCreate="onCreateAutoDriveText3" />
