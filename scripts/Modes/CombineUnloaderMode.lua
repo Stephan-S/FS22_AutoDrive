@@ -364,7 +364,7 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
             -- If we are in fruit, we should clear it
             if AutoDrive.isVehicleOrTrailerInCrop(self.vehicle, true) then
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getTaskAfterUnload ClearCropTask...")
-                nextTask = ClearCropTask:new(self.vehicle, self.combine)
+                nextTask = ClearCropTask:new(self.vehicle)
                 self.state = self.STATE_LEAVE_CROP
             else
                 self:setToWaitForCall()

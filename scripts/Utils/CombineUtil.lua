@@ -13,7 +13,7 @@ function AutoDrive.getNodeName(node)
 end
 
 function AutoDrive.getIsBufferCombine(vehicle)
-    return vehicle.spec_combine ~= nil and vehicle.spec_combine.isBufferCombine == true
+    return vehicle ~= nil and vehicle.spec_combine ~= nil and vehicle.spec_combine.isBufferCombine == true
 end
 
 function AutoDrive.getDischargeNode(combine)
