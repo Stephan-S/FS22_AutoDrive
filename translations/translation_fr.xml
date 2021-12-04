@@ -53,6 +53,8 @@
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Éviter les cultures" />
 		<text name="hud_startCp"								text="AD: Démarrer CP/AIVE à la destination" />
 		<text name="AD_parkVehicle_noPosSet"					text="Pas de parking attribué. Veuillez sélectionner la (Destination actuelle) et corriger avec le clic droit de souris sur le 'P' HUD." />

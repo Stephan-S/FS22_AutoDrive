@@ -65,6 +65,8 @@ function ADStateModule:reset()
     self.activeBeforeSave = false
     self.AIVEActiveBeforeSave = false
     self.bunkerUnloadType = ADStateModule.BUNKER_UNLOAD_TRIGGER
+    self.automaticUnloadTarget = false
+    self.automaticPickupTarget = false
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
@@ -139,6 +141,16 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     if bunkerUnloadType ~= nil then
         self.bunkerUnloadType = bunkerUnloadType
     end
+
+    local automaticUnloadTarget = xmlFile:getValue(key .. "#automaticUnloadTarget")
+    if automaticUnloadTarget ~= nil then
+        self.automaticUnloadTarget = automaticUnloadTarget
+    end
+
+    local automaticPickupTarget = xmlFile:getValue(key .. "#automaticPickupTarget")
+    if automaticPickupTarget ~= nil then
+        self.automaticPickupTarget = automaticPickupTarget
+    end
 end
 
 function ADStateModule:saveToXMLFile(xmlFile, key)    
@@ -157,6 +169,8 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
     xmlFile:setValue(key .. "#lastActive", self.active)
     xmlFile:setValue(key .. "#AIVElastActive", (self.vehicle.acParameters ~= nil and self.vehicle.acParameters.enabled and self.vehicle.spec_aiVehicle.isActive))
     xmlFile:setValue(key .. "#bunkerUnloadType", self.bunkerUnloadType)
+    xmlFile:setValue(key .. "#automaticUnloadTarget", self.automaticUnloadTarget)    
+    xmlFile:setValue(key .. "#automaticPickupTarget", self.automaticPickupTarget)    
 end
 
 function ADStateModule:writeStream(streamId)
@@ -182,6 +196,8 @@ function ADStateModule:writeStream(streamId)
     streamWriteUInt16(streamId, self.remainingDriveTime)
     streamWriteUIntN(streamId, self.refuelFillType, 8)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
+    streamWriteBool(streamId, self.automaticUnloadTarget)
+    streamWriteBool(streamId, self.automaticPickupTarget)
 end
 
 function ADStateModule:readStream(streamId)
@@ -207,6 +223,8 @@ function ADStateModule:readStream(streamId)
     self.remainingDriveTime = streamReadUInt16(streamId)
     self.refuelFillType = streamReadUIntN(streamId, 8)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
+    self.automaticUnloadTarget = streamReadBool(streamId)
+    self.automaticPickupTarget = streamReadBool(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -234,6 +252,8 @@ function ADStateModule:writeUpdateStream(streamId)
 	streamWriteUInt16(streamId, self.remainingDriveTime)
     streamWriteUIntN(streamId, self.refuelFillType, 8)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
+    streamWriteBool(streamId, self.automaticUnloadTarget)
+    streamWriteBool(streamId, self.automaticPickupTarget)
 end
 
 function ADStateModule:readUpdateStream(streamId)
@@ -259,6 +279,8 @@ function ADStateModule:readUpdateStream(streamId)
     self.remainingDriveTime = streamReadUInt16(streamId)
     self.refuelFillType = streamReadUIntN(streamId, 8)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
+    self.automaticUnloadTarget = streamReadBool(streamId)
+    self.automaticPickupTarget = streamReadBool(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -357,6 +379,38 @@ end
 
 function ADStateModule:getUseCP_AIVE()
     return self.useCP
+end
+
+function ADStateModule:toggleAutomaticUnloadTarget()
+    self.automaticUnloadTarget = not self.automaticUnloadTarget
+    self:raiseDirtyFlag()
+end
+
+function ADStateModule:setAutomaticUnloadTarget(enabled)
+    if enabled ~= self.automaticUnloadTarget then
+        self.automaticUnloadTarget = enabled
+        self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:getAutomaticUnloadTarget()
+    return self.automaticUnloadTarget
+end
+
+function ADStateModule:toggleAutomaticPickupTarget()
+    self.automaticPickupTarget = not self.automaticPickupTarget
+    self:raiseDirtyFlag()
+end
+
+function ADStateModule:setAutomaticPickupTarget(enabled)
+    if enabled ~= self.automaticPickupTarget then
+        self.automaticPickupTarget = enabled
+        self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:getAutomaticPickupTarget()
+    return self.automaticPickupTarget
 end
 
 function ADStateModule:getCurrentWayPointId()

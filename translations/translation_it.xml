@@ -53,6 +53,8 @@
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         text="AD: Azione dello sviluppatore" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Suggerimento del giorno aperto" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Evita raccolto" />
 		<text name="hud_startCp"								text="AD: Avvia CP/AIVE a destinazione" />
 		<text name="AD_parkVehicle_noPosSet"					text="Nessuna destinazione di parcheggio assegnata. Si prega di assegnare l'obiettivo attualmente selezionato con il tasto destro del mouse." />

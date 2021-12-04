@@ -110,10 +110,10 @@ function AutoDrive.initSpecialization()
     schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#driverName", "driverName")
     schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#lastActive", "lastActive")
     schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#AIVElastActive", "AIVElastActive")
-    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#AIVElastActive", "AIVElastActive")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#parkDestination", "parkDestination")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#bunkerUnloadType", "bunkerUnloadType")
-    
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticUnloadTarget", "automaticUnloadTarget")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticPickupTarget", "automaticPickupTarget")   
 end
 
 function AutoDrive:onPreLoad(savegame)

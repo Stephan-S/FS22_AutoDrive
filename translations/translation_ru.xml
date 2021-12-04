@@ -53,6 +53,8 @@
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"							text="AD: Действия разработчика" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Открыть совет на день" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Избегать посевов" />
 		<text name="hud_startCp"								text="AD: Запустить CP/AIVE в пункте назначения" />
 		<text name="AD_parkVehicle_noPosSet"					text="Место для парковки не назначено. Чтобы назначить выбранную локацию, как место парковки, нажмите правой кнопкой мыши на этой же кнопке." />

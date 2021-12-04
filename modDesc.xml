@@ -96,6 +96,8 @@ Changelog 2.0.0.0:
 		<action name="AD_devAction" category="VEHICLE" ignoreComboMask="false" />
 		<action name="ADRefuelVehicle" category="VEHICLE" ignoreComboMask="false" />	
 		<action name="ADToggleHudExtension" category="VEHICLE" ignoreComboMask="false" />	
+		<action name="ADToggleAutomaticUnloadTarget" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADToggleAutomaticPickupTarget" category="VEHICLE" ignoreComboMask="false" />
 	</actions>
 
 	<inputBinding>

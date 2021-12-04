@@ -204,6 +204,8 @@ function ADTriggerManager.loadAllTriggers()
             trigger.stoppedTimer = AutoDriveTON:new()
         end
     end
+
+    ADTriggerManager:getHighestPayingSellStation(g_fillTypeManager:getFillTypeIndexByName("WHEAT"))
 end
 
 function ADTriggerManager.getUnloadTriggers()
@@ -384,4 +386,137 @@ function ADTriggerManager.getAllTriggersForFillType(fillType)
     end
 
     return triggers
+end
+
+function ADTriggerManager:getHighestPayingSellStation(fillType)
+    local bestSellingStation = nil
+    local bestPrice = -1
+
+    for _, station in pairs(g_currentMission.storageSystem:getUnloadingStations()) do
+        --AutoDrive.dumpTable(station, "Station:", 1)
+		if station:isa(SellingStation) and not station.hideFromPricesMenu and station.isSellingPoint and station.aiSupportedFillTypes[fillType] and station.unloadTriggers ~= nil and #station.unloadTriggers > 0 then
+			station.uiName = station:getName()
+            local price = station:getEffectiveFillTypePrice(fillType)
+            if price > bestPrice then
+                bestPrice = price
+                bestSellingStation = station
+            end
+		end
+	end
+
+    return bestSellingStation
+end
+
+function ADTriggerManager:getBestPickupLocationFor(vehicle, trailer, fillType)
+    local farmId = -1
+    if vehicle.spec_enterable ~= nil and vehicle.spec_enterable.controllerFarmId ~= nil and vehicle.spec_enterable.controllerFarmId ~= 0 then
+        farmId = vehicle.spec_enterable.controllerFarmId
+    elseif vehicle.spec_aiVehicle ~= nil and vehicle.spec_aiVehicle.startedFarmId ~= nil and vehicle.spec_aiVehicle.startedFarmId ~= 0 then
+        farmId = vehicle.spec_aiVehicle.startedFarmId
+    end
+
+    if farmId <= 0 then
+        return
+    end
+
+    local validLoadingStations = {}
+    local closestDistance = math.huge
+
+	for _, loadingStation in pairs(g_currentMission.storageSystem:getLoadingStations()) do
+		if g_currentMission.accessHandler:canFarmAccess(farmId, loadingStation) then			
+            local aifillTypes = loadingStation:getAISupportedFillTypes()
+			if aifillTypes[fillType] and loadingStation:getFillLevel(fillType, farmId) > 0 then        
+                if loadingStation.getAITargetPositionAndDirection ~= nil then
+                    x, z, xDir, zDir = loadingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
+                    
+                    table.insert(validLoadingStations, loadingStation)
+                end
+
+			end
+		end
+	end
+
+    -- Todo: Sort by owned first and then by distance
+    if #validLoadingStations > 0 then
+        local vehicleX, _, vehicleZ = getWorldTranslation(vehicle.components[1].node)
+        local closestLoadingStation = validLoadingStations[1]
+        local closestDistance = math.huge
+        for _, loadingStation in pairs(validLoadingStations) do
+            if loadingStation.getAITargetPositionAndDirection ~= nil then
+                local x, z, xDir, zDir = loadingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
+                local dis = MathUtil.vector2Length(vehicleX - x, vehicleZ - z)
+                if dis < closestDistance then
+                    closestDistance = dis
+                    closestLoadingStation = loadingStation
+                end
+            end
+        end
+        return closestLoadingStation
+    end
+end
+
+function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle)
+    local closest = -1
+    if sellingStation ~= nil then
+        local x, z, xDir, zDir = 0,0,0,0
+        
+        if sellingStation.getAITargetPositionAndDirection ~= nil then
+            x, z, xDir, zDir = sellingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
+        elseif sellingStation.unloadTriggers ~= nil and #sellingStation.unloadTriggers > 0 then
+            x, z, xDir, zDir = sellingStation.unloadTriggers[1]:getAITargetPositionAndDirection()
+        else
+            return -1
+        end
+
+        -- Now find suitable node in the network
+        local minDistance = AutoDrive.getTractorTrainLength(vehicle, true, false) + 3
+        local distance = minDistance + 10
+
+        --First look for suitable marker
+        for mapMarkerID, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
+            local dis = MathUtil.vector2Length(ADGraphManager:getWayPointById(mapMarker.id).x - x, ADGraphManager:getWayPointById(mapMarker.id).z - z)
+            if dis < distance and dis > minDistance then
+                -- check if this is in the right direction
+                -- Todo: Make sure the path to that marker actually leads over the trigger and not somewhere adjacent
+                local wp = ADGraphManager:getWayPointById(mapMarker.id)
+                if wp.incoming ~= nil and #wp.incoming > 0 then
+                    local disIncoming = MathUtil.vector2Length(ADGraphManager:getWayPointById(wp.incoming[1]).x - x, ADGraphManager:getWayPointById(wp.incoming[1]).z - z)
+                    if disIncoming < dis then
+                        closest = mapMarker.id
+                        distance = dis
+                    end
+                end
+            end
+        end
+
+        if closest == -1 then
+            -- Else look for waypoint and create marker
+            -- Todo: first check for a closest point and then traverse until one meets the requirements
+            for i in pairs(ADGraphManager:getWayPoints()) do
+                local dis = MathUtil.vector2Length(ADGraphManager:getWayPointById(i).x - x, ADGraphManager:getWayPointById(i).z - z)
+                if dis < distance and dis > minDistance then
+                    -- check if this is in the right direction
+                    local wp = ADGraphManager:getWayPointById(i)
+                    if wp.incoming ~= nil and #wp.incoming > 0 then
+                        local disIncoming = MathUtil.vector2Length(ADGraphManager:getWayPointById(wp.incoming[1]).x - x, ADGraphManager:getWayPointById(wp.incoming[1]).z - z)
+                        if disIncoming < dis then
+                            closest = i
+                            distance = dis
+                        end
+                    end
+                end
+            end
+
+            if closest >= 0 then
+                local markerName = "NoName"
+                if sellingStation.uiName ~= nil then
+                    markerName = sellingStation.uiName
+                elseif sellingStation.getName ~= nil then
+                    markerName = sellingStation:getName()
+                end
+                ADGraphManager:createMapMarker(closest, markerName)
+            end
+        end
+    end
+    return closest
 end

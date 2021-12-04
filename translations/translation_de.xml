@@ -54,6 +54,8 @@
 		<text name="input_ADToggleCP_AIVE"						text="AD: CP/AIVE umschalten" />
 		<text name="input_AD_devAction"							text="AD: Entwickler Aktion" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Öffne Tip of the day" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Fruchtumfahrung" />
 		<text name="hud_startCp" 								text="AD: Starte CP / AIVE Fahrer am Zielpunkt" />
 		<text name="AD_parkVehicle_noPosSet"					text="Kein Parkplatz zugewiesen." />

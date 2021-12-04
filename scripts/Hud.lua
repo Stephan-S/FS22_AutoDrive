@@ -186,13 +186,15 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	posX = posX - closeWidth - self.gapWidth
 	table.insert(self.hudElements, ADHudButton:new(posX, posY, closeWidth, closeHeight, "input_toggleHudExtension", nil, nil, nil, "", 1, true))
 
-	-- axel - is this used?
-	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.row4, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/destination.dds", 1, "destinationOverlay"))
+	
+	table.insert(self.hudElements, ADHudButton:new(self.posX + self.gapWidth, self.row4, self.iconWidth, self.iconHeight, "input_toggleAutomaticPickupTarget", nil, nil, nil, "input_ADToggleAutomaticPickupTarget", 1, true))
+	--table.insert(self.hudElements, ADHudIcon:new(self.posX, self.row4, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/destination.dds", 1, "destinationOverlay"))
 	-- 1st destination
 	self.targetPullDownList = ADPullDownList:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row4, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight, ADPullDownList.TYPE_TARGET, 1)
 	table.insert(self.hudElements, self.targetPullDownList)
 
-	table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row3, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/tipper_overlay.dds", 1, "unloadOverlay"))
+	table.insert(self.hudElements, ADHudButton:new(self.posX + self.gapWidth, self.row3, self.iconWidth, self.iconHeight, "input_toggleAutomaticUnloadTarget", nil, nil, nil, "input_ADToggleAutomaticUnloadTarget", 1, true))
+	--table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row3, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/tipper_overlay.dds", 1, "unloadOverlay"))
 
 	table.insert(self.hudElements, ADPullDownList:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row3, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight, ADPullDownList.TYPE_UNLOAD, 1))
 

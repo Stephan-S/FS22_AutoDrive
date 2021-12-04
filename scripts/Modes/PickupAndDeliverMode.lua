@@ -108,6 +108,14 @@ function PickupAndDeliverMode:getNextTask(forced)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:setPickupTarget setFirstMarker -> nextTarget getFirstMarkerName() %s", tostring(self.vehicle.ad.stateModule:getFirstMarkerName()))
             end
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:setPickupTarget getFirstMarkerName() %s", tostring(self.vehicle.ad.stateModule:getFirstMarkerName()))
+        elseif self.vehicle.ad.stateModule:getAutomaticPickupTarget() then
+            local pickupStation = ADTriggerManager:getBestPickupLocationFor(self.vehicle, self.trailers, self.vehicle.ad.stateModule:getFillType())
+            if pickupStation ~= nil then
+                local wpId = ADTriggerManager:getMarkerAtStation(pickupStation, self.vehicle)
+                if wpId > 0 then                    
+                    self.vehicle.ad.stateModule:setFirstMarkerByWayPointId(wpId)
+                end
+            end
         end
     end
 
@@ -123,6 +131,16 @@ function PickupAndDeliverMode:getNextTask(forced)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:setDeliverTarget setSecondMarker -> nextTarget getSecondMarkerName() %s", tostring(self.vehicle.ad.stateModule:getSecondMarkerName()))
             end
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:setDeliverTarget getSecondMarkerName() %s", tostring(self.vehicle.ad.stateModule:getSecondMarkerName()))
+        else
+            if self.vehicle.ad.stateModule:getAutomaticUnloadTarget() then
+                local sellingStation = ADTriggerManager:getHighestPayingSellStation(self.vehicle.ad.stateModule:getFillType())
+                if sellingStation ~= nil then
+                    local wpId = ADTriggerManager:getMarkerAtStation(sellingStation, self.vehicle)
+                    if wpId > 0 then                    
+                        self.vehicle.ad.stateModule:setSecondMarkerByWayPointId(wpId)
+                    end
+                end
+            end
         end
     end
 

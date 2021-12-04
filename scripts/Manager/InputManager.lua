@@ -51,7 +51,9 @@ ADInputManager.actionsToInputs = {
     ADSetParkDestination = "input_setParkDestination",
     AD_devAction = "input_devAction",
     ADRefuelVehicle = "input_refuelVehicle",
-    ADToggleHudExtension = "input_toggleHudExtension"
+    ADToggleHudExtension = "input_toggleHudExtension",
+    ADToggleAutomaticUnloadTarget = "input_toggleAutomaticUnloadTarget",
+    ADToggleAutomaticPickupTarget = "input_toggleAutomaticPickupTarget"
 }
 
 
@@ -91,7 +93,9 @@ ADInputManager.inputsToIds = {
     input_record_subPrio = 27,
     input_record_subPrioDual = 28,
     input_bunkerUnloadType = 29,
-    input_refuelVehicle = 30
+    input_refuelVehicle = 30,
+    input_toggleAutomaticUnloadTarget = 31,
+    input_toggleAutomaticPickupTarget = 32
 }
 
 ADInputManager.idsToInputs = {}
@@ -466,6 +470,14 @@ function ADInputManager:input_toggleCP_AIVE(vehicle) -- select CP or AIVE
         vehicle.ad.stateModule:toggleUseCP_AIVE()
         vehicle.ad.stateModule:setStartCP_AIVE(false) -- disable if changed between CP and AIVE
     end
+end
+
+function ADInputManager:input_toggleAutomaticUnloadTarget(vehicle)
+    vehicle.ad.stateModule:toggleAutomaticUnloadTarget()
+end
+
+function ADInputManager:input_toggleAutomaticPickupTarget(vehicle)
+    vehicle.ad.stateModule:toggleAutomaticPickupTarget()
 end
 
 function ADInputManager:input_devAction(vehicle)
