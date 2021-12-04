@@ -55,6 +55,14 @@ function AutoDrive:checkIsConnected(toCheck, other)
                 return true
             end
 
+            if impl.object.spec_baleGrab ~= nil and impl.object.spec_baleGrab.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_baleGrab.dynamicMountedObjects, other) then
+                return true
+            end
+
+            if impl.object.spec_dynamicMountAttacher ~= nil and impl.object.spec_dynamicMountAttacher.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_dynamicMountAttacher.dynamicMountedObjects, other) then
+                return true
+            end
+
             if impl.object.getAttachedImplements ~= nil then
                 isAttachedToMe = isAttachedToMe or AutoDrive:checkIsConnected(impl.object, other)
             end
