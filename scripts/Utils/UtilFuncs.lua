@@ -550,7 +550,9 @@ function AutoDrive:getAiSplinesParentNode()
 	local splineIndex = 1
 	while hasSplines and aiSplineNode == nil do
 		local spline = g_currentMission.trafficSystem:getSplineByIndex(splineIndex)
-
+		
+		hasSplines = spline ~= nil
+		
 		if aiSplineNode == nil then
 			local parent = getParent(spline) --now we are at trafficSystem
 			if parent ~= nil then
@@ -567,6 +569,8 @@ function AutoDrive:getAiSplinesParentNode()
 				end				
 			end
 		end
+		
+		splineIndex = splineIndex + 1
 	end
 
 	return aiSplineNode
