@@ -517,7 +517,7 @@ function AutoDrive:adParseSplines()
 
 	local aiSplineNode = self:getAiSplinesParentNode()
 	local hasSplines = true
-	local splineIndex = 1
+	local splineIndex = 0
 	while hasSplines do
 		hasSplines = false
 
@@ -553,7 +553,7 @@ function AutoDrive:getAiSplinesParentNode()
 		
 		hasSplines = spline ~= nil
 		
-		if aiSplineNode == nil then
+		if aiSplineNode == nil and spline ~= nil then
 			local parent = getParent(spline) --now we are at trafficSystem
 			if parent ~= nil then
 				print("Parent name: " .. getName(parent))
@@ -569,7 +569,7 @@ function AutoDrive:getAiSplinesParentNode()
 				end				
 			end
 		end
-		
+
 		splineIndex = splineIndex + 1
 	end
 
@@ -579,19 +579,42 @@ end
 function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
 	local lastX, lastY, lastZ = 0,0,0
 	local length = getSplineLength(spline)
+	local secondLastX, secondLastY, secondLastZ = 0,0,0
 	if length > 0 then
 		for i=0, 1, 1.0/length do
 			local posX, posY, posZ = getSplinePosition(spline, i)
 			if posX ~= nil then
-				if lastX == 0 or MathUtil.vector3Length(lastX - posX, lastY - posY, lastZ - posZ) > 3 then
-					--print("[AD] splinePosition " .. i .. ": " .. posX .. " / " .. posZ)
+				local maxDistance = 3
+				if lastX ~= 0 and secondLastX ~= 0 then
+					local angle = math.abs(AutoDrive.angleBetween({x = posX - lastX, z = posZ - lastZ}, {x = lastX - secondLastX, z = lastZ - secondLastZ}))
+					maxDistance = 6
+					if angle < 0.5 then
+						maxDistance = 12
+					elseif angle < 1 then
+						maxDistance = 6
+					elseif angle < 2 then
+						maxDistance = 4
+					elseif angle < 4 then
+						maxDistance = 3
+					elseif angle < 7 then
+						maxDistance = 2
+					elseif angle < 14 then
+						maxDistance = 1
+					elseif angle < 27 then
+						maxDistance = 0.5
+					else
+						maxDistance = 0.25
+					end
+				end
+
+				if MathUtil.vector3Length(lastX - posX, lastY - posY, lastZ - posZ) > maxDistance then
 					local connectLast = false
 					if lastX ~= 0 then
 						connectLast = true
 					end
-					if lastY - posY > 1 and lastY ~= 0 then -- prevent point dropping into the ground in case of bridges etc
-						posY = lastY
-					end
+					--if lastY - posY > 2 and lastY ~= 0 then -- prevent point dropping into the ground in case of bridges etc
+						--posY = lastY
+					--end
 					ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
 
 					if lastX == 0 then
@@ -600,6 +623,7 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
 						table.insert(startNodes, wp)
 					end
 
+					secondLastX, secondLastY, secondLastZ = lastX, lastY, lastZ
 					lastX, lastY, lastZ = posX, posY, posZ
 				end
 			end
