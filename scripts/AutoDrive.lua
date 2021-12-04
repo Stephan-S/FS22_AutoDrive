@@ -419,6 +419,11 @@ end
 
 function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	local vehicle = g_currentMission.controlledVehicle
+	local mouseActiveForAutoDrive = (g_gui.currentGui == nil) and (g_inputBinding:getShowMouseCursor() == true)
+	if not mouseActiveForAutoDrive then
+		AutoDrive.lastButtonDown = nil
+		return
+	end
 
 	if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.nToolTipWait ~= nil then
 		if vehicle.ad.sToolTip ~= "" then
@@ -440,6 +445,8 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 
 	if button > 0 and isDown then
 		AutoDrive.lastButtonDown = button
+	elseif button > 0 and isUp and AutoDrive.lastButtonDown == button then
+		AutoDrive.lastButtonDown = nil
 	end
 end
 
