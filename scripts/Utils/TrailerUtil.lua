@@ -58,7 +58,7 @@ function AutoDrive.getIsEmpty(vehicle, trailer, fillUnitIndex)
     return vehicleEmpty, trailerEmpty, fillUnitEmpty
 end
 
-function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTypes, fillTypeIndex)
+function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTypes, fillUnit)
     if fillTrigger ~= nil then
         local typesMatch = false
         local selectedFillType = vehicle.ad.stateModule:getFillType() or FillType.UNKNOWN
@@ -80,7 +80,7 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
         -- does the trigger support the single fillUnits filltype ?
         -- does the trigger and the fillUnit match the selectedFilltype or do they ignore it ?
         for i = 1, #fillUnits do
-            if fillTypeIndex == nil or i == fillTypeIndex then
+            if fillUnit == nil or i == fillUnit then
                 local selectedFillTypeIsNotInMyFillUnit = true
                 local matchInThisUnit = false
                 for index, _ in pairs(workTool:getFillUnitSupportedFillTypes(i)) do
@@ -128,7 +128,10 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
                             (sourceStorage.fillLevels ~= nil and sourceStorage.fillLevels[allowedFillType]) then
                             return true
                         end    
-                    end                
+                    end
+                    if fillTrigger.source ~= nil and fillTrigger.source.aiSupportedFillTypes ~= nil and fillTrigger.source.aiSupportedFillTypes[allowedFillType] then
+                        return true
+                    end
                 elseif fillTrigger.sourceObject ~= nil then
                     local fillType = fillTrigger.sourceObject:getFillUnitFillType(1)
                     isFillType = (fillType == selectedFillType)
