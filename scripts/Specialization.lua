@@ -1077,6 +1077,10 @@ function AutoDrive:onStartAutoDrive()
         end
     end
 
+    if self.spec_motorized.motor ~= nil then
+        self.spec_motorized.motor:setGearShiftMode(VehicleMotor.SHIFT_MODE_AUTOMATIC)
+    end
+
     AutoDriveHud:createMapHotspot(self)
 
     if AutoDrive.getSetting("enableParkAtJobFinished", self) and ((self.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER) or (self.ad.stateModule:getMode() == AutoDrive.MODE_DELIVERTO)) then
@@ -1127,6 +1131,10 @@ function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
 
         if self.steeringEnabled == false then
             self.steeringEnabled = true
+        end
+
+        if self.spec_motorized.motor ~= nil then
+            self.spec_motorized.motor:setGearShiftMode(self.spec_motorized.gearShiftMode)
         end
     end
 
