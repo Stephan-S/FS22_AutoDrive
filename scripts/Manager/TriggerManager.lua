@@ -204,8 +204,6 @@ function ADTriggerManager.loadAllTriggers()
             trigger.stoppedTimer = AutoDriveTON:new()
         end
     end
-
-    ADTriggerManager:getHighestPayingSellStation(g_fillTypeManager:getFillTypeIndexByName("WHEAT"))
 end
 
 function ADTriggerManager.getUnloadTriggers()
@@ -394,7 +392,7 @@ function ADTriggerManager:getHighestPayingSellStation(fillType)
 
     for _, station in pairs(g_currentMission.storageSystem:getUnloadingStations()) do
         --AutoDrive.dumpTable(station, "Station:", 1)
-		if station:isa(SellingStation) and not station.hideFromPricesMenu and station.isSellingPoint and station.aiSupportedFillTypes[fillType] and station.unloadTriggers ~= nil and #station.unloadTriggers > 0 then
+		if station:isa(SellingStation) and not station.hideFromPricesMenu and station.isSellingPoint and station.supportedFillTypes[fillType] and station.unloadTriggers ~= nil and #station.unloadTriggers > 0 then
 			station.uiName = station:getName()
             local price = station:getEffectiveFillTypePrice(fillType)
             if price > bestPrice then
@@ -460,10 +458,16 @@ function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle)
     if sellingStation ~= nil then
         local x, z, xDir, zDir = 0,0,0,0
         
-        if sellingStation.getAITargetPositionAndDirection ~= nil then
+        if sellingStation.getAITargetPositionAndDirection ~= nil and sellingStation:getAITargetPositionAndDirection(FillType.UNKNOWN) ~= nil then
             x, z, xDir, zDir = sellingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
         elseif sellingStation.unloadTriggers ~= nil and #sellingStation.unloadTriggers > 0 then
-            x, z, xDir, zDir = sellingStation.unloadTriggers[1]:getAITargetPositionAndDirection()
+            if sellingStation.unloadTriggers[1].supportsAIUnloading then
+                x, z, xDir, zDir = sellingStation.unloadTriggers[1]:getAITargetPositionAndDirection()
+            elseif sellingStation.unloadTriggers[1].exactFillRootNode ~= nil then
+                x, _, z = getWorldTranslation(sellingStation.unloadTriggers[1].exactFillRootNode)
+            else
+                return -1
+            end
         else
             return -1
         end
