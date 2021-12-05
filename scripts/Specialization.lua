@@ -52,6 +52,7 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "getWayPointsInRange", AutoDrive.getWayPointsInRange)
     SpecializationUtil.registerFunction(vehicleType, "getWayPointIdsInRange", AutoDrive.getWayPointIdsInRange)
     SpecializationUtil.registerFunction(vehicleType, "onDrawEditorMode", AutoDrive.onDrawEditorMode)
+    SpecializationUtil.registerFunction(vehicleType, "onDrawPreviews", AutoDrive.onDrawPreviews)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
 end
 
@@ -415,7 +416,10 @@ function AutoDrive:onDraw()
 
     if (AutoDrive.isEditorModeEnabled() or AutoDrive.isEditorShowEnabled()) then
         self:onDrawEditorMode()
-    end
+        if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid then
+            self:onDrawPreviews()
+        end
+    end    
 
     if AutoDrive.experimentalFeatures.redLinePosition and AutoDrive.getDebugChannelIsSet(AutoDrive.DC_VEHICLEINFO) and self.ad.frontNodeGizmo ~= nil then
         self.ad.frontNodeGizmo:createWithNode(self.ad.frontNode, getName(self.ad.frontNode), false)
@@ -483,6 +487,41 @@ function AutoDrive:onDraw()
                 end
             end
         end
+    end
+end
+
+function AutoDrive:onDrawPreviews()    
+    --if AutoDrive:checkForCollisionOnSpline() then
+    local lastHeight = AutoDrive.splineInterpolation.startNode.y
+    local lastWp = AutoDrive.splineInterpolation.startNode
+    local arrowPosition = ADDrawingManager.arrows.position.middle
+    local collisionFree = AutoDrive:checkForCollisionOnSpline()
+    for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
+        if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
+            if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+                wp.y = lastHeight
+            end	
+            
+            if collisionFree then
+                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, unpack(AutoDrive.currentColors.ad_color_previewOk))
+                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
+            else
+                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+            end
+
+            lastWp = {x = wp.x, y = wp.y, z = wp.z}
+            lastHeight = wp.y
+        end
+    end
+
+    local targetWp = AutoDrive.splineInterpolation.endNode
+    if collisionFree then
+        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, unpack(AutoDrive.currentColors.ad_color_previewOk))
+        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
+    else
+        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
     end
 end
 

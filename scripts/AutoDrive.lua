@@ -134,7 +134,9 @@ AutoDrive.colors = {
 	ad_color_selectedNode = {0, 1, 0, 0.15},
 	ad_color_currentConnection = {1, 1, 1, 1},
 	ad_color_closestLine = {1, 0, 0, 1},
-	ad_color_editorHeightLine = {1, 1, 1, 1}
+	ad_color_editorHeightLine = {1, 1, 1, 1},
+	ad_color_previewOk = {0.3, 0.9, 0, 1},
+	ad_color_previewNotOk = {1, 0.1, 0, 1}
 }
 
 AutoDrive.currentColors = {} -- this will hold the current colors, derived from default colors above, overwritten by local settings
