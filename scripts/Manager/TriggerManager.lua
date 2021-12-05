@@ -453,7 +453,8 @@ function ADTriggerManager:getBestPickupLocationFor(vehicle, trailer, fillType)
     end
 end
 
-function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle)
+function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle, maxTriggerDistance)
+    local maxTriggerDis = maxTriggerDistance or 6
     local closest = -1
     if sellingStation ~= nil then
         local x, z, xDir, zDir = 0,0,0,0
@@ -481,9 +482,10 @@ function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle)
             local dis = MathUtil.vector2Length(ADGraphManager:getWayPointById(mapMarker.id).x - x, ADGraphManager:getWayPointById(mapMarker.id).z - z)
             if dis < distance and dis > minDistance then
                 -- check if this is in the right direction
-                -- Todo: Make sure the path to that marker actually leads over the trigger and not somewhere adjacent
                 local wp = ADGraphManager:getWayPointById(mapMarker.id)
-                if wp.incoming ~= nil and #wp.incoming > 0 then
+                local isOnPathOverTrigger = AutoDrive:checkIfPathTraversedOverPosition(wp, {x=x, z=z}, maxTriggerDis, 20)
+
+                if wp.incoming ~= nil and #wp.incoming > 0 and isOnPathOverTrigger then
                     local disIncoming = MathUtil.vector2Length(ADGraphManager:getWayPointById(wp.incoming[1]).x - x, ADGraphManager:getWayPointById(wp.incoming[1]).z - z)
                     if disIncoming < dis then
                         closest = mapMarker.id
@@ -496,18 +498,21 @@ function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle)
         if closest == -1 then
             -- Else look for waypoint and create marker
             -- Todo: first check for a closest point and then traverse until one meets the requirements
+
+            local closestNode = nil
+            local closestNodeDistance = math.huge
             for i in pairs(ADGraphManager:getWayPoints()) do
                 local dis = MathUtil.vector2Length(ADGraphManager:getWayPointById(i).x - x, ADGraphManager:getWayPointById(i).z - z)
-                if dis < distance and dis > minDistance then
-                    -- check if this is in the right direction
-                    local wp = ADGraphManager:getWayPointById(i)
-                    if wp.incoming ~= nil and #wp.incoming > 0 then
-                        local disIncoming = MathUtil.vector2Length(ADGraphManager:getWayPointById(wp.incoming[1]).x - x, ADGraphManager:getWayPointById(wp.incoming[1]).z - z)
-                        if disIncoming < dis then
-                            closest = i
-                            distance = dis
-                        end
-                    end
+                if dis < closestNodeDistance and dis < maxTriggerDis then
+                    closestNode = i
+                    closestNodeDistance = dis
+                end
+            end
+
+            if closestNode ~= nil then
+                local pointWithEnoughDistance = AutoDrive:getNodeWithMinDistanceTo(ADGraphManager:getWayPointById(closestNode), {x=x, z=z}, minDistance, 20)
+                if pointWithEnoughDistance ~= nil then
+                    closest = pointWithEnoughDistance.id
                 end
             end
 
@@ -523,4 +528,33 @@ function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle)
         end
     end
     return closest
+end
+
+function AutoDrive:checkIfPathTraversedOverPosition(wayPoint, targetPosition, radius, maxSteps)
+    local maxSearchSteps = maxSteps or 30
+    local distance = MathUtil.vector2Length(wayPoint.x - targetPosition.x, wayPoint.z - targetPosition.z)
+    if distance < radius then
+        return true
+    end
+    for _, incomingId in pairs(wayPoint.incoming) do
+        if AutoDrive:checkIfPathTraversedOverPosition(ADGraphManager:getWayPointById(incomingId), targetPosition, radius, maxSearchSteps - 1) then
+            return true
+        end
+    end
+    return false
+end
+
+function AutoDrive:getNodeWithMinDistanceTo(wayPoint, targetPosition, minDistance, maxSteps)
+    local maxSearchSteps = maxSteps or 30
+    local distance = MathUtil.vector2Length(wayPoint.x - targetPosition.x, wayPoint.z - targetPosition.z)
+    if distance > minDistance then
+        return wayPoint
+    end
+    for _, outId in pairs(wayPoint.out) do
+        local result = AutoDrive:getNodeWithMinDistanceTo(ADGraphManager:getWayPointById(outId), targetPosition, minDistance, maxSearchSteps - 1)
+        if result ~= nil then
+            return result
+        end
+    end
+    return nil
 end
