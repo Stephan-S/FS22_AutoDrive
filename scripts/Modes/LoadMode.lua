@@ -114,6 +114,15 @@ function LoadMode:getNextTask()
 	if self.state == LoadMode.STATE_TO_TARGET then
 		-- STATE_TO_TARGET - drive to load destination
 		AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "LoadMode:getNextTask STATE_TO_TARGET LoadAtDestinationTask...")
+        if self.vehicle.ad.stateModule:getAutomaticPickupTarget() then
+            local pickupStation = ADTriggerManager:getBestPickupLocationFor(self.vehicle, self.trailers, self.vehicle.ad.stateModule:getFillType())
+            if pickupStation ~= nil then
+                local wpId = ADTriggerManager:getMarkerAtStation(pickupStation, self.vehicle)
+                if wpId > 0 then                    
+                    self.vehicle.ad.stateModule:setSecondMarkerByWayPointId(wpId)
+                end
+            end
+        end
 		nextTask = LoadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
 		self.state = LoadMode.STATE_LOAD
     elseif self.state == LoadMode.STATE_LOAD then
