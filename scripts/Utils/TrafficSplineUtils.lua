@@ -227,10 +227,10 @@ function AutoDrive:checkForCollisionOnSpline()
             local r,g,b = 0,1,0
 			if shapes > 0 then
                 r = 1
-                DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
+                --DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
 				return false
 			end
-            DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
+            --DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
 		end
 	end
 	return true
