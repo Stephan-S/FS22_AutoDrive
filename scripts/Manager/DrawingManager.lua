@@ -203,9 +203,17 @@ function ADDrawingManager:drawObjects_alternative(obj, dFunc, iFunc)
     end
 
     local fileToUse
-    if obj.usesSelection then
-        local iconSetToUse = AutoDrive.getSetting("iconSetToUse")
-        fileToUse = obj.fileNames[iconSetToUse]
+    if obj.usesSelection then        
+        if obj.lastDrawFileUsed ~= AutoDrive.getSetting("iconSetToUse") then
+            -- cleaning up not needed objects
+            for _, id in pairs(obj.itemIDs) do
+                -- make invisible unused items
+                setVisibility(id, false)
+            end
+            obj.itemIDs = {}
+        end
+        fileToUse = obj.fileNames[AutoDrive.getSetting("iconSetToUse")]
+        obj.lastDrawFileUsed = AutoDrive.getSetting("iconSetToUse")
     else
         fileToUse = obj.fileName
     end
