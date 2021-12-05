@@ -21,7 +21,7 @@ function AutoDrive.getIsFilled(vehicle, trailer, fillUnitIndex)
             -- AutoLoad
             fillUnitFull = AutoDrive:getALFillLevelPercentage(trailer) >= AutoDrive.getSetting("unloadFillLevel", vehicle) * 0.999
         else           
-            fillUnitFull = (trailer:getFillUnitFreeCapacity(fillUnitIndex) / trailer:getFillUnitCapacity(fillUnitIndex)) >= 0.999 - (AutoDrive.getSetting("unloadFillLevel", vehicle) * 0.999)
+            fillUnitFull = (trailer:getFillUnitFreeCapacity(fillUnitIndex) / trailer:getFillUnitCapacity(fillUnitIndex)) <= 1 - (AutoDrive.getSetting("unloadFillLevel", vehicle) * 0.999)
         end
     end
 
