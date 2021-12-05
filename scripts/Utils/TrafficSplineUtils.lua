@@ -124,6 +124,9 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
 				end
 			end
 		end
+        
+		local posX, posY, posZ = getSplinePosition(spline, 1)
+		ADGraphManager:recordWayPoint(posX, posY, posZ, true, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
 
 		local wpId = ADGraphManager:getWayPointsCount()
 		local wp = ADGraphManager:getWayPointById(wpId)
@@ -133,6 +136,7 @@ end
 
 function AutoDrive:createJunctionCommand()
 	self:createJunctions(AutoDrive.startNodes, AutoDrive.endNodes, 150, 60)
+	self:createJunctions(AutoDrive.startNodes, AutoDrive.endNodes, 30, 120)
 end
 
 function AutoDrive:removeJunctionCommand()
@@ -141,6 +145,7 @@ end
 
 function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
 	--print("AutoDrive:createJunctions")
+    AutoDrive.splineInterpolationUserCurvature = 5
 	for _, endNode in pairs(endNodes) do
 		if endNode.incoming ~= nil and #endNode.incoming > 0 then
 			local incomingNode = ADGraphManager:getWayPointById(endNode.incoming[1])
@@ -155,53 +160,77 @@ function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
 					local dist = ADGraphManager:getDistanceBetweenNodes(startNode.id, endNode.id)
 
 					if angle < maxAngle and angle2 < 85 and angle3 < 85 and dist < maxDist then
-						self.splineInterpolation = nil
-						AutoDrive:createSplineInterpolationBetween(endNode, startNode)
-						-- Todo: check validity of path by checking for collision along created path
-						if self.splineInterpolation ~= nil and self.splineInterpolation.waypoints ~= nil and #self.splineInterpolation.waypoints > 2 then
-							if AutoDrive:checkForCollisionOnSpline() then
-								local lastId = endNode.id
-								local lastHeight = endNode.y
-								for wpId, wp in pairs(self.splineInterpolation.waypoints) do
-									if wpId ~= 1 and wpId < (#self.splineInterpolation.waypoints - 1) then
-										if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
-											wp.y = lastHeight
-										end			
-										ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION)
-										lastId = ADGraphManager:getWayPointsCount()
-									end
-								end
-
-								local wp = ADGraphManager:getWayPointById(lastId)
-								ADGraphManager:toggleConnectionBetween(wp, startNode, false)
-							end
-						else
-							--print("AutoDrive:createJunctions - Fallback to toggle connections")
-							ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
-						end
-						--ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
+                        
+                        local existingPath = ADPathCalculator:GetPath(endNode.id, startNode.id, {})
+                        if (existingPath == nil or #existingPath == 0 or #existingPath > 40) then
+                            self.splineInterpolation = nil
+                            AutoDrive:createSplineInterpolationBetween(endNode, startNode)
+                            -- Todo: check validity of path by checking for collision along created path
+                            if self.splineInterpolation ~= nil and self.splineInterpolation.waypoints ~= nil and #self.splineInterpolation.waypoints > 2 then
+                                if AutoDrive:checkForCollisionOnSpline() then
+                                    local lastId = endNode.id
+                                    local lastHeight = endNode.y
+                                    for wpId, wp in pairs(self.splineInterpolation.waypoints) do
+                                        if wpId ~= 1 and wpId < (#self.splineInterpolation.waypoints - 1) then
+                                            if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+                                                wp.y = lastHeight
+                                            end			
+                                            ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION)
+                                            lastId = ADGraphManager:getWayPointsCount()                                            
+											lastHeight = wp.y
+                                        end
+                                    end
+    
+                                    local wp = ADGraphManager:getWayPointById(lastId)
+                                    ADGraphManager:toggleConnectionBetween(wp, startNode, false)
+                                end
+                            else
+                                --print("AutoDrive:createJunctions - Fallback to toggle connections")
+                                ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
+                            end
+                            --ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
+                        end						
 					end
 				end				
 			end
 		end
 	end
 	
+    AutoDrive.splineInterpolationUserCurvature = 0.49
 end
 
 function AutoDrive:checkForCollisionOnSpline()
-	local widthX = 5
-	local height = 2.65
+	local widthX = 1.8
+	local height = 2.3
+    local mask = 0
+
+    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+
 	for wpId, wp in pairs(self.splineInterpolation.waypoints) do
 		if wpId > 1 and wpId < (#self.splineInterpolation.waypoints - 1) then
 			local wpLast = self.splineInterpolation.waypoints[wpId - 1]
 			local deltaX, deltaY, deltaZ = wp.x - wpLast.x, wp.y - wpLast.y, wp.z - wpLast.z
 			local centerX, centerY, centerZ = wpLast.x + deltaX/2,  wpLast.y + deltaY/2,  wpLast.z + deltaZ/2
-			local angleRad = math.atan2(-deltaZ, deltaX)
+			local angleRad = math.atan2(deltaX, deltaZ)
     		angleRad = AutoDrive.normalizeAngle(angleRad)
-			local shapes = overlapBox(centerX, centerY+3, centerZ, 0, angleRad, 0, widthX, height, deltaZ, "collisionTestCallbackIgnore", nil, 12, true, true, true)
+            local length = MathUtil.vector2Length(deltaX, deltaZ) / 2
+
+            local angleX = -MathUtil.getYRotationFromDirection(deltaY, length*2)
+
+			local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallbackIgnore", nil, mask, true, true, true)
+            local r,g,b = 0,1,0
 			if shapes > 0 then
+                r = 1
+                DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
 				return false
 			end
+            DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
 		end
 	end
 	return true

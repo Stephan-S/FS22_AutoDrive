@@ -71,12 +71,12 @@ string.randomCharset = {
 --- @param x number X Coordinate
 --- @param z number Z Coordinate
 --- @return number Height of the terrain
-function AutoDrive:getTerrainHeightAtWorldPos(x, z)
+function AutoDrive:getTerrainHeightAtWorldPos(x, z, startingHeight)
 	self.raycastHeight = nil
 	-- get a starting height with the basic function
-	local y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
+	local startHeight = startingHeight or getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
 	-- do a raycast from a bit above y
-	raycastClosest(x, y + 2, z, 0, -1, 0, "getTerrainHeightAtWorldPos_Callback", 3, self, 12)
+	raycastClosest(x, startHeight + 3, z, 0, -1, 0, "getTerrainHeightAtWorldPos_Callback", 5, self, 12)
 	return self.raycastHeight or y
 end
 
@@ -543,6 +543,15 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 			break
 		end
 
+		if AutoDrive.splineInterpolationUserCurvature == 5 then
+			-- calculate the angle between start tangent and end tangent
+			local dAngle = math.abs(AutoDrive.angleBetween(
+				ADVectorUtils.subtract2D(p0, startNode),
+				ADVectorUtils.subtract2D(endNode, p3)
+			))
+			self.splineInterpolation.curvature = ADVectorUtils.linterp(0, 180, dAngle, 1.5, 2.5)
+		end
+
 		-- distance from start to end, divided by two to give it more roundness...
 		local dStartEnd = ADVectorUtils.distance2D(startNode, endNode) / self.splineInterpolation.curvature
 
@@ -582,8 +591,16 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 			local distEnd = ADVectorUtils.distance2D(px, endNode)
 			if ( distPrev >= 1.5 and distEnd >= 1.5 and dAngle >= 3 ) or (distPrev >= 4 and distEnd >= 4) then
 				-- get height at terrain
-				px.y = AutoDrive:getTerrainHeightAtWorldPos(px.x, px.z)
+				px.y = AutoDrive:getTerrainHeightAtWorldPos(px.x, px.z, prevWP.y)
 				table.insert(self.splineInterpolation.waypoints, px)
+
+				-- Trying out if this slightly delayed call results in a more stable raycastHeight detection
+				local dummy = 1
+				for i = 1, 1000 do
+					dummy = dummy + i
+				end
+				self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y = self.raycastHeight or self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y
+				
 				prevWP = px -- newWP
 				prevV = newV
 			end

@@ -531,6 +531,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 											end			
 											ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, 0)
 											lastId = ADGraphManager:getWayPointsCount()
+											lastHeight = wp.y
 										end
 									end
 	
