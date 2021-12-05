@@ -972,14 +972,12 @@ function AutoDrive:onFillTypeSelection(fillType)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... fillType %s self.validFillableObject %s self.isLoading %s", tostring(fillType), tostring(self.validFillableObject), tostring(self.isLoading))
 	if not self.isLoading then
         if fillType ~= nil and fillType ~= FillType.UNKNOWN then
-            if self.currentFillableObject == nil then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.validFillableObject == nil")
-                for _, fillableObject in pairs(self.fillableObjects) do --copied from gdn getIsActivatable to get a valid Fillable Object even without entering vehicle (needed for refuel first time)
-                    if fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
-                        self.currentFillableObject = fillableObject.object
-                        self.currentFillableFillUnitIndex = fillableObject.fillUnitIndex
-                    end
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.currentFillableObject == nil")
+            for _, fillableObject in pairs(self.fillableObjects) do --copied from gdn getIsActivatable to get a valid Fillable Object even without entering vehicle (needed for refuel first time)
+                if fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
+                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
+                    self.currentFillableObject = fillableObject.object
+                    self.currentFillableFillUnitIndex = fillableObject.fillUnitIndex
                 end
             end
             local currentFillableObject = self.currentFillableObject

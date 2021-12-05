@@ -301,7 +301,7 @@ function ADTrailerModule:updateLoad(dt)
     -- update load delay timer
     self.loadDelayTimer:timer(self.lastFillLevel >= self.fillLevel and self.trigger == self, ADTrailerModule.LOAD_DELAY_TIME, dt) 
 
-    if self.trigger == nil then
+    if self.trigger == nil and not fillUnitFull then
         -- look for triggers with requested fill type
         self.vehicle.ad.isActive = true        -- let GC think AD is active
         local loadPairs = AutoDrive.getTriggerAndTrailerPairs(self.vehicle, dt)
@@ -369,25 +369,24 @@ function ADTrailerModule:updateLoad(dt)
                 checkForContinue = true
             end
         end
+    end
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad check for load done self.trigger %s", tostring(self.trigger))
+    if self.trigger ~= nil and self.trigger.stoppedTimer ~= nil and self.trigger.stoppedTimer:done() then
+        -- load from trigger
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad loading finished - check fill level...")
+        checkFillUnitFull = true
+    elseif self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger.spec_waterTrailer ~= nil and self.trigger.spec_waterTrailer.isFilling ~= nil and not self.trigger.spec_waterTrailer.isFilling then
+        -- load water
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad WaterTrailer full")
+        checkFillUnitFull = true
+    elseif self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger == self and self.loadDelayTimer:done() and self.lastFillLevel >= self.fillLevel then
+        -- load from source without trigger
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad trailers full")
+        checkFillUnitFull = true
     else
-        if self.trigger ~= nil and self.trigger.stoppedTimer ~= nil and self.trigger.stoppedTimer:done() then
-            -- load from trigger
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad loading finished - check fill level...")
-            checkFillUnitFull = true
-        elseif self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger.spec_waterTrailer ~= nil and self.trigger.spec_waterTrailer.isFilling ~= nil and not self.trigger.spec_waterTrailer.isFilling then
-            -- load water
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad WaterTrailer full")
-            checkFillUnitFull = true
-        elseif self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger == self and self.loadDelayTimer:done() and self.lastFillLevel >= self.fillLevel then
-            -- load from source without trigger
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad trailers full")
-            checkFillUnitFull = true
-        else
-            -- still loading from trigger
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad still loading from trigger -> return ")
-            return
-        end
-        
+        -- still loading from trigger
+        -- AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad still loading from trigger -> return ")
+        -- return
     end
 
     if checkFillUnitFull then
