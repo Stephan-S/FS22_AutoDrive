@@ -164,10 +164,10 @@ function AutoDrive:loadMap(name)
 
 	addConsoleCommand('restartMySavegame', 'Restart my savegame', 'restartMySavegame', self)
 
-	-- if g_server ~= nil then
-		-- AutoDrive.AutoDriveSync = AutoDriveSync:new(g_server ~= nil, g_client ~= nil)
-		-- AutoDrive.AutoDriveSync:register(false)
-	-- end
+	if g_server ~= nil then
+		AutoDrive.AutoDriveSync = AutoDriveSync.new(g_server ~= nil, g_client ~= nil)
+		AutoDrive.AutoDriveSync:register(false)
+	end
 	index = index + 1
 	Logging.info("[AD] Index: %d",index)
 

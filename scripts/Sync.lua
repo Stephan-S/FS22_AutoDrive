@@ -10,11 +10,11 @@ AutoDriveSync_mt = Class(AutoDriveSync, Object)
 
 InitObjectClass(AutoDriveSync, "AutoDriveSync")
 
-function AutoDriveSync:new(isServer, isClient, customMt)
-    local ads = Object:new(isServer, isClient, customMt or AutoDriveSync_mt)
-    ads.dirtyFlag = ads:getNextDirtyFlag()
-    registerObjectClassName(ads, "AutoDriveSync")
-    return ads
+function AutoDriveSync.new(isServer, isClient, customMt)
+    local self = Object.new(isServer, isClient, customMt or AutoDriveSync_mt)
+    self.dirtyFlag = self:getNextDirtyFlag()
+    registerObjectClassName(self, "AutoDriveSync")
+    return self
 end
 
 function AutoDriveSync:delete()
@@ -22,19 +22,21 @@ function AutoDriveSync:delete()
     AutoDriveSync:superClass().delete(self)
 end
 
-function AutoDriveSync:writeStream(streamId)
+function AutoDriveSync:writeStream(streamId, connection)
     AutoDriveSync.streamWriteGraph(streamId, ADGraphManager:getWayPoints(), ADGraphManager:getMapMarkers(), ADGraphManager:getGroups())
-    AutoDriveSync:superClass().writeStream(self, streamId)
+    AutoDriveSync:superClass().writeStream(self, streamId, connection)
 end
 
-function AutoDriveSync:readStream(streamId)
-    local wayPoints, mapMarkers, groups = AutoDriveSync.streamReadGraph(streamId)
-    ADGraphManager:setWayPoints(wayPoints)
-    ADGraphManager:setMapMarkers(mapMarkers)
-    AutoDrive:notifyDestinationListeners()
-    ADGraphManager:setGroups(groups)
-    AutoDrive.Hud.lastUIScale = 0
-    AutoDriveSync:superClass().readStream(self, streamId)
+function AutoDriveSync:readStream(streamId, connection) 
+    if connection:getIsServer() then
+        local wayPoints, mapMarkers, groups = AutoDriveSync.streamReadGraph(streamId)
+        ADGraphManager:setWayPoints(wayPoints)
+        ADGraphManager:setMapMarkers(mapMarkers)
+        AutoDrive:notifyDestinationListeners()
+        ADGraphManager:setGroups(groups)
+        AutoDrive.Hud.lastUIScale = 0
+        AutoDriveSync:superClass().readStream(self, streamId, connection)
+    end
 end
 
 function AutoDriveSync:readUpdateStream(streamId, timestamp, connection)
