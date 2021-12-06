@@ -2,12 +2,12 @@
 
 <i3D name="cross" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
   <Asset>
-    <Export program="GIANTS Editor 64bit" version="8.2.0"/>
+    <Export program="GIANTS Editor 64bit" version="9.0.1"/>
   </Asset>
 
   <Files>
-    <File fileId="2" filename="fxCircleShader.xml"/>
     <File fileId="1" filename="cross_diffuse.dds"/>
+    <File fileId="2" filename="fxCircleShader.xml"/>
   </Files>
 
 
@@ -27,7 +27,7 @@
   </Dynamics>
 
   <Scene>
-    <Shape shapeId="1" name="cross" clipDistance="100" nodeId="7" materialIds="4"/>
+      <Shape shapeId="1" name="cross" clipDistance="100" nodeId="7" materialIds="4"/>
   </Scene>
 
 </i3D>
