@@ -510,36 +510,35 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 
 				-- waypoint at mouse position
                 if button == 1 and isUp
-                    and not AutoDrive.leftLSHIFTmodifierKeyPressed
+                    --and not AutoDrive.leftLSHIFTmodifierKeyPressed
                     and not AutoDrive.leftCTRLmodifierKeyPressed
                     and not AutoDrive.leftALTmodifierKeyPressed 
                     -- and AutoDrive.rightSHIFTmodifierKeyPressed   -- see below !!!
                     then
 					-- left mouse button to select point / connect to already selected point
 					if vehicle.ad.selectedNodeId ~= nil then
-						if vehicle.ad.selectedNodeId ~= vehicle.ad.hoveredNodeId then
+						if vehicle.ad.selectedNodeId ~= vehicle.ad.hoveredNodeId and not table.contains(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId).out, vehicle.ad.hoveredNodeId) then
 							-- connect selected point with hovered point
 
-							if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid and AutoDrive.splineInterpolation.waypoints ~= nil and #AutoDrive.splineInterpolation.waypoints > 2 then
-								--if AutoDrive:checkForCollisionOnSpline() then
-									local lastId = vehicle.ad.selectedNodeId
-									local lastHeight = ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId).y
-									for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
-										if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
-											if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
-												wp.y = lastHeight
-											end			
-											ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, 0)
-											lastId = ADGraphManager:getWayPointsCount()
-											lastHeight = wp.y
+							if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid and AutoDrive.splineInterpolation.waypoints ~= nil and #AutoDrive.splineInterpolation.waypoints > 2 then								
+								local lastId = vehicle.ad.selectedNodeId
+								local lastHeight = ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId).y
+								for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
+									if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
+										if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+											wp.y = lastHeight
+										end			
+										ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, AutoDrive.rightSHIFTmodifierKeyPressed, lastId, 0)
+										if AutoDrive.leftLSHIFTmodifierKeyPressed then
+											ADGraphManager:toggleWayPointAsSubPrio(ADGraphManager:getWayPointsCount())
 										end
+										lastId = ADGraphManager:getWayPointsCount()
+										lastHeight = wp.y
 									end
-	
-									local wp = ADGraphManager:getWayPointById(lastId)
-									ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), false)
-								--else										
-									--print("AutoDrive:mouseAction - found collision")
-								--end
+								end
+
+								local wp = ADGraphManager:getWayPointById(lastId)
+								ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
 							else
 								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
 								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
@@ -548,12 +547,12 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 									ADGraphManager:toggleWayPointAsSubPrio(vehicle.ad.selectedNodeId)
 								end
 							end
+							
+							-- unselect point
+							AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent unselect point selectedNodeId = nil")
+							vehicle.ad.selectedNodeId = nil
+							adjustedPaths = true
 						end
-
-						-- unselect point
-						AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent unselect point selectedNodeId = nil")
-						vehicle.ad.selectedNodeId = nil
-						adjustedPaths = true
 					else
 						-- select point
 						-- no selectedNodeId: hoveredNodeId is now selectedNodeId
