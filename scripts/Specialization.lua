@@ -254,11 +254,23 @@ function AutoDrive:onWriteStream(streamId, connection)
     if self.ad == nil then
         return
     end
+
+    local count = 0
+    for _, setting in pairs(AutoDrive.settings) do
+        if setting ~= nil and setting.isVehicleSpecific and not setting.isUserSpecific then
+            count = count + 1
+        end
+    end
+
+    streamWriteUInt16(streamId, count)
+
     for settingName, setting in pairs(AutoDrive.settings) do
-        if setting ~= nil and setting.isVehicleSpecific then
+        if setting ~= nil and setting.isVehicleSpecific and not setting.isUserSpecific then
+            streamWriteString(streamId, settingName)
             streamWriteUInt16(streamId, AutoDrive.getSettingState(settingName, self))
         end
     end
+
     self.ad.stateModule:writeStream(streamId)
 end
 
@@ -266,11 +278,15 @@ function AutoDrive:onReadStream(streamId, connection)
     if self.ad == nil then
         return
     end
-    for settingName, setting in pairs(AutoDrive.settings) do
-        if setting ~= nil and setting.isVehicleSpecific then
-            self.ad.settings[settingName].current = streamReadUInt16(streamId)
-        end
+
+    local count = streamReadUInt16(streamId)
+    for i = 1, count do
+        local settingName = streamReadString(streamId)
+        local value = streamReadUInt16(streamId)
+        self.ad.settings[settingName].current = value
+        self.ad.settings[settingName].new = value
     end
+
     self.ad.stateModule:readStream(streamId)
 end
 

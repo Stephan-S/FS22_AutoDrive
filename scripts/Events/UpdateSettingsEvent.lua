@@ -16,19 +16,40 @@ end
 
 function AutoDriveUpdateSettingsEvent:writeStream(streamId, connection)
 	-- Writing global confings
+	local count = 0
 	for _, setting in pairs(AutoDrive.settings) do
 		if setting ~= nil and not setting.isVehicleSpecific and not setting.isUserSpecific then
+			count = count + 1
+		end
+	end
+
+	streamWriteUInt16(streamId, count)
+
+	for settingName, setting in pairs(AutoDrive.settings) do
+		if setting ~= nil and not setting.isVehicleSpecific and not setting.isUserSpecific then
+			streamWriteString(streamId, settingName)
 			streamWriteUInt16(streamId, setting.current)
 		end
 	end
 
-	streamWriteBool(streamId, self.vehicle ~= nil)
+	streamWriteBool(streamId, self.vehicle ~= nil)	
 
 	-- Writing vehicle confings
-	if self.vehicle ~= nil then
+	if self.vehicle ~= nil then		
+		count = 0
+		for _, setting in pairs(AutoDrive.settings) do
+			if setting ~= nil and setting.isVehicleSpecific and not setting.isUserSpecific then
+				count = count + 1
+			end
+		end
+
 		streamWriteInt32(streamId, NetworkUtil.getObjectId(self.vehicle))
+		
+		streamWriteUInt16(streamId, count)
+
 		for settingName, setting in pairs(AutoDrive.settings) do
 			if setting ~= nil and setting.isVehicleSpecific and not setting.isUserSpecific then
+				streamWriteString(streamId, settingName)
 				streamWriteUInt16(streamId, AutoDrive.getSettingState(settingName, self.vehicle))
 			end
 		end
@@ -37,10 +58,12 @@ end
 
 function AutoDriveUpdateSettingsEvent:readStream(streamId, connection)
 	-- Reading global confings
-	for _, setting in pairs(AutoDrive.settings) do
-		if setting ~= nil and not setting.isVehicleSpecific and not setting.isUserSpecific then
-			setting.current = streamReadUInt16(streamId)
-		end
+	local count = streamReadUInt16(streamId)
+	for i = 1, count do
+		local settingName = streamReadString(streamId)
+		local value = streamReadUInt16(streamId)
+		AutoDrive.settings[settingName].current = value
+		AutoDrive.settings[settingName].new = value
 	end
 
 	local vehicle = nil
@@ -48,13 +71,12 @@ function AutoDriveUpdateSettingsEvent:readStream(streamId, connection)
 	if streamReadBool(streamId) then
 		vehicle = NetworkUtil.getObject(streamReadInt32(streamId))
 		if vehicle ~= nil then
-			-- Reading vehicle confings
-			for settingName, setting in pairs(AutoDrive.settings) do
-				if setting ~= nil and setting.isVehicleSpecific and not setting.isUserSpecific then
-					local newSettingsValue = streamReadUInt16(streamId)
-					vehicle.ad.settings[settingName].current = newSettingsValue
-					vehicle.ad.settings[settingName].new = newSettingsValue -- Also update 'new' field to prevent a following incoerence state of 'hasChanges()' function on settings pages
-				end
+			count = streamReadUInt16(streamId)
+			for i = 1, count do
+				local settingName = streamReadString(streamId)
+				local value = streamReadUInt16(streamId)
+				vehicle.ad.settings[settingName].current = value
+				vehicle.ad.settings[settingName].new = value
 			end
 		end
 	end
