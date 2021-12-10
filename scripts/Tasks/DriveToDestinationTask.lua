@@ -19,7 +19,7 @@ function DriveToDestinationTask:setUp()
         self.state = DriveToDestinationTask.STATE_DRIVING
         self.vehicle.ad.drivePathModule:setPathTo(self.destinationID)
     end
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
 end
 

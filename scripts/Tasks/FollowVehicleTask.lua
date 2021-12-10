@@ -37,7 +37,7 @@ function FollowVehicleTask:setUp()
             self.vehicle.ad.drivePathModule:setWayPoints(self:getBreadCrumbsUntilFollowDistance())
         end
     end
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
 end
 

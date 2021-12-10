@@ -129,8 +129,8 @@ function AutoDrive:StartDriving(vehicle, destinationID, unloadDestinationID, cal
             elseif unloadDestinationID == -3 then --park
                 local parkDestinationAtJobFinished = vehicle.ad.stateModule:getParkDestinationAtJobFinished()
                 if parkDestinationAtJobFinished >= 1 then
-                    local trailers, _ = AutoDrive.getTrailersOf(vehicle, true)
-                    local fillLevel, _ = AutoDrive.getFillLevelAndCapacityOfAll(trailers)
+                    local trailers, _ = AutoDrive.getAllUnits(vehicle)
+                    local fillLevel, _, _ = AutoDrive.getAllNonFuelFillLevels(trailers)
                     if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER and fillLevel > 0 then
                         -- unload before going to park
                         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartDriving unload before going to park")
@@ -399,7 +399,7 @@ function AutoDrive:unloadALAll(vehicle)
         return false
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadALAll")
-    local trailers, trailerCount = AutoDrive.getTrailersOf(vehicle, false)
+    local trailers, trailerCount = AutoDrive.getAllUnits(vehicle)
     -- AutoDrive.debugMsg(object, "AutoDrive:unloadALAll trailerCount %s", tostring(trailerCount))
     if trailerCount > 0 then
         for i=1, trailerCount do
@@ -501,7 +501,7 @@ function AutoDrive:setALFillType(vehicle, fillType)
         return false
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALFillType")
-    local trailers, trailerCount = AutoDrive.getTrailersOf(vehicle, false)
+    local trailers, trailerCount = AutoDrive.getAllUnits(vehicle)
     if trailerCount > 0 then
         for i=1, trailerCount do
             local object = trailers[i]

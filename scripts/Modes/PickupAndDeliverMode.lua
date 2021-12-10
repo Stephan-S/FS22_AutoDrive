@@ -24,7 +24,7 @@ function PickupAndDeliverMode:reset()
     self.state = PickupAndDeliverMode.STATE_INIT
     self.vehicle.ad.stateModule:setLoopsDone(0)
     self.activeTask = nil
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
 end
 
@@ -91,10 +91,7 @@ function PickupAndDeliverMode:getNextTask(forced)
             distanceToStart = MathUtil.vector2Length(x - point.x, z - point.z)
         end
     end
-
-    local fillLevel, leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
-    local maxCapacity = fillLevel + leftCapacity
-    local filledToUnload = (leftCapacity <= (maxCapacity * (1 - AutoDrive.getSetting("unloadFillLevel", self.vehicle) + 0.001)))
+    local fillLevel, _, filledToUnload = AutoDrive.getAllFillLevels(self.trailers)
 
     local setPickupTarget = function()
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:setPickupTarget")

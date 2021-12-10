@@ -251,7 +251,7 @@ function ADSpecialDrivingModule:handleReverseDriving(dt)
             else
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "ADSpecialDrivingModule:handleReverseDriving reverseToPoint self.currentWayPointIndex %s ", tostring(self.currentWayPointIndex))
                 -- open trailer cover if trigger is reachable
-                local trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+                local trailers, _ = AutoDrive.getAllUnits(self.vehicle)
                 local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self.vehicle)
                 AutoDrive.setTrailerCoverOpen(self.vehicle, trailers, isInRangeToLoadUnloadTarget)
 

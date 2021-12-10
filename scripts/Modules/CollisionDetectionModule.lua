@@ -197,7 +197,7 @@ function ADCollisionDetectionModule:getDetectedVehicle()
 end
 
 function ADCollisionDetectionModule:checkReverseCollision()
-    local trailers, trailerCount = AutoDrive.getTrailersOf(self.vehicle)
+    local trailers, trailerCount = AutoDrive.getAllUnits(self.vehicle)
     local BackImplements, BackImplementsCount = AutoDrive.getBackImplementsOf(self.vehicle)
     local trailer = nil
     if trailerCount > 0 and self.vehicle.trailer ~= nil and self.vehicle.trailer ~= self.vehicle then

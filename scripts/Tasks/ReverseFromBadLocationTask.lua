@@ -14,7 +14,7 @@ function ReverseFromBadLocationTask:setUp()
     self.startLocation = {x=x, y=y, z=z}
     self.timeOut = AutoDriveTON:new()
     self.frontFreeTimer = AutoDriveTON:new()
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
 end
 

@@ -29,8 +29,7 @@ function ADRecordingModule:start(dual, subPrio)
     end
 
     local rearOffset = 0
-    local _, trailerCount = AutoDrive.getTrailersOf(self.vehicle, false)
-    self.trailerCount = trailerCount
+    _, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     if self.trailerCount > 0 then
         rearOffset = -6
     end

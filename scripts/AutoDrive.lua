@@ -141,6 +141,18 @@ AutoDrive.colors = {
 
 AutoDrive.currentColors = {} -- this will hold the current colors, derived from default colors above, overwritten by local settings
 
+AutoDrive.fuelFillTypes = {
+    "DIESEL",
+    "DEF",
+    "AIR",
+    "ELECTRICCHARGE",
+    "METHANE"
+}
+
+AutoDrive.nonFillableFillTypes = {
+    "AIR" -- this fillType should not be transported
+}
+
 function AutoDrive:onAllModsLoaded()
 	-- ADThirdPartyModsManager:load()
 end

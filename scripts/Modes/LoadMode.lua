@@ -17,7 +17,7 @@ end
 function LoadMode:reset()
     self.state = LoadMode.STATE_INIT
     self.activeTask = nil
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
 end
 
@@ -90,9 +90,7 @@ function LoadMode:getNextTask()
 		end
 	end
 
-    local fillLevel, leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
-    local maxCapacity = fillLevel + leftCapacity
-    local filledToUnload = (leftCapacity <= (maxCapacity * (1 - AutoDrive.getSetting("unloadFillLevel", self.vehicle) + 0.001)))
+    local _, _, filledToUnload = AutoDrive.getAllFillLevels(self.trailers)
 
 	if self.state == LoadMode.STATE_INIT then
 		AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "LoadMode:getNextTask STATE_INIT self.state %s distanceToStart %s", tostring(self.state), tostring(distanceToStart))

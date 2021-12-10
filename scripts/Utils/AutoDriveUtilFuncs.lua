@@ -18,7 +18,7 @@ function AutoDrive.isTrailerInCrop(vehicle, enlargeDetectionArea)
         widthFactor = 1.5
     end
 
-    local trailers, trailerCount = AutoDrive.getTrailersOf(vehicle)
+    local trailers, trailerCount = AutoDrive.getAllUnits(vehicle)
     local trailer = trailers[trailerCount]
     local inCrop = false
     if trailer ~= nil then
@@ -217,7 +217,7 @@ function AutoDrive.isVehicleInBunkerSiloArea(vehicle)
                 return true
             end
 
-            local trailers, trailerCount = AutoDrive.getTrailersOf(vehicle)
+            local trailers, trailerCount = AutoDrive.getAllUnits(vehicle)
             if trailerCount > 0 then
                 for _, trailer in pairs(trailers) do
                     if AutoDrive.isTrailerInBunkerSiloArea(trailer, trigger) then

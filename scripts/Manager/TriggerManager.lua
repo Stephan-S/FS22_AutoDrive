@@ -14,6 +14,8 @@ end
 function ADTriggerManager:update(dt)
 end
 
+-- not used
+--[[
 function ADTriggerManager.checkForTriggerProximity(vehicle, distanceToTarget)
     local shouldLoad = vehicle.ad.stateModule:getCurrentMode():shouldLoadOnTrigger()
     local shouldUnload = vehicle.ad.stateModule:getCurrentMode():shouldUnloadAtTrigger()
@@ -22,7 +24,7 @@ function ADTriggerManager.checkForTriggerProximity(vehicle, distanceToTarget)
     end
 
     local x, y, z = getWorldTranslation(vehicle.components[1].node)
-    local allFillables, _ = AutoDrive.getTrailersOf(vehicle, false)
+    local allFillables, _ = AutoDrive.getAllUnits(vehicle)
 
     local totalMass = vehicle:getTotalMass(false)
     local massFactor = math.max(1, math.min(3, (totalMass + 20) / 30))
@@ -81,6 +83,7 @@ function ADTriggerManager.checkForTriggerProximity(vehicle, distanceToTarget)
 
     return false
 end
+]]
 
 function ADTriggerManager.loadAllTriggers()
     ADTriggerManager.searchedForTriggers = true

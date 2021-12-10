@@ -568,11 +568,18 @@ function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointD
         end
     else
         local supportedFillTypes = {}
-        for _, trailer in pairs(AutoDrive.getTrailersOf(self, false)) do
+        local trailers, trailerCount = AutoDrive.getAllUnits(self)
+        for index, trailer in ipairs(trailers) do
             if trailer.getFillUnits ~= nil then
                 for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
                     if trailer.getFillUnitSupportedFillTypes ~= nil then
                         for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
+                            if index == 1 then -- hide fuel types for 1st vehicle
+                                local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
+                                if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
+                                    supported = false
+                                end
+                            end
                             if supported then
                                 table.insert(supportedFillTypes, fillType)
                             end
@@ -613,7 +620,7 @@ function AutoDrive:onPreDetachImplement(implement)
 end
 
 function AutoDrive:onEnterVehicle()
-    local trailers, trailerCount = AutoDrive.getTrailersOf(self, false)
+    local trailers, trailerCount = AutoDrive.getAllUnits(self)
     -- AutoDrive.debugMsg(object, "AutoDrive:onEnterVehicle trailerCount %s", tostring(trailerCount))
     if trailerCount > 0 then
         -- AutoLoad

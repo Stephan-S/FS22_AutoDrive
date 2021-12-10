@@ -29,7 +29,7 @@ function ADStateModule:reset()
     self.secondMarker = ADGraphManager:getMapMarkerById(1)
     self.creationMode = ADStateModule.CREATE_OFF
 
-    self.fillType = 2
+    self.fillType = 1
     self.loopCounter = 0
     self.loopsDone = 0
 

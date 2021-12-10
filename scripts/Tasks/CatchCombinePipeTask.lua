@@ -40,7 +40,7 @@ function CatchCombinePipeTask:setUp()
     if angleToCombineHeading < 35 and angleToCombine < 90 and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < 60 then
         self:finished()
     end
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, true)
 end
 
@@ -167,8 +167,9 @@ function CatchCombinePipeTask:startNewPathFinding()
 
     -- Only chase the rear on low fill levels of the combine. This should prevent getting into unneccessarily tight spots for the final approach to the pipe.
     -- Also for small fields, there is often no purpose in chasing so far behind the combine as it will already start a turn soon
-    local cfillLevel, cleftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(self.combine)
-    local cFillRatio = cfillLevel / (cfillLevel + cleftCapacity)
+
+    local cfillLevel, cfillCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(self.combine)
+    local cFillRatio = cfillLevel / cfillCapacity
 
     if cFillRatio > 0.91 then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:startNewPathFinding() - Combine is almost full - dont chase for active unloading anymore")

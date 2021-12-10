@@ -34,7 +34,7 @@ function LoadAtDestinationTask:setUp()
     else
         self.loadRetryTimer:timer(false)      -- clear timer
     end
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:setUp end self.state %s", tostring(self.state))
 end
@@ -93,11 +93,8 @@ function LoadAtDestinationTask:update(dt)
 
                             if not self.vehicle.ad.trailerModule:isActiveAtTrigger() then
                                 -- check fill levels only if not still filling something
-                                local fillLevel, leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
-                                local maxCapacity = fillLevel + leftCapacity
-                                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update leftCapacity %s maxCapacity %s", tostring(leftCapacity), tostring(maxCapacity))
-
-                                if (leftCapacity <= (maxCapacity * (1 - AutoDrive.getSetting("unloadFillLevel", self.vehicle) + 0.001))) then
+                                local _, _, isFull = AutoDrive.getAllFillLevels(self.trailers)
+                                if isFull then
                                     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update leftCapacity <= -> self:finished")
                                     self:finished()
                                 end

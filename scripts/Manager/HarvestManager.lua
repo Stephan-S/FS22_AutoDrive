@@ -129,9 +129,11 @@ function ADHarvestManager:update(dt)
                     if AutoDrive.getSetting("callSecondUnloader", harvester) then
                         local unloader = self:getAssignedUnloader(harvester)
                         if unloader.ad.modes[AutoDrive.MODE_UNLOAD]:getFollowingUnloader() == nil then
-                            local trailers, _ = AutoDrive.getTrailersOf(unloader, false)
-                            local fillLevel, leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(trailers)
-                            local maxCapacity = fillLevel + leftCapacity
+                            local trailers, _ = AutoDrive.getAllUnits(unloader)
+
+                            local fillLevel, _, _, fillFreeCapacity = AutoDrive.getAllNonFuelFillLevels(trailers)
+                            local maxCapacity = fillLevel + fillFreeCapacity
+
                             if fillLevel >= (maxCapacity * AutoDrive.getSetting("preCallLevel", harvester)) then
                                 local closestUnloader = self:getClosestIdleUnloader(harvester)
                                 if closestUnloader ~= nil then
@@ -203,8 +205,7 @@ end
 
 function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
     local ret = false
-    local fillLevel, leftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(harvester)
-    local maxCapacity = fillLevel + leftCapacity
+    local _, maxCapacity, _, leftCapacity = AutoDrive.getObjectNonFuelFillLevels(harvester)
 
     local cpIsCalling = false
     if harvester.cp and harvester.cp.driver and harvester.cp.driver.isWaitingForUnload then
@@ -219,10 +220,10 @@ function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
                         -- (maxCapacity > 0 and leftCapacity < 1.0)
                     or 
                         cpIsCalling
-                    ) 
+                    )
                 and
                 -- (pipeOut or ignorePipe) 
-                (pipeOut or (ignorePipe == true)) 
+                (pipeOut or (ignorePipe == true))
             )
             and 
             harvester.ad.noMovementTimer.elapsedTime > 5000
@@ -234,9 +235,8 @@ function ADHarvestManager.isHarvesterActive(harvester)
     if AutoDrive.getIsBufferCombine(harvester) then
         return true
     else
-        local fillLevel, leftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(harvester)
-        local maxCapacity = fillLevel + leftCapacity
-        local fillPercent = (fillLevel / maxCapacity)
+        local fillLevel, fillCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(harvester)
+        local fillPercent = (fillLevel / fillCapacity)
         local reachedPreCallLevel = fillPercent >= AutoDrive.getSetting("preCallLevel", harvester)
         local isAlmostFull = fillPercent >= ADHarvestManager.MAX_PREDRIVE_LEVEL
                

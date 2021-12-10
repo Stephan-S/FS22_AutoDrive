@@ -44,7 +44,7 @@ function FollowCombineTask:setUp()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "Setting up FollowCombineTask")
     self.lastChaseSide = self.chaseSide
     self.combinePreCallLevel = AutoDrive.getSetting("preCallLevel", self.combine)
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, true)
 end
 
@@ -249,14 +249,15 @@ function FollowCombineTask:updateStates(dt)
     if (g_updateLoopIndex  % AutoDrive.PERF_FRAMES == 0) or self.updateStatesFirst ~= true then
         self.updateStatesFirst = true
 
-        self.cfillLevel, self.cleftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(self.combine)
-        self.cmaxCapacity = self.cfillLevel + self.cleftCapacity
-        self.combineFillPercent = (self.cfillLevel / self.cmaxCapacity) * 100
+        local cmaxCapacity = 0
+        local cfillLevel = 0
+        cfillLevel, cmaxCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(self.combine)
+        self.combineFillPercent = (cfillLevel / cmaxCapacity) * 100
 
-        self.fillLevel, self.leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
-        local maxCapacity = self.fillLevel + self.leftCapacity
-        self.filledToUnload = (self.leftCapacity <= (maxCapacity * (1 - AutoDrive.getSetting("unloadFillLevel", self.vehicle) + 0.001)))
-        self.filled = self.leftCapacity <= 1
+        local fillFreeCapacity = 0
+        _, _, self.filledToUnload, fillFreeCapacity = AutoDrive.getAllNonFuelFillLevels(self.trailers)
+        self.filled = fillFreeCapacity <= 1
+        
         self.combinePreCallLevel = AutoDrive.getSetting("preCallLevel", self.combine)
     end
     self:shouldWaitForChasePos(dt)

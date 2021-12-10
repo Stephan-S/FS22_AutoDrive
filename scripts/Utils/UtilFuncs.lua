@@ -969,15 +969,24 @@ function AutoDrive:onActivateObject(superFunc, vehicle)
 end
 
 function AutoDrive:onFillTypeSelection(fillType)
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... fillType %s self.validFillableObject %s self.isLoading %s", tostring(fillType), tostring(self.validFillableObject), tostring(self.isLoading))
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... fillType %s self.validFillableObject %s self.currentFillableObject %s self.isLoading %s", tostring(fillType), tostring(self.validFillableObject), tostring(self.currentFillableObject), tostring(self.isLoading))
 	if not self.isLoading then
         if fillType ~= nil and fillType ~= FillType.UNKNOWN then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.currentFillableObject == nil")
             for _, fillableObject in pairs(self.fillableObjects) do --copied from gdn getIsActivatable to get a valid Fillable Object even without entering vehicle (needed for refuel first time)
-                if fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
+
+
+                local fillFreeCapacity = 0
+                if fillableObject.object.getFillUnitFreeCapacity ~= nil then
+                    fillFreeCapacity = fillableObject.object:getFillUnitFreeCapacity(fillableObject.fillUnitIndex)
+                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection fillFreeCapacity %s", tostring(fillFreeCapacity))
+                end
+
+                if fillFreeCapacity > 0 and fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
                     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
                     self.currentFillableObject = fillableObject.object
                     self.currentFillableFillUnitIndex = fillableObject.fillUnitIndex
+                    break
                 end
             end
             local currentFillableObject = self.currentFillableObject
@@ -987,6 +996,7 @@ function AutoDrive:onFillTypeSelection(fillType)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection setIsLoading")
                 self:setIsLoading(true, currentFillableObject, fillUnitIndex, fillType)
             end
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.isLoading %s", tostring(self.isLoading))
         end
     end
 end
