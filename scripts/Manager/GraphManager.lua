@@ -1382,3 +1382,26 @@ function ADGraphManager:removeNodesWithFlag(flagToRemove)
 		ADGraphManager:removeWayPoint(pointsToDelete[i])
 	end
 end
+
+function ADGraphManager:createSplineConnection(start, waypoints, target, sendEvent)
+	if sendEvent == nil or sendEvent == true then
+		-- Propagating connection toggling all over the network
+		CreateSplineConnectionEvent.sendEvent(start, waypoints, target)
+	else
+		local lastId = start
+		local lastHeight = ADGraphManager:getWayPointById(start).y
+		for wpId, wp in pairs(waypoints) do
+			if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+				wp.y = lastHeight
+			end
+			self:createWayPoint(wp.x, wp.y, wp.z, sendEvent)
+			local createdId = self:getWayPointsCount()
+			self:toggleConnectionBetween(ADGraphManager:getWayPointById(lastId), ADGraphManager:getWayPointById(createdId), false, false)
+			lastId = createdId
+			lastHeight = wp.y
+		end
+
+		local wp = self:getWayPointById(lastId)
+		self:toggleConnectionBetween(wp, self:getWayPointById(target), false, false)
+	end
+end

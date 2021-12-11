@@ -52,6 +52,7 @@ source(Utils.getFilename("scripts/Events/Graph/RecordWayPointEvent.lua", g_curre
 source(Utils.getFilename("scripts/Events/Graph/MoveWayPointEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/Graph/RoutesUploadEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/Graph/SetConnectionEvent.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Events/Graph/CreateSplineConnectionEvent.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Utils/AutoDriveTON.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Utils/TrailerUtil.lua", g_currentModDirectory))
