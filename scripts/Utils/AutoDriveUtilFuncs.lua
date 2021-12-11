@@ -114,29 +114,26 @@ end
 
 -- return fillType to refuel or nil if no refuel required
 --[[
-ignoreFillLevel:
-- only useful for diesel and electricCharge - def is included in most cases with diesel
-- how to decide to pick diesel or def?
+ignoreFillLevel: if true the fuel type is captured of level < 90%
 ]]
-function AutoDrive.getRequiredRefuel(vehicle, ignoreFillLevel)
-    local spec = vehicle.spec_motorized
-    local ret = 0
+function AutoDrive.getRequiredRefuels(vehicle, ignoreFillLevel)
+    local ret = {}
+    local minFillLevel = 0.90   -- to prevent cycles between different fuel fillTypes we take 90% as full level
+    if vehicle ~= nil then
+        local spec = vehicle.spec_motorized
+        if spec ~= nil and spec.consumersByFillTypeName ~= nil then
 
-    if spec ~= nil and spec.consumersByFillTypeName ~= nil then
-        if spec.consumersByFillTypeName.DIESEL ~= nil and spec.consumersByFillTypeName.DIESEL.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.DIESEL.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
-            ret = g_fillTypeManager:getFillTypeIndexByName('DIESEL')
-        end
-        if spec.consumersByFillTypeName.METHANE ~= nil and spec.consumersByFillTypeName.METHANE.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.METHANE.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
-            ret = g_fillTypeManager:getFillTypeIndexByName('METHANE')
-        end
-        if spec.consumersByFillTypeName.DEF ~= nil and spec.consumersByFillTypeName.DEF.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.DEF.fillUnitIndex) < AutoDrive.REFUEL_LEVEL) then
-            ret = g_fillTypeManager:getFillTypeIndexByName('DEF')
-        end
-        if spec.consumersByFillTypeName.ELECTRICCHARGE ~= nil and spec.consumersByFillTypeName.ELECTRICCHARGE.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.ELECTRICCHARGE.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
-            ret = g_fillTypeManager:getFillTypeIndexByName('ELECTRICCHARGE')
+            for fillTypeName, consumer in pairs(spec.consumersByFillTypeName) do
+                local currentFillLevelPercentage = vehicle:getFillUnitFillLevelPercentage(consumer.fillUnitIndex)
+                local needFuel = (currentFillLevelPercentage < AutoDrive.REFUEL_LEVEL or (ignoreFillLevel and (currentFillLevelPercentage < minFillLevel)))
+                if needFuel then
+                    if not table.contains(AutoDrive.nonFillableFillTypes, fillTypeName) then
+                        table.insert(ret, consumer.fillType)
+                    end
+                end
+            end
         end
     end
-
     return ret
 end
 

@@ -14,6 +14,7 @@ function DriveToMode:reset()
 end
 
 function DriveToMode:start()
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "DriveToMode:start self.vehicle.ad.onRouteToRefuel %s", tostring(self.vehicle.ad.onRouteToRefuel))
     if not self.vehicle.ad.stateModule:isActive() then
         self.vehicle:startAutoDrive()
     end
@@ -24,21 +25,11 @@ function DriveToMode:start()
 
     self:reset()
     self.destinationID = self.vehicle.ad.stateModule:getFirstMarker().id
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "DriveToMode:start self.destinationID %s", tostring(self.destinationID))
 
-    if self.vehicle.ad.onRouteToRefuel then
-        local refuelDestinationMarkerID = ADTriggerManager.getClosestRefuelDestination(self.vehicle)
-        if refuelDestinationMarkerID ~= nil then
-            self.driveToDestinationTask = RefuelTask:new(self.vehicle, ADGraphManager:getMapMarkerById(refuelDestinationMarkerID).id)
-        else
-            self.vehicle.ad.isStoppingWithError = true
-            self.vehicle:stopAutoDrive()
-            local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(self.vehicle.ad.stateModule:getRefuelFillType()).title
-            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, self.vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
-        end
-        self.vehicle.ad.onRouteToRefuel = false
-    else
-        self.driveToDestinationTask = DriveToDestinationTask:new(self.vehicle, self.destinationID)
-    end
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "DriveToMode:start add DriveToDestinationTask")
+    self.driveToDestinationTask = DriveToDestinationTask:new(self.vehicle, self.destinationID)
+
     self.vehicle.ad.taskModule:addTask(self.driveToDestinationTask)
 end
 

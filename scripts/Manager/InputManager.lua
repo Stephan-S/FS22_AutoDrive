@@ -491,17 +491,10 @@ function ADInputManager:input_bunkerUnloadType(vehicle)
 end
 
 function ADInputManager:input_refuelVehicle(vehicle)
-    -- make sure we know which refuel type to check for   
-    local refuelFillType = AutoDrive.getRequiredRefuel(vehicle, true)
-    if refuelFillType > 0 then
-        if vehicle.ad.stateModule:getRefuelFillType() ~= refuelFillType then
-            vehicle.ad.stateModule:setRefuelFillType(refuelFillType)
-        end
-    end
-
-    local refuelDestination = ADTriggerManager.getClosestRefuelDestination(vehicle)
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADInputManager:input_refuelVehicle ")
+    local refuelDestination = ADTriggerManager.getClosestRefuelDestination(vehicle, true)
     if refuelDestination ~= nil and refuelDestination >= 1 then
-        vehicle.ad.stateModule:setFirstMarker(refuelDestination)
+        -- vehicle.ad.stateModule:setFirstMarker(refuelDestination)
         vehicle.ad.stateModule:removeCPCallback()
         if vehicle.ad.stateModule:isActive() then
             self:input_start_stop(vehicle) --disable if already active
@@ -510,7 +503,6 @@ function ADInputManager:input_refuelVehicle(vehicle)
         vehicle.ad.onRouteToRefuel = true
         self:input_start_stop(vehicle)
     else       
-        local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(vehicle.ad.stateModule:getRefuelFillType()).title
-        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
+        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; ", 5000, vehicle.ad.stateModule:getName())
     end
 end

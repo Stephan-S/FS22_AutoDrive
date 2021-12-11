@@ -143,14 +143,20 @@ AutoDrive.currentColors = {} -- this will hold the current colors, derived from 
 
 AutoDrive.fuelFillTypes = {
     "DIESEL",
-    "DEF",
-    "AIR",
+    "METHANE",
     "ELECTRICCHARGE",
-    "METHANE"
+    "DEF",
+    "AIR"
 }
 
 AutoDrive.nonFillableFillTypes = {
     "AIR" -- this fillType should not be transported
+}
+
+AutoDrive.seedFillTypes = {
+    'SEEDS',
+    'FERTILIZER',
+    'LIQUIDFERTILIZER'
 }
 
 function AutoDrive:onAllModsLoaded()

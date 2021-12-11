@@ -223,12 +223,13 @@ function ADTriggerManager.getLoadTriggers()
     return ADTriggerManager.siloTriggers
 end
 
--- returns only suitable fuel triggers according to used fuel type
-function ADTriggerManager.getRefuelTriggers(vehicle)
-    local refuelTriggers = {}
-    local fillType = vehicle.ad.stateModule:getRefuelFillType()
+-- returns only suitable fuel triggers according to used fuel types
+function ADTriggerManager.getRefuelTriggers(vehicle, ignoreFillLevel)
 
-    if fillType > 0 then
+
+    local refuelTriggers = {}
+    local refuelFillTypes = AutoDrive.getRequiredRefuels(vehicle, ignoreFillLevel)
+    if #refuelFillTypes > 0 then
 
         for _, trigger in pairs(ADTriggerManager.getLoadTriggers()) do
             --loadTriggers
@@ -249,10 +250,15 @@ function ADTriggerManager.getRefuelTriggers(vehicle)
                     end
                 end
             end
-            local hasCapacity = (fillLevels[fillType] ~= nil and fillLevels[fillType] > 0) or (gcFillLevels[fillType] ~= nil and gcFillLevels[fillType] > 0)
 
-            if hasCapacity then
-                table.insert(refuelTriggers, trigger)
+            if #refuelFillTypes > 0 then
+                for _, refuelFillType in pairs(refuelFillTypes) do
+                    local hasCapacity = (fillLevels[refuelFillType] ~= nil and fillLevels[refuelFillType] > 0) or (gcFillLevels[refuelFillType] ~= nil and gcFillLevels[refuelFillType] > 0)
+
+                    if hasCapacity and not table.contains(refuelTriggers, trigger) then
+                        table.insert(refuelTriggers, trigger)
+                    end
+                end
             end
         end
     end
@@ -260,8 +266,8 @@ function ADTriggerManager.getRefuelTriggers(vehicle)
     return refuelTriggers
 end
 
-function ADTriggerManager.getClosestRefuelTrigger(vehicle)
-    local refuelTriggers = ADTriggerManager.getRefuelTriggers(vehicle)
+function ADTriggerManager.getClosestRefuelTrigger(vehicle, ignoreFillLevel)
+    local refuelTriggers = ADTriggerManager.getRefuelTriggers(vehicle, ignoreFillLevel)
     local x, _, z = getWorldTranslation(vehicle.components[1].node)
 
     local closestRefuelTrigger = nil
@@ -280,10 +286,10 @@ function ADTriggerManager.getClosestRefuelTrigger(vehicle)
     return closestRefuelTrigger
 end
 
-function ADTriggerManager.getRefuelDestinations(vehicle)
+function ADTriggerManager.getRefuelDestinations(vehicle, ignoreFillLevel)
     local refuelDestinations = {}
 
-    local refuelTriggers = ADTriggerManager.getRefuelTriggers(vehicle)
+    local refuelTriggers = ADTriggerManager.getRefuelTriggers(vehicle, ignoreFillLevel)
 
     for mapMarkerID, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
         for _, refuelTrigger in pairs(refuelTriggers) do
@@ -298,8 +304,8 @@ function ADTriggerManager.getRefuelDestinations(vehicle)
     return refuelDestinations
 end
 
-function ADTriggerManager.getClosestRefuelDestination(vehicle)
-    local refuelDestinations = ADTriggerManager.getRefuelDestinations(vehicle)
+function ADTriggerManager.getClosestRefuelDestination(vehicle, ignoreFillLevel)
+    local refuelDestinations = ADTriggerManager.getRefuelDestinations(vehicle, ignoreFillLevel)
 
     local x, _, z = getWorldTranslation(vehicle.components[1].node)
     local closestRefuelDestination = nil

@@ -1049,7 +1049,10 @@ function AutoDrive:stopAutoDrive()
             end
             
             self.ad.trailerModule:handleTrailerReversing(false)
-            self.ad.onRouteToRefuel = false
+            if self.ad.isStoppingWithError == true then
+                self.ad.onRouteToRefuel = false
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
+            end
         end
     else
         Logging.devError("AutoDrive:stopAutoDrive() must be called only on the server.")
