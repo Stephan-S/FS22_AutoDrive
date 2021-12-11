@@ -401,8 +401,8 @@ function AutoDrive:deleteMap()
 	if AutoDrive.mapHotspotsBuffer ~= nil then
 		-- Removing and deleting all map hotspots
 		for _, mh in pairs(AutoDrive.mapHotspotsBuffer) do
-			g_currentMission:removeMapHotspot(mh)
-			mh:delete()
+			-- g_currentMission:removeMapHotspot(mh)
+			-- mh:delete()
 		end
 	end
 	AutoDrive.mapHotspotsBuffer = {}
