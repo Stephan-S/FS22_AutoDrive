@@ -510,10 +510,10 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 
 				-- waypoint at mouse position
                 if button == 1 and isUp
-                    --and not AutoDrive.leftLSHIFTmodifierKeyPressed
+                    and not AutoDrive.leftLSHIFTmodifierKeyPressed
                     and not AutoDrive.leftCTRLmodifierKeyPressed
                     and not AutoDrive.leftALTmodifierKeyPressed 
-                    -- and AutoDrive.rightSHIFTmodifierKeyPressed   -- see below !!!
+                    and AutoDrive.rightSHIFTmodifierKeyPressed   -- see below !!!
                     then
 					-- left mouse button to select point / connect to already selected point
 					if vehicle.ad.selectedNodeId ~= nil then
@@ -528,17 +528,14 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 										if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
 											wp.y = lastHeight
 										end			
-										ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, AutoDrive.rightSHIFTmodifierKeyPressed, lastId, 0)
-										if AutoDrive.leftLSHIFTmodifierKeyPressed then
-											ADGraphManager:toggleWayPointAsSubPrio(ADGraphManager:getWayPointsCount())
-										end
+										ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, 0)
 										lastId = ADGraphManager:getWayPointsCount()
 										lastHeight = wp.y
 									end
 								end
 
 								local wp = ADGraphManager:getWayPointById(lastId)
-								ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
+								ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), false)
 							else
 								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
 								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
