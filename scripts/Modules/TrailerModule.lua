@@ -233,39 +233,37 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
 
     for _, trailer in pairs(self.trailers) do
         if #trailer.components > 1 then
-            if #trailer.componentJoints < 2 then
-                return;
-            end;
-
-            if trailer.ad == nil then
-                trailer.ad = {}
-                trailer.ad.lastBlockedState = false
-                trailer.ad.targetBlockedState = false
-            end
-
-            trailer.ad.targetBlockedState = blockTrailers
-
-            if trailer.ad.rotLimitBackup == nil then
-                trailer.ad.rotLimitBackup = {};
-                            
-                if trailer.componentJoints[1].rotLimit == nil or
-                trailer.componentJoints[1].rotLimit[2] == nil then
-                    trailer.ad.rotLimitBackup[1] = 0;
-                    trailer.ad.rotLimitBackup[2] = 0;
-                else
-                    trailer.ad.rotLimitBackup[1] = trailer.componentJoints[1].rotLimit[1];
-                    trailer.ad.rotLimitBackup[2] = trailer.componentJoints[1].rotLimit[2];
-                end;
-            else
-                if trailer.ad.lastBlockedState ~= trailer.ad.targetBlockedState then
-                    if trailer.ad.targetBlockedState then
-                        trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, 0, 0);
+            if #trailer.componentJoints >= 2 then
+                if trailer.ad == nil then
+                    trailer.ad = {}
+                    trailer.ad.lastBlockedState = false
+                    trailer.ad.targetBlockedState = false
+                end
+    
+                trailer.ad.targetBlockedState = blockTrailers
+    
+                if trailer.ad.rotLimitBackup == nil then
+                    trailer.ad.rotLimitBackup = {}
+                                
+                    if trailer.componentJoints[1].rotLimit == nil or
+                    trailer.componentJoints[1].rotLimit[2] == nil then
+                        trailer.ad.rotLimitBackup[1] = 0
+                        trailer.ad.rotLimitBackup[2] = 0
                     else
-                        trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, -trailer.ad.rotLimitBackup[2], trailer.ad.rotLimitBackup[2]);
-                    end;
-                    trailer.ad.lastBlockedState = trailer.ad.targetBlockedState;
-                end;
-            end
+                        trailer.ad.rotLimitBackup[1] = trailer.componentJoints[1].rotLimit[1]
+                        trailer.ad.rotLimitBackup[2] = trailer.componentJoints[1].rotLimit[2]
+                    end
+                else
+                    if trailer.ad.lastBlockedState ~= trailer.ad.targetBlockedState then
+                        if trailer.ad.targetBlockedState then
+                            trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, 0, 0)
+                        else
+                            trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, -trailer.ad.rotLimitBackup[2], trailer.ad.rotLimitBackup[2])
+                        end
+                        trailer.ad.lastBlockedState = trailer.ad.targetBlockedState;
+                    end
+                end
+            end            
         end
     end    
 end
