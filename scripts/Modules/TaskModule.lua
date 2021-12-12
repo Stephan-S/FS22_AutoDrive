@@ -106,6 +106,7 @@ function ADTaskModule:hasToRefuel()
     end
     local refuelFillTypes = AutoDrive.getRequiredRefuels(self.vehicle, self.vehicle.ad.onRouteToRefuel)
     if #refuelFillTypes > 0 then
+        self.vehicle.ad.stateModule:setRefuelFillType(refuelFillTypes[1])
         return true
     else
         return false
@@ -121,7 +122,9 @@ function ADTaskModule:RefuelIfNeeded()
         else
             self.vehicle.ad.isStoppingWithError = true
             self.vehicle:stopAutoDrive()
-            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; ", 5000, self.vehicle.ad.stateModule:getName())
+            local fillType = self.vehicle.ad.stateModule:getRefuelFillType()
+            local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(fillType).title
+            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, self.vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
         end
     end
 end
