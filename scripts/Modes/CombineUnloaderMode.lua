@@ -495,9 +495,8 @@ function CombineUnloaderMode:getTargetTrailer()
     local trailerLeftCapacity = 0
     -- Get the next trailer that hasn't reached fill level yet
     for trailerIndex, trailer in ipairs(self.trailers) do
-
-        trailerLeftCapacity = AutoDrive.getFreeCapacity(targetTrailer) -- take into account mass setting feature
-        
+        local fillLevel, fillCapacity, filledToUnload, fillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(targetTrailer)
+        trailerLeftCapacity = fillFreeCapacity
         if (trailerLeftCapacity < 1) and currentTrailer < self.trailerCount then
             currentTrailer = trailerIndex
             targetTrailer = trailer
