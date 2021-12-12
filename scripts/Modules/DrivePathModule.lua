@@ -647,9 +647,6 @@ function ADDrivePathModule:checkActiveAttributesSet(dt)
         self.vehicle.spec_motorized.stopMotorOnLeave = false
         self.vehicle.spec_enterable.disableCharacterOnLeave = false
 
-        if self.vehicle.steeringEnabled == true then
-            self.vehicle.steeringEnabled = false
-        end
         if self.vehicle.spec_aiVehicle ~= nil and self.vehicle.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
             self.vehicle.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000
         end

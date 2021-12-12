@@ -1064,7 +1064,6 @@ function AutoDrive:onStartAutoDrive()
     self.spec_motorized.stopMotorOnLeave = false
     self.spec_enterable.disableCharacterOnLeave = false
     self.spec_aiVehicle.isActive = true
-    self.steeringEnabled = false
 
     self.ad.isActive = true
 
@@ -1136,9 +1135,9 @@ end
 
 function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
     if not hasCallbacks then
-        if self.raiseAIEvent ~= nil and not isStartingAIVE then
-            self:raiseAIEvent("onAIEnd", "onAIImplementEnd")
-        end
+        --if self.raiseAIEvent ~= nil and not isStartingAIVE then
+            --self:raiseAIEvent("onAIFieldWorkerEnd", "onAIImplementEnd")
+        --end
 
         self.ad.isActive = false
 
@@ -1150,18 +1149,24 @@ function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
             g_helperManager:releaseHelper(self.spec_aiVehicle.currentHelper)
         end
         self.spec_aiVehicle.currentHelper = nil
+        if self.spec_aiJobVehicle ~= nil then
+            self.spec_aiJobVehicle.currentHelper = nil
+        end
 
         if self.restoreVehicleCharacter ~= nil then
             self:restoreVehicleCharacter()
         end
 
-        if self.steeringEnabled == false then
-            self.steeringEnabled = true
-        end
-
         if self.spec_motorized.motor ~= nil then
             self.spec_motorized.motor:setGearShiftMode(self.spec_motorized.gearShiftMode)
         end
+    end
+
+    -- In case we get this event before the status has been updated with the readStream
+    if self.ad.stateModule:isActive() then
+        -- Set this to false without raising flags. The update should already be on the wire
+        -- Otherwise this following requestActionEventUpdate will not allow user input since the AI is still active
+        self.ad.stateModule.active = false
     end
 
     self:requestActionEventUpdate()
