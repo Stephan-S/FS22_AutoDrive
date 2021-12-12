@@ -472,15 +472,17 @@ end
 
 function AutoDrive:update(dt)	
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_NONE and ADGraphManager:getWayPointsCount() == 0 then
-        AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_OPEN
         if g_server ~= nil and g_dedicatedServer == nil then
             -- open dialog
-            AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_OPEN")
-            AutoDrive.onOpenScanConfirmation()
-            return
+			if g_gui.currentGui == nil then
+				AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_OPEN")
+				AutoDrive.onOpenScanConfirmation()
+				AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_OPEN
+			end
+			return
         else
-            AutoDrive.debugMsg(nil, "[AD] AutoDrive:update dedi -> SCAN_DIALOG_RESULT_YES")
-            AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_YES
+            AutoDrive.debugMsg(nil, "[AD] AutoDrive:update dedi -> SCAN_DIALOG_RESULT_NO")
+            AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_NO
         end
     end
 
