@@ -455,7 +455,7 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 		end
 	end
 
-	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 then
+	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
 		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and AutoDrive.Hud.showHud == true then
 			AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 		end
@@ -463,7 +463,7 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 		ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 
-	if button > 0 and isDown then
+	if button > 0 and button <= 3 and isDown then
 		AutoDrive.lastButtonDown = button
 	elseif button > 0 and isUp and AutoDrive.lastButtonDown == button then
 		AutoDrive.lastButtonDown = nil
