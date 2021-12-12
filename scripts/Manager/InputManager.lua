@@ -502,7 +502,12 @@ function ADInputManager:input_refuelVehicle(vehicle)
         vehicle.ad.stateModule:setMode(AutoDrive.MODE_DRIVETO)
         vehicle.ad.onRouteToRefuel = true
         self:input_start_stop(vehicle)
-    else       
-        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; ", 5000, vehicle.ad.stateModule:getName())
+    else
+        local refuelFillTypes = AutoDrive.getRequiredRefuels(vehicle, true)
+        local refuelFillTypeTitle = ""
+        if #refuelFillTypes > 0 then
+            refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(refuelFillTypes[1]).title
+        end
+        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
     end
 end
