@@ -540,7 +540,11 @@ function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle, maxTrigger
 end
 
 function AutoDrive:checkIfPathTraversedOverPosition(wayPoint, targetPosition, radius, maxSteps)
+    print("AutoDrive:checkIfPathTraversedOverPosition: id: " .. wayPoint.id .. " maxSteps: " .. maxSteps)
     local maxSearchSteps = maxSteps or 30
+    if maxSearchSteps <= 0 then
+        return false
+    end
     local distance = MathUtil.vector2Length(wayPoint.x - targetPosition.x, wayPoint.z - targetPosition.z)
     if distance < radius then
         return true
@@ -555,6 +559,9 @@ end
 
 function AutoDrive:getNodeWithMinDistanceTo(wayPoint, targetPosition, minDistance, maxSteps)
     local maxSearchSteps = maxSteps or 30
+    if maxSearchSteps <= 0 then
+        return nil
+    end
     local distance = MathUtil.vector2Length(wayPoint.x - targetPosition.x, wayPoint.z - targetPosition.z)
     if distance > minDistance then
         return wayPoint
