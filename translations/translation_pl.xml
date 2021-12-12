@@ -175,6 +175,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Podaj nazwę folderu:" />
 		<text name="gui_ad_autoRefuel"							text="Automatyczne tankowanie" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Jedź do miejsca tankowania (blisko triggera z paliwem), kiedy poziom paliwa jest niski." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtr" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Zmień tekst filtrowania celów" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Podaj tekst filtrowania:" />
@@ -360,6 +362,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Oczekiwanie na kombajn" />
 		<text name="AD_task_drive_to_load_point"				text="Przejazd do punktu załadunku" />
 		<text name="AD_task_drive_to_refuel_point"				text="Przejazd do stacji paliw" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Zatrzymanie" />
 		<text name="AD_task_drive_to_unload_point"				text="Przejazd do punktu rozładunku" />
 		<text name="AD_task_wait_for_call"						text="Oczekiwanie na wezwanie" />	

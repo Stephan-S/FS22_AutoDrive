@@ -785,6 +785,17 @@ AutoDrive.settings.autoRefuel = {
     isVehicleSpecific = true
 }
 
+AutoDrive.settings.autoRepair = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_autoRepair",
+    tooltip = "gui_ad_autoRepair_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
 AutoDrive.settings.showMarkersOnMap = {
     values = {false, true},
     texts = {"gui_ad_no", "gui_ad_yes"},

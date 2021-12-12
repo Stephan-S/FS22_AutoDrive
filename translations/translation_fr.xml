@@ -176,6 +176,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Entrez le nom du dossier:" />
 		<text name="gui_ad_autoRefuel"							text="Faire le plein automatiquement" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Lorsque le niveau du réservoir est bas, la station-service la plus proche est automatiquement ajoutée dans les trajets." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtrage" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Changer le filtre de destination" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Entrez le filtre de destination:" />
@@ -363,6 +365,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Attendre le tour de la moissonneuse-batteuse" />
 		<text name="AD_task_drive_to_load_point"				text="Conduire jusqu'au point de chargement" />
 		<text name="AD_task_drive_to_refuel_point"				text="Conduire jusqu'à la station-service" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Arrêter" />
 		<text name="AD_task_drive_to_unload_point"				text="Conduire jusqu'au point de déchargement" />
 		<text name="AD_task_wait_for_call"						text="En attente d'un appel" />	

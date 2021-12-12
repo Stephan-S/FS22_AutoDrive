@@ -176,6 +176,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Ordnernamen eingeben:" />
 		<text name="gui_ad_autoRefuel"							text="Automatisch Auftanken" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Bei einem niedrigen Tanklevel wird automatisch ein Ziel in Tankstellennähe angefahren." />
+		<text name="gui_ad_autoRepair"							text="Automatische Reperatur" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Falls das Fahrzeug oder ein Anbaugerät stark beschädigt ist, automatisch Werkstatt anfahren und reparieren" />
 		<text name="gui_ad_filter"								text="Filter" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Zielfilter ändern" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Zielfilter eingeben:" />
@@ -361,6 +363,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Drescher wenden lassen" />
 		<text name="AD_task_drive_to_load_point"				text="Fahre zu Aufladepunkt" />
 		<text name="AD_task_drive_to_refuel_point"				text="Fahre tanken" />
+		<text name="AD_task_drive_to_repair_point"				text="Fahre zur Werkstatt" />
 		<text name="AD_task_stop_and_disable"					text="Stoppen" />
 		<text name="AD_task_drive_to_unload_point"				text="Fahre zu Abladepunkt" />
 		<text name="AD_task_wait_for_call"						text="Auf Ruf warten" />	

@@ -176,6 +176,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Inserisci nome cartella:" />
 		<text name="gui_ad_autoRefuel"							text="Rifornimento Automatico" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Si dirige verso la destinazione di rifornimento (vicino al punto di rifornimento) quando il livello del carburante è basso." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtro" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Carica un testo filtro per le destinazioni." />
 		<text name="gui_ad_enterDestinationFilterText"			text="Inserisci testo filtro:" />
@@ -361,6 +363,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Attesa svolta della mietitrebbia" />
 		<text name="AD_task_drive_to_load_point"				text="Guida al punto di carico" />
 		<text name="AD_task_drive_to_refuel_point"				text="Guida al punto di rifornimento" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Fermata" />
 		<text name="AD_task_drive_to_unload_point"				text="Guida al punto di scarico" />
 		<text name="AD_task_wait_for_call"						text="Attesa di chiamata" />	

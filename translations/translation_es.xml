@@ -174,6 +174,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Introduce el nombre de la carpeta: " />
 		<text name="gui_ad_autoRefuel"							text="Repostar automáticamente" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Conduce hasta el destino de repostaje (cerca del desencadenante de repostaje) cuando el nivel de combustible sea bajo." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtro" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Cambiar el texto del filtro de destino" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Insertar texto de filtro:" />
@@ -359,6 +361,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Esperando el turno de la cosechadora" />
 		<text name="AD_task_drive_to_load_point"				text="Conduciendo al punto de carga" />
 		<text name="AD_task_drive_to_refuel_point"				text="Conduciendo a la gasolinera" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Deteniendo" />
 		<text name="AD_task_drive_to_unload_point"				text="Conduciendo al punto de descarga" />
 		<text name="AD_task_wait_for_call"						text="Esperando llamada" />	

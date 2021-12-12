@@ -176,6 +176,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Inserir nome da pasta:" />
 		<text name="gui_ad_autoRefuel"							text="Reabastecimento Automático" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Dirija até o destino de reabastecimento (próximo ao gatilho de reabastecimento) quando o nível de combustível estiver baixo." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtro" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Alterar texto do filtro de destino" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Inserir texto do filtro:" />
@@ -361,6 +363,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Aguarde a vez da ceifeira" />
 		<text name="AD_task_drive_to_load_point"				text="Dirija até o ponto de carregamento" />
 		<text name="AD_task_drive_to_refuel_point"				text="Dirija até a estação de reabastecimento" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Para" />
 		<text name="AD_task_drive_to_unload_point"				text="Dirija até o ponto de descarga" />
 		<text name="AD_task_wait_for_call"						text="Aguardar chamada" />

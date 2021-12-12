@@ -2,6 +2,7 @@ ADTriggerManager = {}
 
 ADTriggerManager.tipTriggers = {}
 ADTriggerManager.siloTriggers = {}
+ADTriggerManager.repairTriggers = {}
 
 ADTriggerManager.searchedForTriggers = false
 
@@ -106,6 +107,14 @@ function ADTriggerManager.loadAllTriggers()
                             end
                         end
                     end
+                end
+            end
+        end
+
+        for _, item in pairs(ownedItem.items) do
+            if item.spec_workshop ~= nil and  item.spec_workshop.sellingPoint ~= nil then
+                if item.spec_workshop.sellingPoint.sellTriggerNode ~= nil then
+                    table.insert(ADTriggerManager.repairTriggers, {node=item.spec_workshop.sellingPoint.sellTriggerNode, owner=item.ownerFarmId })
                 end
             end
         end
@@ -221,6 +230,13 @@ function ADTriggerManager.getLoadTriggers()
         ADTriggerManager.loadAllTriggers()
     end
     return ADTriggerManager.siloTriggers
+end
+
+function ADTriggerManager.getRepairTriggers()
+    if not ADTriggerManager.searchedForTriggers then
+        ADTriggerManager.loadAllTriggers()
+    end
+    return ADTriggerManager.repairTriggers
 end
 
 -- returns only suitable fuel triggers according to used fuel types
@@ -572,4 +588,50 @@ function AutoDrive:getNodeWithMinDistanceTo(wayPoint, targetPosition, minDistanc
         end
     end
     return nil
+end
+
+function AutoDrive:getClosestRepairTrigger(vehicle)
+    local x, y, z = getWorldTranslation(vehicle.components[1].node)
+    local distance = math.huge
+    local maxDistance = 15
+    local closest = nil
+
+    -- Check ownerFarmId
+    local repairMarkers = {}
+    local ownedRepairMarkers = {}
+    for _, repairTrigger in pairs(ADTriggerManager.getRepairTriggers()) do
+        triggerX, _, triggerZ = getWorldTranslation(repairTrigger.node)
+
+        --First look for suitable marker
+        for mapMarkerID, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
+            local dis = MathUtil.vector2Length(ADGraphManager:getWayPointById(mapMarker.id).x - triggerX, ADGraphManager:getWayPointById(mapMarker.id).z - triggerZ)
+            if dis < distance and dis < maxDistance then            
+                closest = mapMarker.id
+                distance = dis
+            end
+        end
+
+        if closest ~= nil then
+            table.insert(repairMarkers, {marker=closest, distance=MathUtil.vector2Length(ADGraphManager:getWayPointById(closest).x - x, ADGraphManager:getWayPointById(closest).z - z)})
+            if vehicle.getOwnerFarmId ~= nil and vehicle:getOwnerFarmId() == repairTrigger.owner then
+                table.insert(ownedRepairMarkers, {marker=closest, distance=MathUtil.vector2Length(ADGraphManager:getWayPointById(closest).x - x, ADGraphManager:getWayPointById(closest).z - z)})
+            end
+        end
+
+        distance = math.huge
+        closest = nil
+    end
+    
+    if #ownedRepairMarkers > 0 then 
+        repairMarkers = ownedRepairMarkers
+    end
+
+    for _, repairMarker in pairs(repairMarkers) do
+        if repairMarker.distance < distance then
+            closest = repairMarker
+            distance = repairMarker.distance
+        end
+    end
+
+    return closest
 end

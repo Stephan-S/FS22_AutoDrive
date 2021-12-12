@@ -176,6 +176,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Vytvořit název adresáře:" />
 		<text name="gui_ad_autoRefuel"							text="Automatické dotankování" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Při nízké hladině paliva jeď k benzince (pokud je v blízkosti trigger benzinky)." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtr" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Změna cíle filtrovat text" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Vložte text filtru:" />
@@ -361,6 +363,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Čekám na návrat kombajnu" />
 		<text name="AD_task_drive_to_load_point"				text="Jedu k bodu nakládky" />
 		<text name="AD_task_drive_to_refuel_point"				text="Jedu k benzince" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Zastavení" />
 		<text name="AD_task_drive_to_unload_point"				text="Jedu k bodu vykládky" />
 		<text name="AD_task_wait_for_call"						text="Čekám na zavolání" />	

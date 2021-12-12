@@ -176,6 +176,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Nome da Pasta:" />
 		<text name="gui_ad_autoRefuel"							text="Automatic Refueling" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Drive to refuel destination (close to refuel trigger) when fuel level is low." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtro" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Change destination filter text" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Insert filter text:" />
@@ -359,6 +361,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Wait for combine's turn" />
 		<text name="AD_task_drive_to_load_point"				text="Drive to loading point" />
 		<text name="AD_task_drive_to_refuel_point"				text="Drive to refuel station" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Parando" />
 		<text name="AD_task_drive_to_unload_point"				text="Drive to unload point" />
 		<text name="AD_task_wait_for_call"						text="Waiting for call" />	
