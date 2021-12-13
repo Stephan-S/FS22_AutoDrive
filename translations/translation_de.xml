@@ -233,6 +233,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Wiederherstellen" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Alle Änderungen gehen verloren" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Wirklich ohne Speichern schließen?" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Zu Standard" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Routen Manager" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Routennamen eingeben:" />

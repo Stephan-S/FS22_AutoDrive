@@ -234,6 +234,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Восстановить" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Все изменения будут утеряны" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Вы уверены, что хотите закрыть окно настроек без сохранения?" />
+		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Менеджер маршрутов" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Присвоить название маршруту:" />

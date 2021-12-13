@@ -96,6 +96,11 @@ function AutoDrive.readFromXML(xmlFile)
 				AutoDrive.settings[settingName].current = value
 			end
 		end
+
+		local value = getXMLFloat(xmlFile, "AutoDrive." .. settingName .. "_userDefault")
+		if value ~= nil then
+			AutoDrive.settings[settingName].userDefault = value
+		end
 	end
 
 	for feature, _ in pairs(AutoDrive.experimentalFeatures) do
@@ -286,6 +291,9 @@ function AutoDrive.saveToXML(xmlFile)
 	for settingName, setting in pairs(AutoDrive.settings) do
 		if not setting.isVehicleSpecific then
 			setXMLFloat(xmlFile, "AutoDrive." .. settingName, AutoDrive.settings[settingName].current)
+		end
+		if setting.userDefault ~= nil then
+			setXMLFloat(xmlFile, "AutoDrive." .. settingName .. "_userDefault", AutoDrive.settings[settingName].userDefault)
 		end
 	end
 

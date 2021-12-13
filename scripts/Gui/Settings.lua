@@ -9,7 +9,7 @@ ADSettings = {}
 
 local ADSettings_mt = Class(ADSettings, TabbedMenu)
 
-ADSettings.CONTROLS = {"autoDriveSettings", "autoDriveUserSettings", "autoDriveVehicleSettings", "autoDriveCombineUnloadSettings", "autoDriveDebugSettings", "autoDriveExperimentalFeaturesSettings", "autoDriveEnvironmentSettings"}
+ADSettings.CONTROLS = {"autoDriveVehicleSettings", "autoDriveCombineUnloadSettings", "autoDriveUserSettings", "autoDriveSettings", "autoDriveEnvironmentSettings",  "autoDriveDebugSettings", "autoDriveExperimentalFeaturesSettings"}
 
 --- Page tab UV coordinates for display elements.
 --AD specific iconUVs
@@ -134,7 +134,8 @@ function ADSettings:setupMenuButtonInfo()
         {inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = self:makeSelfCallback(self.onClickBack), showWhenPaused = true},
         {inputAction = InputAction.MENU_ACCEPT, text = g_i18n:getText("button_apply"), callback = self:makeSelfCallback(self.onClickOK), showWhenPaused = true},
         {inputAction = InputAction.MENU_CANCEL, text = g_i18n:getText("button_reset"), callback = self:makeSelfCallback(self.onClickReset), showWhenPaused = true},
-        {inputAction = InputAction.MENU_ACTIVATE, text = g_i18n:getText("gui_ad_restoreButtonText"), callback = self:makeSelfCallback(self.onClickRestore), showWhenPaused = true}
+        {inputAction = InputAction.MENU_ACTIVATE, text = g_i18n:getText("gui_ad_restoreButtonText"), callback = self:makeSelfCallback(self.onClickRestore), showWhenPaused = true},
+        {inputAction = InputAction.MENU_EXTRA_1, text = g_i18n:getText("gui_ad_setDefaultButtonText"), callback = self:makeSelfCallback(self.onClickSetDefault), showWhenPaused = true}
     }
 end
 
@@ -171,6 +172,27 @@ function ADSettings:onClickRestore()
         return
     end
     self:restorePage(page)
+end
+
+function ADSettings:onClickSetDefault()
+    if self:pagesHasChanges() then
+        for settingName, setting in pairs(AutoDrive.settings) do
+            local newSetting = setting
+            if setting.isVehicleSpecific and g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle.ad.settings[settingName] ~= nil then
+                newSetting = g_currentMission.controlledVehicle.ad.settings[settingName]
+                if g_currentMission.controlledVehicle.ad.settings[settingName].new ~= nil then
+                    g_currentMission.controlledVehicle.ad.settings[settingName].current = g_currentMission.controlledVehicle.ad.settings[settingName].new
+                end
+                if (not newSetting.isUserSpecific) and newSetting.new ~= nil and newSetting.new ~= setting.userDefault then
+                    -- We could even print this with our debug system, but since GIANTS itself prints every changed config, for the moment we will do the same
+                    Logging.info('Default setting \'%s\' changed from "%s" to "%s"', settingName, setting.values[setting.userDefault], setting.values[newSetting.new])
+                    setting.userDefault = newSetting.new
+                end
+            end            
+        end
+
+        AutoDriveUpdateSettingsEvent.sendEvent(g_currentMission.controlledVehicle)
+    end
 end
 
 function ADSettings:applySettings()
@@ -225,11 +247,16 @@ function ADSettings:restorePage(page)
     for settingName, _ in pairs(page.settingElements) do
         if AutoDrive.settings[settingName] ~= nil then
             local setting = AutoDrive.settings[settingName]
-            -- We will restore only global settings to prevent confusion but we could even restore vehicle settings if it will be requested in future
-            if not setting.isVehicleSpecific then
-                setting.new = setting.default
-                page:loadGUISetting(settingName, setting.default)
+            if setting.isVehicleSpecific and g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle.ad.settings[settingName] ~= nil then
+                setting = g_currentMission.controlledVehicle.ad.settings[settingName]
             end
+
+            if AutoDrive.settings[settingName].userDefault ~= nil then
+                setting.new = AutoDrive.settings[settingName].userDefault
+            else
+                setting.new = setting.default
+            end
+            page:loadGUISetting(settingName, setting.new)
         end
     end
 end

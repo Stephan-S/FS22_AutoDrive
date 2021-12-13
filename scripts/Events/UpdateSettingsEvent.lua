@@ -15,7 +15,7 @@ function AutoDriveUpdateSettingsEvent.new(vehicle)
 end
 
 function AutoDriveUpdateSettingsEvent:writeStream(streamId, connection)
-	-- Writing global confings
+	-- Writing global configs
 	local count = 0
 	for _, setting in pairs(AutoDrive.settings) do
 		if setting ~= nil and not setting.isVehicleSpecific and not setting.isUserSpecific then
@@ -34,7 +34,7 @@ function AutoDriveUpdateSettingsEvent:writeStream(streamId, connection)
 
 	streamWriteBool(streamId, self.vehicle ~= nil)	
 
-	-- Writing vehicle confings
+	-- Writing vehicle configs
 	if self.vehicle ~= nil then		
 		count = 0
 		for _, setting in pairs(AutoDrive.settings) do
@@ -52,6 +52,23 @@ function AutoDriveUpdateSettingsEvent:writeStream(streamId, connection)
 				streamWriteString(streamId, settingName)
 				streamWriteUInt16(streamId, AutoDrive.getSettingState(settingName, self.vehicle))
 			end
+		end
+	end
+
+	-- Writing global userDefault values
+	count = 0
+	for _, setting in pairs(AutoDrive.settings) do
+		if setting ~= nil and not setting.isUserSpecific and setting.isVehicleSpecific then
+			count = count + 1
+		end
+	end
+
+	streamWriteUInt16(streamId, count)
+
+	for settingName, setting in pairs(AutoDrive.settings) do
+		if setting ~= nil and not setting.isUserSpecific and setting.isVehicleSpecific then
+			streamWriteString(streamId, settingName)
+			streamWriteUInt16(streamId, setting.userDefault)
 		end
 	end
 end
@@ -79,6 +96,14 @@ function AutoDriveUpdateSettingsEvent:readStream(streamId, connection)
 				vehicle.ad.settings[settingName].new = value
 			end
 		end
+	end
+
+	-- Reading global confings
+	count = streamReadUInt16(streamId)
+	for i = 1, count do
+		local settingName = streamReadString(streamId)
+		local value = streamReadUInt16(streamId)
+		AutoDrive.settings[settingName].userDefault = value
 	end
 
 	AutoDrive.gui.ADSettings:forceLoadGUISettings()

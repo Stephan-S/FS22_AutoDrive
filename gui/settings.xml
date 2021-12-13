@@ -51,7 +51,7 @@
         <GuiElement type="button" profile="buttonOK" text="button_apply" onClick="onClickOk" id="menuButton[2]" />
         <GuiElement type="button" profile="buttonCancel" text="$l10n_button_reset" onClick="onClickReset" id="menuButton[3]" />
         <GuiElement type="button" profile="buttonActivate" text="gui_ad_restoreButtonText" onClick="onClickRestore" id="menuButton[4]" />
+        <GuiElement type="button" profile="buttonSelect" text="gui_ad_setDefaultButtonText" onClick="onClickSetDefault" id="menuButton[5]" />
     </GuiElement>
-
 
 </GUI>

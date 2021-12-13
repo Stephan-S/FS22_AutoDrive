@@ -233,6 +233,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Ripristina" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Tutte le modifiche andranno perse" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Sei sicuro di voler uscire dalle impostazioni senza salvare?" />
+		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Gestione percorsi" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Inserisci nome del percorso:" />

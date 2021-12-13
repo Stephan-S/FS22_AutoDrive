@@ -227,10 +227,11 @@
         <text name="gui_ad_combineUnloadSettingsPage_title"                                                 text="Biçerdöver boşaltma ayarları - AutoDrive"  />
         <text name="gui_ad_debugSettingsPage_title"                                                         text="Hata Ayıklama Ayarları - AutoDrive"  />
         <text name="gui_ad_eFeaturesSettingsPage_title"                                                     text="Deneysel Özellik Ayarları - AutoDrive"  />
-		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		                                            text="Non-functional Settings - AutoDrive" />
         <text name="gui_ad_restoreButtonText"                                                               text="Onarmak"  />
         <text name="gui_ad_settingsClosingDialog_title"                                                     text="Tüm değişiklikler kaybolacak"  />
         <text name="gui_ad_settingsClosingDialog_text"                                                      text="Ayarları kaydetmeden kapatmak istediğinizden emin misiniz?"  />
+		<text name="gui_ad_setDefaultButtonText" 				                                            text="As default" />
                                                                                                             
         <text name="gui_ad_routesManagerTitle"                                                              text="Rota Yöneticisi"  />
         <text name="gui_ad_routesManagerTextTitle"                                                          text="Rota adını girin:"  />

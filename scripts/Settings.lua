@@ -1020,7 +1020,12 @@ function AutoDrive.copySettingsToVehicle(vehicle)
             settingVehicle.values = setting.values
             settingVehicle.texts = setting.texts
             settingVehicle.default = setting.default
-            settingVehicle.current = setting.current
+            settingVehicle.userDefault = setting.userDefault
+            if setting.userDefault ~= nil then
+                settingVehicle.current = setting.userDefault
+            else
+                settingVehicle.current = setting.default
+            end
             settingVehicle.text = setting.text
             settingVehicle.tooltip = setting.tooltip
             settingVehicle.translate = setting.translate
@@ -1036,7 +1041,12 @@ function AutoDrive.readVehicleSettingsFromXML(vehicle, xmlFile, key)
             local settingVehicle = {}
             settingVehicle.values = setting.values
             settingVehicle.default = setting.default
-            settingVehicle.current = setting.current
+            settingVehicle.userDefault = setting.userDefault
+            if setting.userDefault ~= nil then
+                settingVehicle.current = setting.userDefault
+            else
+                settingVehicle.current = setting.default
+            end
             vehicle.ad.settings[settingName] = settingVehicle
 
             if xmlFile:hasProperty(key) then
