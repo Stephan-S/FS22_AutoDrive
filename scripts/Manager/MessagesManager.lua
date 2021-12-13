@@ -177,7 +177,12 @@ function ADMessagesManager:update(dt)
         self.currentMessage = self.messages:Dequeue()
         if self.currentMessage ~= nil then
             local nd = AutoDrive.getSetting("notifications")
-            if nd ~= 0 then
+            if nd ~= 0 then   
+                if self.currentMessage.messageType == ADMessagesManager.messageTypes.ERROR then    
+                    playSample(AutoDrive.notificationWarningSample, 1, 0.4, 0, 0, 0)
+                else            
+                    playSample(AutoDrive.notificationSample, 1, 0.4, 0, 0, 0)
+                end
                 self.currentMessage.duration = self.currentMessage.duration * nd
                 self:updateHud(self.huds.message, self.currentMessage.text, self.currentMessage.messageType)
             else
@@ -203,6 +208,11 @@ function ADMessagesManager:update(dt)
             self.lastNotificationVehicle = self.currentNotification.vehicle
             local nd = AutoDrive.getSetting("notifications")
             if nd ~= 0 then
+                if self.currentNotification.messageType == ADMessagesManager.messageTypes.ERROR then
+                    playSample(AutoDrive.notificationWarningSample, 1, 0.9, 0, 0, 0)
+                else         
+                    playSample(AutoDrive.notificationSample, 1, 0.9, 0, 0, 0)
+                end
                 self.currentNotification.duration = self.currentNotification.duration * nd
                 self:updateHud(self.huds.notification, self.currentNotification.text, self.currentNotification.messageType)
             else

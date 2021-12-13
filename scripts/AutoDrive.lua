@@ -369,6 +369,28 @@ function AutoDrive:init()
 
 	AutoDrive.updateDestinationsMapHotspots()
 	AutoDrive:registerDestinationListener(AutoDrive, AutoDrive.updateDestinationsMapHotspots)
+
+	if AutoDrive.notificationSample == nil then
+		local fileName = Utils.getFilename( "sounds/notification_ok.ogg", AutoDrive.directory)
+		AutoDrive.notificationSample = createSample("AutoDrive_Notification_ok")
+		loadSample(AutoDrive.notificationSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/notification_warning.ogg", AutoDrive.directory)
+		AutoDrive.notificationWarningSample = createSample("AutoDrive_Notification_warning")
+		loadSample(AutoDrive.notificationWarningSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/click_up.ogg", AutoDrive.directory)
+		AutoDrive.mouseClickSample = createSample("AutoDrive_mouseClick")
+		loadSample(AutoDrive.mouseClickSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/recordWaypoint.ogg", AutoDrive.directory)
+		AutoDrive.recordWaypointSample = createSample("AutoDrive_recordWaypoint")
+		loadSample(AutoDrive.recordWaypointSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/selectedWayPoint.ogg", AutoDrive.directory)
+		AutoDrive.selectedWayPointSample = createSample("AutoDrive_selectedWayPoint")
+		loadSample(AutoDrive.selectedWayPointSample, fileName, false)
+	end
 end
 
 function AutoDrive:saveSavegame()

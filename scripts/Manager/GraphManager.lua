@@ -667,6 +667,9 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 			return
 		end
 	end
+	
+	playSample(AutoDrive.recordWaypointSample, 1, 0.25, 0, 0, 0)
+
 	local newId = self:getWayPointsCount() + 1
 	local newWp = self:createNode(newId, x, y, z, {}, {}, flags)
 	self:setWayPoint(newWp)

@@ -270,6 +270,10 @@ function ADHudButton:act(vehicle, posX, posY, isDown, isUp, button)
             ADInputManager:onInputCall(vehicle, self.quatenaryAction)
             return true
         end
+
+        if button > 0 and button < 4 and isDown then
+            return true, true
+        end
     end
 
     return false
