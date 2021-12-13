@@ -71,6 +71,7 @@
 		<text name="AD_No_Bunker"								text="couldn't find silo bunker" />
 		<text name="AD_No_Shovel"								text="couldn't find a connected shovel" />
 		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_MODE_DRIVETO"							text="Drive" />
 		<text name="AD_MODE_DELIVERTO"							text="Deliver" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Pickup and Deliver" />

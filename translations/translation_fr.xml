@@ -69,6 +69,7 @@
 		<text name="AD_No_Bunker"								text="Ne trouve pas le silo (bunker)" />
 		<text name="AD_No_Shovel"								text="Ne trouve pas de pelle" />
 		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_MODE_DRIVETO"							text="Conduite" />
 		<text name="AD_MODE_DELIVERTO"							text="Livraison" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Chargement et livraison" />

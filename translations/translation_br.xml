@@ -69,6 +69,7 @@
 		<text name="AD_No_Bunker"								text="não foi possível encontrar o silo" />
 		<text name="AD_No_Shovel"								text="não foi possível encontrar uma pá conectada" />
 		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_MODE_DRIVETO"							text="Dirigir" />
 		<text name="AD_MODE_DELIVERTO"							text="Transportar" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Carregar e Descarregar" />

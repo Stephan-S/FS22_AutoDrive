@@ -70,6 +70,7 @@
 		<text name="AD_No_Bunker"								text="nie mogłem znaleźć silosu" />
 		<text name="AD_No_Shovel"								text="nie mogłem znaleźć łychy" />
 		<text name="AD_No_Refuel_Station"						text="nie mogłem znaleźć miejsca napełniania:" />
+		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_MODE_DRIVETO"							text="Jazda" />
 		<text name="AD_MODE_DELIVERTO"							text="Rozładunek" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Odbiór i rozładunek" />

@@ -69,6 +69,7 @@
 		<text name="AD_No_Bunker"								text="impossibile trovare il bunker" />
 		<text name="AD_No_Shovel"								text="impossibile trovare una pala collegata" />
 		<text name="AD_No_Refuel_Station"						text="Impossibile trovare la stazione di rifornimento per:" />
+		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_MODE_DRIVETO"							text="Guida" />
 		<text name="AD_MODE_DELIVERTO"							text="Consegna" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Carica e consegna" />

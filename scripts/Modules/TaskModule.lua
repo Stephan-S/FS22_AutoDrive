@@ -151,9 +151,9 @@ function ADTaskModule:RepairIfNeeded()
         if repairDestinationMarkerNodeID ~= nil then
             self.activeTask = RepairTask:new(self.vehicle, repairDestinationMarkerNodeID.marker)
         else
-            self.vehicle.ad.isStoppingWithError = true
-            self.vehicle:stopAutoDrive()
-            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station;", 5000, self.vehicle.ad.stateModule:getName())
+            --self.vehicle.ad.isStoppingWithError = true
+            --self.vehicle:stopAutoDrive()
+            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Repair_Station;", 5000, self.vehicle.ad.stateModule:getName())
         end
     end
 end
