@@ -58,7 +58,7 @@ function AutoDriveUpdateSettingsEvent:writeStream(streamId, connection)
 	-- Writing global userDefault values
 	count = 0
 	for _, setting in pairs(AutoDrive.settings) do
-		if setting ~= nil and not setting.isUserSpecific and setting.isVehicleSpecific then
+		if setting ~= nil and not setting.isUserSpecific and setting.isVehicleSpecific and setting.userDefault ~= nil then
 			count = count + 1
 		end
 	end
@@ -66,7 +66,7 @@ function AutoDriveUpdateSettingsEvent:writeStream(streamId, connection)
 	streamWriteUInt16(streamId, count)
 
 	for settingName, setting in pairs(AutoDrive.settings) do
-		if setting ~= nil and not setting.isUserSpecific and setting.isVehicleSpecific then
+		if setting ~= nil and not setting.isUserSpecific and setting.isVehicleSpecific and setting.userDefault ~= nil then
 			streamWriteString(streamId, settingName)
 			streamWriteUInt16(streamId, setting.userDefault)
 		end
