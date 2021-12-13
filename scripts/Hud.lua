@@ -543,6 +543,8 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 										ADGraphManager:toggleWayPointAsSubPrio(vehicle.ad.selectedNodeId)
 									end
 								end
+
+								AutoDrive.splineInterpolationUserCurvature = nil
 							else
 								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
 								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
