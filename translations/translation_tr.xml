@@ -231,7 +231,7 @@
         <text name="gui_ad_restoreButtonText"                                                               text="Onarmak"  />
         <text name="gui_ad_settingsClosingDialog_title"                                                     text="Tüm değişiklikler kaybolacak"  />
         <text name="gui_ad_settingsClosingDialog_text"                                                      text="Ayarları kaydetmeden kapatmak istediğinizden emin misiniz?"  />
-		<text name="gui_ad_setDefaultButtonText" 				                                            text="As default" />
+		<text name="gui_ad_setDefaultButtonText" 				                                            text="Set as default" />
                                                                                                             
         <text name="gui_ad_routesManagerTitle"                                                              text="Rota Yöneticisi"  />
         <text name="gui_ad_routesManagerTextTitle"                                                          text="Rota adını girin:"  />

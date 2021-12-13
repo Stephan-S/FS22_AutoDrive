@@ -232,7 +232,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Przywrócenie" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Wszystkie zmiany zostaną utracone" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Czy na pewno chcesz zamknąć ustawienia bez zapisywania?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Manager tras" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Podaj nazwę trasy:" />

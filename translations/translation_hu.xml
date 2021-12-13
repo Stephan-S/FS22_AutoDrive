@@ -229,7 +229,7 @@
 		<text name="gui_ad_eFeaturesSettingsPage_title"			text="Kísérleti szolgáltatások beállításai - AutoDrive" />
 		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
 		<text name="gui_ad_restoreButtonText"					text="Visszaállítás" />
-		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 		<text name="gui_ad_settingsClosingDialog_title"			text="Minden változás elveszik" />
 		<text name="gui_ad_settingsClosingDialog_text"			text="Biztosan bezárja a beállításokat mentés nélkül?" />
 		<text name="gui_ad_routesManagerTitle" 					text="Útvonal szerkesztés" />

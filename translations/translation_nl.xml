@@ -233,7 +233,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Herstel" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Alle veranderingen zullen verloren gaan" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Weet u zeker dat u de instellingen wilt sluiten zonder op te slaan?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Routes Manager" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Voeg de naam van de route in:" />

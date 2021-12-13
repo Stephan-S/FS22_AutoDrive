@@ -148,7 +148,7 @@
 <!-- TODO: used? -->
     <Profile name="autoDriveButtonBoxDocked" extends="buttonBoxDocked">
 <!-- axel -->
-        <Value name="size" value="1000px 60px" />
+        <Value name="size" value="1300px 60px" />
         <Value name="position" value="150px 20px" />
     </Profile>
 

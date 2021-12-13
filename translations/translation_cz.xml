@@ -231,7 +231,7 @@
 		<text name="gui_ad_eFeaturesSettingsPage_title" 		text="Nastavení experimentálních funkcí - AutoDrive" />
 		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
 		<text name="gui_ad_restoreButtonText" 					text="Obnovit" />
-		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Všechny změny budou ztraceny" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Jste si jistí, že chcete vypnout nastavení bez uložení změn?" />
 		

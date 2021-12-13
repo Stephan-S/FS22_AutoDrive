@@ -234,7 +234,7 @@
 		<text name="gui_ad_settingsClosingDialog_text"			text="Êtes-vous sûr de vouloir fermer les paramètres sans enregistrer ?" />
 		<text name="gui_ad_showMarkersOnMap"					text="Afficher les marqueurs" />
 		<text name="gui_ad_showMarkersOnMap_tooltip"			text="Affiche les marqueurs/destinations en jeu sur la carte." />
-		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Gestionnaire d'itinéraires" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Entrez le nom de l'itinéraire:" />

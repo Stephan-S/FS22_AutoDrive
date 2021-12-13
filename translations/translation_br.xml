@@ -233,7 +233,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Restaurar" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="All changes will be lost" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Are you sure you want to close the settings without saving?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="As default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 
 		<text name="gui_ad_routesManagerTitle" 					text="Routes Manager" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Insert route name:" />
