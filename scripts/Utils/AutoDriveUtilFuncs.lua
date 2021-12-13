@@ -351,8 +351,10 @@ function AutoDrive.getAllImplements(vehicle)
 end
 
 function AutoDrive.getAllAttachedObjects(vehicle)
+    local allImp = {}
+    
     if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
-        local allImp = {}
+        
         local function addAllAttached(obj)
             for _, imp in pairs(obj:getAttachedImplements()) do
                 addAllAttached(imp.object)
@@ -361,9 +363,9 @@ function AutoDrive.getAllAttachedObjects(vehicle)
         end
 
         addAllAttached(vehicle)
-
-        return allImp
     end
+
+    return allImp
 end
 
 -- set or delete park destination for selected vehicle, tool from user input action, client mode!
