@@ -6,6 +6,7 @@ AutoDrive.directory = g_currentModDirectory
 g_autoDriveUIFilename = AutoDrive.directory .. "textures/GUI_Icons.dds"
 g_autoDriveDebugUIFilename = AutoDrive.directory .. "textures/gui_debug_Icons.dds"
 g_autoDriveDebugUIFilename_BC7 = AutoDrive.directory .. "textures/gui_debug_Icons_BC7.dds"
+g_autoDriveIconFilename = g_iconsUIFilename
 
 AutoDrive.experimentalFeatures = {}
 AutoDrive.experimentalFeatures.redLinePosition = false

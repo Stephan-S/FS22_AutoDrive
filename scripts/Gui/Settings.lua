@@ -28,7 +28,7 @@ ADSettings.TAB_UV = {
 ]]
 
 ADSettings.TAB_UV = {
-    SETTINGS_GENERAL = {720, 0, 64, 64},
+    SETTINGS_GENERAL = {0, 0, 64, 64},
     SETTINGS_VEHICLE = {650, 0, 64, 64},
     SETTINGS_USER = {0, 130, 64, 64},
     SETTINGS_UNLOAD = {128, 70, 64, 64},
@@ -47,14 +47,15 @@ ADSettings.ICON_UVa= {
 ]]
 
 ADSettings.ICON_UV = {
-    GLOBAL = {720, 0, 64, 64},
-    VEHICLE = {650, 0, 64, 64},
-    USER = {0, 130, 64, 64}
+    GLOBAL = {0, 0, 64, 64},
+    VEHICLE = {260, 0, 64, 64},
+    USER = {0, 120, 70, 85}
 }
 
 ADSettings.ICON_COLOR = {
     DEFAULT = {1, 1, 1, 1},
-    CHANGED = {0.9910, 0.3865, 0.0100, 1}
+    -- CHANGED = {0.9910, 0.3865, 0.0100, 1}
+    CHANGED = {0.9910, 0.03865, 0.0100, 1}
 }
 
 function ADSettings:new()

@@ -9,7 +9,6 @@ ADSettingsPage = {}
 
 local ADSettingsPage_mt = Class(ADSettingsPage, TabbedMenuFrameElement)
 
-
 -- ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox", "headerIcon", "headerText"}
 ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox"}
 
@@ -53,10 +52,13 @@ function ADSettingsPage:onCreateAutoDriveSetting(element)
     local iconElem = element.elements[6]
     if iconElem ~= nil then
         if setting.isUserSpecific then
+            iconElem:setImageFilename(g_autoDriveIconFilename)
             iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.USER)))
         elseif setting.isVehicleSpecific then
+            iconElem:setImageFilename(g_autoDriveIconFilename)
             iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.VEHICLE)))
         else
+            iconElem:setImageFilename(g_autoDriveIconFilename)
             iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.GLOBAL)))
         end
     end

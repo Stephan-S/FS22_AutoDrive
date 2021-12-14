@@ -15,17 +15,7 @@
                 <GuiElement type="button" name="tabButton" profile="uiTabbedMenuPageTabButton" handleFocus="false" />
             </GuiElement>
         </GuiElement>
-
-<!-- axel - fs19 -->
-        <!-- <GuiElement type="button" profile="uiInGameMenuPagingTabPrevious" id="pagingTabPrevious" onClick="onTabPagingPrevious"> -->
-            <!-- <GuiElement type="bitmap" profile="uiInGameMenuPagingTabPrevIcon" /> -->
-        <!-- </GuiElement> -->
-        <!-- <GuiElement type="button" profile="uiInGameMenuPagingTabNext" id="pagingTabNext" onClick="onTabPagingNext"> -->
-            <!-- <GuiElement type="bitmap" profile="uiInGameMenuPagingTabNextIcon" /> -->
-        <!-- </GuiElement> -->
-
     </GuiElement>
-
     <GuiElement type="bitmap" profile="uiElementContainerFullScreenSpanning">
         <GuiElement type="paging" profile="uiInGameMenuPaging" onPageChange="onPageChange" onPageUpdate="onPageUpdate" id="pagingElement">
             <GuiElement type="frameReference" ref="autoDriveVehicleSettings" name="autoDriveVehicleSettings" id="autoDriveVehicleSettings" />
@@ -37,15 +27,6 @@
             <GuiElement type="frameReference" ref="autoDriveExperimentalFeaturesSettings" name="autoDriveExperimentalFeaturesSettings" id="autoDriveExperimentalFeaturesSettings" />
         </GuiElement>
     </GuiElement>
-
-
-    <!-- <GuiElement type="bitmap" profile="ingameMenuHelpRowBg" position="210px -64px" id="ingameMenuHelpBox" visible="false"> -->
-        <!-- <GuiElement type="bitmap" profile="ingameMenuHelpRowIcon" /> -->
-    <!-- <Profile name="autoDriveingameMenuHelpRowBg" extends="ingameMenuHelpRowBg"> -->
-        <!-- <Value name="size" value="700px 50px" /> -->
-        <!-- <Value name="position" value="80px 20px" /> -->
-    <!-- </Profile> -->
-<!-- buttonBoxDocked -->
     <GuiElement type="flowLayout" profile="autoDriveButtonBoxDocked" id="buttonsPanel" >
         <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" id="menuButton[1]" />
         <GuiElement type="button" profile="buttonOK" text="button_apply" onClick="onClickOk" id="menuButton[2]" />
@@ -53,5 +34,4 @@
         <GuiElement type="button" profile="buttonActivate" text="gui_ad_restoreButtonText" onClick="onClickRestore" id="menuButton[4]" />
         <GuiElement type="button" profile="buttonSelect" text="gui_ad_setDefaultButtonText" onClick="onClickSetDefault" id="menuButton[5]" />
     </GuiElement>
-
 </GUI>
