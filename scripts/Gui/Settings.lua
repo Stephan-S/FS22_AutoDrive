@@ -31,7 +31,7 @@ ADSettings.TAB_UV = {
     SETTINGS_GENERAL = {0, 0, 64, 64},
     SETTINGS_VEHICLE = {650, 0, 64, 64},
     SETTINGS_USER = {0, 130, 64, 64},
-    SETTINGS_UNLOAD = {128, 70, 64, 64},
+    SETTINGS_UNLOAD = {0, 0, 128, 128},
     SETTINGS_DEBUG = {588, 140, 64, 64},
     SETTINGS_EXPFEAT = {0, 270, 64, 64},
     SETTINGS_ENVIRONMENT = {134, 0, 64, 64}
@@ -94,7 +94,7 @@ function ADSettings:setupPages()
     end
     local orderedPages = {
         {self.autoDriveVehicleSettings, vehicleEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_VEHICLE, false},
-        {self.autoDriveCombineUnloadSettings, combineEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
+        {self.autoDriveCombineUnloadSettings, combineEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
         {self.autoDriveUserSettings, alwaysEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_USER, false},
         {self.autoDriveSettings, alwaysEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_GENERAL, false},
         {self.autoDriveEnvironmentSettings, vehicleEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_ENVIRONMENT, false},
