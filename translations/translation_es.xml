@@ -200,6 +200,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Utilizar el modo de edición alternativo para modificar la ruta en lugar de tener que mantener pulsada la tecla LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Ventana ancha" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Usar el modo de ventana ancha, lo que permite mostrar algunos botones más en el panel" />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_syncMultiTargets"					text="Sincronizar múltiples objetivos" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Múltiples conductores usando la misma carpeta para múltiples objetivos se coordinarán con los siguientes objetivos" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Aparcar al terminar el trabajo" />

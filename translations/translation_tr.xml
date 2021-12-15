@@ -200,6 +200,8 @@
         <text name="gui_ad_secondEditorModeAllowed_tooltip"                                                 text="LCTRL'yi basılı tutmak yerine rota manipülasyonu için 2. düzenleyici modunu kullanın"  />
         <text name="gui_ad_wideHUD"                                                                         text="Geniş HUD"  />
         <text name="gui_ad_wideHUD_tooltip"                                                                 text="HUD'da birkaç ayar düğmesine daha izin veren geniş HUD modunu kullanın"  />
+        <text name="gui_ad_playSounds"							                                            text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					                                            text="Enables the sound effects for mouse clicks and notifications" />
         <text name="gui_ad_syncMultiTargets"                                                                text="Birden çok hedefi senkronize et"  />
         <text name="gui_ad_syncMultiTargets_tooltip"                                                        text="Birden çok hedef için aynı klasörü kullanan birden çok sürücü, sonraki hedefleri senkronize edecek"  />
         <text name="gui_ad_enableParkAtJobFinished"                                                         text="Park işi tamamlandı"  />

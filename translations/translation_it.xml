@@ -202,6 +202,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Utilizzare la modalità editor 2 per la modifica del percorso invece di tenere premuto LCTRL" />
 		<text name="gui_ad_wideHUD"								text="HUD estesa" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Utilizzare la modalità HUD estersa, che consente anche qualche altro pulsante di impostazione nell'HUD" />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_syncMultiTargets"					text="Sincronizza obbiettivi multipli" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Più driver che utilizzano la stessa cartella per più target sincronizzeranno i target successivi" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Parcheggia a lavoro finito" />

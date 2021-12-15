@@ -1375,4 +1375,8 @@ function AutoDrive.checkWaypointsMultipleSameOut(correctit)
 	end
 end
 
--- TODO: Maybe we should add a console command that allows to run console commands to server
+function AutoDrive.playSample(sample, volume)
+    if AutoDrive.getSetting("playSounds") then
+        playSample(sample, 1, volume, 0, 0, 0)
+    end
+end

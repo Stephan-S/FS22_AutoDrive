@@ -201,6 +201,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Drugi tryb edycji pozwala zmieniać trasy bez przytrzymywania wciśniętego LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Szeroki interfejs" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Użyj trybu szerokiego interfejsu, który pozwala umieścić kilka dodatkowych przycisków ustawień na interfejsie" />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizuj wiele celów" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Różni kierowcy wykorzystujący ten sam folder do różnych celów zsynchronizują następny cel" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkuj po zakończeniu pracy" />

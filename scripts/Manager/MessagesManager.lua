@@ -179,9 +179,9 @@ function ADMessagesManager:update(dt)
             local nd = AutoDrive.getSetting("notifications")
             if nd ~= 0 then   
                 if self.currentMessage.messageType == ADMessagesManager.messageTypes.ERROR then    
-                    playSample(AutoDrive.notificationWarningSample, 1, 0.4, 0, 0, 0)
+                    AutoDrive.playSample(AutoDrive.notificationWarningSample, 0.4)
                 else            
-                    playSample(AutoDrive.notificationSample, 1, 0.4, 0, 0, 0)
+                    AutoDrive.playSample(AutoDrive.notificationSample, 0.4)
                 end
                 self.currentMessage.duration = self.currentMessage.duration * nd
                 self:updateHud(self.huds.message, self.currentMessage.text, self.currentMessage.messageType)
@@ -209,9 +209,9 @@ function ADMessagesManager:update(dt)
             local nd = AutoDrive.getSetting("notifications")
             if nd ~= 0 then
                 if self.currentNotification.messageType == ADMessagesManager.messageTypes.ERROR then
-                    playSample(AutoDrive.notificationWarningSample, 1, 0.9, 0, 0, 0)
+                    AutoDrive.playSample(AutoDrive.notificationWarningSample, 0.9)
                 else         
-                    playSample(AutoDrive.notificationSample, 1, 0.9, 0, 0, 0)
+                    AutoDrive.playSample(AutoDrive.notificationSample, 0.9)
                 end
                 self.currentNotification.duration = self.currentNotification.duration * nd
                 self:updateHud(self.huds.notification, self.currentNotification.text, self.currentNotification.messageType)

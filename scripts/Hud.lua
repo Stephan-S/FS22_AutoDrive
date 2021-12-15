@@ -458,7 +458,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 				-- Maybe a PullDownList have been expanded/collapsed, so need to refresh layer sequence
 				self:refreshHudElementsLayerSequence()
 				if silent == nil or silent == false then
-					playSample(AutoDrive.mouseClickSample, 1, 0.45, 0, 0, 0)
+					AutoDrive.playSample(AutoDrive.mouseClickSample, 0.45)
 				end
 				break
 			end
@@ -554,7 +554,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 							end
 						end
 							
-						playSample(AutoDrive.selectedWayPointSample, 1, 0.75, 0, 0, 0)
+						AutoDrive.playSample(AutoDrive.selectedWayPointSample, 0.75)
 						-- unselect point
 						AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent unselect point selectedNodeId = nil")
 						vehicle.ad.selectedNodeId = nil
@@ -565,7 +565,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
                         vehicle.ad.selectedNodeId = vehicle.ad.hoveredNodeId
                         AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent select point selectedNodeId %d", vehicle.ad.selectedNodeId)
 						
-						playSample(AutoDrive.selectedWayPointSample, 1, 0.75, 0, 0, 0)
+						AutoDrive.playSample(AutoDrive.selectedWayPointSample, 0.75)
 
                         -- color assignment goes in here
                         if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServer == nil then

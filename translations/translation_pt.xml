@@ -202,6 +202,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Use 2. modo editor para manipulação de rota em vez de manter pressionada a tecla LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Wide HUD" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Use o modo Wide HUD, que também permite mais alguns botões de configuração no HUD" />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_syncMultiTargets"					text="Sincronizar vários alvos" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Vários condutores usando a mesma pasta para múltiplos alvos sincronizarão os próximos alvos" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Estacionar no Trabalho concluído" />

@@ -202,6 +202,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Použijte 2. režim editoru pro manipulaci s trasou namísto přidržení LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Široký HUD" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Použijte široký režim HUD, který také umožňuje několik dalších tlačítek pro nastavení v HUD" />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizujte více cílů" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Více řidičů používá stejnou složku s více cíly a budou  sychronizovány s dalšími cíly" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkovat po dokončení práce" />
