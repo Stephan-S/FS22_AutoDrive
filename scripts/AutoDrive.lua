@@ -171,15 +171,12 @@ function AutoDrive:restartMySavegame()
 end
 
 function AutoDrive:loadMap(name)
-	local index = 0
 	Logging.info("[AD] Start register later loaded mods...")
     --ADThirdPartyModsManager:load()
 	-- second iteration to register AD to vehicle types which where loaded after AD
     AutoDriveRegister.register()
     AutoDriveRegister.registerVehicleData()
 	Logging.info("[AD] Start register later loaded mods end")
-	index = index + 1
-	Logging.info("[AutoDrive] Index: %d",index)
 
 	addConsoleCommand('restartMySavegame', 'Restart my savegame', 'restartMySavegame', self)
 
@@ -187,8 +184,6 @@ function AutoDrive:loadMap(name)
 		AutoDrive.AutoDriveSync = AutoDriveSync.new(g_server ~= nil, g_client ~= nil)
 		AutoDrive.AutoDriveSync:register(false)
 	end
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	AutoDrive:loadGUI()
 
@@ -201,14 +196,8 @@ function AutoDrive:loadMap(name)
 	AutoDrive.loadedMap = string.gsub(AutoDrive.loadedMap, ":", "_")
 	AutoDrive.loadedMap = string.gsub(AutoDrive.loadedMap, ";", "_")
 	AutoDrive.loadedMap = string.gsub(AutoDrive.loadedMap, "'", "_")
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	Logging.info("[AD] Parsed map title: %s", AutoDrive.loadedMap)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	-- That's probably bad, but for the moment I can't find another way to know if development controls are enabled
 	local gameXmlFilePath = getUserProfileAppPath() .. "game.xml"
@@ -220,93 +209,48 @@ function AutoDrive:loadMap(name)
 			end
 		end
 	end
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	ADGraphManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	AutoDrive.loadStoredXML()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
     AutoDrive:resetColorAssignment(0, true)     -- set default colors
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
     AutoDrive.readLocalSettingsFromXML()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-    
 	ADUserDataManager:load()
 	if g_server ~= nil then
 		ADUserDataManager:loadFromXml()
 	end
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	AutoDrive.Hud = AutoDriveHud:new()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	AutoDrive.Hud:loadHud()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
-
 
 	-- Save Configuration when saving savegame
 	FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, AutoDrive.saveSavegame)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	LoadTrigger.onActivateObject = Utils.overwrittenFunction(LoadTrigger.onActivateObject, AutoDrive.onActivateObject)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	--AIDriveStrategyCombine.getDriveData = Utils.overwrittenFunction(AIDriveStrategyCombine.getDriveData, AutoDrive.getDriveData)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	VehicleCamera.zoomSmoothly = Utils.overwrittenFunction(VehicleCamera.zoomSmoothly, AutoDrive.zoomSmoothly)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
     --LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
     -- LoadTrigger.delete = Utils.prependedFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	Placeable.onBuy = Utils.appendedFunction(Placeable.onBuy, ADTriggerManager.onPlaceableBuy)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	MapHotspot.getIsVisible = Utils.overwrittenFunction(MapHotspot.getIsVisible, AutoDrive.MapHotspot_getIsVisible)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
+	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
 
 	--FarmStats.saveToXMLFile = Utils.appendedFunction(FarmStats.saveToXMLFile, AutoDrive.FarmStats_saveToXMLFile)
 	--index = index + 1
@@ -317,49 +261,28 @@ function AutoDrive:loadMap(name)
 	--Logging.info("[AD] Index: %d",index)
 
 	FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	FSBaseMission.removeVehicle = Utils.prependedFunction(FSBaseMission.removeVehicle, AutoDrive.preRemoveVehicle)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADRoutesManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADDrawingManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADMessagesManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADHarvestManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-        ADScheduler:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+    ADScheduler:load()
 
 	ADInputManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADMultipleTargetsManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 	AutoDrive.initTelemetry()
-
-	Logging.info("[AD] load map end: %d",index)
 end
 
 function AutoDrive:init()
 
-    AutoDrive.debugMsg(nil, "[AD] AutoDrive:init start...")
+    -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:init start...")
 
 	if g_server == nil then
 		-- Here we could ask to server the initial sync
@@ -498,13 +421,13 @@ function AutoDrive:update(dt)
         if g_server ~= nil and g_dedicatedServer == nil then
             -- open dialog
 			if g_gui.currentGui == nil then
-				AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_OPEN")
+				-- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_OPEN")
 				AutoDrive.onOpenScanConfirmation()
 				AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_OPEN
 			end
 			return
         else
-            AutoDrive.debugMsg(nil, "[AD] AutoDrive:update dedi -> SCAN_DIALOG_RESULT_NO")
+            -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update dedi -> SCAN_DIALOG_RESULT_NO")
             AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_NO
         end
     end
@@ -517,7 +440,7 @@ function AutoDrive:update(dt)
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_YES then
         AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
         -- dialog closed with yes
-        AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_YES")
+        -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_YES")
         AutoDrive:adParseSplines()
         AutoDrive:createJunctionCommand()
     end
@@ -525,7 +448,7 @@ function AutoDrive:update(dt)
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_NO then
         AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
         -- dialog closed with no
-        AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_NO")
+        -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_NO")
         AutoDrive.loadStoredXML(true)
     end
 

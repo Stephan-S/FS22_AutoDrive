@@ -120,7 +120,7 @@ end
 function AutoDrive:onPreLoad(savegame)
     if self.spec_autodrive == nil then
         self.spec_autodrive = AutoDrive
-        AutoDrive.debugMsg(self, "AutoDrive:onPreLoad")
+        -- AutoDrive.debugMsg(self, "AutoDrive:onPreLoad")
         -- AutoDriveRegister.addModTranslations(g_i18n)
     end
 end
