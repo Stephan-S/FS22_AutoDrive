@@ -162,6 +162,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Odległość do celów, przy której są wykrywane i aktywowane triggery." />
 		<text name="gui_ad_useBeaconLights"						text="Światła ostrzegawcze" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Używaj świateł ostrzegawczych na drodze." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Ogranicz odnajdywanie trasy do obszaru pola" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Jeżeli pojazd rozładowujący jest zaparkowany na polu, będzie szukał trasy tylko do granic pola." />
 		<text name="gui_ad_showTooltips"						text="Pokaż podpowiedzi" />

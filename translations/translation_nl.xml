@@ -163,6 +163,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Afstand tot los/laad bestemming waar de trigger wordt gevonden en geactiveerd." />
 		<text name="gui_ad_useBeaconLights"						text="Zwaailichten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Gebruik zwaailampen buiten de velden." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Route zoeken beperken tot veld" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Als de chauffeur is geparkeerd in het veld, dan wordt de route binnen het veld gezocht." />
 		<text name="gui_ad_showTooltips"						text="Laat tooltips zien" />

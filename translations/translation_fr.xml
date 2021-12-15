@@ -163,6 +163,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Définis la distance jusqu'où le déclencheur est détecté lorsque le point de destination est chargé/déchargé." />
 		<text name="gui_ad_useBeaconLights"						text="Gyrophares" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Utiliser les gyrophares sur la route." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Recherche de parcours limité" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Si le chauffeur est déjà garé sur le champ, il limitera la recherche aux limites du champ." />
 		<text name="gui_ad_showTooltips"						text="Afficher les info-bulles" />

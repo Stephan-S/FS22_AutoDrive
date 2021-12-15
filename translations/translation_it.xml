@@ -163,6 +163,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distanza dall'obiettivo in cui i trigger vengono rilevati e attivati." />
 		<text name="gui_ad_useBeaconLights"						text="Accendi Fari" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Usa i fari sulla strada." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Pianificazione del percorso limitata " />
 		<text name="gui_ad_restrictToField_tooltip"				text="Se lo scaricatore è già parcheggiato sul campo, limiterà il rilevatore di percorsi ai limiti del campo." />
 		<text name="gui_ad_showTooltips"						text="Mostra suggerimenti" />

@@ -165,6 +165,8 @@
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Да - использовать автоматические сигнальные огни за пределами полей / Нет - сигнальные огни не будут включаться или выключаться автоматически." />
 		<text name="gui_ad_restrictToField"						text="Поиск маршрута ограничен полем" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Если разгружающий автомобиль уже находится на поле, он ограничит поиск маршрута границами поля." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_showTooltips"						text="Отображать подсказки" />
 		<text name="gui_ad_showTooltips_tooltip"				text="Показывать подсказки к кнопкам в HUD AutoDrive." />
 		<text name="gui_ad_enterTargetNameTitle_add"			text="Добавление локации" />

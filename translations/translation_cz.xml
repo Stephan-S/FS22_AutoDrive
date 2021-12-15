@@ -163,6 +163,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Rozsah, ve kterém jsou detekovány aktivní triggery (např. osivo a hnojivo)." />
 		<text name="gui_ad_useBeaconLights"						text="Zapnout maják" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Použití majáku na silnici" />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Vyhledávat cestu jen na poli" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Pokud odvozce parkuje na poli, bude vyhledávaní cesty omezeno je na pole vymezené okrajem tohoto pole" />
 		<text name="gui_ad_showTooltips"						text="Zobrazit HUD nápovědu" />

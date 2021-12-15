@@ -167,6 +167,8 @@
         <text name="gui_ad_showTooltips_tooltip"                                                            text="Gösterge Paneli'nde düğme araç ipuçlarını gösterin."  />
         <text name="gui_ad_enterTargetNameTitle_add"                                                        text="Hedef Ekle"  />
         <text name="gui_ad_enterTargetNameTitle_edit"                                                       text="Hedefi Düzenleyin"  />
+		<text name="gui_ad_activeUnloading"						                                            text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				                                            text="Unload harvesters while driving." />
         <text name="gui_ad_enterTargetNameText"                                                             text="Hedef adı girin:"  />
         <text name="gui_ad_createButtonText"                                                                text="Oluşturmak"  />
         <text name="gui_ad_enterDriverNameTitle"                                                            text="Sürücüyü Yeniden Adlandır"  />

@@ -161,6 +161,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distancia a la que se detectan y activan los desencadenantes (por ejemplo, al llegar a un punto de descarga)." />		
 		<text name="gui_ad_useBeaconLights"						text="Luces rotativas" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Sí - usa luces rotativas automáticas fuera de los campos / No - las luces rotativas no se encenderán ni apagarán automáticamente" />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Restringir conducción solo dentro del campo" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Si el remolque ya está aparcado en el campo, limitará el buscador de rutas a los límites del campo." />
 		<text name="gui_ad_showTooltips"						text="Mostrar ayudas de menú" />

@@ -163,6 +163,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance to target at which triggers are detected and activated." />
 		<text name="gui_ad_useBeaconLights"						text="Beacon lights" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Yes - Use beacon lights automatic outside of fields / No - beacon lights will not be turned on or off automatically" />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Restrict pathfinder to field" />
 		<text name="gui_ad_restrictToField_tooltip"				text="If unloader is already parked in the field, he will limit the pathfinder to field boundaries." />
 		<text name="gui_ad_showTooltips"						text="Show tooltips" />

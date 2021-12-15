@@ -163,6 +163,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distância ao alvo em que os gatilhos são detectados e ativados." />
 		<text name="gui_ad_useBeaconLights"						text="Pirilampos" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Use pirilampos na estrada." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Restringir o pathfinder ao campo" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Se o descarregador já estiver estacionado no campo, ele limitará o pathfinder aos limites do campo." />
 		<text name="gui_ad_showTooltips"						text="Mostrar dicas de ferramentas" />

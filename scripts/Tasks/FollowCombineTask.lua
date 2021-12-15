@@ -72,7 +72,7 @@ function FollowCombineTask:update(dt)
                 self.state = FollowCombineTask.STATE_REVERSING -- reverse to get room from harvester
                 return
             end
-        elseif self.filled or ( not AutoDrive.getIsBufferCombine(self.combine) and self.combineFillPercent <= 0.1 and self.combinePreCallLevel > 0) then
+        elseif self.filled or ( not AutoDrive.getIsBufferCombine(self.combine) and self.combineFillPercent <= 0.1 and (not self.activeUnloading)) then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "I am filled - reversing now")
             self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH -- unload after some time to let harvester drive away
             return
@@ -259,6 +259,7 @@ function FollowCombineTask:updateStates(dt)
         self.filled = fillFreeCapacity <= 1
         
         self.combinePreCallLevel = AutoDrive.getSetting("preCallLevel", self.combine)
+        self.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     end
     self:shouldWaitForChasePos(dt)
 end
