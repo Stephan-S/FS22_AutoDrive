@@ -265,3 +265,23 @@ function AutoDrive.getFrontToolLength(vehicle)
 
     return lengthOfFrontTool
 end
+
+--onlyWithFruit is not yet implemented and ignored for now
+function AutoDrive.getLengthOfFieldInFront(vehicle, onlyWithFruit, maxRange, stepLength)
+    local maxSearchRange = maxRange or 50
+    local acceptOnlyWithFruit = onlyWithFruit or false
+    local stepLength = stepLength or 5
+    
+    local length = 0
+    local foundField = true
+    while foundField do
+        local worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, 0, 0, length + stepLength)
+        foundField = AutoDrive.checkIsOnField(worldPosX, 0, worldPosZ)
+        length = length + stepLength
+        if math.abs(length) >= maxSearchRange then
+            foundField = false
+        end
+    end
+
+    return length
+end

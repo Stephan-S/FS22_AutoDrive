@@ -368,6 +368,10 @@ function AutoDrive:onUpdate(dt)
     --For 'legacy' purposes, this value should be kept since other mods already test for this:
     self.ad.mapMarkerSelected = self.ad.stateModule:getFirstMarkerId()
     self.ad.mapMarkerSelected_Unload = self.ad.stateModule:getSecondMarkerId()
+
+    if self.ad.isCombine then
+        AutoDrive.getLengthOfFieldInFront(self)
+    end
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)

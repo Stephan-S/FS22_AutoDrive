@@ -151,6 +151,14 @@ function AutoDrive.combineIsTurning(combine)
     --local combineSteering = combine.rotatedTime ~= nil and (math.deg(combine.rotatedTime) > 30)
     local combineIsTurning = cpIsTurning or cpIsTurningTwo or aiIsTurning --or combineSteering
 
+    --Check if we are close to the field borders and about to turn
+    local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, false, 50, 5)
+    local fieldLengthBehind = math.abs(AutoDrive.getLengthOfFieldInFront(combine, false, 50, -5))
+
+    if fieldLengthInFront <= 20 or fieldLengthBehind <= 20 then
+        combineIsTurning = true
+    end
+
     --local b = AutoDrive.boolToString
     --print("cpIsTurning: " .. b(cpIsTurning) .. " cpIsTurningTwo: " .. b(cpIsTurningTwo) .. " aiIsTurning: " .. b(aiIsTurning) .. " combineIsTurning: " .. b(combineIsTurning) .. " driveForwardDone: " .. b(combine.ad.driveForwardTimer:done()))
     if not combineIsTurning then --(combine.ad.driveForwardTimer:done() and (not combine:getIsBufferCombine()))
