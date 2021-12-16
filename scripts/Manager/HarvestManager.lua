@@ -306,9 +306,9 @@ function ADHarvestManager:getClosestIdleUnloader(harvester)
     for _, unloader in pairs(self.idleUnloaders) do
         -- sort by distance to combine first
         local distance = AutoDrive.getDistanceBetween(unloader, harvester)
-        local distanceMatch = distance <= ADHarvestManager.MAX_SEARCH_RANGE and AutoDrive.getSetting("findDriver")
+        --local distanceMatch = distance <= ADHarvestManager.MAX_SEARCH_RANGE and AutoDrive.getSetting("findDriver")
         local targetsMatch = unloader.ad.stateModule:getFirstMarker() == harvester.ad.stateModule:getFirstMarker()
-        if distanceMatch or targetsMatch then
+        if targetsMatch then --if distanceMatch or targetsMatch then
             if closestUnloader == nil or distance < closestDistance then
                 closestUnloader = unloader
                 closestDistance = distance

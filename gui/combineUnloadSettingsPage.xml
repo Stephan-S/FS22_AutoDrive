@@ -9,15 +9,6 @@
 
 		<GuiElement type="bitmap" profile="ingameMenuSettingsBox" id="settingsContainer">
 			<GuiElement type="scrollingLayout" profile="ingameMenuSettingsLayout" >
-
-				<GuiElement type="multiTextOption" profile="multiTextOptionSettings" onCreate="onCreateAutoDriveSetting" onClick="onOptionChange" name="findDriver" toolTipElementId="ingameMenuHelpBoxText">
-					<GuiElement type="button" profile="multiTextOptionSettingsLeft" />
-					<GuiElement type="button" profile="multiTextOptionSettingsRight" />
-					<GuiElement type="text" profile="multiTextOptionSettingsText" />
-					<GuiElement type="text" profile="multiTextOptionSettingsTitle" position="27px 0px" />
-					<GuiElement type="bitmap" profile="multiTextOptionSettingsBg" />
-					<GuiElement type="bitmap" profile="baseReference" position="730px 0px" size="50px 50px"/>
-				</GuiElement>
 				<GuiElement type="multiTextOption" profile="multiTextOptionSettings" onCreate="onCreateAutoDriveSetting" onClick="onOptionChange" name="preCallLevel" toolTipElementId="ingameMenuHelpBoxText">
 					<GuiElement type="button" profile="multiTextOptionSettingsLeft" />
 					<GuiElement type="button" profile="multiTextOptionSettingsRight" />
