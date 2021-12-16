@@ -36,15 +36,15 @@ function FollowCombineTask:new(vehicle, combine)
     o.angleToCombineHeading = vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombineHeading()
     o.angleToCombine = vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombine()
     o.trailers = nil
-    o.combinePreCallLevel = 0
+    o.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     return o
 end
 
 function FollowCombineTask:setUp()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "Setting up FollowCombineTask")
     self.lastChaseSide = self.chaseSide
-    self.combinePreCallLevel = AutoDrive.getSetting("preCallLevel", self.combine)
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
+    self.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, true)
 end
 
@@ -258,7 +258,6 @@ function FollowCombineTask:updateStates(dt)
         _, _, self.filledToUnload, fillFreeCapacity = AutoDrive.getAllNonFuelFillLevels(self.trailers)
         self.filled = fillFreeCapacity <= 1
         
-        self.combinePreCallLevel = AutoDrive.getSetting("preCallLevel", self.combine)
         self.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     end
     self:shouldWaitForChasePos(dt)

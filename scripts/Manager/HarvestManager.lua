@@ -97,7 +97,7 @@ function ADHarvestManager:update(dt)
         if vehicle.isTrailedHarvester then
             vehicle = vehicle.trailingVehicle
         end
-        if (vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or AutoDrive:getIsEntered(vehicle) then
+        if (vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or (AutoDrive:getIsEntered(vehicle) and AutoDrive.isPipeOut(vehicle)) then
             table.insert(self.harvesters, idleHarvester)
             table.removeValue(self.idleHarvesters, idleHarvester)
         end
@@ -107,7 +107,7 @@ function ADHarvestManager:update(dt)
         if vehicle.isTrailedHarvester then
             vehicle = vehicle.trailingVehicle
         end
-        if not ((vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or AutoDrive:getIsEntered(vehicle)) then
+        if not ((vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or (AutoDrive:getIsEntered(vehicle) and AutoDrive.isPipeOut(vehicle))) then
             table.insert(self.idleHarvesters, harvester)
             table.removeValue(self.harvesters, harvester)
 
@@ -261,6 +261,12 @@ function ADHarvestManager.isHarvesterActive(harvester)
             end
         end
 
+        local manuallyControlled = AutoDrive:getIsEntered(harvester) and (not (harvester.getIsAIActive ~= nil and harvester:getIsAIActive()))
+
+        if manuallyControlled then
+            return  AutoDrive.isPipeOut(harvester)
+        end
+
         return reachedPreCallLevel and (not isAlmostFull) and allowedToChase
     end
 
@@ -310,6 +316,44 @@ function ADHarvestManager:getClosestIdleUnloader(harvester)
         end
     end
     return closestUnloader
+end
+
+function ADHarvestManager:hasHarvesterPotentialUnloaders(harvester)
+    for _, unloader in pairs(self.idleUnloaders) do
+        local targetsMatch = unloader.ad.stateModule:getFirstMarker() == harvester.ad.stateModule:getFirstMarker()
+        if targetsMatch then
+            return true
+        end
+    end
+    for _, unloader in pairs(self.activeUnloaders) do
+        local targetsMatch = unloader.ad.stateModule:getFirstMarker() == harvester.ad.stateModule:getFirstMarker()
+        if targetsMatch then
+            return true
+        end
+    end
+    for _, other in pairs(g_currentMission.vehicles) do
+        if other ~= self.vehicle and other.ad ~= nil and other.ad.stateModule ~= nil and other.ad.stateModule:isActive() and other.ad.stateModule:getFirstMarker() == harvester.ad.stateModule:getFirstMarker() and other.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD then
+            return true
+        end
+    end
+    
+    return false
+end
+
+function ADHarvestManager:hasVehiclePotentialHarvesters(vehicle)
+    for _, harvester in pairs(self.idleHarvesters) do
+        local targetsMatch = vehicle.ad.stateModule:getFirstMarker() == harvester.ad.stateModule:getFirstMarker()
+        if targetsMatch then
+            return true
+        end
+    end
+    for _, harvester in pairs(self.harvesters) do
+        local targetsMatch = vehicle.ad.stateModule:getFirstMarker() == harvester.ad.stateModule:getFirstMarker()
+        if targetsMatch then
+            return true
+        end
+    end
+    return false
 end
 
 function ADHarvestManager.getOpenPipePercent(harvester)

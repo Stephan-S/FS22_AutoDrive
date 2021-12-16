@@ -211,6 +211,8 @@
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="AutoDrive doit-il créer un réseau routier à partir des données de trafic et d'assistance de la carte ?" />
+		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
+		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
 
 		<text name="gui_ad_followOnlyOnField"					text="Restreindre au champ..." />
 		<text name="gui_ad_followOnlyOnField_tooltip"			text="Restreindre le déchargement au champ pendant le déchargement actif" />

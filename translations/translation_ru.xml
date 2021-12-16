@@ -228,6 +228,8 @@
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="Должен ли AutoDrive генерировать маршрутную сеть на основе данных о трафике и помощниках на карте?" />
+		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
+		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
 
 		<text name="gui_ad_settingsPage_title"					text="Общие настройки - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Пользовательские настройки - AutoDrive" />

@@ -227,6 +227,8 @@
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="A AutoDrive deve gerar uma rede de rotas a partir do tráfego e dos dados do ajudante no mapa?" />
+		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
+		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
 
 		<text name="gui_ad_settingsPage_title"					text="Configurações - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Configurações do Usuário - AutoDrive" />

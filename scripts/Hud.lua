@@ -197,7 +197,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	--table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row3, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/tipper_overlay.dds", 1, "unloadOverlay"))
 
 	table.insert(self.hudElements, ADPullDownList:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row3, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight, ADPullDownList.TYPE_UNLOAD, 1))
-
+	
 	table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row2, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/fruit_overlay.dds", 1, "fruitOverlay"))
 
 	table.insert(
@@ -211,6 +211,8 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 			1
 		)
 	)
+	table.insert(self.hudElements, HudHarvesterInfo:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row2, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight))
+
 
 	-------- BASE ROW BUTTONS --------------
 	self:AddButton("input_start_stop", nil, nil, nil, "input_ADEnDisable", 1, true)
@@ -474,6 +476,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 			else
 				self:moveHud(posX, posY)
 			end
+			mouseEventHandled = true
 		end
 
 		vehicle.ad.hoveredNodeId = nil

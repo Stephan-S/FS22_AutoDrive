@@ -28,6 +28,7 @@ source(Utils.getFilename("scripts/Hud/HudSettingsButton.lua", g_currentModDirect
 source(Utils.getFilename("scripts/Hud/HudIcon.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudSpeedmeter.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/PullDownList.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Hud/HudHarvesterInfo.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Events/GroupsEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/UserDataEvent.lua", g_currentModDirectory))
