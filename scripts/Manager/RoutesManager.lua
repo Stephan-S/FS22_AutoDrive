@@ -224,5 +224,5 @@ function ADRoutesManager:exportRoutesAsExternalMod()
     saveXMLFile(rXml)
     delete(rXml)
 
-    print(string.format("Files exported to '%s'", exportRootFolder))
+    print(string.format("[AD] Files exported to '%s'", exportRootFolder))
 end

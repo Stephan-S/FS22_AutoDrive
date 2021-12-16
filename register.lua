@@ -149,44 +149,6 @@ if g_specializationManager:getSpecializationByName("AutoDrive") == nil then
     g_specializationManager:addSpecialization("AutoDrive", "AutoDrive", Utils.getFilename("scripts/AutoDrive.lua", g_currentModDirectory), nil)
 end
 
-function AutoDrive.dumpTable_temp(inputTable, name, maxDepth)
-    maxDepth = maxDepth or 5
-    print(name .. " = {}")
-    local function dumpTableRecursively(inputTable, name, depth, maxDepth)
-        if depth >= maxDepth then
-            return
-        end
-        for k, v in pairs(inputTable) do
-            local newName = string.format("%s.%s", name, k)
-            if type(k) == "number" then
-                newName = string.format("%s[%s]", name, k)
-            end
-            if type(v) ~= "table" and type(v) ~= "function" then
-                print(string.format("%s = %s", newName, v))
-            end
-            if type(v) == "table" then
-                print(newName .. " = {}")
-                dumpTableRecursively(v, newName, depth + 1, maxDepth)
-            end
-        end
-    end
-    for k, v in pairs(inputTable) do
-        local newName = string.format("%s.%s", name, k)
-        if type(k) == "number" then
-            newName = string.format("%s[%s]", name, k)
-        end
-        if type(v) ~= "table" and type(v) ~= "function" then
-            print(string.format("%s = %s", newName, v))
-        end
-        if type(v) == "table" then
-            print(newName .. " = {}")
-            dumpTableRecursively(v, newName, 1, maxDepth)
-        end
-    end
-end
-
---AutoDrive.dumpTable_temp(TypeManager, "TypeManager", 2)
-
 function AutoDriveRegister.register()
 
     if AutoDrive == nil then

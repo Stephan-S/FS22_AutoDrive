@@ -84,7 +84,7 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
 end
 
 function AutoDrive.initSpecialization()
-    print("Calling AutoDrive initSpecialization")
+    -- print("Calling AutoDrive initSpecialization")
     local schema = Vehicle.xmlSchema
     schema:setXMLSpecializationType("AutoDrive")
 
@@ -193,7 +193,7 @@ function AutoDrive:onPostLoad(savegame)
             -- local xmlFile = loadXMLFile("vehicleXML", savegame.xmlFile)
             local key = savegame.key .. ".AutoDrive"
 -- Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
-            print("Trying to load xml keys from: " .. key)
+            -- print("Trying to load xml keys from: " .. key)
 
             self.ad.stateModule:readFromXMLFile(xmlFile, key)
             AutoDrive.readVehicleSettingsFromXML(self, xmlFile, key)

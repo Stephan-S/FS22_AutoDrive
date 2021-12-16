@@ -52,14 +52,14 @@ function AutoDrive:getAiSplinesParentNode()
 		if aiSplineNode == nil and spline ~= nil then
 			local parent = getParent(spline) --now we are at trafficSystem
 			if parent ~= nil then
-				print("Parent name: " .. getName(parent))
+				-- print("Parent name: " .. getName(parent))
 				parent = getParent(parent) -- now we are at "Splines"
 				if parent ~= nil then
-					print("Parent parent name: " .. getName(parent))
+					-- print("Parent parent name: " .. getName(parent))
 					for i=0, getNumOfChildren(parent)-1, 1 do
 						if string.find(getName(getChildAt(parent, i)), "ai") then
 							aiSplineNode = getChildAt(parent, i)
-							print("aiSplineNode name: " .. getName(aiSplineNode))
+							-- print("aiSplineNode name: " .. getName(aiSplineNode))
 						end
 					end
 				end				
