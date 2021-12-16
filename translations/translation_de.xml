@@ -179,7 +179,7 @@
 		<text name="gui_ad_enterGroupNameText"					text="Ordnernamen eingeben:" />
 		<text name="gui_ad_autoRefuel"							text="Automatisch Auftanken" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Bei einem niedrigen Tanklevel wird automatisch ein Ziel in Tankstellennähe angefahren." />
-		<text name="gui_ad_autoRepair"							text="Automatische Reperatur" />
+		<text name="gui_ad_autoRepair"							text="Automatische Reparatur" />
 		<text name="gui_ad_autoRepair_tooltip"					text="Falls das Fahrzeug oder ein Anbaugerät stark beschädigt ist, automatisch Werkstatt anfahren und reparieren" />
 		<text name="gui_ad_filter"								text="Filter" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Zielfilter ändern" />
