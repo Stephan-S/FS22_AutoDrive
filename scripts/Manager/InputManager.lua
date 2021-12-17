@@ -278,7 +278,7 @@ function ADInputManager:input_start_stop(vehicle)
                     if otherVehicle.ad.stateModule.AIVEActiveBeforeSave and otherVehicle.acParameters ~= nil then
                         g_currentMission:requestToEnterVehicle(otherVehicle)
                         otherVehicle.acParameters.enabled = true
-                        otherVehicle:startAIVehicle(nil, false, g_currentMission.player.farmId)
+                        otherVehicle:toggleAIVehicle()
                     end                    
 				end
 			end

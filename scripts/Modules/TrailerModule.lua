@@ -268,14 +268,6 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
     end    
 end
 
-
-
---[[
-Important:
-Due to a call to GlobalCompany GC_LoadingTrigger:getIsActivatable() from Giants Engine without initiate by AD we need to fake if AD is active or not
-Before calling this function we have to set vehicle.ad.isActive to true so that GC can treat the vehicle as to have a driver in and get the correct result from Giants
-]]
-
 function ADTrailerModule:updateLoad(dt)
     self.count =  self.count + dt
 
@@ -305,9 +297,7 @@ function ADTrailerModule:updateLoad(dt)
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad search for load self.trigger %s", tostring(self.trigger))
 
         -- look for triggers with requested fill type
-        self.vehicle.ad.isActive = true        -- let GC think AD is active
         local loadPairs = AutoDrive.getTriggerAndTrailerPairs(self.vehicle, dt)
-        self.vehicle.ad.isActive = false        -- let GC think AD is not active
         local index = 0
         for _, pair in pairs(loadPairs) do
             index = index + 1
@@ -318,9 +308,7 @@ function ADTrailerModule:updateLoad(dt)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad Try loading at trigger now index %s", tostring(index))
                 fillFound = true
                 -- start loading
-                self.vehicle.ad.isActive = true        -- let GC think AD is active
                 self:tryLoadingAtTrigger(pair.trailer, pair.trigger, pair.fillUnitIndex)
-                self.vehicle.ad.isActive = false        -- let GC think AD is not active
                 self.foundSuitableTrigger = true    -- loading trigger was found
                 return
             end
@@ -416,12 +404,10 @@ function ADTrailerModule:updateLoad(dt)
             self.isLoading = true
             if self.loadRetryTimer:done() then
                 -- initiate load animation
-                self.vehicle.ad.isActive = true        -- let GC think AD is active
                 local loadPairs = AutoDrive.getTriggerAndTrailerPairs(self.vehicle, dt)
                 for _, pair in pairs(loadPairs) do
                     self:tryLoadingAtTrigger(pair.trailer, pair.trigger, pair.fillUnitIndex)
                 end
-                self.vehicle.ad.isActive = false        -- let GC think AD is not active
                 -- self.trigger = nil
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad try loading again after some time")
                 self.loadRetryTimer:timer(false, ADTrailerModule.LOAD_RETRY_TIME)     -- reset the timer to try load again

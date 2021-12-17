@@ -1046,7 +1046,7 @@ function AutoDrive:stopAutoDrive()
                         if self.acParameters ~= nil then
                             self.acParameters.enabled = true
                             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to AIVE with startAIVehicle")
-                            self:startAIVehicle(nil, false, self.spec_aiVehicle.startedFarmId)
+                            self:toggleAIVehicle()
                         end
                     end
                 end
