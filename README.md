@@ -20,8 +20,6 @@ And to all who do donate: Thank you very much :-)
 #### Stephan (Founder & Modder):
 https://www.paypal.me/StephanSchlosser
 
-https://www.patreon.com/stephanAD
-
 #### Axel (Co-Modder)
 
 #### Iwan1803 (Community Manager, Supporter & Tester):
