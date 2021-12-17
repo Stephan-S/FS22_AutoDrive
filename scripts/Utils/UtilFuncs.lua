@@ -1376,7 +1376,7 @@ function AutoDrive.checkWaypointsMultipleSameOut(correctit)
 end
 
 function AutoDrive.playSample(sample, volume)
-    if AutoDrive.getSetting("playSounds") then
+    if AutoDrive.getSetting("playSounds") and sample~= nil then
         playSample(sample, 1, volume, 0, 0, 0)
     end
 end
