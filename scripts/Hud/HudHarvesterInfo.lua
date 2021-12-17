@@ -16,13 +16,14 @@ function HudHarvesterInfo:onDraw(vehicle, uiScale)
             local text = ""
             setTextColor(1, 1, 1, 1)
 
+            local harvesterPairingOk = vehicle.ad.stateModule:getHarvesterPairingOk()
             if vehicle.ad.isCombine then
-                if not ADHarvestManager:hasHarvesterPotentialUnloaders(vehicle) then
+                if not harvesterPairingOk then
                     setTextColor(1, 0, 0, 1)
                     text = g_i18n:getText("gui_ad_noUnloaderAvailable")
                 end
             else
-                if not ADHarvestManager:hasVehiclePotentialHarvesters(vehicle) then
+                if not harvesterPairingOk and vehicle.ad.stateModule:isActive() then
                     setTextColor(1, 0, 0, 1)
                     text = g_i18n:getText("gui_ad_noHarvesterAvailable")
                 end

@@ -67,6 +67,7 @@ function ADStateModule:reset()
     self.bunkerUnloadType = ADStateModule.BUNKER_UNLOAD_TRIGGER
     self.automaticUnloadTarget = false
     self.automaticPickupTarget = false
+    self.harversterPairingOk = false
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
@@ -198,6 +199,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
+    streamWriteBool(streamId, self.harversterPairingOk)    
 end
 
 function ADStateModule:readStream(streamId)
@@ -225,6 +227,7 @@ function ADStateModule:readStream(streamId)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
+    self.harversterPairingOk = streamReadBool(streamId)    
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -254,6 +257,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
+    streamWriteBool(streamId, self.harversterPairingOk)    
 end
 
 function ADStateModule:readUpdateStream(streamId)
@@ -281,6 +285,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
+    self.harversterPairingOk = streamReadBool(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -303,6 +308,20 @@ function ADStateModule:update(dt)
         if self.vehicle.advd ~= nil then
             self.vehicle.advd:setParkDestination(self.vehicle, self.parkDestination, false)
             self.parkDestination = -1
+        end
+    end
+    
+    if g_server ~= nil then
+        if self.vehicle.ad.isCombine or (self:getMode() == AutoDrive.MODE_UNLOAD and self.active) then
+            if self.vehicle.ad.isCombine then
+                if ADHarvestManager:hasHarvesterPotentialUnloaders(self.vehicle) ~= self.harversterPairingOk then
+                    self:setHarvesterPairingOk(not self.harversterPairingOk)
+                end
+            else
+                if ADHarvestManager:hasVehiclePotentialHarvesters(self.vehicle) ~= self.harversterPairingOk then
+                    self:setHarvesterPairingOk(not self.harversterPairingOk)
+                end
+            end
         end
     end
 
@@ -411,6 +430,17 @@ end
 
 function ADStateModule:getAutomaticPickupTarget()
     return self.automaticPickupTarget
+end
+
+function ADStateModule:setHarvesterPairingOk(ok)
+    if ok ~= self.harversterPairingOk then
+        self.harversterPairingOk = ok
+        self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:getHarvesterPairingOk()
+    return self.harversterPairingOk
 end
 
 function ADStateModule:getCurrentWayPointId()
