@@ -13,11 +13,11 @@ And to all who do donate: Thank you very much :-)
 
 #### Stephan (Founder & Modder):
 https://www.patreon.com/stephanAD
-
 https://www.paypal.me/StephanSchlosser
 
-#### Iwan1803 (Community Manager & Supporter):
+#### Axel (Co-Modder)
+
+#### Iwan1803 (Community Manager, Supporter & Tester):
 https://www.tipeeestream.com/iwan1803/tip
 
-and also
-#### Axel (Co-Modder), Willi (Supporter & Tester), TyKonKet (Modder), Oliver (Modder), Aletheist (Co-Modder)
+### Willi (Supporter & Tester)
