@@ -12,8 +12,9 @@ But remember, this is absolutely not required. We value any issues and feature r
 And to all who do donate: Thank you very much :-)
 
 #### Stephan (Founder & Modder):
-https://www.patreon.com/stephanAD
 https://www.paypal.me/StephanSchlosser
+
+https://www.patreon.com/stephanAD
 
 #### Axel (Co-Modder)
 
