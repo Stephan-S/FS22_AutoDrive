@@ -3,8 +3,8 @@
 --
 -- Author: Stephan
 -- Email: Stephan910@web.de
--- Date: 02.02.2019
--- Version: 1.0.0.0
+-- Date: 17.12.2021
+-- Version: 2.0.0.0
 
 -- #############################################################################
 
@@ -159,7 +159,7 @@ function AutoDriveRegister.register()
     for vehicleType, typeDef in pairs(g_vehicleTypeManager.types) do
         if typeDef ~= nil and vehicleType ~= "locomotive" and vehicleType ~= "horse" and (not typeDef.hasADSpec == true) then
             if AutoDrive.prerequisitesPresent(typeDef.specializations) then
-                Logging.info('[AD] Attached to vehicleType "%s"', vehicleType)
+                --Logging.info('[AD] Attached to vehicleType "%s"', vehicleType)
                 if typeDef.specializationsByName[AutoDrive.ADSpecName] == nil then
                     g_vehicleTypeManager:addSpecialization(vehicleType, AutoDrive.ADSpecName)
                     typeDef.hasADSpec = true
