@@ -295,6 +295,9 @@ function PathFinderModule:startPathPlanningToVehicle(targetVehicle, targetDistan
     self.goingToPipe = false
     self.chasingVehicle = true
     self.isSecondChasingVehicle = true
+    if targetVehicle.ad ~= nil and targetVehicle.ad.pathFinderModule ~= nil and targetVehicle.ad.pathFinderModule.fruitToCheck ~= nil then
+        self.fruitToCheck = targetVehicle.ad.pathFinderModule.fruitToCheck
+    end
 end
 
 function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
