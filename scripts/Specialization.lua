@@ -248,6 +248,12 @@ function AutoDrive:onPostLoad(savegame)
     self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
     self.ad.lastDrawPosition = {x = x, z = z}
+
+    if self.spec_enterable ~= nil and self.spec_enterable.cameras ~= nil then
+        for _, camera in pairs(self.spec_enterable.cameras) do
+            camera.storedIsRotatable = camera.isRotatable
+        end
+    end
 end
 
 function AutoDrive:onWriteStream(streamId, connection)
@@ -1311,7 +1317,7 @@ function AutoDrive:toggleMouse()
         if self.spec_enterable ~= nil and self.spec_enterable.cameras ~= nil then
             for _, camera in pairs(self.spec_enterable.cameras) do
                 camera.storedAllowTranslation = camera.allowTranslation
-                camera.storedIsRotatable = camera.isRotatable
+                --camera.storedIsRotatable = camera.isRotatable
                 camera.allowTranslation = false
                 camera.isRotatable = false
             end
