@@ -360,8 +360,8 @@ function AutoDriveHud:refreshHudElementsLayerSequence()
 	)
 end
 
-function AutoDriveHud:drawHud(vehicle)	
-	if vehicle == g_currentMission.controlledVehicle then
+function AutoDriveHud:drawHud(vehicle)
+	if vehicle == g_currentMission.controlledVehicle or AutoDrive.aiFrameOpen then
 		local uiScale = g_gameSettings:getValue("uiScale")
 		if AutoDrive.getSetting("guiScale") ~= 0 then
 			uiScale = AutoDrive.getSetting("guiScale")
@@ -375,9 +375,6 @@ function AutoDriveHud:drawHud(vehicle)
 			self:createHudAt(self.posX, self.posY)
 		end
 		self.lastUIScale = uiScale
-
-		--local ovWidth = self.Background.width
-		--local ovHeight = self.Background.height
 
 		for _, element in ipairs(self.hudElements) do -- `ipairs` is important, as we want "index-value pairs", not "key-value pairs". https://stackoverflow.com/a/55109411
 			element:onDraw(vehicle, uiScale)
@@ -444,7 +441,8 @@ function AutoDriveHud:toggleHud(vehicle)
 end
 
 function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
-	local mouseActiveForAutoDrive = (g_gui.currentGui == nil) and (g_inputBinding:getShowMouseCursor() == true)
+	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
+	
 	if mouseActiveForAutoDrive then
 		local mouseEventHandled = false
 		if AutoDrive.splineInterpolation ~= nil then			

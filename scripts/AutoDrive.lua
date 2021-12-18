@@ -278,6 +278,40 @@ function AutoDrive:loadMap(name)
 
 	ADMultipleTargetsManager:load()
 	AutoDrive.initTelemetry()
+
+	InGameMenuAIFrame.onFrameOpen = Utils.appendedFunction(InGameMenuAIFrame.onFrameOpen, AutoDrive.onAIFrameOpen)
+	InGameMenuAIFrame.onFrameClose = Utils.appendedFunction(InGameMenuAIFrame.onFrameClose, AutoDrive.onAIFrameClose)
+	InGameMenuAIFrame.refreshContextInput = Utils.appendedFunction(InGameMenuAIFrame.refreshContextInput, AutoDrive.refreshContextInputAIFrame)
+	BaseMission.draw = Utils.appendedFunction(BaseMission.draw, AutoDrive.drawBaseMission)
+
+end
+
+function AutoDrive:onAIFrameOpen()
+	AutoDrive.aiFrameOpen = true
+end
+
+function AutoDrive:onAIFrameClose()
+	AutoDrive.aiFrameOpen = false
+end
+
+function AutoDrive:refreshContextInputAIFrame()
+	if AutoDrive.aiFrameOpen then		
+		local hotspot = self.currentHotspot
+		if hotspot ~= nil then
+			local vehicle = InGameMenuMapUtil.getHotspotVehicle(hotspot)
+			AutoDrive.aiFrameVehicle = vehicle
+		end
+	end
+end
+
+function AutoDrive:drawBaseMission()
+	if AutoDrive.aiFrameOpen then
+		if AutoDrive.aiFrameVehicle ~= nil then
+			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
+		else
+			AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
+		end
+	end
 end
 
 function AutoDrive:init()
@@ -385,7 +419,8 @@ end
 
 function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	local vehicle = g_currentMission.controlledVehicle
-	local mouseActiveForAutoDrive = (g_gui.currentGui == nil) and (g_inputBinding:getShowMouseCursor() == true)
+	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
+	
 	if not mouseActiveForAutoDrive then
 		AutoDrive.lastButtonDown = nil
 		return
@@ -402,8 +437,12 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 
 	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
-		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and AutoDrive.Hud.showHud == true then
-			AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then		
+			if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle then
+				AutoDrive.Hud:mouseEvent(AutoDrive.aiFrameVehicle, posX, posY, isDown, isUp, button)
+			else
+				AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+			end
 		end
 
 		ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
@@ -470,7 +509,7 @@ function AutoDrive:update(dt)
 	end
 
 	if AutoDrive.Hud ~= nil then
-		if AutoDrive.Hud.showHud == true then
+		if AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen then
 			AutoDrive.Hud:update(dt)
 		end
 	end
@@ -484,7 +523,7 @@ function AutoDrive:update(dt)
 	ADTriggerManager:update(dt)
 	ADRoutesManager:update(dt)
 
-	AutoDrive.handleTelemetry(dt)
+	AutoDrive.handleTelemetry(dt)	
 end
 
 function AutoDrive:draw()

@@ -258,7 +258,21 @@ function ADHudButton:act(vehicle, posX, posY, isDown, isUp, button)
         end
 
         if button == 1 and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
+            local storedVehicle = nil
+            if self.primaryAction == "input_start_stop" then
+                if vehicle ~= g_currentMission.controlledVehicle then
+                    storedVehicle = g_currentMission.controlledVehicle
+                    g_currentMission.controlledVehicle = vehicle
+                    --g_currentMission:requestToEnterVehicle(vehicle)
+                end
+            end
             ADInputManager:onInputCall(vehicle, self.primaryAction)
+            if storedVehicle ~= nil then
+                SpecializationUtil.raiseEvent(vehicle, "onUpdate", 16, false, false, false)
+                g_currentMission.controlledVehicle = storedVehicle
+                --g_currentMission:requestToEnterVehicle(storedVehicle)
+                g_inputBinding:setShowMouseCursor(true)
+        end
             return true
         elseif (button == 3 or button == 2) and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
             ADInputManager:onInputCall(vehicle, self.secondaryAction)
