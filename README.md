@@ -26,3 +26,8 @@ https://www.paypal.me/StephanSchlosser
 https://www.tipeeestream.com/iwan1803/tip
 
 #### Willi (Supporter & Tester)
+
+
+## Course Editor
+The course editor is now maintained by @KillBait and can be found here:
+https://github.com/KillBait/AutoDrive_Course_Editor
