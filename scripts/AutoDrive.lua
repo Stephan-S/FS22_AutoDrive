@@ -283,7 +283,8 @@ function AutoDrive:loadMap(name)
 	InGameMenuAIFrame.onFrameClose = Utils.appendedFunction(InGameMenuAIFrame.onFrameClose, AutoDrive.onAIFrameClose)
 	InGameMenuAIFrame.refreshContextInput = Utils.appendedFunction(InGameMenuAIFrame.refreshContextInput, AutoDrive.refreshContextInputAIFrame)
 	BaseMission.draw = Utils.appendedFunction(BaseMission.draw, AutoDrive.drawBaseMission)
-
+	PlaceableHotspot.getCategory = Utils.overwrittenFunction(PlaceableHotspot.getCategory, AutoDrive.PlaceableHotspotGetCategory)
+	InGameMenuAIFrame.setMapSelectionItem = Utils.overwrittenFunction(InGameMenuAIFrame.setMapSelectionItem, AutoDrive.InGameMenuAIFrameSetMapSelectionItem)
 end
 
 function AutoDrive:onAIFrameOpen()
@@ -312,6 +313,25 @@ function AutoDrive:drawBaseMission()
 			AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
 		end
 	end
+end
+
+function AutoDrive:PlaceableHotspotGetCategory()
+	if self.isADMarker then
+		return MapHotspot.CATEGORY_AI
+	end
+	return PlaceableHotspot.CATEGORY_MAPPING[self.placeableType]
+end
+
+function AutoDrive:InGameMenuAIFrameSetMapSelectionItem(superFunc, hotspot)
+	if hotspot ~= nil and hotspot.isADMarker and AutoDrive.aiFrameOpen then
+		if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+			if AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
+				AutoDriveHudInputEventEvent:sendFirstMarkerEvent(AutoDrive.aiFrameVehicle, hotspot.markerID)
+				return
+			end
+		end
+	end
+	return superFunc(self, hotspot)
 end
 
 function AutoDrive:init()
