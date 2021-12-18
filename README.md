@@ -1,6 +1,12 @@
 # FS22_AutoDrive
 FS22 version of the AutoDrive mod
 
+### Latest Release: 2.0.0.0
+![GitHub all releases](https://img.shields.io/github/downloads/Stephan-S/FS22_AutoDrive/total?label=Downloads&style=plastic)  
+[Latest Release](https://github.com/Stephan-S/FS22_AutoDrive/releases/latest)  
+
+Download: https://github.com/Stephan-S/FS22_AutoDrive/releases/download/2.0.0.0/FS22_AutoDrive.zip
+
 ## Discord Server:
 For help & support, feel free to join us on Discord: 
 https://discord.gg/9D4B5hX
@@ -12,7 +18,6 @@ But remember, this is absolutely not required. We value any issues and feature r
 And to all who do donate: Thank you very much :-)
 
 #### Stephan (Founder & Modder):
-https://www.patreon.com/stephanAD
 https://www.paypal.me/StephanSchlosser
 
 #### Axel (Co-Modder)
@@ -21,3 +26,8 @@ https://www.paypal.me/StephanSchlosser
 https://www.tipeeestream.com/iwan1803/tip
 
 #### Willi (Supporter & Tester)
+
+
+## Course Editor
+The course editor is now maintained by @KillBait and can be found here:
+https://github.com/KillBait/AutoDrive_Course_Editor
