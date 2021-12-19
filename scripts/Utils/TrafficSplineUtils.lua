@@ -135,8 +135,8 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
 end
 
 function AutoDrive:createJunctionCommand()
-	self:createJunctions(AutoDrive.startNodes, AutoDrive.endNodes, 150, 60)
-	self:createJunctions(AutoDrive.startNodes, AutoDrive.endNodes, 30, 120)
+	--self:createJunctions(AutoDrive.startNodes, AutoDrive.endNodes, 150, 60)
+	--self:createJunctions(AutoDrive.startNodes, AutoDrive.endNodes, 30, 120)
 end
 
 function AutoDrive:removeJunctionCommand()
