@@ -77,12 +77,16 @@ function AutoDrive:getTerrainHeightAtWorldPos(x, z, startingHeight)
 	local startHeight = startingHeight or getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
 	-- do a raycast from a bit above y
 	raycastClosest(x, startHeight + 3, z, 0, -1, 0, "getTerrainHeightAtWorldPos_Callback", 5, self, 12)
-	return self.raycastHeight or y
+	return self.raycastHeight or startingHeight
 end
 
 --- Callback function called by AutoDrive:getTerrainHeightAtWorldPos()
 function AutoDrive:getTerrainHeightAtWorldPos_Callback(hitObjectId, x, y, z, distance)
-	self.raycastHeight = y
+	if y ~= nil then
+		self.raycastHeight = y
+	--else
+		--print("Raycast returned nil value!!!")
+	end
 end
 
 function AutoDrive.streamReadStringOrEmpty(streamId)
@@ -600,6 +604,9 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 					dummy = dummy + i
 				end
 				self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y = self.raycastHeight or self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y
+				if self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y == nil then
+					self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y = prevWP.y
+				end
 				
 				prevWP = px -- newWP
 				prevV = newV
