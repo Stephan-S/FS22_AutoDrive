@@ -331,7 +331,7 @@ function ADGraphManager:renameMapMarker(newName, markerId, sendEvent)
 end
 
 function ADGraphManager:createMapMarkerOnClosest(vehicle, markerName, sendEvent)
-	if vehicle ~= nil and markerName:len() > 1 then
+	if vehicle ~= nil and markerName:len() >= 1 then
 		-- Finding closest waypoint
 		local closest, _ = vehicle:getClosestWayPoint()
 		if closest ~= nil and closest ~= -1 and self.wayPoints[closest] ~= nil then
@@ -361,7 +361,7 @@ function ADGraphManager:createMapMarker(markerId, markerName, sendEvent)
 end
 
 function ADGraphManager:addGroup(groupName, sendEvent)
-	if groupName:len() > 1 and self.groups[groupName] == nil then
+	if groupName:len() >= 1 and self.groups[groupName] == nil then
 		if sendEvent == nil or sendEvent == true then
 			-- Propagating group creation all over the network
 			AutoDriveGroupsEvent.sendEvent(groupName, AutoDriveGroupsEvent.TYPE_ADD)
