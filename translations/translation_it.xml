@@ -1,215 +1,215 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
-	<translationContributors>cristiancundari, Roby1164</translationContributors>
+	<translationContributors>cristiancundari, Roby1164, Markus33_ITA</translationContributors>
 	<texts>
-		<text name="UNKNOWN"									text="Sconosciuto" />
-		<text name="input_ADToggleHud"							text="AD: Mostra/Nascondi HUD" />
+		<text name="UNKNOWN" 									text="Sconosciuto" />
+		<text name="input_ADToggleHud" 							text="AD: Mostra/Nascondi HUD" />
 		<text name="input_ADToggleHudExtension"					text="AD: Mostra/Nascondi HUD estesa" />
-		<text name="input_ADToggleMouse"						text="AD: Mostra/Nascondi mouse" />
-		<text name="input_ADEnDisable"							text="AD: Abilita/Disabilita" />
-		<text name="input_ADSilomode"							text="AD: Cambia modalità" />
-		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
-		<text name="input_ADRecord"								text="AD: Registra" />
-		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
-		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
-		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
-		<text name="input_ADSelectTarget"						text="AD: Destinazione successiva" />
-		<text name="input_ADSelectPreviousTarget"				text="AD: Destinazione precedente" />
-		<text name="input_AD_Speed_up"							text="AD: Aumenta velocità" />
-		<text name="input_AD_Speed_down"						text="AD: Diminuisci velocità" />
-		<text name="input_AD_routes_manager"					text="AD: Apri Gestione percorsi" />
+		<text name="input_ADToggleMouse" 						text="AD: Mostra/Nascondi mouse" />
+		<text name="input_ADEnDisable" 							text="AD: Abilita/Disabilita" />
+		<text name="input_ADSilomode" 							text="AD: Cambia modalità" />
+		<text name="input_ADPreviousMode" 						text="AD: Previous mode" />
+		<text name="input_ADRecord" 							text="AD: Registra" />
+		<text name="input_ADRecord_Dual" 						text="AD: Registra percorso a 2 strade" />
+		<text name="input_ADRecord_SubPrio" 					text="AD: Registra percorso secondario" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Registra il percorso del percorso secondario a 2 strade" />
+		<text name="input_ADSelectTarget" 						text="AD: Destinazione successiva" />
+		<text name="input_ADSelectPreviousTarget" 				text="AD: Destinazione precedente" />
+		<text name="input_AD_Speed_up" 							text="AD: Aumenta velocità" />
+		<text name="input_AD_Speed_down" 						text="AD: Diminuisci velocità" />
+		<text name="input_AD_routes_manager" 					text="AD: Apri Gestione percorsi" />
 		<text name="input_AD_open_notification_history" 		text="AD: Apri storico notifiche" />
 		<text name="input_AD_continue"							text="AD: Continua" />
 		<text name="input_ADSelectTargetUnload"					text="AD: Punto di scarico successivo" />
 		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Punto di scarico precedente" />
-		<text name="input_ADActivateDebug"						text="AD: Modalità di modifica" />
-		<text name="input_ADDisplayMapPoints"					text="AD: Show waypoints" />
-		<text name="input_ADDebugSelectNeighbor"				text="AD: Seleziona un punto vicino" />
-		<text name="input_ADDebugChangeNeighbor"				text="AD: Prossimo punto vicino" />
-		<text name="input_ADDebugPreviousNeighbor"				text="AD: Select previous Neighbour Point" />
-		<text name="input_ADDebugCreateConnection"				text="AD: Connetti/Disconnetti" />
-		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Toggle connection between inverted" />
-		<text name="input_ADDebugCreateMapMarker"				text="AD: Crea nuova destinazione" />
-		<text name="input_ADRenameMapMarker"					text="AD: Rinomina destinazione corrente" />
-		<text name="input_ADDebugDeleteWayPoint"				text="AD: Elimina nodo" />
-		<text name="input_ADDebugDeleteDestination"				text="AD: Elimina destinazione" />
-		<text name="input_ADSelectNextFillType"					text="AD: Prodotto successivo" />
-		<text name="input_ADSelectPreviousFillType"				text="AD: Prodotto precedente" />
-		<text name="input_ADOpenGUI"							text="AD: Apri menu" />
-		<text name="input_ADCallDriver"							text="AD: Chiama autista" />
-		<text name="input_ADGoToVehicle"						text="AD: Passa al veicolo arrivato" />
-		<text name="input_ADNameDriver"							text="AD: Assegna un nome all'autista" />
-		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
-		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
-		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
-		<text name="input_ADIncLoopCounter"						text="AD: Aumenta contatore ciclo" />
-		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
-		<text name="input_ADbunkerUnloadType"					text="AD: Scarica su rimorchio o BGA" />
-		<text name="input_ADParkVehicle"						text="AD: Parcheggio Veicolo" />
-		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
-		<text name="input_ADRefuelVehicle"						text="AD: Rifornire il veicolo" />
-		<text name="input_ADSwapTargets"						text="AD: Scambia Destinazione" />
-		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
-		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
-		<text name="input_AD_devAction"                         text="AD: Azione dello sviluppatore" />
+		<text name="input_ADActivateDebug" 						text="AD: Modalità di modifica" />
+		<text name="input_ADDisplayMapPoints" 					text="AD: Mostra punti di passaggio" />
+		<text name="input_ADDebugSelectNeighbor" 				text="AD: Seleziona un punto vicino" />
+		<text name="input_ADDebugChangeNeighbor" 				text="AD: Prossimo punto vicino" />
+		<text name="input_ADDebugPreviousNeighbor" 				text="AD: Seleziona il punto vicino precedente" />
+		<text name="input_ADDebugCreateConnection" 				text="AD: Connetti/Disconnetti" />
+		<text name="input_ADDebugToggleConnectionInverted" 		text="AD: Commuta la connessione tra invertita" />
+		<text name="input_ADDebugCreateMapMarker" 				text="AD: Crea nuova destinazione" />
+		<text name="input_ADRenameMapMarker" 					text="AD: Rinomina destinazione corrente" />
+		<text name="input_ADDebugDeleteWayPoint" 				text="AD: Elimina nodo" />
+		<text name="input_ADDebugDeleteDestination" 			text="AD: Elimina destinazione" />
+		<text name="input_ADSelectNextFillType" 				text="AD: Prodotto successivo" />
+		<text name="input_ADSelectPreviousFillType" 			text="AD: Prodotto precedente" />
+		<text name="input_ADOpenGUI" 							text="AD: Apri menu" />
+		<text name="input_ADCallDriver" 						text="AD: Chiama autista" />
+		<text name="input_ADGoToVehicle" 						text="AD: Passa al veicolo arrivato" />
+		<text name="input_ADNameDriver" 						text="AD: Assegna un nome all'autista" />
+		<text name="input_ADSetDestinationFilter" 				text="AD: Filtro di destinazione" />
+		<text name="input_AD_FieldSpeed_up" 					text="AD: Aumenta la velocità nel campo" />
+		<text name="input_AD_FieldSpeed_down" 					text="AD: Diminuisci la velocità nel campo" />
+		<text name="input_ADIncLoopCounter" 					text="AD: Aumenta contatore ciclo" />
+		<text name="input_ADDecLoopCounter" 					text="AD: Diminuisci contatore ciclo" />
+		<text name="input_ADbunkerUnloadType" 					text="AD: Scarica su rimorchio o BGA" />
+		<text name="input_ADParkVehicle" 						text="AD: Parcheggio Veicolo" />
+		<text name="input_ADSetParkDestination"	 				text="AD: Assegna la prima destinazione per il parcheggio" />
+		<text name="input_ADRefuelVehicle" 						text="AD: Rifornire il veicolo" />
+		<text name="input_ADSwapTargets" 						text="AD: Scambia Destinazione" />
+		<text name="input_ADStartCP" 							text="AD: Passa a CP/ALIVE" />
+		<text name="input_ADToggleCP_AIVE" 						text="AD: Attiva/Disattiva CP/AIVE" />
+		<text name="input_AD_devAction" 						text="AD: Azione dello sviluppatore" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Suggerimento del giorno aperto" />
-		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
-		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
-		<text name="hud_avoidFruit"								text="AD: Evita raccolto" />
-		<text name="hud_startCp"								text="AD: Avvia CP/AIVE a destinazione" />
-		<text name="AD_parkVehicle_noPosSet"					text="Nessuna destinazione di parcheggio assegnata. Si prega di assegnare l'obiettivo attualmente selezionato con il tasto destro del mouse." />
-		<text name="AD_parkVehicle_selected"					text="Seleziona Parcheggio veicolo: " />
+		<text name="input_ADToggleAutomaticPickupTarget" 		text="AD: Attiva/Disattiva il target di ritiro automatico" />
+		<text name="input_ADToggleAutomaticUnloadTarget" 		text="AD: Attiva/Disattiva obiettivo di scaricamento automatico" />
+		<text name="hud_avoidFruit" 							text="AD: Evita raccolto" />
+		<text name="hud_startCp" 								text="AD: Avvia CP/AIVE a destinazione" />
+		<text name="AD_parkVehicle_noPosSet" 					text="Nessuna destinazione di parcheggio assegnata. Si prega di assegnare l'obiettivo attualmente selezionato con il tasto destro del mouse." />
+		<text name="AD_parkVehicle_selected" 					text="Seleziona Parcheggio veicolo: " />
 		<text name="AD_Driver_of"								text="L'autista di" />
-		<text name="AD_has_reached"								text="ha raggiunto" />
-		<text name="AD_got_stuck"								text="si è bloccato" />
-		<text name="AD_cannot_reach"							text="non può raggiungere" />
-		<text name="AD_cannot_find_path"						text="impossibile calcolare un percorso" />
-		<text name="AD_new_marker"								text="Nuovo obbiettivo:" />
-		<text name="AD_No_Trailer"								text="impossibile trovare il rimorchio" />
-		<text name="AD_No_Bunker"								text="impossibile trovare il bunker" />
-		<text name="AD_No_Shovel"								text="impossibile trovare una pala collegata" />
-		<text name="AD_No_Refuel_Station"						text="Impossibile trovare la stazione di rifornimento per:" />
-		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
-		<text name="AD_MODE_DRIVETO"							text="Guida" />
-		<text name="AD_MODE_DELIVERTO"							text="Consegna" />
-		<text name="AD_MODE_PICKUPANDDELIVER"					text="Carica e consegna" />
-		<text name="AD_MODE_UNLOAD"								text="Scarica trebbia" />
+		<text name="AD_has_reached" 							text="Ha raggiunto" />
+		<text name="AD_got_stuck" 								text="si è bloccato" />
+		<text name="AD_cannot_reach" 							text="Non può raggiungere" />
+		<text name="AD_cannot_find_path" 						text="Impossibile calcolare un percorso" />
+		<text name="AD_new_marker" 								text="Nuovo obbiettivo:" />
+		<text name="AD_No_Trailer" 								text="Impossibile trovare il rimorchio" />
+		<text name="AD_No_Bunker" 								text="Impossibile trovare il bunker" />
+		<text name="AD_No_Shovel" 								text="Impossibile trovare una pala collegata" />
+		<text name="AD_No_Refuel_Station" 						text="Impossibile trovare la stazione di rifornimento per: " />
+		<text name="AD_No_Repair_Station"						text="Impossibile trovare la stazione di riparazione per: " />
+		<text name="AD_MODE_DRIVETO" 							text="Guida" />
+		<text name="AD_MODE_DELIVERTO" 							text="Consegna" />
+		<text name="AD_MODE_PICKUPANDDELIVER" 					text="Carica e consegna" />
+		<text name="AD_MODE_UNLOAD" 							text="Scarica trebbia" />
 		<text name="AD_MODE_LOAD"								text="Carica" />
-		<text name="AD_MODE_BGA"								text="Scarica il bunker" />
-		<text name="AD_synchronizing"							text="Caricamento Percorsi dal server.." />
-		<text name="AD_lctrl_for_extendedEditor" 				text="LCTRL per modalita editor estesa" />
+		<text name="AD_MODE_BGA" 								text="Scarica il bunker" />
+		<text name="AD_synchronizing" 							text="Caricamento Percorsi dal server.." />
+		<text name="AD_lctrl_for_extendedEditor" 				text="LCTRL per modalità editor estesa" />
 		<text name="AD_lctrl_for_creation" 						text="LCTRL per creare" />
 		<text name="AD_lalt_for_deletion" 						text="LALT per cancellare" />
-		<text name="AD_lshift_for_reverse" 						text="RSHIFT per Guida in retromarcia" />
-		<text name="gui_ad_Setting"								text="Impostazioni Autodrive" />
-		<text name="gui_ad_collisionHeigth"						text="Distanza collisione" />
-		<text name="gui_ad_collisionHeigth_tooltip"				text="Impostazione per il rilevamento delle collisioni davanti al veicolo. Se durante la guida non vengono rilevati altri veicoli, ridurre gradualmente. (Default 2m)" />
-		<text name="gui_ad_blinkValue"						    text="Frecce automatiche" />
-		<text name="gui_ad_blinkValue_tooltip"					text="Angolo di sterzata per attivare automaticamente le frecce. (0 = indicatore di direzione automatico disattivato)" />
+		<text name="AD_lshift_for_reverse" 						text="RSHIFT per guida in retromarcia" />
+		<text name="gui_ad_Setting" 							text="Impostazioni Autodrive" />
+		<text name="gui_ad_collisionHeigth" 					text="Distanza collisione" />
+		<text name="gui_ad_collisionHeigth_tooltip" 			text="Impostazione per il rilevamento delle collisioni davanti al veicolo. Se durante la guida non vengono rilevati altri veicoli, ridurre gradualmente. (Default 2m)" />
+		<text name="gui_ad_blinkValue" 							text="Frecce automatiche" />
+		<text name="gui_ad_blinkValue_tooltip" 					text="Angolo di sterzata per attivare automaticamente le frecce. (0 = indicatore di direzione automatico disattivato)" />
 		<text name="gui_ad_pipe_offset"							text="Distanza dal tubo" />
-		<text name="gui_ad_followDistance"						text="Distance combine" />
-		<text name="gui_ad_followDistance_tooltip"				text="Distanza mantenuta dalla mietitrebbia quando la si segue" />
+		<text name="gui_ad_followDistance" 						text="Distanza mietitrebbia" />
+		<text name="gui_ad_followDistance_tooltip" 				text="Distanza mantenuta dalla mietitrebbia quando la si segue" />
 		<text name="gui_ad_lookahead_turning"					text="Distanza d'avanti (sterzata)" />
-		<text name="gui_ad_lookahead_turning_tooltip"			text="La distanza alla quale il veicolo aggiusta la sterzata per seguire il prossimo segmento del percorso" />
-		<text name="gui_ad_useFastestRoute"						text="Usa la strada più veloce" />
-		<text name="gui_ad_useFastestRoute_tooltip"				text="Prendi in considerazione la velocità di guida invece delle semplici distanze, quando calcoli i percorsi migliori" />
-		<text name="gui_ad_mapMarkerDetour"						text="Deviazione massima" />
-		<text name="gui_ad_mapMarkerDetour_tooltip"				text="Deviazione massima quando si sceglie di evitare le destinazioni" />
-		<text name="gui_ad_siloEmpty"							text="Se il silo è vuoto" />
-		<text name="gui_ad_siloEmpty_tooltip"					text="Determina come l'autista deve reagire ad un silo vuoto" />
-		<text name="gui_ad_useFolders"							text="Usa le cartelle" />
-		<text name="gui_ad_useFolders_tooltip"					text="Usa Le cartelle per le destinazioni edifici" />
-		<text name="gui_ad_wait"								text="Attendi" />
-		<text name="gui_ad_drive"								text="Continua" />
-		<text name="gui_ad_yes"									text="Si" />
-		<text name="gui_ad_no"									text="No" />
-		<text name="ad_bga_init"								text="Inizializzazione" />
-		<text name="ad_bga_waiting"								text="In attesa del rimorchio/Silos" />
-		<text name="ad_bga_active"								text="Attivo" />
-		<text name="gui_ad_autoConnect_start"					text="Connessione automatica (inizio)" />
-		<text name="gui_ad_autoConnect_start_tooltip"			text="Connette automaticamente il nodo appropriato all'inizio della registrazione" />
-		<text name="gui_ad_autoConnect_end"						text="Connessione automatica (fine)" />
-		<text name="gui_ad_autoConnect_end_tooltip"				text="Connette automaticamente il nodo appropriato alla fine della registrazione" />
+		<text name="gui_ad_lookahead_turning_tooltip" 			text="La distanza alla quale il veicolo aggiusta la sterzata per seguire il prossimo segmento del percorso" />
+		<text name="gui_ad_useFastestRoute" 					text="Usa la strada più veloce" />
+		<text name="gui_ad_useFastestRoute_tooltip" 			text="Prendi in considerazione la velocità di guida invece delle semplici distanze, quando calcoli i percorsi migliori" />
+		<text name="gui_ad_mapMarkerDetour" 					text="Deviazione massima" />
+		<text name="gui_ad_mapMarkerDetour_tooltip" 			text="Deviazione massima quando si sceglie di evitare le destinazioni" />
+		<text name="gui_ad_siloEmpty" 							text="Se il silo è vuoto" />
+		<text name="gui_ad_siloEmpty_tooltip" 					text="Determina come l'autista deve reagire ad un silo vuoto" />
+		<text name="gui_ad_useFolders" 							text="Usa le cartelle" />
+		<text name="gui_ad_useFolders_tooltip" 					text="Usa Le cartelle per le destinazioni edifici" />
+		<text name="gui_ad_wait" 								text="Attendi" />
+		<text name="gui_ad_drive" 								text="Continua" />
+		<text name="gui_ad_yes" 								text="Si" />
+		<text name="gui_ad_no" 									text="No" />
+		<text name="ad_bga_init" 								text="Inizializzazione" />
+		<text name="ad_bga_waiting" 							text="In attesa del rimorchio/Silos" />
+		<text name="ad_bga_active" 								text="Attivo" />
+		<text name="gui_ad_autoConnect_start" 					text="Connessione automatica (inizio)" />
+		<text name="gui_ad_autoConnect_start_tooltip" 			text="Connette automaticamente il nodo appropriato all'inizio della registrazione" />
+		<text name="gui_ad_autoConnect_end" 					text="Connessione automatica (fine)" />
+		<text name="gui_ad_autoConnect_end_tooltip" 			text="Connette automaticamente il nodo appropriato alla fine della registrazione" />
 		<text name="gui_ad_parkInField"							text="Parcheggia sul campo" />
-		<text name="gui_ad_parkInField_tooltip"					text="Dopo aver scaricato la trebbia se non si è sul raccolto" />
-		<text name="gui_ad_unloadFillLevel"						text="Scarica al livello" />
-		<text name="gui_ad_unloadFillLevel_tooltip"				text="Dopo aver scaricato la trebbia vai direttamente a consegnare se è stato raggiunto questo livello" />
-		<text name="gui_ad_findDriver"							text="Trova autista" />
-		<text name="gui_ad_findDriver_tooltip"					text="Cerca automaticamente un autista nelle vicinanze (Ignorando la sua destinazione)" />
-		<text name="gui_ad_gui_scale"							text="Dimensione finestra HUD" />
-		<text name="gui_ad_gui_scale_tooltip"					text="Imposta predefinito per lasciare la dimensione come da impostazioni del gioco" />
-		<text name="gui_ad_notifications"						text="Notifiche" />
-		<text name="gui_ad_notifications_text_1"				text="Disabilita" />
-		<text name="gui_ad_notifications_text_2"				text="Brevi" />
-		<text name="gui_ad_notifications_text_3"				text="Normale" />
-		<text name="gui_ad_notifications_text_4"				text="ampie" />
-		<text name="gui_ad_notifications_text_5"				text="Estese" />
-		<text name="gui_ad_notifications_text_6"				text="Illimitate" />
-		<text name="gui_ad_notifications_tooltip"				text="Tempo di visualizzazione delle notifiche" />
-		<text name="gui_ad_exitField"							text="Uscita dal campo" />
-		<text name="gui_ad_exitField_tooltip"					text="Strategia di uscita dal campo per lo scaricatore" />
-		<text name="gui_ad_default"								text="Predefinito" />
+		<text name="gui_ad_parkInField_tooltip" 				text="Dopo aver scaricato la trebbia se non si è sul raccolto" />
+		<text name="gui_ad_unloadFillLevel" 					text="Scarica al livello" />
+		<text name="gui_ad_unloadFillLevel_tooltip" 			text="Dopo aver scaricato la trebbia vai direttamente a consegnare se è stato raggiunto questo livello" />
+		<text name="gui_ad_findDriver" 							text="Trova autista" />
+		<text name="gui_ad_findDriver_tooltip" 					text="Cerca automaticamente un autista nelle vicinanze (Ignorando la sua destinazione)" />
+		<text name="gui_ad_gui_scale" 							text="Dimensione finestra HUD" />
+		<text name="gui_ad_gui_scale_tooltip" 					text="Imposta predefinito per lasciare la dimensione come da impostazioni del gioco" />
+		<text name="gui_ad_notifications" 						text="Notifiche" />
+		<text name="gui_ad_notifications_text_1" 				text="Disabilita" />
+		<text name="gui_ad_notifications_text_2" 				text="Brevi" />
+		<text name="gui_ad_notifications_text_3" 				text="Normale" />
+		<text name="gui_ad_notifications_text_4" 				text="ampie" />
+		<text name="gui_ad_notifications_text_5" 				text="Estese" />
+		<text name="gui_ad_notifications_text_6" 				text="Illimitate" />
+		<text name="gui_ad_notifications_tooltip" 				text="Tempo di visualizzazione delle notifiche" />
+		<text name="gui_ad_exitField" 							text="Uscita dal campo" />
+		<text name="gui_ad_exitField_tooltip" 					text="Strategia di uscita dal campo per lo scaricatore" />
+		<text name="gui_ad_default" 							text="Predefinito" />
 		<text name="gui_ad_after_start"							text="Dopo l'inizio" />
-		<text name="gui_ad_closest"								text="Il punto più vicino" />
+		<text name="gui_ad_closest" 							text="Il punto più vicino" />
 		<text name="gui_ad_showHelp"							text="Mostra tasti help" />
-		<text name="gui_ad_showHelp_tooltip"					text="Mostra la combinazione dei tasti in F1" />
-		<text name="gui_ad_driverWages"							text="Salario Autisti" />
-		<text name="gui_ad_driverWages_tooltip"					text="Il salario del autista sarà moltiplicato per questo valore" />
-		<text name="gui_ad_showNextPath"						text="Mostra il percorso successivo" />
-		<text name="gui_ad_showNextPath_tooltip"				text="Attiva/disattiva visualizzazione dei prossimi due nodi" />
-		<text name="gui_ad_avoidFruit"							text="Evita raccolto" />
-		<text name="gui_ad_avoidFruit_tooltip"					text="La trebbia cerca di scaricare evitando il raccolto" />
-		<text name="gui_ad_pathFinderTime"						text="Esplorazione-tempo (max)" />
-		<text name="gui_ad_pathFinderTime_tooltip"				text="Determina per quanto tempo è consentito all'algoritmo di esplorazione di cercare il percorso libero da collisione da/verso la trebbia. (Potenziale impatto fps)" />
-		<text name="gui_ad_lineHeight"							text="Altezza linea" />
-		<text name="gui_ad_lineHeight_tooltip"					text="Altezza della linea in modalità editor. A livello del suolo o sopra il veicolo" />
-		<text name="gui_ad_ground"								text="Livello del suolo" />
-		<text name="gui_ad_aboveDriver"							text="Sopra il veicolo" />
+		<text name="gui_ad_showHelp_tooltip" 					text="Mostra la combinazione dei tasti in F1" />
+		<text name="gui_ad_driverWages" 						text="Salario Autisti" />
+		<text name="gui_ad_driverWages_tooltip" 				text="Il salario del autista sarà moltiplicato per questo valore" />
+		<text name="gui_ad_showNextPath" 						text="Mostra il percorso successivo" />
+		<text name="gui_ad_showNextPath_tooltip" 				text="Attiva/disattiva visualizzazione dei prossimi due nodi" />
+		<text name="gui_ad_avoidFruit" 							text="Evita raccolto" />
+		<text name="gui_ad_avoidFruit_tooltip" 					text="La trebbia cerca di scaricare evitando il raccolto" />
+		<text name="gui_ad_pathFinderTime" 						text="Esplorazione-tempo (max)" />
+		<text name="gui_ad_pathFinderTime_tooltip" 				text="Determina per quanto tempo è consentito all'algoritmo di esplorazione di cercare il percorso libero da collisione da/verso la trebbia. (Potenziale impatto fps)" />
+		<text name="gui_ad_lineHeight" 							text="Altezza linea" />
+		<text name="gui_ad_lineHeight_tooltip" 					text="Altezza della linea in modalità editor. A livello del suolo o sopra il veicolo" />
+		<text name="gui_ad_ground" 								text="Livello del suolo" />
+		<text name="gui_ad_aboveDriver"	 						text="Sopra il veicolo" />
 		<text name="gui_ad_enableTrafficDetection"				text="Rileva collisioni" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Rilevamento di collisioni avanzato, che rileva anche traffico AI, segnali stradali, recinzioni ecc" />
+		<text name="gui_ad_enableTrafficDetection_tooltip" 		text="Rilevamento di collisioni avanzato, che rileva anche traffico AI, segnali stradali, recinzioni ecc" />
 		<text name="gui_ad_shovelWidth"							text="Larghezza della pala (aggiunta)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Se la larghezza della pala rilevata automaticamente è troppo piccola, può essere aumentata con questo valore" />
-		<text name="gui_ad_preCallLevel"						text="Anticipa chiamata per scarico" />
-		<text name="gui_ad_preCallLevel_tooltip"				text="Anticipa chiamata per scarico al livello impostato" />
-		<text name="gui_ad_none"					            text="Nessuna" />
-		<text name="gui_ad_onlyPickup"					        text="Solo ritiro" />
-		<text name="gui_ad_onlyDeliver"					        text="solo consegna" />
-		<text name="gui_ad_PickupandDeliver"					text="Ritiro e Consegna" />
-		<text name="gui_ad_rotateTargets"					    text="Ciclo ritiro e consegna" />
-		<text name="gui_ad_rotateTargets_tooltip"			    text="4 modalità: nessun obbiettivo / solo obbiettivo ritiro / solo obbiettivo consegna / Obbiettivo Ritiro e Consegna a rotazione nella cartella(non con la cartella predefinita) (considerato solo se l'uso delle cartelle è attivo)" />
-		<text name="gui_ad_distributeToFolder"					text="Obiettivi multipli" />
-		<text name="gui_ad_distributeToFolder_tooltip"			text="Tutte le destinazioni nella stessa cartella verranno ruotate come destinazioni di scarico." />
-		<text name="gui_ad_maxTriggerDistance"					text="Distanza massima dal trigger" />
-		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distanza dall'obiettivo in cui i trigger vengono rilevati e attivati." />
-		<text name="gui_ad_useBeaconLights"						text="Accendi Fari" />
-		<text name="gui_ad_useBeaconLights_tooltip"				text="Usa i fari sulla strada." />
-		<text name="gui_ad_activeUnloading"						text="Active unloading" />
-		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
-		<text name="gui_ad_restrictToField"						text="Pianificazione del percorso limitata " />
-		<text name="gui_ad_restrictToField_tooltip"				text="Se lo scaricatore è già parcheggiato sul campo, limiterà il rilevatore di percorsi ai limiti del campo." />
-		<text name="gui_ad_showTooltips"						text="Mostra suggerimenti" />
-		<text name="gui_ad_showTooltips_tooltip"				text="Mostra suggerimenti dei tasti della HUD." />
-		<text name="gui_ad_enterTargetNameTitle_add"			text="Nuova destinazione" />
-		<text name="gui_ad_enterTargetNameTitle_edit"			text="Modifica destinazione" />
+		<text name="gui_ad_preCallLevel" 						text="Anticipa chiamata per scarico" />
+		<text name="gui_ad_preCallLevel_tooltip" 				text="Anticipa chiamata per scarico al livello impostato" />
+		<text name="gui_ad_none" 								text="Nessuna" />
+		<text name="gui_ad_onlyPickup" 							text="Solo ritiro" />
+		<text name="gui_ad_onlyDeliver" 						text="Solo consegna" />
+		<text name="gui_ad_PickupandDeliver" 					text="Ritiro e Consegna" />
+		<text name="gui_ad_rotateTargets" 						text="Ciclo di ritiro e consegna" />
+		<text name="gui_ad_rotateTargets_tooltip" 				text="4 modalità: nessun obbiettivo / solo obbiettivo ritiro / solo obbiettivo consegna / Obbiettivo ritiro e consegna a rotazione nella cartella(non con la cartella predefinita) (considerato solo se l'uso delle cartelle è attivo)" />
+		<text name="gui_ad_distributeToFolder" 					text="Obiettivi multipli" />
+		<text name="gui_ad_distributeToFolder_tooltip" 			text="Tutte le destinazioni nella stessa cartella verranno ruotate come destinazioni di scarico." />
+		<text name="gui_ad_maxTriggerDistance" 					text="Distanza massima dal trigger" />
+		<text name="gui_ad_maxTriggerDistance_tooltip" 			text="Distanza dall'obiettivo in cui i trigger vengono rilevati e attivati." />
+		<text name="gui_ad_useBeaconLights" 					text="Accendi Fari" />
+		<text name="gui_ad_useBeaconLights_tooltip" 			text="Usa i fari sulla strada." />
+		<text name="gui_ad_activeUnloading" 					text="Scarico attivo" />
+		<text name="gui_ad_activeUnloading_tooltip" 			text="Scaricare le mietitrici durante la guida." />
+		<text name="gui_ad_restrictToField" 					text="Pianificazione del percorso limitata " />
+		<text name="gui_ad_restrictToField_tooltip" 			text="Se lo scaricatore è già parcheggiato sul campo, limiterà il rilevatore di percorsi ai limiti del campo." />
+		<text name="gui_ad_showTooltips" 						text="Mostra suggerimenti" />
+		<text name="gui_ad_showTooltips_tooltip" 				text="Mostra suggerimenti dei tasti della HUD." />
+		<text name="gui_ad_enterTargetNameTitle_add" 			text="Nuova destinazione" />
+		<text name="gui_ad_enterTargetNameTitle_edit" 			text="Modifica destinazione" />
 		<text name="gui_ad_enterTargetNameText"					text="Inserisci nome destinazione:" />
-		<text name="gui_ad_createButtonText"					text="Crea" />
-		<text name="gui_ad_enterDriverNameTitle"				text="Rinomina autista" />
+		<text name="gui_ad_createButtonText" 					text="Crea" />
+		<text name="gui_ad_enterDriverNameTitle" 				text="Rinomina autista" />
 		<text name="gui_ad_enterDriverNameText"					text="Inserisci nome autista:" />
 		<text name="gui_ad_enterGroupNameTitle"					text="Crea Cartella" />
-		<text name="gui_ad_enterGroupNameText"					text="Inserisci nome cartella:" />
-		<text name="gui_ad_autoRefuel"							text="Rifornimento Automatico" />
-		<text name="gui_ad_autoRefuel_tooltip"					text="Si dirige verso la destinazione di rifornimento (vicino al punto di rifornimento) quando il livello del carburante è basso." />
-		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
-		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
-		<text name="gui_ad_filter"								text="Filtro" />
-		<text name="gui_ad_enterDestinationFilterTitle"			text="Carica un testo filtro per le destinazioni." />
-		<text name="gui_ad_enterDestinationFilterText"			text="Inserisci testo filtro:" />
-		<text name="gui_ad_shovelHeight"						text="Altezza pala" />
-		<text name="gui_ad_shovelHeight_tooltip"				text="Se l'altezza della pala rilevata automaticamente non è corretta. Utilizzare questo per regolare l'altezza dal suolo" />
-		<text name="gui_ad_showMarkersOnMap"					text="Visualizza marcatori " />
-		<text name="gui_ad_showMarkersOnMap_tooltip"			text="Visualizza marcatori/destinazioni sulla mappa in gioco" />
-		<text name="gui_ad_switchToMarkersOnMap"				text="Vai ai marcatori" />
-		<text name="gui_ad_switchToMarkersOnMap_tooltip"		text="Imposta la destinazione quando si fa clic sugli hotspot della mappa" />
+		<text name="gui_ad_enterGroupNameText" 					text="Inserisci nome cartella:" />
+		<text name="gui_ad_autoRefuel" 							text="Rifornimento Automatico" />
+		<text name="gui_ad_autoRefuel_tooltip" 					text="Si dirige verso la destinazione di rifornimento (vicino al punto di rifornimento) quando il livello del carburante è basso." />
+		<text name="gui_ad_autoRepair"							text="Riparazione automatica" />
+		<text name="gui_ad_autoRepair_tooltip" 					text="Guida verso la destinazione dell'officina (vicino al grilletto per la riparazione) quando il livello di usura è troppo alto." />
+		<text name="gui_ad_filter" 								text="Filtro" />
+		<text name="gui_ad_enterDestinationFilterTitle" 		text="Carica un testo filtro per le destinazioni." />
+		<text name="gui_ad_enterDestinationFilterText" 			text="Inserisci testo filtro:" />
+		<text name="gui_ad_shovelHeight" 						text="Altezza pala" />
+		<text name="gui_ad_shovelHeight_tooltip" 				text="Se l'altezza della pala rilevata automaticamente non è corretta. Utilizzare questo per regolare l'altezza dal suolo" />
+		<text name="gui_ad_showMarkersOnMap" 					text="Visualizza marcatori " />
+		<text name="gui_ad_showMarkersOnMap_tooltip" 			text="Visualizza marcatori/destinazioni sulla mappa in gioco" />
+		<text name="gui_ad_switchToMarkersOnMap" 				text="Vai ai marcatori" />
+		<text name="gui_ad_switchToMarkersOnMap_tooltip" 		text="Imposta la destinazione quando si fa clic sugli hotspot della mappa" />
 		<text name="gui_ad_cornerSpeed"							text="Velocità di svolta" />
 		<text name="gui_ad_cornerSpeed_tooltip"					text="Regola la velocità di svolta per il singolo veicolo. La massa e la velocità continueranno ad influenzare il punto di frenata" />
-		<text name="gui_ad_callSecondUnloader"					text="Chiamata secondo carro" />
-		<text name="gui_ad_callSecondUnloader_tooltip"			text="Chiama il secondo carro quando lo quello attuale raggiunge il livello di riempimento di preallarme" />
-		<text name="gui_ad_followOnlyOnField"					text="Limita lo scaricatore al campo" />
-		<text name="gui_ad_followOnlyOnField_tooltip"			text="Limitare lo scaricatore al campo durante lo scaricamento attivo" />
-		<text name="gui_ad_addSettingsToHUD"					text="Agg Impostazioni sulla HUD" />
-		<text name="gui_ad_addSettingsToHUD_tooltip"			text="Aggiunge il tasto impostazioni sulla HUD per modificare le impostazioni senza aprire questo menu" />
-		<text name="gui_ad_iconSetToUse"						text="Personalizzazione Logo" />
-		<text name="gui_ad_iconSetToUse_tooltip"				text="Logo predefinito o logo personalizzato: la selezione può essere espansa." />
-		<text name="gui_ad_secondEditorModeAllowed"				text="Usa modalità editor 2" />
+		<text name="gui_ad_callSecondUnloader" 					text="Chiamata secondo carro" />
+		<text name="gui_ad_callSecondUnloader_tooltip" 			text="Chiama il secondo carro quando lo quello attuale raggiunge il livello di riempimento di preallarme" />
+		<text name="gui_ad_followOnlyOnField" 					text="Limita lo scaricatore al campo" />
+		<text name="gui_ad_followOnlyOnField_tooltip" 			text="Limitare lo scaricatore al campo durante lo scaricamento attivo" />
+		<text name="gui_ad_addSettingsToHUD" 					text="Aggiungi impostazioni all'HUD" />
+		<text name="gui_ad_addSettingsToHUD_tooltip" 			text="Aggiunge il tasto impostazioni sulla HUD per modificare le impostazioni senza aprire questo menu" />
+		<text name="gui_ad_iconSetToUse" 						text="Personalizzazione Logo" />
+		<text name="gui_ad_iconSetToUse_tooltip" 				text="Logo predefinito o logo personalizzato: la selezione può essere espansa." />
+		<text name="gui_ad_secondEditorModeAllowed" 			text="Usa modalità editor 2" />
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Utilizzare la modalità editor 2 per la modifica del percorso invece di tenere premuto LCTRL" />
-		<text name="gui_ad_wideHUD"								text="HUD estesa" />
-		<text name="gui_ad_wideHUD_tooltip"						text="Utilizzare la modalità HUD estersa, che consente anche qualche altro pulsante di impostazione nell'HUD" />
-		<text name="gui_ad_playSounds"							text="Sound" />
-		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
-		<text name="gui_ad_syncMultiTargets"					text="Sincronizza obbiettivi multipli" />
-		<text name="gui_ad_syncMultiTargets_tooltip"			text="Più driver che utilizzano la stessa cartella per più target sincronizzeranno i target successivi" />
-		<text name="gui_ad_enableParkAtJobFinished"				text="Parcheggia a lavoro finito" />
-		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Disponibile solo nelle modalità Ritiro e consegna, consegna: se il lavoro è terminato, verrà raggiunta la posizione di parcheggio memorizzata del veicolo / attrezzatura. Su Dedi-Server disponibile solo per parcheggio auto!" />
+		<text name="gui_ad_wideHUD" 							text="HUD estesa" />
+		<text name="gui_ad_wideHUD_tooltip" 					text="Utilizzare la modalità HUD estersa, che consente anche qualche altro pulsante di impostazione nell'HUD" />
+		<text name="gui_ad_playSounds" 							text="Suono" />
+		<text name="gui_ad_playSounds_tooltip" 					text="Abilita gli effetti sonori per i clic del mouse e le notifiche" />
+		<text name="gui_ad_syncMultiTargets" 					text="Sincronizza obbiettivi multipli" />
+		<text name="gui_ad_syncMultiTargets_tooltip" 			text="Più driver che utilizzano la stessa cartella per più target sincronizzeranno i target successivi" />
+		<text name="gui_ad_enableParkAtJobFinished" 			text="Parcheggia a lavoro finito" />
+		<text name="gui_ad_enableParkAtJobFinished_tooltip" 	text="Disponibile solo nelle modalità Ritiro e consegna, consegna: se il lavoro è terminato, verrà raggiunta la posizione di parcheggio memorizzata del veicolo / attrezzatura. Su Dedi-Server disponibile solo per parcheggio auto!" />
 		<text name="gui_ad_autoTipSide"                         text="Selezione lato automatico" />
 		<text name="gui_ad_autoTipSide_tooltip"                 text="Sì - AutoDrive seleziona automaticamente il lato da usare / No - verrà utilizzato il lato già selezionato" />
 		<text name="gui_ad_autoTrailerCover"                    text="Copertura automatica del rimorchio" />
@@ -218,193 +218,194 @@
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Sì - gli scaricatori AutoDrive cercano di pianificare un percorso in avanti per adattarsi alla svolta a 90° della mietitrebbia. / No - Gli scaricatori si invertiranno prima del turno" />
 		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Posizione di scarico" />
 		<text name="gui_ad_ALUnload_tooltip"                    text="Scarico automatico spento, scarico centrale sulla piattaforma di carico, posizione di scarico del veicolo sinistra/dietro/destra (la posizione dipende dalla configurazione del veicolo, non dall'AD!)" />
-		<text name="gui_ad_AL_off"                              text="Unload Spento" />
-		<text name="gui_ad_AL_center"                           text="Unload centrale" />
-		<text name="gui_ad_AL_left"                             text="Unload Sinistra" />
-		<text name="gui_ad_AL_behind"                           text="Unload dietro" />
-		<text name="gui_ad_AL_right"                            text="Unload destra" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
-		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_AL_off"                              text="Scaricamento Spento" />
+		<text name="gui_ad_AL_center"                           text="Scarica al centro" />
+		<text name="gui_ad_AL_left"                             text="Scarica a sinistra" />
+		<text name="gui_ad_AL_behind"                           text="Scarica di dietro" />
+		<text name="gui_ad_AL_right"                            text="Scarica a destra" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: tempo di attesa dopo lo scarico" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Tempo di attesa dopo lo scarico, prima di continuare a guidare - utile per il centro di scarico: 0-no aspetta, aspetta il tempo selezionato" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generazione di rete" />
 		<text name="gui_ad_scanConfirmationText"                text="AutoDrive deve generare una rete di percorsi a partire dai dati del traffico e degli aiutanti sulla mappa?" />
-		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
-		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
+		<text name="gui_ad_noHarvesterAvailable"				text="Nessuna mietitrice con lo stesso obiettivo trovata" />
+		<text name="gui_ad_noUnloaderAvailable"					text="Nessun autista con lo stesso obiettivo disponibile" />
 		
-		<text name="gui_ad_settingsPage_title"					text="Impostazioni" />
-		<text name="gui_ad_userSettingsPage_title"				text="Impostazioni Utente" />
-		<text name="gui_ad_vehicleSettingsPage_title"			text="Impostazioni Veicolo" />
-		<text name="gui_ad_combineUnloadSettingsPage_title"		text="Impostazioni Mietitrebbia" />
-		<text name="gui_ad_debugSettingsPage_title" 			text="Impostazioni debug" />
-		<text name="gui_ad_eFeaturesSettingsPage_title" 		text="Impostazione funzioni sperimentali" />
-		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
-		<text name="gui_ad_restoreButtonText" 					text="Ripristina" />
-		<text name="gui_ad_settingsClosingDialog_title" 		text="Tutte le modifiche andranno perse" />
-		<text name="gui_ad_settingsClosingDialog_text" 			text="Sei sicuro di voler uscire dalle impostazioni senza salvare?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
+		<text name="gui_ad_settingsPage_title" 				text="Impostazioni" />
+		<text name="gui_ad_userSettingsPage_title" 			text="Impostazioni Utente" />
+		<text name="gui_ad_vehicleSettingsPage_title" 		text="Impostazioni Veicolo" />
+		<text name="gui_ad_combineUnloadSettingsPage_title"	text="Impostazioni Mietitrebbia" />
+		<text name="gui_ad_debugSettingsPage_title" 		text="Impostazioni debug" />
+		<text name="gui_ad_eFeaturesSettingsPage_title" 	text="Impostazione funzioni sperimentali" />
+		<text name="gui_ad_environmentSettingsPage_title" 	text="Impostazioni non funzionali - AutoDrive" />
+		<text name="gui_ad_restoreButtonText" 				text="Ripristina" />
+		<text name="gui_ad_settingsClosingDialog_title" 	text="Tutte le modifiche andranno perse" />
+		<text name="gui_ad_settingsClosingDialog_text" 		text="Sei sicuro di voler uscire dalle impostazioni senza salvare?" />
+		<text name="gui_ad_setDefaultButtonText" 			text="Imposta come predefinito" />
 		
-		<text name="gui_ad_routesManagerTitle" 					text="Gestione percorsi" />
-		<text name="gui_ad_routesManagerTextTitle" 				text="Inserisci nome del percorso:" />
-		<text name="gui_ad_button_export" 						text="Salva" />
-		<text name="gui_ad_button_import" 						text="Carica" />
-		<text name="gui_ad_routeExportWarn_text" 				text="Sei sicuro di voler sovrascrivere i percorsi esistent1?" />
-		<text name="gui_ad_routeExportWarn_title" 				text="Sovrascrittura percorsi" />
-		<text name="gui_ad_routeDeleteWarn_text" 				text="Sei sicuro di voler cancellare il percorso '%s'?" />
-		<text name="gui_ad_routeDeleteWarn_title" 				text="Rimozione percorso" />
+		<text name="gui_ad_routesManagerTitle"		text="Gestione percorsi" />
+		<text name="gui_ad_routesManagerTextTitle"	text="Inserisci nome del percorso:" />
+		<text name="gui_ad_button_export" 			text="Salva" />
+		<text name="gui_ad_button_import" 			text="Carica" />
+		<text name="gui_ad_routeExportWarn_text" 	text="Sei sicuro di voler sovrascrivere i percorsi esistent1?" />
+		<text name="gui_ad_routeExportWarn_title" 	text="Sovrascrittura percorsi" />
+		<text name="gui_ad_routeDeleteWarn_text" 	text="Sei sicuro di voler cancellare il percorso '%s'?" />
+		<text name="gui_ad_routeDeleteWarn_title" 	text="Rimozione percorso" />
 
-		<text name="statistic_driversTraveledDistance" 			text="Distanza percorsa dagli autisti" />
-		<text name="statistic_driversHired" 					text="Autisti attualmente assunti" />
+		<text name="statistic_driversTraveledDistance" 	text="Distanza percorsa dagli autisti" />
+		<text name="statistic_driversHired" 			text="Autisti attualmente assunti" />
 		
-		<text name="gui_ad_debugChannelVehicle" 				text="Veicoli" />
-		<text name="gui_ad_debugChannelCombine" 				text="Trebbie" />
-		<text name="gui_ad_debugChannelTrailer" 				text="Rimorchi" />
-		<text name="gui_ad_debugChannelDev" 					text="Sviluppatori" />
-		<text name="gui_ad_debugChannelPath" 					text="Cerca percorso" />
-		<text name="gui_ad_debugChannelSensor" 					text="Sensore" />
-		<text name="gui_ad_debugChannelNetwork" 				text="Rete" />
-		<text name="gui_ad_debugChannelExternalInterface" 		text="Interfaccia esterna" />
-		<text name="gui_ad_debugChannelRender" 					text="Rendering" />
-		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Rete stradale" />
-		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
-		<text name="gui_ad_debugChannelAll" 					text="Tutto" />
+		<text name="gui_ad_debugChannelVehicle" 			text="Veicoli" />
+		<text name="gui_ad_debugChannelCombine" 			text="Trebbie" />
+		<text name="gui_ad_debugChannelTrailer" 			text="Rimorchi" />
+		<text name="gui_ad_debugChannelDev" 				text="Sviluppatori" />
+		<text name="gui_ad_debugChannelPath" 				text="Cerca percorso" />
+		<text name="gui_ad_debugChannelSensor" 				text="Sensore" />
+		<text name="gui_ad_debugChannelNetwork" 			text="Rete" />
+		<text name="gui_ad_debugChannelExternalInterface"	text="Interfaccia esterna" />
+		<text name="gui_ad_debugChannelRender" 				text="Rendering" />
+		<text name="gui_ad_debugChannelRoadNetwork" 		text="Rete stradale" />
+		<text name="gui_ad_debugChannelBGA" 				text="Modalità BGA" />
+		<text name="gui_ad_debugChannelAll" 				text="Tutto" />
 		
-		<text name="gui_ad_notificationHistoryTitle" 			text="Notifiche" />
+		<text name="gui_ad_notificationHistoryTitle" 	text="Notifiche" />
 
-		<text name="gui_ad_colorSettingsTitle" 			        text="Assegnazioni dei colori" />
+		<text name="gui_ad_colorSettingsTitle" 			text="Assegnazioni dei colori" />
 
-		<text name="ad_color_singleConnection" 			        text="01 linea di connessione unidirezionale" />
-		<text name="ad_color_dualConnection" 			        text="02 linea di connessione bidirezionale" />
-		<text name="ad_color_reverseConnection" 			    text="03 linea di collegamento inverso" />
-		<text name="ad_color_default" 			                text="04 nodo su connessione singola e inversa" />
-		<text name="ad_color_subPrioSingleConnection" 			text="05 linea di connessione secondaria unidirezionale" />
-		<text name="ad_color_subPrioDualConnection" 			text="06 linea di connessione secondaria bidirezionale" />
-		<text name="ad_color_subPrioNode" 			            text="07 nodo secondario" />
-		<text name="ad_color_hoveredNode" 			            text="08 Nodo sospeso" />
-		<text name="ad_color_previousNode" 			            text="09 nodo precedente connesso" />
-		<text name="ad_color_nextNode" 			                text="10 connesso al prossimo nodo" />
-		<text name="ad_color_selectedNode" 			            text="11 nodo selezionato" />
-		<text name="ad_color_currentConnection" 			    text="12 linea percorso successivo" />
-		<text name="ad_color_closestLine" 			            text="13 linea dal veicolo al nodo più vicino" />
-		<text name="ad_color_editorHeightLine" 			        text="14 linea dal nodo di superficie a quello sopra il veicolo" />
+		<text name="ad_color_singleConnection" 			text="01 Linea di connessione unidirezionale" />
+		<text name="ad_color_dualConnection" 			text="02 Linea di connessione bidirezionale" />
+		<text name="ad_color_reverseConnection" 		text="03 Linea di collegamento inverso" />
+		<text name="ad_color_default" 					text="04 Nodo su connessione singola e inversa" />
+		<text name="ad_color_subPrioSingleConnection" 	text="05 Linea di connessione secondaria unidirezionale" />
+		<text name="ad_color_subPrioDualConnection" 	text="06 Linea di connessione secondaria bidirezionale" />
+		<text name="ad_color_subPrioNode" 				text="07 Nodo secondario" />
+		<text name="ad_color_hoveredNode" 				text="08 Nodo sospeso" />
+		<text name="ad_color_previousNode" 				text="09 Nodo precedente connesso" />
+		<text name="ad_color_nextNode" 					text="10 Connesso al prossimo nodo" />
+		<text name="ad_color_selectedNode" 				text="11 Nodo selezionato" />
+		<text name="ad_color_currentConnection" 		text="12 Linea percorso successivo" />
+		<text name="ad_color_closestLine" 				text="13 Linea dal veicolo al nodo più vicino" />
+		<text name="ad_color_editorHeightLine" 			text="14 Linea dal nodo di superficie a quello sopra il veicolo" />
 
-		<text name="button_delete_all" 							text="Cancella Tutto" />
-		<text name="button_reset_selected" 					    text="Ripristina selezionato" />
+		<text name="button_delete_all" 		text="Cancella Tutto" />
+		<text name="button_reset_selected" 	text="Ripristina selezionato" />
 
-		<text name="ad_helpCategory_1"							text="AutoDrive" />
+		<text name="ad_helpCategory_1"		text="AutoDrive" />
 		
-		<text name="ad_helpTitle_01"							text="AD - Introduzione" />
-		<text name="ad_helpText_01_01"							text="AutoDrive è uno strumento multiuso che consente ai tuoi veicoli di muoversi autonomamente nel mappa di Farming Simulator." />
-		<text name="ad_helpText_01_02"							text="La spina dorsale è una rete interconnessa di punti registrati e destinazioni definite. Per alcune mappe, un percorso iniziale è fornito con la mod. Sulla maggior parte delle mappe dovrai registrare tutto da solo o importare una rete da un altro utente (vedi importazione / esportazione di seguito)." />
-		<text name="ad_helpText_01_03"							text="Se tutte le destinatazioni sono correttamente collegate alla rete, AutoDrive naviga in modo molto simile al tipico sistema di navigazione in auto, calcolando il percorso più breve verso la destinazione, quindi è importante assicurarsi che tutti i punti siano collegati alla rete. Se AutoDrive rileva un punto disconnesso, è contrassegnato da una ,X' e deve essere rimosso o collegato manualmente." />
+		<text name="ad_helpTitle_01"		text="AD - Introduzione" />
+		<text name="ad_helpText_01_01"		text="AutoDrive è uno strumento multiuso che consente ai tuoi veicoli di muoversi autonomamente nel mappa di Farming Simulator." />
+		<text name="ad_helpText_01_02"  	text="La spina dorsale è una rete interconnessa di punti registrati e destinazioni definite. Per alcune mappe, un percorso iniziale è fornito con la mod. Sulla maggior parte delle mappe dovrai registrare tutto da solo o importare una rete da un altro utente (vedi importazione / esportazione di seguito)." />
+		<text name="ad_helpText_01_03"		text="Se tutte le destinatazioni sono correttamente collegate alla rete, AutoDrive naviga in modo molto simile al tipico sistema di navigazione in auto, calcolando il percorso più breve verso la destinazione, quindi è importante assicurarsi che tutti i punti siano collegati alla rete. Se AutoDrive rileva un punto disconnesso, è contrassegnato da una ,X' e deve essere rimosso o collegato manualmente." />
 		
-		<text name="ad_helpTitle_02"							text="AD modalità - Solo guida" />
-		<text name="ad_helpText_02_01"							text="In questa modalità, il veicolo corrente prenderà il punto più adatto (in base alla direzione e alla distanza attuali) o semplicemente quello più vicino e quindi utilizzerà il percorso più breve da lì alla destinazione e si fermerà lì. È la modalità più semplice e più adatta per testare i tuoi nuovi percorsi." />
+		<text name="ad_helpTitle_02"		text="AD modalità - Solo guida" />
+		<text name="ad_helpText_02_01"		text="In questa modalità, il veicolo corrente prenderà il punto più adatto (in base alla direzione e alla distanza attuali) o semplicemente quello più vicino e quindi utilizzerà il percorso più breve da lì alla destinazione e si fermerà lì. È la modalità più semplice e più adatta per testare i tuoi nuovi percorsi." />
 		
-		<text name="ad_helpTitle_03"							text="AD modalità - Consegna" />
-		<text name="ad_helpText_03_01"							text="In questa modalità AutoDrive guiderà il veicolo proprio come nella modalità 'Solo guida', ma in aggiunta scaricherà il rimorchio corrente a destinazione, se viene rilevato un trigger di scarico." />
-		<text name="ad_helpText_03_02"							text="Il punto di destinazione deve essere creato dopo il punto di scarico, in modo che i veicoli con rimorchi lunghi raggiungano il punto di scarico prima di raggiungere la destinazione. " />
-		<text name="ad_helpText_03_03"							text="L'autista si fermerà a destinazione indipendentemente dal fatto che sia vuoto o meno. Se noti che il punto di destinazione non è abbastanza indietro, puoi facilmente rimuovere la destinazione e crearla nel punto seguente senza dover rimuovere il punto da solo (vedi Pulsanti HUD)." />
+		<text name="ad_helpTitle_03"		text="AD modalità - Consegna" />
+		<text name="ad_helpText_03_01"		text="In questa modalità AutoDrive guiderà il veicolo proprio come nella modalità 'Solo guida', ma in aggiunta scaricherà il rimorchio corrente a destinazione, se viene rilevato un trigger di scarico." />
+		<text name="ad_helpText_03_02"		text="Il punto di destinazione deve essere creato dopo il punto di scarico, in modo che i veicoli con rimorchi lunghi raggiungano il punto di scarico prima di raggiungere la destinazione. " />
+		<text name="ad_helpText_03_03"		text="L'autista si fermerà a destinazione indipendentemente dal fatto che sia vuoto o meno. Se noti che il punto di destinazione non è abbastanza indietro, puoi facilmente rimuovere la destinazione e crearla nel punto seguente senza dover rimuovere il punto da solo (vedi Pulsanti HUD)." />
 		
-		<text name="ad_helpTitle_04"							text="AD modalità - Carico e Consegna" />
-		<text name="ad_helpText_04_01"							text="In questa modalità, è possibile selezionare i punti di destinazioni. Uno per il caricamento (il primo) e il secondo per il punto di scarico." />
-		<text name="ad_helpText_04_02"							text="Se AutoDrive è attivato, esaminerà l'attuale livello di riempimento dei rimorchi / attrezzi collegati. Se questo valore è superiore al dato impostato 'Scarica a livello' (vedi impostazioni), ed il conducente si dirigerà direttamente verso la destinazione di scarico." />
-		<text name="ad_helpText_04_03"							text="Altrimenti si dirigerà prima verso la destinazione di carico. A seconda dell'impostazione selezionata (In silos vuoto), il conducente attenderà che la destinazione del carico venga riempita oltre il livello 'Scarica a' o continuerà fino alla destinazione di scarico." />
-		<text name="ad_helpText_04_04"							text="In entrambi i casi, il conducente proverà innanzitutto a caricare il tipo di riempimento selezionato su qualsiasi trigger disponibile nell'intervallo fornito (vedere le impostazioni) prima della destinazione del caricamento." />
-		<text name="ad_helpText_04_05"							text="Inoltre è possibile selezionare un contatore ripetizioni prima di avviare il driver. Se si imposta questo contatore su 2, il conducente si fermerà dopo aver raggiunto la destinazione di scarico 2 volte. Se questa impostazione (vedi HUD) è lasciata di default, il conducente inizierà sempre il ciclo successivo." />
+		<text name="ad_helpTitle_04"		text="AD modalità - Carico e Consegna" />
+		<text name="ad_helpText_04_01"		text="In questa modalità, è possibile selezionare i punti di destinazioni. Uno per il caricamento (il primo) e il secondo per il punto di scarico." />
+		<text name="ad_helpText_04_02"		text="Se AutoDrive è attivato, esaminerà l'attuale livello di riempimento dei rimorchi / attrezzi collegati. Se questo valore è superiore al dato impostato 'Scarica a livello' (vedi impostazioni), ed il conducente si dirigerà direttamente verso la destinazione di scarico." />
+		<text name="ad_helpText_04_03"		text="Altrimenti si dirigerà prima verso la destinazione di carico. A seconda dell'impostazione selezionata (In silos vuoto), il conducente attenderà che la destinazione del carico venga riempita oltre il livello 'Scarica a' o continuerà fino alla destinazione di scarico." />
+		<text name="ad_helpText_04_04"		text="In entrambi i casi, il conducente proverà innanzitutto a caricare il tipo di riempimento selezionato su qualsiasi trigger disponibile nell'intervallo fornito (vedere le impostazioni) prima della destinazione del caricamento." />
+		<text name="ad_helpText_04_05"		text="Inoltre è possibile selezionare un contatore ripetizioni prima di avviare il driver. Se si imposta questo contatore su 2, il conducente si fermerà dopo aver raggiunto la destinazione di scarico 2 volte. Se questa impostazione (vedi HUD) è lasciata di default, il conducente inizierà sempre il ciclo successivo." />
 		
-		<text name="ad_helpTitle_05"							text="AD modalità - Modalità di caricamento" />
-		<text name="ad_helpText_05_01"							text="Questa modalità è molto simile alla modalità 'Ritiro e consegna' precedentemente descritta, con solo poche eccezioni. Non userà il 'contatore delle ripetizioni'." />
-		<text name="ad_helpText_05_02"							text="Esiste solo una destinazione di carico e un punto di destinazione in cui il conducente si fermerà e disabiliterà AutoDrive." />
-		<text name="ad_helpText_05_03"							text="Questa modalità deve essere utilizzata come modalità di ricarica per il lavoro sul campo. In questo modo le seminatrici o le irroratrici possono essere avviate nella posizione del campo e inviate a un punto di riempimento e successivamente torneranno alla destinazione del campo impostata." />
-		<text name="ad_helpText_05_04"							text="Questa modalità può essere utilizzata anche in combinazione con Courseplay. Dovrai selezionare 'Usa AutoDrive per scarico/carico' in Courseplay HUD (non parte di questa documentazione)." />
+		<text name="ad_helpTitle_05"		text="AD modalità - Modalità di caricamento" />
+		<text name="ad_helpText_05_01"  	text="Questa modalità è molto simile alla modalità 'Ritiro e consegna' precedentemente descritta, con solo poche eccezioni. Non userà il 'contatore delle ripetizioni'." />
+		<text name="ad_helpText_05_02"		text="Esiste solo una destinazione di carico e un punto di destinazione in cui il conducente si fermerà e disabiliterà AutoDrive." />
+		<text name="ad_helpText_05_03"		text="Questa modalità deve essere utilizzata come modalità di ricarica per il lavoro sul campo. In questo modo le seminatrici o le irroratrici possono essere avviate nella posizione del campo e inviate a un punto di riempimento e successivamente torneranno alla destinazione del campo impostata." />
+		<text name="ad_helpText_05_04"		text="Questa modalità può essere utilizzata anche in combinazione con Courseplay. Dovrai selezionare 'Usa AutoDrive per scarico/carico' in Courseplay HUD (non parte di questa documentazione)." />
 		
-		<text name="ad_helpTitle_06"							text="AD modalità - Scarico mietitrebbia" />
-		<text name="ad_helpText_06_01"							text="In questa modalità, è possibile impostare nuovamente due destinazioni. Il primo dovrebbe essere una posizione sul campo da cui è possibile raggiungere una mietitrice attiva. Il secondo è di nuovo una destinazione di scarico." />
-		<text name="ad_helpText_06_02"							text="Questa è la prima modalità in cui i driver AutoDrive possono lasciare il percorso registrato e guidare sul campo. Questa modalità è piuttosto complicata e comporta molte impostazioni dal menu delle impostazioni." />
-		<text name="ad_helpText_06_03"							text="Quindi questa documentazione descriverà prima il comportamento di base e quindi aggiungerà come le impostazioni influenzano il comportamento." />
+		<text name="ad_helpTitle_06"		text="AD modalità - Scarico mietitrebbia" />
+		<text name="ad_helpText_06_01"  	text="In questa modalità, è possibile impostare nuovamente due destinazioni. Il primo dovrebbe essere una posizione sul campo da cui è possibile raggiungere una mietitrice attiva. Il secondo è di nuovo una destinazione di scarico." />
+		<text name="ad_helpText_06_02"  	text="Questa è la prima modalità in cui i driver AutoDrive possono lasciare il percorso registrato e guidare sul campo. Questa modalità è piuttosto complicata e comporta molte impostazioni dal menu delle impostazioni." />
+		<text name="ad_helpText_06_03"		text="Quindi questa documentazione descriverà prima il comportamento di base e quindi aggiungerà come le impostazioni influenzano il comportamento." />
 		
-		<text name="ad_helpTitle_07"							text="AD modalità - Scarico mietitrebbia - normale - 1" />
-		<text name="ad_helpText_07_01"							text="Il conducente deciderà all'avvio se andare sul campo o scaricare prima (vedi Ritiro e consegna). Se raggiunge la posizione sul campo, si registra come driver disponibile. Se una mietitrebbia è al livello di riempimento del 100% e ha un tubo esteso, passerà automaticamente attraverso gli scaricatori registrati e sceglierà quello più vicino a lui. A seconda dell'impostazione 'Trova scaricatore', vengono accettati tutti i conducenti in un raggio di 300 metri (sì) o solo conducenti con le stesse destinazioni target della mietitrice in AutoDrive Hud (no)." />
-		<text name="ad_helpText_07_02"							text="" />
-		<text name="ad_helpText_07_03"							text="Importante: non è necessario attivare AutoDrive sulla mietitrice. È richiesto solo il target selezionato." />
-		<text name="ad_helpText_07_04"							text="" />
-		<text name="ad_helpText_07_05"							text="In alternativa, il giocatore può anche chiamare manualmente lo scaricatore assegnando il tasto 'Chiama autista' nelle opzioni di gioco e utilizzandolo mentre è seduto nella mietitrice. Se la mietitrice è controllata da Courseplay, AutoDrive chiamerà anche un'autista se rileva che il veicolo Courseplay vuole essere scaricato." />
+		<text name="ad_helpTitle_07"		text="AD modalità - Scarico mietitrebbia - normale - 1" />
+		<text name="ad_helpText_07_01"		text="Il conducente deciderà all'avvio se andare sul campo o scaricare prima (vedi Ritiro e consegna). Se raggiunge la posizione sul campo, si registra come driver disponibile. Se una mietitrebbia è al livello di riempimento del 100% e ha un tubo esteso, passerà automaticamente attraverso gli scaricatori registrati e sceglierà quello più vicino a lui. A seconda dell'impostazione 'Trova scaricatore', vengono accettati tutti i conducenti in un raggio di 300 metri (sì) o solo conducenti con le stesse destinazioni target della mietitrice in AutoDrive Hud (no)." />
+		<text name="ad_helpText_07_02"		text="" />
+		<text name="ad_helpText_07_03"		text="Importante: non è necessario attivare AutoDrive sulla mietitrice. È richiesto solo il target selezionato." />
+		<text name="ad_helpText_07_04"		text="" />
+		<text name="ad_helpText_07_05"		text="In alternativa, il giocatore può anche chiamare manualmente lo scaricatore assegnando il tasto 'Chiama autista' nelle opzioni di gioco e utilizzandolo mentre è seduto nella mietitrice. Se la mietitrice è controllata da Courseplay, AutoDrive chiamerà anche un'autista se rileva che il veicolo Courseplay vuole essere scaricato." />
 		
-		<text name="ad_helpTitle_08"							text="AD modalità - Scarico mietitrebbia - normale - 2" />
-		<text name="ad_helpText_08_01"							text="Se uno scaricatore viene chiamato a una mietitrice, inizierà a pianificare un percorso per il tubo esteso della mietitrice. Il planner di percorso è un'implementazione completamente unica e una spiegazione potrebbe essere inclusa come appendice a questa documentazione in seguito. I concetti chiave sono una divisione del mondo simulato in celle a griglia. Queste celle della griglia sono dimensionate in base al raggio di sterzata dei veicoli e vengono controllate come libere da frutta (vedi impostazioni), libere da collisioni, sul campo (vedi impostazioni) e hanno una pendenza massima accettabile per i conducenti AI. Dopo che è stato trovato un percorso libero, viene applicato anche un po 'di livellamento per eliminare la maggior parte delle curve strette e quindi il conducente viene inviato lungo il percorso alla mietitrice." />
-		<text name="ad_helpText_08_02"							text="" />
-		<text name="ad_helpText_08_03"							text="Note: Non appena il driver di scarico riceve il comando di guidare verso la mietitrice, il messaggio di stato nella barra delle informazioni dell'HUD passa da 'In attesa della mietitrebbia' a 'Guida verso la mietitrebbia'. Ciò significa che il pianificatore di percorso è ora alla ricerca attiva di un percorso. A seconda delle prestazioni della CPU e delle impostazioni ('Tempo di ricerca percorso (massimo)'), questo processo potrebbe richiedere del tempo e, in casi estremi, ridurre i tuoi fps. Questo di solito è il caso se lo scaricatore non è in grado di trovare un percorso accettabile per la mietitrebbia. Accertarsi sempre che lo spazio davanti al conducente sia privo di ostacoli (e privo di raccolto) e che anche il percorso che conduce al tubo della mietitrice sia libero da collisioni (ad esempio nessun raccolto o alberi dietro la mietitrice)." />
-		<text name="ad_helpText_08_04"							text="" />
-		<text name="ad_helpText_08_05"							text="Quando raggiunge la mietitrice controllerà se il processo di scarico è terminato o se il rimorchio corrente è pieno. In caso di più rimorchi, il conducente procederà in avanti fino a quando non verrà rilevato un processo di riempimento sul rimorchio successivo. Dopo il processo di scarico, il conducente inizierà a guidare indietro per alcuni metri per fornire alla mietitrice spazio sufficiente per continuare il suo lavoro. Quindi il conducente attenderà alcuni secondi affinché la mietitrice sgombrerà l'area e ricomincerà la pianificazione del percorso fino al punto di partenza. Una volta raggiunto il punto di partenza, si registrerà nuovamente come scaricatore disponibile e attenderà di essere richiamato. Se il rimorchio è già pieno a quel punto, si dirigerà direttamente verso la destinazione di scarico prima di tornare alla posizione sul campo." />
+		<text name="ad_helpTitle_08"		text="AD modalità - Scarico mietitrebbia - normale - 2" />
+		<text name="ad_helpText_08_01"		text="Se uno scaricatore viene chiamato a una mietitrice, inizierà a pianificare un percorso per il tubo esteso della mietitrice. Il planner di percorso è un'implementazione completamente unica e una spiegazione potrebbe essere inclusa come appendice a questa documentazione in seguito. I concetti chiave sono una divisione del mondo simulato in celle a griglia. Queste celle della griglia sono dimensionate in base al raggio di sterzata dei veicoli e vengono controllate come libere da frutta (vedi impostazioni), libere da collisioni, sul campo (vedi impostazioni) e hanno una pendenza massima accettabile per i conducenti AI. Dopo che è stato trovato un percorso libero, viene applicato anche un po 'di livellamento per eliminare la maggior parte delle curve strette e quindi il conducente viene inviato lungo il percorso alla mietitrice." />
+		<text name="ad_helpText_08_02"		text="" />
+		<text name="ad_helpText_08_03"		text="Note: Non appena il driver di scarico riceve il comando di guidare verso la mietitrice, il messaggio di stato nella barra delle informazioni dell'HUD passa da 'In attesa della mietitrebbia' a 'Guida verso la mietitrebbia'. Ciò significa che il pianificatore di percorso è ora alla ricerca attiva di un percorso. A seconda delle prestazioni della CPU e delle impostazioni ('Tempo di ricerca percorso (massimo)'), questo processo potrebbe richiedere del tempo e, in casi estremi, ridurre i tuoi fps. Questo di solito è il caso se lo scaricatore non è in grado di trovare un percorso accettabile per la mietitrebbia. Accertarsi sempre che lo spazio davanti al conducente sia privo di ostacoli (e privo di raccolto) e che anche il percorso che conduce al tubo della mietitrice sia libero da collisioni (ad esempio nessun raccolto o alberi dietro la mietitrice)." />
+		<text name="ad_helpText_08_04"		text="" />
+		<text name="ad_helpText_08_05"		text="Quando raggiunge la mietitrice controllerà se il processo di scarico è terminato o se il rimorchio corrente è pieno. In caso di più rimorchi, il conducente procederà in avanti fino a quando non verrà rilevato un processo di riempimento sul rimorchio successivo. Dopo il processo di scarico, il conducente inizierà a guidare indietro per alcuni metri per fornire alla mietitrice spazio sufficiente per continuare il suo lavoro. Quindi il conducente attenderà alcuni secondi affinché la mietitrice sgombrerà l'area e ricomincerà la pianificazione del percorso fino al punto di partenza. Una volta raggiunto il punto di partenza, si registrerà nuovamente come scaricatore disponibile e attenderà di essere richiamato. Se il rimorchio è già pieno a quel punto, si dirigerà direttamente verso la destinazione di scarico prima di tornare alla posizione sul campo." />
 		
-		<text name="ad_helpTitle_09"							text="AD modalità - Scarico mietitrebbia - Pracheggio sul campo" />
-		<text name="ad_helpText_09_01"							text="Se questa opzione è impostata su SI nelle impostazioni AutoDrive, il conducente verificherà se la cella target (posizione del tubo) ha rilevato un frutto (Evita raccolto dev'essere impostato su SI). Se non viene rilevato alcun raccolto e il conducente non ha ancora raggiunto il livello di riempimento 'scarico', rimarrà nella posizione corrente del campo. " />
+		<text name="ad_helpTitle_09"		text="AD modalità - Scarico mietitrebbia - Pracheggio sul campo" />
+		<text name="ad_helpText_09_01"		text="Se questa opzione è impostata su SI nelle impostazioni AutoDrive, il conducente verificherà se la cella target (posizione del tubo) ha rilevato un frutto (Evita raccolto dev'essere impostato su SI). Se non viene rilevato alcun raccolto e il conducente non ha ancora raggiunto il livello di riempimento 'scarico', rimarrà nella posizione corrente del campo. " />
 		
-		<text name="ad_helpTitle_10"							text="AD modalità - Scarico mietitrebbia - Limita al campo" />
-		<text name="ad_helpText_10_01"							text="Se questa opzione è impostata su SI, l'algoritmo di ricerca percorso accetta solo celle della griglia presenti sul campo. Questa impostazione ha effetto solo se il veicolo è già sul campo (avviato sul campo o parcheggiato sul campo). Questa opzione dovrebbe aiutare a mantenere il guidatore sul campo, specialmente durante le manovre di svolta, ideale in campi stretti e circondati da recinti, muri o filari di alberi. " />
-		<text name="ad_helpText_10_02"							text="" />
-		<text name="ad_helpText_10_03"							text="Importante: Se non è possibile calcolare un percorso privo di frutti nel tempo previsto (vedere le impostazioni), il rilevatore di percorsi entrerà in una modalità di fallback che ignora il raccolto ed i limiti campo!" />
+		<text name="ad_helpTitle_10"		text="AD modalità - Scarico mietitrebbia - Limita al campo" />
+		<text name="ad_helpText_10_01"		text="Se questa opzione è impostata su SI, l'algoritmo di ricerca percorso accetta solo celle della griglia presenti sul campo. Questa impostazione ha effetto solo se il veicolo è già sul campo (avviato sul campo o parcheggiato sul campo). Questa opzione dovrebbe aiutare a mantenere il guidatore sul campo, specialmente durante le manovre di svolta, ideale in campi stretti e circondati da recinti, muri o filari di alberi. " />
+		<text name="ad_helpText_10_02"		text="" />
+		<text name="ad_helpText_10_03"		text="Importante: Se non è possibile calcolare un percorso privo di frutti nel tempo previsto (vedere le impostazioni), il rilevatore di percorsi entrerà in una modalità di fallback che ignora il raccolto ed i limiti campo!" />
 		
-		<text name="ad_helpTitle_11"							text="AD modalità - Scarico mietitrebbia - Evita raccolto" />
-		<text name="ad_helpText_11_01"							text="Questa opzione garantisce che il calcolo percorso accetti solo celle della griglia che non contenga raccolto o che contenga solo una quantità marginale di raccolto. Importante: se non è possibile calcolare un percorso privo di raccolto nel tempo previsto (vedere le impostazioni), il rilevatore di percorsi entrerà in una modalità di fallback che ignora il raccolto ed i limiti campo!" />
+		<text name="ad_helpTitle_11"		text="AD modalità - Scarico mietitrebbia - Evita raccolto" />
+		<text name="ad_helpText_11_01"		text="Questa opzione garantisce che il calcolo percorso accetti solo celle della griglia che non contenga raccolto o che contenga solo una quantità marginale di raccolto. Importante: se non è possibile calcolare un percorso privo di raccolto nel tempo previsto (vedere le impostazioni), il rilevatore di percorsi entrerà in una modalità di fallback che ignora il raccolto ed i limiti campo!" />
 		
-		<text name="ad_helpTitle_12"							text="AD modalità - Scarico mietitrebbia - Segui mietitrebbia" />
-		<text name="ad_helpText_12_01"							text="Chiamta anticipata / Segui mietitrebbia" />
-		<text name="ad_helpText_12_02"							text="" />
-		<text name="ad_helpText_12_03"							text="Queste opzioni possono essere utilizzate per seguire semplicemente la mietitrice con una certa distanza (la pre-chiamata on / insegui mietitrebbia Off). Oppure fare scaricare attivamente lo scaricatore mentre la mietitrice sta ancora guidando. Quando la mietitrice raggiunge il livello di riempimento impostato (Livello pre-chiamata), chiamerà già il conducente nella posizione corrente. Quando l'autista raggiunge questo punto, rivaluterà, se è vicino alla mietitrice (meno di 60 metri) e l'impostazione 'insegui mietitrebbia' è attiva, inizierà a seguirlo per linea di vista. In caso contrario, riattiverà un processo di ricerca del percorso nella nuova posizione della mietitrice. Mentre insegue, controllerà se il tubo è attualmente nel frutto o no. Se non è nel frutto, inizierà a prendere di mira la posizione del tubo, altrimenti seguirà la mietitrice con una certa distanza. Quando il conducente raggiunge il livello 'Scarica a', inizierà immediatamente a pianificare un percorso per l'uscita dal campo selezionato (vedere le impostazioni). Quindi ha senso impostare il livello al 100% in questa modalità. In questo modo non proverà accidentalmente a tagliare davanti alla mietitrice o ad andarsene prima di essere completamente riempito." />
-		<text name="ad_helpTitle_13"							text="AD modalità - Scarico Bunker silos" />
-		<text name="ad_helpText_13_01"							text="Questa modalità può essere utilizzata solo con veicoli a cui è collegata una pala. L'idea di base è una soluzione con un clic per svuotare i silos bunker drive-through. All'avvio, il veicolo verificherà le condizioni richieste. Ha bisogno di un silo di bunker pieno nelle vicinanze (~ 100m?) E di una pala attaccata. Se entrambe le condizioni sono soddisfatte, il veicolo inizializzerà l'asse del caricatore frontale per acquisire i valori corretti per i movimenti su / giù, caricare / scaricare ed estendere / ritrarre i movimenti. Quindi dividerà la larghezza del silo del bunker in pezzi larghi quanto la sua pala + aggiunta di pala (vedi impostazioni) e inizierà dalla prima riga. Se la prima o l'ultima riga finisce per colpire la parete del silo, è necessario aumentare il valore di aggiunta della pala nelle impostazioni e riavviare il driver. Ciò può accadere se la larghezza del pickup della pala non è adattata correttamente alle dimensioni fisiche o se la definizione del silo del bunker si trova all'interno del muro, il che non è insolito poiché facilita lo sviluppo di un silos di bunker di bell'aspetto. Dopo che la pala è stata sgonfiata e il veicolo invertito dal bunker, cercherà un veicolo con un rimorchio attaccato (con spazio di riempimento a sinistra) e inizierà a dirigersi lì." />
-		<text name="ad_helpText_13_02"							text="" />
-		<text name="ad_helpText_13_03"							text="Attenzione: Al momento non è incluso il rilevamento delle collisioni in questa modalità!" />
-		<text name="ad_helpText_13_04"							text="" />
-		<text name="ad_helpText_13_05"							text="Poiché il veicolo cerca automaticamente di trovare la posizione di carico ideale per la pala, può capitare che sollevi le ruote anteriori. È incluso un rilevamento per questo scenario, che verifica se tutte le ruote sono a terra e inizia a sollevare la pala se questo controllo restituisce falso per alcune centinaia di millisecondi." />
+		<text name="ad_helpTitle_12"		text="AD modalità - Scarico mietitrebbia - Segui mietitrebbia" />
+		<text name="ad_helpText_12_01"		text="Chiamta anticipata / Segui mietitrebbia" />
+		<text name="ad_helpText_12_02"		text="" />
+		<text name="ad_helpText_12_03"		text="Queste opzioni possono essere utilizzate per seguire semplicemente la mietitrice con una certa distanza (la pre-chiamata on / insegui mietitrebbia Off). Oppure fare scaricare attivamente lo scaricatore mentre la mietitrice sta ancora guidando. Quando la mietitrice raggiunge il livello di riempimento impostato (Livello pre-chiamata), chiamerà già il conducente nella posizione corrente. Quando l'autista raggiunge questo punto, rivaluterà, se è vicino alla mietitrice (meno di 60 metri) e l'impostazione 'insegui mietitrebbia' è attiva, inizierà a seguirlo per linea di vista. In caso contrario, riattiverà un processo di ricerca del percorso nella nuova posizione della mietitrice. Mentre insegue, controllerà se il tubo è attualmente nel frutto o no. Se non è nel frutto, inizierà a prendere di mira la posizione del tubo, altrimenti seguirà la mietitrice con una certa distanza. Quando il conducente raggiunge il livello 'Scarica a', inizierà immediatamente a pianificare un percorso per l'uscita dal campo selezionato (vedere le impostazioni). Quindi ha senso impostare il livello al 100% in questa modalità. In questo modo non proverà accidentalmente a tagliare davanti alla mietitrice o ad andarsene prima di essere completamente riempito." />
+		<text name="ad_helpTitle_13"    	text="AD modalità - Scarico Bunker silos" />
+		<text name="ad_helpText_13_01"		text="Questa modalità può essere utilizzata solo con veicoli a cui è collegata una pala. L'idea di base è una soluzione con un clic per svuotare i silos bunker drive-through. All'avvio, il veicolo verificherà le condizioni richieste. Ha bisogno di un silo di bunker pieno nelle vicinanze (~ 100m?) E di una pala attaccata. Se entrambe le condizioni sono soddisfatte, il veicolo inizializzerà l'asse del caricatore frontale per acquisire i valori corretti per i movimenti su / giù, caricare / scaricare ed estendere / ritrarre i movimenti. Quindi dividerà la larghezza del silo del bunker in pezzi larghi quanto la sua pala + aggiunta di pala (vedi impostazioni) e inizierà dalla prima riga. Se la prima o l'ultima riga finisce per colpire la parete del silo, è necessario aumentare il valore di aggiunta della pala nelle impostazioni e riavviare il driver. Ciò può accadere se la larghezza del pickup della pala non è adattata correttamente alle dimensioni fisiche o se la definizione del silo del bunker si trova all'interno del muro, il che non è insolito poiché facilita lo sviluppo di un silos di bunker di bell'aspetto. Dopo che la pala è stata sgonfiata e il veicolo invertito dal bunker, cercherà un veicolo con un rimorchio attaccato (con spazio di riempimento a sinistra) e inizierà a dirigersi lì." />
+		<text name="ad_helpText_13_02"		text="" />
+		<text name="ad_helpText_13_03"		text="Attenzione: Al momento non è incluso il rilevamento delle collisioni in questa modalità!" />
+		<text name="ad_helpText_13_04"		text="" />
+		<text name="ad_helpText_13_05"		text="Poiché il veicolo cerca automaticamente di trovare la posizione di carico ideale per la pala, può capitare che sollevi le ruote anteriori. È incluso un rilevamento per questo scenario, che verifica se tutte le ruote sono a terra e inizia a sollevare la pala se questo controllo restituisce falso per alcune centinaia di millisecondi." />
 		
 
-		<text name="AD_task_pathfinding"						text="Pianificazione" />
-		<text name="AD_task_catch_up_with_combine"				text="Intercettazione della mietitrebbia" />
-		<text name="AD_task_clearcrop"							text="Spostamento" />
-		<text name="AD_task_drive_to_destination"				text="Guida a destinazione" />
-		<text name="AD_task_drive_to_vehicle"					text="Guida al veicolo" />
-		<text name="AD_task_drive_to_combine_pipe"				text="Guida allo scarico della mietitrebbia" />
-		<text name="AD_task_unloading_combine"					text="Scaricamento della mietitrebbia" />
-		<text name="AD_task_reversing_from_combine"				text="Reversione della mietitrebbia" />
-		<text name="AD_task_waiting_for_space"					text="Attesa spazio di manovra" />
-		<text name="AD_task_wait_for_combine_turn"				text="Attesa svolta della mietitrebbia" />
-		<text name="AD_task_drive_to_load_point"				text="Guida al punto di carico" />
-		<text name="AD_task_drive_to_refuel_point"				text="Guida al punto di rifornimento" />
-		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
-		<text name="AD_task_stop_and_disable"					text="Fermata" />
-		<text name="AD_task_drive_to_unload_point"				text="Guida al punto di scarico" />
-		<text name="AD_task_wait_for_call"						text="Attesa di chiamata" />	
-		<text name="AD_task_chasing_combine"					text="Inseguimento mietitrebbia" />	
-		<text name="AD_task_wait_for_combine_pass_by"			text="Lasciare passare a" />	
-		<text name="AD_task_catching_chase_side"				text="Lato di intercettazione" />	
-		<text name="AD_task_chase_side"							text="Lato" />	
-		<text name="AD_task_chase_side_left"					text="sinistra" />	
-		<text name="AD_task_chase_side_rear"					text="dietro" />	
-		<text name="AD_task_chase_side_right"					text="destra" />		
-		<text name="AD_task_waiting_for_room"					text="Attesa di spazio" />
-		<text name="AD_task_exiting_field"						text="Uscita dal campo" />
-		<text name="AD_task_reversing_from_collision"			text="Retromarcia per collisione" />
-        <text name="AD_task_drive_to_park"				        text="Guida al parcheggio" />
-		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
+		<text name="AD_task_pathfinding" 				text="Pianificazione" />
+		<text name="AD_task_catch_up_with_combine" 		text="Intercettazione della mietitrebbia" />
+		<text name="AD_task_clearcrop" 					text="Spostamento" />
+		<text name="AD_task_drive_to_destination" 		text="Guida a destinazione" />
+		<text name="AD_task_drive_to_vehicle" 			text="Guida al veicolo" />
+		<text name="AD_task_drive_to_combine_pipe" 		text="Guida allo scarico della mietitrebbia" />
+		<text name="AD_task_unloading_combine" 			text="Scaricamento della mietitrebbia" />
+		<text name="AD_task_reversing_from_combine" 	text="Reversione della mietitrebbia" />
+		<text name="AD_task_waiting_for_space" 			text="Attesa spazio di manovra" />
+		<text name="AD_task_wait_for_combine_turn" 		text="Attesa svolta della mietitrebbia" />
+		<text name="AD_task_drive_to_load_point" 		text="Guida al punto di carico" />
+		<text name="AD_task_drive_to_refuel_point" 		text="Guida al punto di rifornimento" />
+		<text name="AD_task_drive_to_repair_point" 		text="Guida alla stazione di riparazione" />
+		<text name="AD_task_stop_and_disable" 			text="Fermata" />
+		<text name="AD_task_drive_to_unload_point" 		text="Guida al punto di scarico" />
+		<text name="AD_task_wait_for_call" 				text="Attesa di chiamata" />	
+		<text name="AD_task_chasing_combine" 			text="Inseguimento mietitrebbia" />	
+		<text name="AD_task_wait_for_combine_pass_by"	text="Lasciare passare a" />	
+		<text name="AD_task_catching_chase_side" 		text="Lato di intercettazione" />	
+		<text name="AD_task_chase_side"					text="Lato" />	
+		<text name="AD_task_chase_side_left" 			text="Sinistra" />	
+		<text name="AD_task_chase_side_rear" 			text="Dietro" />	
+		<text name="AD_task_chase_side_right" 			text="Destra" />		
+		<text name="AD_task_waiting_for_room" 			text="Attesa di spazio" />
+		<text name="AD_task_exiting_field" 				text="Uscita dal campo" />
+		<text name="AD_task_reversing_from_collision" 	text="Retromarcia per collisione" />
+        <text name="AD_task_drive_to_park" 				text="Guida al parcheggio" />
+		<text name="AD_task_unload_area_in_fruit" 		text="Area di scarico bloccata" />
 
-		<text name = "gui_CPAD_off"								text = "spento"/>
-		<text name = "gui_CPAD_simple"							text = "semplice"/>
-		<text name = "gui_CPAD_full"							text = "completo"/>		
-		<text name = "gui_ad_combineCPADHudMouse"				text = "combinare i pulsanti CP/AD"/>
-    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "spento: standard / semplice: CP: sec azione del mouse > mouse on + off, AD: attiva/disattiva Hud > entrambi gli hud on + off / completo: come semplice ma gli hud si attivano in singoli passaggi / Richiesto: disabilita il tasto destro del mouse HUD nelle impostazioni CP"/>
+		<text name="gui_CPAD_off" 						text="Spento"/>
+		<text name="gui_CPAD_simple" 					text="Semplice"/>
+		<text name="gui_CPAD_full" 						text="Completo"/>		
+		<text name="gui_ad_combineCPADHudMouse" 		text="Combinare i pulsanti CP/AD"/>
+    	<text name="gui_ad_combineCPADHudMouse_tooltip" text="Spento: standard / semplice: CP: sec azione del mouse > mouse on + off, AD: attiva/disattiva Hud > entrambi gli hud on + off / completo: come semplice ma gli hud si attivano in singoli passaggi / Richiesto: disabilita il tasto destro del mouse HUD nelle impostazioni CP"/>
 	
-		<text name="gui_ad_showTipOfTheDay"						text="Consiglio del giorno" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Suggerimento del giorno visualizzato ad ogni inizio del gioco" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Consiglio del giorno" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Mostra al prossimo avvio" />
-		<text name="ad_next_tip" 								text="Nuovo consiglio" />
-		<text name="ad_totd_01_title" 							text="Funzioni multiple" />
-		<text name="ad_totd_01_text" 							text="Molti pulsanti in AutoDrive hanno più funzioni. La funzione principale è sempre attivabile con il tasto sinistro del mouse. La funzione secondaria può essere attivata con il tasto centrale o con il tasto destro del mouse.
+		<text name="gui_ad_showTipOfTheDay" 		text="Consiglio del giorno" />
+		<text name="gui_ad_showTipOfTheDay_tooltip" text="Suggerimento del giorno visualizzato ad ogni inizio del gioco" />
+		<text name="gui_ad_tipOfTheDayTitle" 		text="Consiglio del giorno" />
+		<text name="gui_ad_tipOfTheDayActive" 		text="Mostra al prossimo avvio" />
+		<text name="ad_next_tip" 					text="Nuovo consiglio" />
+		<text name="ad_totd_01_title" 				text="Funzioni multiple" />
+		<text name="ad_totd_01_text"				text="Molti pulsanti in AutoDrive hanno più funzioni. La funzione principale è sempre attivabile con il tasto sinistro del mouse. La funzione secondaria può essere attivata con il tasto centrale o con il tasto destro del mouse.
 
 		Diversi pulsanti hanno anche una terza e una quarta funzione che possono essere utilizzate scorrendo con la rotella del mouse sopra detti pulsanti. Per ora, quelli sono i limitatori di velocità e il pulsante di registrazione." />
-		<text name="ad_totd_02_title" 							text="Diversi tipi di strade" />
-		<text name="ad_totd_02_text" 							text="Una rete AutoDrive può contenere 4 diversi tipi di strade.
+		
+		<text name="ad_totd_02_title" 	text="Diversi tipi di strade" />
+		<text name="ad_totd_02_text" 	text="Una rete AutoDrive può contenere 4 diversi tipi di strade.
 
 		1. Un segmento di strada standard (verde). I veicoli possono viaggiare lungo la direzione contrassegnata dalle frecce. Per iniziare a registrare una strada standard, è sufficiente fare clic con il pulsante sinistro del mouse sul pulsante di registrazione.
 
@@ -414,15 +415,15 @@
 
 		4. Strada laterale - Questo tipo di segmento di strada viene solitamente evitato dalla pianificazione del percorso a meno che l'obiettivo non sia su questo segmento di strada. Per registrare una strada laterale, usa la rotellina del mouse verso l'alto mentre tieni premuto il pulsante di registrazione." />
 		
-		<text name="ad_totd_03_title" 							text="Trebbiatura - 1" />
-		<text name="ad_totd_03_text" 							text="Alcuni suggerimenti di base per l'utilizzo di AutoDrive per scaricare le mietitrebbie:
+		<text name="ad_totd_03_title" 	text="Trebbiatura - 1" />
+		<text name="ad_totd_03_text" 	text="Alcuni suggerimenti di base per l'utilizzo di AutoDrive per scaricare le mietitrebbie:
 
 		1. Per consentire a una mietitrice di chiamare automaticamente uno scaricatore, seleziona semplicemente la stessa destinazione nell'HUD AutoDrive della mietitrice che hai selezionato per lo scaricatore. Questo punto dovrebbe di solito essere un obiettivo vicino al campo in modo che lo scaricatore possa pianificare un percorso verso la mietitrice. In alternativa è anche possibile abilitare l'impostazione 'Trova conducente' che farà sì che la mietitrice cercherà qualsiasi scaricatore disponibile in un raggio di 300 m.
 
 		2. AutoDrive può scaricare sia mietitrebbie che trebbiatrici in movimento. Per abilitare questa funzione per le mietitrebbie, è sufficiente impostare l'impostazione 'Livello pre-chiamata' su 0%." />
-		<text name="ad_totd_04_title" 							text="Impostazione - 1" />
+		<text name="ad_totd_04_title" 	text="Impostazione - 1" />
 
-		<text name="ad_totd_04_text" 							text="Attualmente ci sono 6 diverse pagine di impostazione.
+		<text name="ad_totd_04_text" 	text="Attualmente ci sono 6 diverse pagine di impostazione.
 
 		1. Impostazioni generali: valide per tutti i veicoli.
 
@@ -436,19 +437,19 @@
 
 		6. Funzionalità sperimentali - Queste impostazioni si riferiscono a funzionalità che stiamo attualmente testando/sviluppando ma che non sono ancora considerate stabili. Utilizzare a proprio rischio." />
 
-		<text name = "gui_ad_editorTip_1"								text = "Semplice clic con il tasto sinistro del mouse:"/>
-		<text name = "gui_ad_editorTip_2"								text = "Solo mouse: seleziona 1. punto"/>
-		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Crea nodo"/>
-		<text name = "gui_ad_editorTip_4"								text = "LALT = Elimina nodo"/>
-		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Attiva/disattiva punto strada laterale"/>
+		<text name="gui_ad_editorTip_1" 	text="Semplice clic con il tasto sinistro del mouse:"/>
+		<text name="gui_ad_editorTip_2" 	text="Solo mouse: seleziona 1. punto"/>
+		<text name="gui_ad_editorTip_3" 	text="LCTRL = Crea nodo"/>
+		<text name="gui_ad_editorTip_4" 	text="LALT = Elimina nodo"/>
+		<text name="gui_ad_editorTip_5" 	text="LSHIFT = Attiva/Disattiva punto strada laterale"/>
 
-		<text name = "gui_ad_editorTip_6"								text = "Cliccare sul secondo nodo:"/>
-		<text name = "gui_ad_editorTip_7"								text = "Attiva/disattiva connessione"/>
-		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Crea percorso in retromarcia"/>
+		<text name="gui_ad_editorTip_6" 	text="Cliccare sul secondo nodo:"/>
+		<text name="gui_ad_editorTip_7" 	text="Attiva/Disattiva connessione"/>
+		<text name="gui_ad_editorTip_8" 	text="RSHIFT = Crea percorso in retromarcia"/>
 
-		<text name = "gui_ad_editorTip_9"								text = "1. il nodo è l'intersezione, in secondo luogo è il vicino:"/>
-		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Attiva/disattiva tipo di segmento (normale/doppio)"/>
-		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Attiva/disattiva strada laterale"/>
+		<text name="gui_ad_editorTip_9" 	text="1. Il nodo è l'intersezione, in secondo luogo è il vicino:"/>
+		<text name="gui_ad_editorTip_10" 	text="LCTRL: Attiva/Disattiva tipo di segmento (normale/doppio)"/>
+		<text name="gui_ad_editorTip_11" 	text="LSHIFT = Attiva/Disattiva strada laterale"/>
     
 	</texts>
 </l10n>
