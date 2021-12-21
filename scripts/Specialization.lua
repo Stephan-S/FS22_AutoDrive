@@ -1075,8 +1075,6 @@ function AutoDrive:onStartAutoDrive()
     self.spec_enterable.disableCharacterOnLeave = false
     self.spec_aiVehicle.isActive = true
 
-    self.ad.isActive = true
-
     if self.spec_aiVehicle.currentHelper == nil then
         self.spec_aiVehicle.currentHelper = g_helperManager:getRandomHelper()
 
@@ -1118,11 +1116,13 @@ function AutoDrive:onStartAutoDrive()
 
     AutoDriveHud:createMapHotspot(self)
 
-    if AutoDrive.getSetting("enableParkAtJobFinished", self) and ((self.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER) or (self.ad.stateModule:getMode() == AutoDrive.MODE_DELIVERTO)) then
-        local actualParkDestination = self.ad.stateModule:getParkDestinationAtJobFinished()
-        if actualParkDestination >= 1 then
-        else
-            AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+    if g_server ~= nil then
+        if AutoDrive.getSetting("enableParkAtJobFinished", self) and ((self.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER) or (self.ad.stateModule:getMode() == AutoDrive.MODE_DELIVERTO)) then
+            local actualParkDestination = self.ad.stateModule:getParkDestinationAtJobFinished()
+            if actualParkDestination >= 1 then
+            else
+                AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+            end
         end
     end
 end
@@ -1148,8 +1148,6 @@ function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
         --if self.raiseAIEvent ~= nil and not isStartingAIVE then
             --self:raiseAIEvent("onAIFieldWorkerEnd", "onAIImplementEnd")
         --end
-
-        self.ad.isActive = false
 
         self.spec_aiVehicle.isActive = false
         self.forceIsActive = false
