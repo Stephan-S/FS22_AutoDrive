@@ -39,8 +39,7 @@ end
 function DriveToMode:handleFinishedTask()
     if self.driveToDestinationTask ~= nil then
         self.driveToDestinationTask = nil
-        self.vehicle.ad.taskModule:addTask(StopAndDisableADTask:new(self.vehicle))
-    else
+        self.vehicle.ad.taskModule:addTask(StopAndDisableADTask:new(self.vehicle), ADTaskModule.DONT_PROPAGATE)
         local target = self.vehicle.ad.stateModule:getFirstMarker().name
         for _, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
             if self.destinationID == mapMarker.id then

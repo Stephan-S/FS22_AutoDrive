@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.0"
+AutoDrive.version = "2.0.0.1"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -278,7 +278,127 @@ function AutoDrive:loadMap(name)
 
 	ADMultipleTargetsManager:load()
 	AutoDrive.initTelemetry()
+
+	InGameMenuAIFrame.onFrameOpen = Utils.appendedFunction(InGameMenuAIFrame.onFrameOpen, AutoDrive.onAIFrameOpen)
+	InGameMenuAIFrame.onFrameClose = Utils.appendedFunction(InGameMenuAIFrame.onFrameClose, AutoDrive.onAIFrameClose)
+	InGameMenuAIFrame.refreshContextInput = Utils.appendedFunction(InGameMenuAIFrame.refreshContextInput, AutoDrive.refreshContextInputAIFrame)
+	BaseMission.draw = Utils.appendedFunction(BaseMission.draw, AutoDrive.drawBaseMission)
+	PlaceableHotspot.getCategory = Utils.overwrittenFunction(PlaceableHotspot.getCategory, AutoDrive.PlaceableHotspotGetCategory)
+	InGameMenuAIFrame.setMapSelectionItem = Utils.overwrittenFunction(InGameMenuAIFrame.setMapSelectionItem, AutoDrive.InGameMenuAIFrameSetMapSelectionItem)
 end
+
+function AutoDrive:onAIFrameOpen()
+	AutoDrive.aiFrameOpen = true
+	AutoDrive.aiFrame = self
+end
+
+function AutoDrive:onAIFrameClose()
+	AutoDrive.aiFrameOpen = false
+	AutoDrive.aiFrame = nil
+end
+
+function AutoDrive:refreshContextInputAIFrame()
+	if AutoDrive.aiFrameOpen then		
+		local hotspot = self.currentHotspot
+		if hotspot ~= nil then
+			local vehicle = InGameMenuMapUtil.getHotspotVehicle(hotspot)
+			AutoDrive.aiFrameVehicle = vehicle
+		end
+	end
+end
+
+function AutoDrive:drawBaseMission()
+	if AutoDrive.aiFrameOpen then		
+		AutoDrive:drawRouteOnMap()
+		if AutoDrive.aiFrameVehicle ~= nil then
+			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
+		else
+			AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
+		end
+	end
+end
+
+function AutoDrive:PlaceableHotspotGetCategory()
+	if self.isADMarker then
+		return MapHotspot.CATEGORY_AI
+	end
+	return PlaceableHotspot.CATEGORY_MAPPING[self.placeableType]
+end
+
+function AutoDrive:InGameMenuAIFrameSetMapSelectionItem(superFunc, hotspot)
+	if hotspot ~= nil and hotspot.isADMarker and AutoDrive.aiFrameOpen then
+		if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+			if AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
+				AutoDriveHudInputEventEvent:sendFirstMarkerEvent(AutoDrive.aiFrameVehicle, hotspot.markerID)
+				return
+			end
+		end
+	end
+	return superFunc(self, hotspot)
+end
+
+function AutoDrive.drawRouteOnMap()
+	if AutoDrive.aiFrame == nil then
+		return
+	end
+	
+	local vehicle = g_currentMission.controlledVehicle
+	if AutoDrive.aiFrameVehicle ~= nil then
+		vehicle = AutoDrive.aiFrameVehicle
+	end
+
+	if vehicle == nil then
+		return
+	end
+
+	if AutoDrive.courseOverlayId == nil then
+		AutoDrive.courseOverlayId = createImageOverlay('data/shared/default_normal.dds')
+	end
+
+	local dx, dz, dx2D, dy2D, width, rotation, r, g, b
+
+	local WPs, currentWp = vehicle.ad.drivePathModule:getWayPoints()
+	if WPs ~= nil then
+		local lastWp = nil
+		local skips = 0
+		for index, wp in pairs(WPs) do
+			if skips == 0 then
+				if lastWp ~= nil and index >= currentWp then
+					local startX, startY, _, _ = AutoDrive.getScreenPosFromWorldPos(lastWp.x, lastWp.z)
+					local endX, endY, _, _ = AutoDrive.getScreenPosFromWorldPos(wp.x, wp.z)
+								
+					if startX and startY and endX and endY then
+						dx2D = endX - startX;
+						dy2D = ( endY - startY ) / g_screenAspectRatio;
+						width = MathUtil.vector2Length(dx2D, dy2D);
+			
+						dx = wp.x - lastWp.x;
+						dz = wp.z - lastWp.z;
+						rotation = MathUtil.getYRotationFromDirection(dx, dz) - math.pi * 0.5;
+			
+						local lineThickness = 2 / g_screenHeight
+						setOverlayColor( AutoDrive.courseOverlayId, 0.3, 0.5, 0.56, 1)
+						setOverlayRotation( AutoDrive.courseOverlayId, rotation, 0, 0)
+						
+						renderOverlay( AutoDrive.courseOverlayId, startX, startY, width, lineThickness )
+					end
+					setOverlayRotation( AutoDrive.courseOverlayId, 0, 0, 0 ) -- reset overlay rotation
+				end
+				lastWp = wp
+			end
+			skips = (skips + 1) % 1
+		end
+	end
+end
+
+function AutoDrive.getScreenPosFromWorldPos(worldX, worldZ)
+	local objectX = (worldX + AutoDrive.aiFrame.ingameMapBase.worldCenterOffsetX) / AutoDrive.aiFrame.ingameMapBase.worldSizeX * 0.5 + 0.25
+	local objectZ = (worldZ + AutoDrive.aiFrame.ingameMapBase.worldCenterOffsetZ) / AutoDrive.aiFrame.ingameMapBase.worldSizeZ * 0.5 + 0.25
+	local x, y, _, _ = AutoDrive.aiFrame.ingameMapBase.layout:getMapObjectPosition(objectX, objectZ, 0, 0, 0, true)
+	
+	return x, y
+end
+
 
 function AutoDrive:init()
 
@@ -385,7 +505,8 @@ end
 
 function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	local vehicle = g_currentMission.controlledVehicle
-	local mouseActiveForAutoDrive = (g_gui.currentGui == nil) and (g_inputBinding:getShowMouseCursor() == true)
+	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
+	
 	if not mouseActiveForAutoDrive then
 		AutoDrive.lastButtonDown = nil
 		return
@@ -402,8 +523,12 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 
 	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
-		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and AutoDrive.Hud.showHud == true then
-			AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then		
+			if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle then
+				AutoDrive.Hud:mouseEvent(AutoDrive.aiFrameVehicle, posX, posY, isDown, isUp, button)
+			else
+				AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+			end
 		end
 
 		ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
@@ -470,7 +595,7 @@ function AutoDrive:update(dt)
 	end
 
 	if AutoDrive.Hud ~= nil then
-		if AutoDrive.Hud.showHud == true then
+		if AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen then
 			AutoDrive.Hud:update(dt)
 		end
 	end
@@ -484,7 +609,7 @@ function AutoDrive:update(dt)
 	ADTriggerManager:update(dt)
 	ADRoutesManager:update(dt)
 
-	AutoDrive.handleTelemetry(dt)
+	AutoDrive.handleTelemetry(dt)	
 end
 
 function AutoDrive:draw()
