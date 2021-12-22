@@ -54,6 +54,8 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "onDrawEditorMode", AutoDrive.onDrawEditorMode)
     SpecializationUtil.registerFunction(vehicleType, "onDrawPreviews", AutoDrive.onDrawPreviews)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
+    SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
+    SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)    
 end
 
 function AutoDrive.registerEvents(vehicleType)
@@ -378,6 +380,8 @@ function AutoDrive:onUpdate(dt)
     if self.ad.isCombine then
         AutoDrive.getLengthOfFieldInFront(self)
     end
+
+    --AutoDrive.generateUTurn(self, false)
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
@@ -1401,5 +1405,152 @@ function AutoDrive:getActiveFarm(superFunc)
         return self.spec_aiVehicle.startedFarmId
     else
         return superFunc(self)
+    end
+end
+
+function AutoDrive:generateUTurn(left)
+    if self.ad.uTurn == nil then
+        self.ad.uTurn = {}
+        self.ad.uTurn.expectedColliCallbacks = 0
+        self.ad.uTurn.inProgress = false
+        self.ad.uTurn.doneChecking = true
+    end
+    if not self.ad.uTurn.inProgress then
+        self.ad.uTurn.doneChecking = false
+        self.ad.uTurn.inProgress = true
+        
+        local radius = AutoDrive.getDriverRadius(self, true)
+        local vehX, vehY, vehZ = getWorldTranslation(self.components[1].node)
+        local resolution = 20
+
+        -- Determine area to check
+        local points = {}
+        if left then
+            for i = 1, (resolution + 1) do
+                local circlePoint = {   x = -math.cos((i-1) * math.pi / resolution) * radius + radius,
+                                        y = math.sin((i-1) * math.pi / resolution) * radius }
+                local worldX, _, worldZ = localToWorld(self.components[1].node, circlePoint.x, 0, circlePoint.y)
+                local point = { x = worldX, y = vehY, z = worldZ }
+                local rayCastResult = AutoDrive:getTerrainHeightAtWorldPos(worldX, worldZ)
+                point.y = rayCastResult or point.y
+                local dummy = 1
+                for i = 1, 1000 do
+                    dummy = dummy + i
+                end
+                point.y = AutoDrive.raycastHeight or point.y
+                
+                table.insert(points, point)
+            end
+            local worldX, _, worldZ = localToWorld(self.components[1].node, 2*radius, 0, -1)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, 2*radius, 0, -4)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, 2*radius, 0, -8)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+        else
+            for i = 1, (resolution + 1) do
+                local circlePoint = {   x = math.cos((i-1) * math.pi / resolution) * radius - radius,
+                                        y = math.sin((i-1) * math.pi / resolution) * radius }
+                local worldX, _, worldZ = localToWorld(self.components[1].node, circlePoint.x, 0, circlePoint.y)
+                local point = { x = worldX, y = vehY, z = worldZ }
+                local rayCastResult = AutoDrive:getTerrainHeightAtWorldPos(worldX, worldZ)
+                point.y = rayCastResult or point.y
+                local dummy = 1
+                for i = 1, 1000 do
+                    dummy = dummy + i
+                end
+                point.y = AutoDrive.raycastHeight or point.y
+                
+                table.insert(points, point)
+            end
+            local worldX, _, worldZ = localToWorld(self.components[1].node, -2*radius, 0, -1)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, -2*radius, 0, -4)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, -2*radius, 0, -8)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+        end
+
+        --- Coll check:
+        local widthX = self.size.width / 1.75
+        local height = 2.3
+        local mask = 0
+
+        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+
+        self.ad.uTurn.expectedColliCallbacks = 0
+        self.ad.uTurn.colliFound = false
+        self.ad.uTurn.points = points
+        
+        for i, wp in pairs(points) do
+            if i > 1 and i < (#points - 1) then
+                local wpLast = points[i - 1]
+                local deltaX, deltaY, deltaZ = wp.x - wpLast.x, wp.y - wpLast.y, wp.z - wpLast.z
+                local centerX, centerY, centerZ = wpLast.x + deltaX/2,  wpLast.y + deltaY/2,  wpLast.z + deltaZ/2
+                local angleRad = math.atan2(deltaX, deltaZ)
+                angleRad = AutoDrive.normalizeAngle(angleRad)
+                local length = MathUtil.vector2Length(deltaX, deltaZ) / 2
+
+                local angleX = -MathUtil.getYRotationFromDirection(deltaY, length*2)
+
+                local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallback", self, mask, true, true, true)         
+                if shapes > 0 then
+                    self.ad.uTurn.expectedColliCallbacks = self.ad.uTurn.expectedColliCallbacks + 1
+                end
+                --[[
+                local r,g,b = 0,1,0
+                if shapes > 0 then
+                    r = 1
+                    g = 0
+                    DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
+                end
+                DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
+                --]]
+            end
+        end
+    elseif self.ad.uTurn.inProgress then
+        local r,g,b = 0,1,0
+        if self.ad.uTurn.colliFound then
+            r = 1
+            g = 0
+        end
+
+        for i, p in ipairs(self.ad.uTurn.points) do
+            if i > 1 then
+                ADDrawingManager:addLineTask(self.ad.uTurn.points[i-1].x, self.ad.uTurn.points[i-1].y, self.ad.uTurn.points[i-1].z, p.x, p.y, p.z, r, g, b)
+                ADDrawingManager:addArrowTask(self.ad.uTurn.points[i-1].x, self.ad.uTurn.points[i-1].y, self.ad.uTurn.points[i-1].z, p.x, p.y, p.z, ADDrawingManager.arrows.position.middle, unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection))
+            end
+        end
+        
+        if self.ad.uTurn.doneChecking then
+            self.ad.uTurn.inProgress = false
+        end
+    end
+    
+    -- Coll check with large box
+    --local centerX, centerY, centerZ = localToWorld(vehicle.components[1].node, radius, 0, radius/2)
+    --local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallbackIgnore", nil, mask, true, true, true)    
+end
+
+function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
+    self.ad.uTurn.expectedColliCallbacks = math.max(0, self.ad.uTurn.expectedColliCallbacks - 1)
+    if transformId ~= 0 and transformId ~= g_currentMission.terrainRootNode then
+        if g_currentMission.nodeToObject[transformId] ~= nil then
+            if g_currentMission.nodeToObject[transformId] ~= self and not AutoDrive:checkIsConnected(self, g_currentMission.nodeToObject[transformId]) then
+                self.ad.uTurn.colliFound = true
+            end
+        else
+            self.ad.uTurn.colliFound = true
+        end
+    
+        if self.ad.uTurn.inProgress and (self.ad.uTurn.expectedColliCallbacks == 0 or self.ad.uTurn.colliFound) then
+            self.ad.uTurn.doneChecking = true
+        end
     end
 end

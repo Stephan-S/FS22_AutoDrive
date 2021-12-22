@@ -15,6 +15,7 @@ AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer = false
 AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
 AutoDrive.experimentalFeatures.DrawAlternativ = false
+AutoDrive.experimentalFeatures.UTurn = true
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true
