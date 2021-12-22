@@ -1030,6 +1030,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
         end
 		local count1 = 1
 		local count2 = 1
+		local count3 = 1
 		local mapMarkerCounter = #self:getMapMarkers() + 1
 		for i, wp in pairs(network) do
             -- mark wayPoint without outgoing connection
@@ -1078,6 +1079,28 @@ function ADGraphManager:createDebugMarkers(updateMap)
                     end
                 end
             end
+
+            -- mark wayPoint without outgoing connection
+            if wp.out ~= nil then
+                for _, wp_out in pairs(wp.out) do
+                    local missingIncoming = self:checkForMissingIncoming(wp, self:getWayPointById(wp_out))
+                    if missingIncoming then
+                        local debugMapMarkerName = "3_" .. tostring(count3)
+
+                        -- create the mapMarker
+                        local mapMarker = {}
+                        mapMarker.name = debugMapMarkerName
+                        mapMarker.group = ADGraphManager.debugGroupName
+                        mapMarker.markerIndex = mapMarkerCounter
+                        mapMarker.id = wp.id
+                        mapMarker.isADDebug = true
+                        self:setMapMarker(mapMarker)
+
+                        count3 = count3 + 1
+                        mapMarkerCounter = mapMarkerCounter + 1
+                    end
+                end
+            end
 		end
 	end
     if shouldUpdateMap == true then
@@ -1103,6 +1126,32 @@ function ADGraphManager:checkForWrongReverseStart(wp_ref, wp_current, wp_ahead)
     end
 
     return reverseStart
+end
+
+function ADGraphManager:checkForMissingIncoming(wp_current)
+    local ret = false
+
+    if wp_current == nil then
+        return ret
+    end
+    local reverseFound = false
+    if wp_current.incoming ~= nil and #wp_current.incoming == 0 then
+
+        -- search for a possible reverse connection
+        for _, wp in pairs(self.wayPoints) do
+            if wp.out ~= nil and wp_current.id ~= nil then
+                if table.contains(wp.out, wp_current.id) then
+                    reverseFound = true
+                    break
+                end
+            end
+        end
+        if not reverseFound then
+            -- the waypoint has no incoming connection
+            ret = true
+        end
+    end
+    return ret
 end
 
 function ADGraphManager:toggleWayPointAsSubPrio(wayPointId)
