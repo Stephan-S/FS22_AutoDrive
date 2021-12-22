@@ -667,8 +667,14 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 			return
 		end
 	end
-	
-	AutoDrive.playSample(AutoDrive.recordWaypointSample, 0.25)
+
+    -- play sound only on client with enabled editor mode
+    if g_client ~= nil then
+        local vehicle = g_currentMission.controlledVehicle
+        if vehicle ~= nil and vehicle.ad ~= nil and AutoDrive.isInExtendedEditorMode() then
+            AutoDrive.playSample(AutoDrive.recordWaypointSample, 0.25)
+        end
+    end
 
 	local newId = self:getWayPointsCount() + 1
 	local newWp = self:createNode(newId, x, y, z, {}, {}, flags)
