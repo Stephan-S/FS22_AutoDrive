@@ -677,12 +677,11 @@ function AutoDrive.checkForContinueOnEmptyLoadTrigger(vehicle)
 end
 
 function AutoDrive.getWaterTrailerInWater(vehicle, trailers)
-    if trailers ~= nil then
+    if vehicle ~= nil and trailers ~= nil then
         for _, trailer in pairs(trailers) do
             local spec = trailer.spec_waterTrailer
-            if spec ~= nil and spec.waterFillNode ~= nil and g_currentMission.waterY ~= nil then
-                local _,y,_ = getWorldTranslation(spec.waterFillNode)
-                local isNearWater = (y <= g_currentMission.waterY + 0.2)
+            if spec ~= nil and spec.waterFillNode ~= nil then
+                local isNearWater = vehicle.isInWater
                 local fillUnits = trailer:getFillUnits()
                 for i = 1, #fillUnits do
                     local isNotFilled = not AutoDrive.getIsFillUnitFull(trailer, i)
