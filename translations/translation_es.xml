@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
-	<translationContributors>Yllelder, Vanquish081</translationContributors>
+	<translationContributors>Yllelder, Vanquish081, AlegriaJ</translationContributors>
 	<texts>
 		<text name="UNKNOWN"									text="Desconocido" />
 		<text name="input_ADToggleHud"							text="AD: Abrir ventana AD" />
-		<text name="input_ADToggleHudExtension"					text="AD: Show HUD infos" />
+		<text name="input_ADToggleHudExtension"					text="AD: Mostrar más información" />
 		<text name="input_ADToggleMouse"						text="AD: Activar ratón" />
 		<text name="input_ADEnDisable"							text="AD: Activar/desactivar" />
 		<text name="input_ADSilomode"							text="AD: Cambiar modo" />
-		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
+		<text name="input_ADPreviousMode"						text="AD: Modo anterior" />
 		<text name="input_ADRecord"								text="AD: Grabar" />
-		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
-		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
-		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
+		<text name="input_ADRecord_Dual"						text="AD: Grabar ruta de dos vías" />
+		<text name="input_ADRecord_SubPrio"						text="AD: Grabar ruta secundaria" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Grabar rute secundaria de dos vías" />
 		<text name="input_ADSelectTarget"						text="AD: Seleccionar siguiente destino" />
 		<text name="input_ADSelectPreviousTarget"				text="AD: Seleccionar destino anterior" />
 		<text name="input_AD_Speed_up"							text="AD: Aumentar velocidad" />
@@ -22,39 +22,39 @@
 		<text name="input_AD_continue"							text="AD: Continuar" />
 		<text name="input_ADSelectTargetUnload"					text="AD: Seleccionar siguiente descarga" />
 		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Seleccionar descarga anterior" />
-		<text name="input_ADActivateDebug"						text="AD: Modo edición" />
-		<text name="input_ADDisplayMapPoints"					text="AD: Show waypoints" />
+		<text name="input_ADActivateDebug"						text="AD: Activar modo de editar" />
+		<text name="input_ADDisplayMapPoints"					text="AD: Mostrar puntos de ruta" />
 		<text name="input_ADDebugSelectNeighbor"				text="AD: Seleccionar punto vecino" />
 		<text name="input_ADDebugChangeNeighbor"				text="AD: Seleccionar siguiente punto vecino" />
-		<text name="input_ADDebugPreviousNeighbor"				text="AD: Select previous Neighbour Point" />
-		<text name="input_ADDebugCreateConnection"				text="AD: Activar punto de conexión" />
-		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Toggle connection between inverted" />
+		<text name="input_ADDebugPreviousNeighbor"				text="AD: Seleccionar punto vecino anterior" />
+		<text name="input_ADDebugCreateConnection"				text="AD: Conectar puntos" />
+		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Conectar puntos invertido" />
 		<text name="input_ADDebugCreateMapMarker"				text="AD: Crear/editar destino" />
 		<text name="input_ADRenameMapMarker"					text="AD: Editar el destino seleccionado" />
 		<text name="input_ADDebugDeleteWayPoint"				text="AD: Eliminar punto de ruta" />
 		<text name="input_ADDebugDeleteDestination"				text="AD: Eliminar el destino más cercano" />
-		<text name="input_ADSelectNextFillType"					text="AD: Seleccionar tipo de relleno siguiente" />
-		<text name="input_ADSelectPreviousFillType"				text="AD: Seleccionar tipo de relleno anterior" />
+		<text name="input_ADSelectNextFillType"					text="AD: Seleccionar tipo de carga siguiente" />
+		<text name="input_ADSelectPreviousFillType"				text="AD: Seleccionar tipo de carga anterior" />
 		<text name="input_ADOpenGUI"							text="AD: Abrir menú" />
-		<text name="input_ADCallDriver"							text="AD: Llamar a conductor" />
+		<text name="input_ADCallDriver"							text="AD: Llamar al conductor" />
 		<text name="input_ADGoToVehicle"						text="AD: Ir junto al vehículo seleccionado" />
 		<text name="input_ADNameDriver"							text="AD: Asignar nombre al conductor" />
-		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
-		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
-		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
-		<text name="input_ADIncLoopCounter"						text="AD: Aumentar los ciclos" />
-		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
-		<text name="input_ADbunkerUnloadType"					text="AD: Unload to Trailer or BGA" />
+		<text name="input_ADSetDestinationFilter"				text="AD: Filtro de destino" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: Aumentar velocidad de campo" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: Disminuir velocidad de campo" />
+		<text name="input_ADIncLoopCounter"						text="AD: Aumentar el contador de circuito" />
+		<text name="input_ADDecLoopCounter"						text="AD: Disminuir el contador de circuito" />
+		<text name="input_ADbunkerUnloadType"					text="AD: Descargar al remolque o planta de biogás" />
 		<text name="input_ADParkVehicle"						text="AD: Aparcar vehículo" />
-		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
-		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
+		<text name="input_ADSetParkDestination"					text="AD: Asignar destino de estacionamiento" />
+		<text name="input_ADRefuelVehicle"						text="AD: Reabastecer de combustible" />
 		<text name="input_ADSwapTargets"						text="AD: Intercambiar destinos" />
-		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
-		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
-		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
-		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
-		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
+		<text name="input_ADStartCP"							text="AD: Pasar a CP/AIVE" />
+		<text name="input_ADToggleCP_AIVE"						text="AD: Altenar CP/AIVE" />
+		<text name="input_AD_devAction"                         text="AD: Acción de desarrollador" />
+		<text name="input_AD_open_tipOfTheDay" 					text="AD: Abrir el consejo del día" />
+		<text name="input_ADToggleAutomaticPickupTarget"		text="AD: Alternar objetivo de recogida automática" />
+		<text name="input_ADToggleAutomaticUnloadTarget"		text="AD: Alternar destino de descarga automática" />
 		<text name="hud_avoidFruit"								text="AD: Evitar destruir cosechas" />
 		<text name="hud_startCp" 								text="AD: Iniciar CP / AIVE en destino" />
 		<text name="AD_parkVehicle_noPosSet"					text="No se ha asignado ningún destino de estacionamiento. Asigna el destino seleccionado actualmente haciendo clic derecho. " />
@@ -68,8 +68,8 @@
 		<text name="AD_No_Trailer"								text="no puedo encontrar el remolque" />
 		<text name="AD_No_Bunker"								text="no puedo encontrar el silo búnker" />
 		<text name="AD_No_Shovel"								text="no puedo encontrar una pala conectada" />
-		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
-		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
+		<text name="AD_No_Refuel_Station"						text="no puedo encontrar la estación de combustible para:" />
+		<text name="AD_No_Repair_Station"						text="no puedo encontrar la estación de reparación para:" />
 		<text name="AD_MODE_DRIVETO"							text="Conducir" />
 		<text name="AD_MODE_DELIVERTO"							text="Entregar" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Cargar y entregar" />
@@ -177,8 +177,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Introduce el nombre de la carpeta: " />
 		<text name="gui_ad_autoRefuel"							text="Repostar automáticamente" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Conduce hasta el destino de repostaje (cerca del desencadenante de repostaje) cuando el nivel de combustible sea bajo." />
-		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
-		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
+		<text name="gui_ad_autoRepair"							text="Reparación automática" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Conducir al taller de reparo (cerca del activador) cuando el nivel de desgaste esté demasiado alto." />
 		<text name="gui_ad_filter"								text="Filtro" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Cambiar el texto del filtro de destino" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Insertar texto de filtro:" />
@@ -202,31 +202,31 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Utilizar el modo de edición alternativo para modificar la ruta en lugar de tener que mantener pulsada la tecla LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Ventana ancha" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Usar el modo de ventana ancha, lo que permite mostrar algunos botones más en el panel" />
-		<text name="gui_ad_playSounds"							text="Sound" />
-		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
+		<text name="gui_ad_playSounds"							text="Sonidos" />
+		<text name="gui_ad_playSounds_tooltip"					text="Habilitar los efectos de sonido para los clics del ratón y las notificaciones." />
 		<text name="gui_ad_syncMultiTargets"					text="Sincronizar múltiples objetivos" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Múltiples conductores usando la misma carpeta para múltiples objetivos se coordinarán con los siguientes objetivos" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Aparcar al terminar el trabajo" />
 		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Solo disponible en los modos Recoger y entregar. Entregar: si el trabajo se ha terminado y el vehículo tiene posición de aparcamiento, los aperos o remolques se llevarán al aparcamiento también. En servidores dedicados, solo está disponible para aparcar el vehículo." />
-		<text name="gui_ad_autoTipSide"                         text="Lado Descarga Automático" />
+		<text name="gui_ad_autoTipSide"                         text="Lado de descarga automático" />
 		<text name="gui_ad_autoTipSide_tooltip"                 text="Sí - AD selecciona automaticamente el lado de descarga / No - Se utilizará el lado de descarga ya seleccionado" />
 		<text name="gui_ad_autoTrailerCover"                    text="Lonas de remolque automáticas" />
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Sí - AutoDrive abrirá y cerrará las lonas según necesite / No - las lonas no se abrirán ni cerrarán automáticamente" />
-		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning manoeuvre" />
-		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
-		<text name="gui_ad_AL_off"                              text="Unload Off" />
-		<text name="gui_ad_AL_center"                           text="Unload center" />
-		<text name="gui_ad_AL_left"                             text="Unload left" />
-		<text name="gui_ad_AL_behind"                           text="Unload behind" />
-		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
-		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_useForwardTurningManoeuvre"          text="Usar maniobra de giro hacia adelante" />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Sí - Los descargadores intentaran planificar un camino hacia adelante para adaptarse a los giros de 90° de la cosechadora. / No - Los descargadores retrocederán antes de girar." />
+		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Posición de descarga" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Apagado-Sin descarga automática, Centro-descargar en plataforma de carga, Izquierda / Detrás / Derecha - posición de descarga del vehículo (La posición depende de la configuración del vehículo, no de AD!)" />
+		<text name="gui_ad_AL_off"                              text="Descargar apagado" />
+		<text name="gui_ad_AL_center"                           text="Descargar centro" />
+		<text name="gui_ad_AL_left"                             text="Descargar izquierda" />
+		<text name="gui_ad_AL_behind"                           text="Descargar detrás" />
+		<text name="gui_ad_AL_right"                            text="Descargar derecha" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: Tiempo de espera después de descargar" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Tiempo de esperar despues de descargar, antes de continuar - útil para Descargar centro: 0-sin espera, esperar el tiempo seleccionado" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generación de red" />
 		<text name="gui_ad_scanConfirmationText"                text="¿Debe AutoDrive generar una red de rutas a partir de los datos de tráfico y ayuda del mapa?" />
-		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
-		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
+		<text name="gui_ad_noHarvesterAvailable"				text="No se encuentra ninguna cosechadora con el mismo objetivo" />
+		<text name="gui_ad_noUnloaderAvailable"					text="No se encuentra ningún conductor con el mismo objetivo disponible" />
 		
 		<text name="gui_ad_settingsPage_title"					text="Ajustes - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Ajustes de usuario - AutoDrive" />
@@ -234,11 +234,11 @@
 		<text name="gui_ad_combineUnloadSettingsPage_title"		text="Ajustes de descarga cosechadora - AutoDrive" />
 		<text name="gui_ad_debugSettingsPage_title" 			text="Ajustes de depuración - AutoDrive" />
 		<text name="gui_ad_eFeaturesSettingsPage_title" 		text="Ajustes de funciones experimentales - AutoDrive" />
-		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		text="Ajustes no funcional - AutoDrive" />
 		<text name="gui_ad_restoreButtonText" 					text="Restaurar" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Todos los cambios se perderán" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="¿Estás seguro de que quieres cerrar los ajustes sin guardar?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Establecer por defecto" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Gestor de rutas" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Introduce el nombre de la ruta:" />
@@ -267,22 +267,22 @@
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Notificaciones" />
 
-		<text name="gui_ad_colorSettingsTitle" 			        text="Color Assignments" />
+		<text name="gui_ad_colorSettingsTitle" 			        text="Asignaciones de color" />
         <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
-		<text name="ad_color_singleConnection" 			        text="01 line of single-way connection" />
-		<text name="ad_color_dualConnection" 			        text="02 line of dual-way connection" />
-		<text name="ad_color_reverseConnection" 			    text="03 line of reverse connection" />
-		<text name="ad_color_default" 			                text="04 waypoint on sinle and reverse connection" />
-		<text name="ad_color_subPrioSingleConnection" 			text="05 line of secondary single-way connection" />
-		<text name="ad_color_subPrioDualConnection" 			text="06 line of secondary dual-way connection" />
-		<text name="ad_color_subPrioNode" 			            text="07 secondary waypoint" />
+		<text name="ad_color_singleConnection" 			        text="01 línea de conexión unidireccional" />
+		<text name="ad_color_dualConnection" 			        text="02 línea de conexión de doble vía" />
+		<text name="ad_color_reverseConnection" 			    text="03 línea de conexión inversa" />
+		<text name="ad_color_default" 			                text="04 punto de ruta en conexión simple e inversa" />
+		<text name="ad_color_subPrioSingleConnection" 			text="05 línea de conexión secundaria unidireccional" />
+		<text name="ad_color_subPrioDualConnection" 			text="06 línea de conexión secundaria de doble vía" />
+		<text name="ad_color_subPrioNode" 			            text="07 punto de ruta secundario" />
 		<text name="ad_color_hoveredNode" 			            text="08 hovered waypoint" />
-		<text name="ad_color_previousNode" 			            text="09 connected previous waypoint" />
-		<text name="ad_color_nextNode" 			                text="10 connected next waypoint" />
-		<text name="ad_color_selectedNode" 			            text="11 selected waypoint" />
-		<text name="ad_color_currentConnection" 			    text="12 line next path" />
-		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
-		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+		<text name="ad_color_previousNode" 			            text="09 punto de ruta anterior conectado" />
+		<text name="ad_color_nextNode" 			                text="10 conectado siguiente punto de ruta" />
+		<text name="ad_color_selectedNode" 			            text="11 punto de ruta seleccionado" />
+		<text name="ad_color_currentConnection" 			    text="12 línea del siguiente camino" />
+		<text name="ad_color_closestLine" 			            text="13 línea desde el vehículo hasta el punto de ruta más cercano" />
+		<text name="ad_color_editorHeightLine" 			        text="14 línea del punto de ruta de la superficie hasta el de arriba del vehículo" />
 
 		<text name="button_delete_all" 							text="Eliminar todas" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
@@ -386,7 +386,7 @@
         <text name="AD_task_drive_to_park"				        text="Conduciendo al aparcamiento" />
 		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
 
-		<text name = "gui_CPAD_off"								text = "Off"/>
+		<text name = "gui_CPAD_off"								text = "Apagado"/>
 		<text name = "gui_CPAD_simple"							text = "Simple"/>
 		<text name = "gui_CPAD_full"							text = "Lleno"/>		
 		<text name = "gui_ad_combineCPADHudMouse"				text = "Combinar Botones CP/AD"/>
@@ -432,18 +432,18 @@
 		
 		6. Funciones experimentales - Estos ajustes se relacionan con funciones que están en desarrollo y testeo actualmente, por lo que aún no se consideran estables. Úselo bajo su propio riesgo." />
 		
-		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
-		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
-		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>
-		<text name = "gui_ad_editorTip_4"								text = "LALT = Delete node"/>
-		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Toggle point as side road"/>
+		<text name = "gui_ad_editorTip_1"								text = "Clic con el botón izquierdo del ratón:"/>
+		<text name = "gui_ad_editorTip_2"								text = "Solo ratón: Seleccionar 1. punto"/>
+		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Crear nodo"/>
+		<text name = "gui_ad_editorTip_4"								text = "LALT = Eliminar nodo"/>
+		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Alternar punto como camino lateral"/>
 
-		<text name = "gui_ad_editorTip_6"								text = "Clicking on second node:"/>
-		<text name = "gui_ad_editorTip_7"								text = "Toggle connection"/>
-		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Create reverse road"/>
+		<text name = "gui_ad_editorTip_6"								text = "Haciendo clic al proximo nodo:"/>
+		<text name = "gui_ad_editorTip_7"								text = "Alternar conexión"/>
+		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Crear camino inverso"/>
 
-		<text name = "gui_ad_editorTip_9"								text = "1. node is intersection, second it's neighbor:"/>
-		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Toggle segment type (normal/dual)"/>
-		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Toggle side road"/>
+		<text name = "gui_ad_editorTip_9"								text = "1. nodo es intersección, siguiente es su vecino:"/>
+		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Alternar el tipo de segmento (normal/doble)"/>
+		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Alternar camino lateral"/>
 	</texts>
 </l10n>
