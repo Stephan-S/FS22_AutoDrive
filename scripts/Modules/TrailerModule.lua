@@ -292,7 +292,7 @@ function ADTrailerModule:updateLoad(dt)
     -- update load delay timer
     self.loadDelayTimer:timer(self.lastFillLevel >= self.fillLevel and self.trigger == self, ADTrailerModule.LOAD_DELAY_TIME, dt) 
 
-    if self.trigger == nil and not fillUnitFull then
+    if self.trigger == nil and (not fillUnitFull or self.fillUnits > 1) then
     
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad search for load self.trigger %s", tostring(self.trigger))
 
