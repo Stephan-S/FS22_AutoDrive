@@ -10,10 +10,14 @@ end
 function AutoDrive:adParseSplines()
 	local startNodes = {}
 	local endNodes = {}
+	local usedSplines = {}
 
 	local aiSplineNode = self:getAiSplinesParentNode()
 	local hasSplines = true
 	local splineIndex = 0
+
+	local splines = {}
+
 	while hasSplines do
 		hasSplines = false
 
@@ -21,7 +25,9 @@ function AutoDrive:adParseSplines()
 		if spline ~= nil then
 			hasSplines = true
 			splineIndex = splineIndex + 1
-			self:createWaypointsForSpline(startNodes, endNodes, spline)
+			if not table.contains(splines, spline) then
+				table.insert(splines, spline)
+			end
 		end
 	end
 
@@ -29,8 +35,17 @@ function AutoDrive:adParseSplines()
 		for i=0, getNumOfChildren(aiSplineNode)-1, 1 do
 			local spline = getChildAt(aiSplineNode, i)
 			if spline ~= nil then
-				self:createWaypointsForSpline(startNodes, endNodes, spline)
+				if not table.contains(splines, spline) then
+					table.insert(splines, spline)
+				end			
 			end
+		end
+	end
+
+	for _, spline in pairs(splines) do
+		self:createWaypointsForSpline(startNodes, endNodes, usedSplines, splines, spline)
+		if not table.contains(usedSplines, spline) then
+			table.insert(usedSplines, spline)
 		end
 	end
 
@@ -72,12 +87,18 @@ function AutoDrive:getAiSplinesParentNode()
 	return aiSplineNode
 end
 
-function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
+function AutoDrive:createWaypointsForSpline(startNodes, endNodes, usedSplines, splines, spline)
 	local lastX, lastY, lastZ = 0,0,0
 	local length = getSplineLength(spline)
 	local secondLastX, secondLastY, secondLastZ = 0,0,0
 	local mapSize = Utils.getNoNil(g_currentMission.terrainSize, 2048) / 2
+	local lastId = -1
 	if length > 0 then
+		local reverseSpline = AutoDrive:checkForSplineInReverseDirection(splines, spline)
+		local isDualRoad = reverseSpline ~= nil
+		if reverseSpline ~= nil and table.contains(usedSplines, reverseSpline) then
+			return
+		end
 		for i=0, 1, 1.0/length do
 			local posX, posY, posZ = getSplinePosition(spline, i)
 			if posX ~= nil then
@@ -109,35 +130,115 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
 					if lastX ~= 0 then
 						connectLast = true
 					end
-					--if lastY - posY > 2 and lastY ~= 0 then -- prevent point dropping into the ground in case of bridges etc
-						--posY = lastY
-					--end
+					
 					if posX < mapSize and posZ < mapSize then
-						ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
-
-						if lastX == 0 then
-							local wpId = ADGraphManager:getWayPointsCount()
-							local wp = ADGraphManager:getWayPointById(wpId)
-							table.insert(startNodes, wp)
+						local previousId = -1
+						if i == 0 then
+							previousId = AutoDrive:getSplineStartConnection(spline)
 						end
+							
+						if previousId >= 0 then
+							local wp = ADGraphManager:getWayPointById(previousId)
+							secondLastX, secondLastY, secondLastZ = lastX, lastY, lastZ
+							lastX, lastY, lastZ = wp.x, wp.y, wp.z
+							lastId = previousId
+						else
+							local connectId = 0
+							if lastId ~= 0 then
+								connectId = lastId
+								lastId = 0
+							end
+							ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, isDualRoad, false, connectId, AutoDrive.FLAG_TRAFFIC_SYSTEM)
 
-						secondLastX, secondLastY, secondLastZ = lastX, lastY, lastZ
-						lastX, lastY, lastZ = posX, posY, posZ
+							if lastX == 0 then
+								local wpId = ADGraphManager:getWayPointsCount()
+								local wp = ADGraphManager:getWayPointById(wpId)
+								table.insert(startNodes, wp)
+							end
+	
+							secondLastX, secondLastY, secondLastZ = lastX, lastY, lastZ
+							lastX, lastY, lastZ = posX, posY, posZ
+						end					
 					end
 				end
 			end
 		end
         
 		local posX, posY, posZ = getSplinePosition(spline, 1)
-		
-		if posX < mapSize and posZ < mapSize then
-			ADGraphManager:recordWayPoint(posX, posY, posZ, true, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
-		end
-
-		local wpId = ADGraphManager:getWayPointsCount()
-		local wp = ADGraphManager:getWayPointById(wpId)
-		table.insert(endNodes, wp)
+		local targetId = AutoDrive:getSplineEndConnection(spline)
+		if targetId >= 0 then			
+			local wpId = ADGraphManager:getWayPointsCount()
+			local wp = ADGraphManager:getWayPointById(wpId)
+			ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(targetId))
+			if isDualRoad then
+				ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(targetId), wp)
+			end
+		else
+			if posX < mapSize and posZ < mapSize then
+				ADGraphManager:recordWayPoint(posX, posY, posZ, true, isDualRoad, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
+			end
+	
+			local wpId = ADGraphManager:getWayPointsCount()
+			local wp = ADGraphManager:getWayPointById(wpId)
+			table.insert(endNodes, wp)
+		end		
 	end	
+end
+
+function AutoDrive:checkForSplineInReverseDirection(splines, spline)
+	local length = getSplineLength(spline)
+	if length > 0 then
+		local startX, _, startZ = getSplinePosition(spline, 0)
+		local endX, _, endZ = getSplinePosition(spline, 1)
+
+		for _, otherSpline in pairs(splines) do
+			length = getSplineLength(otherSpline)
+			if length > 0 then
+				local otherStartX, _, otherStartZ = getSplinePosition(otherSpline, 0)
+				local otherEndX, _, otherEndZ = getSplinePosition(otherSpline, 1)
+
+				if AutoDrive.Equals(endX, otherStartX) and AutoDrive.Equals(endZ, otherStartZ) and AutoDrive.Equals(startX, otherEndX) and AutoDrive.Equals(startZ, otherEndZ) then
+					return otherSpline
+				end					
+			end
+		end
+	end
+end
+
+function AutoDrive:getSplineStartConnection(spline)
+	local length = getSplineLength(spline)
+	if length > 0 then
+		local startX, _, startZ = getSplinePosition(spline, 0)
+
+		for wpId, wp in pairs(ADGraphManager:getWayPoints()) do
+			if AutoDrive.Equals(startX, wp.x) and AutoDrive.Equals(startZ, wp.z) then
+				return wpId
+			end
+		end
+	end
+
+	return -1
+end
+
+function AutoDrive:getSplineEndConnection(spline)
+	local length = getSplineLength(spline)
+	if length > 0 then
+		local endX, _, endZ = getSplinePosition(spline, 1)
+
+		for wpId, wp in pairs(ADGraphManager:getWayPoints()) do
+			if AutoDrive.Equals(endX, wp.x) and AutoDrive.Equals(endZ, wp.z) then
+				return wpId
+			end
+		end
+	end
+
+	return -1
+end
+
+function AutoDrive.Equals(a, b, tolerance)
+	local tol = tolerance or 0.3
+
+	return math.abs(a - b) <= tol
 end
 
 function AutoDrive:createJunctionCommand()
