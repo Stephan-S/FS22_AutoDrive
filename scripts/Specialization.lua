@@ -948,6 +948,19 @@ function AutoDrive:startAutoDrive()
             g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
 
             AutoDriveStartStopEvent:sendStartEvent(self)
+
+            if AutoDrive.experimentalFeatures.FoldImplements then
+                for _, implement in pairs(self:getAttachedImplements()) do
+                    if implement ~= nil and implement.object ~= nil then
+                        if implement.object.setFoldState ~= nil then
+                            local allowed, warning = implement.object:getIsFoldAllowed(1, false)
+                            if allowed then
+                                implement.object:setFoldState(1, false)
+                            end
+                        end
+                    end
+                end
+            end
         end
     else
         Logging.devError("AutoDrive:startAutoDrive() must be called only on the server.")
