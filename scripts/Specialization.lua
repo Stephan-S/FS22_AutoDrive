@@ -280,6 +280,12 @@ function AutoDrive:onWriteStream(streamId, connection)
     end
 
     self.ad.stateModule:writeStream(streamId)
+
+    if self.ad.stateModule:isActive() and self.spec_aiVehicle ~= nil and self.spec_aiVehicle.currentHelper ~= nil then
+        streamWriteUInt8(streamId, self.spec_aiVehicle.currentHelper.index)
+    else
+        streamWriteUInt8(streamId, 0)
+    end
 end
 
 function AutoDrive:onReadStream(streamId, connection)
@@ -296,6 +302,19 @@ function AutoDrive:onReadStream(streamId, connection)
     end
 
     self.ad.stateModule:readStream(streamId)
+
+    local helperIndex = streamReadUInt8(streamId)
+    if helperIndex > 0 then
+        local helper = g_helperManager:getHelperByIndex(helperIndex)
+        if helper ~= nil then
+            if self.spec_aiVehicle ~= nil and self.spec_aiVehicle.currentHelper == nil then
+                self.spec_aiVehicle.currentHelper = helper
+            end
+            if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper == nil then
+                self.spec_aiJobVehicle.currentHelper = helper
+            end
+        end
+    end
 end
 
 function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
