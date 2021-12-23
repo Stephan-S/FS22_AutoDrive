@@ -37,6 +37,7 @@ function UnloadAtDestinationTask:setUp()
 end
 
 function UnloadAtDestinationTask:update(dt)
+    self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = false
     if self.state == UnloadAtDestinationTask.STATE_PATHPLANNING then
         if self.vehicle.ad.pathFinderModule:hasFinished() then
             self.wayPoints = self.vehicle.ad.pathFinderModule:getPath()
@@ -84,6 +85,9 @@ function UnloadAtDestinationTask:update(dt)
                 else
                    -- AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtDestinationTask:update Wait at unload point until unloaded somehow")
                     -- Wait at unload point until unloaded somehow
+                    --Keep motor running. Maybe we could check if the current trailer need Power to be unloaded or not
+                    self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = true
+
                     self.vehicle.ad.specialDrivingModule:stopVehicle()
                     self.vehicle.ad.specialDrivingModule:update(dt)
                     if self.vehicle.ad.trailerModule:getHasAL() == true then
@@ -105,6 +109,7 @@ function UnloadAtDestinationTask:update(dt)
                     self.vehicle.ad.drivePathModule:update(dt)
                 else
                     --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtDestinationTask:update isTargetReached NOT isActiveAtTrigger stopVehicle")
+                    self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = true
                     self.vehicle.ad.specialDrivingModule:stopVehicle()
                     self.vehicle.ad.specialDrivingModule:update(dt)
                 end
