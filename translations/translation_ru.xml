@@ -48,7 +48,7 @@
 		<text name="input_ADParkVehicle"						text="AD: Отправить на парковку" />
 		<text name="input_ADSetParkDestination"					text="AD: Назначить 1-ю локацию как парковку" />
 		<text name="input_ADRefuelVehicle"						text="AD: Заправить технику" />
-		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
+		<text name="input_ADRepairVehicle"						text="AD: Ремонтировать технику" />
 		<text name="input_ADSwapTargets"						text="AD: Сменить локации" />
 		<text name="input_ADStartCP"							text="AD: Передать управление CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Переключение CP/AIVE" />
@@ -389,7 +389,7 @@
 		<text name="AD_task_exiting_field"						text="Покидает поле" />
 		<text name="AD_task_reversing_from_collision"			text="Ищет свободное пространство" />
 		<text name="AD_task_drive_to_park"						text="Движется на место парковки" />
-		<text name="AD_task_unload_area_in_fruit"			    text="Зона разгрузки занята" />
+		<text name="AD_task_unload_area_in_fruit"				text="Зона разгрузки занята" />
 
 		<text name="gui_CPAD_off"								text="ВЫКЛ"/>
 		<text name="gui_CPAD_simple"							text="простое"/>
@@ -437,20 +437,18 @@
 		
 		6. Настройки экспериментальных функций - эти настройки относятся к функциям, которые мы в настоящее время тестируем / разрабатываем, но еще не считаются стабильными. Используйте на свой страх и риск." />
 		
-		<text name = "gui_ad_editorTip_1"								text = "Одинарный клик ЛКМ:"/>
-		<text name = "gui_ad_editorTip_1"								text = "Одинарный клик ЛКМ:"/>
-		<text name = "gui_ad_editorTip_2"								text = "Только мышь: Выбор 1-ой точки"/>
-		<text name = "gui_ad_editorTip_3"								text = "с LCtrl = Создать узел"/>
-		<text name = "gui_ad_editorTip_4"								text = "с LAlt = Удалить узел"/>
-		<text name = "gui_ad_editorTip_5"								text = "с LShift = Переключение точки на 'боковую дорогу'"/>
+		<text name = "gui_ad_editorTip_1"						text = "Одинарный клик ЛКМ:"/>
+		<text name = "gui_ad_editorTip_2"						text = "Только мышь: Выбор 1-ой точки"/>
+		<text name = "gui_ad_editorTip_3"						text = "с LCtrl = Создать узел"/>
+		<text name = "gui_ad_editorTip_4"						text = "с LAlt = Удалить узел"/>
+		<text name = "gui_ad_editorTip_5"						text = "с LShift = Переключение точки на 'боковую дорогу'"/>
 
-		<text name = "gui_ad_editorTip_6"								text = "Клик по вторичному узлу:"/>
-		<text name = "gui_ad_editorTip_7"								text = "Переключение соединения"/>
-		<text name = "gui_ad_editorTip_8"								text = "с RShift = Создание реверсивной дороги"/>
+		<text name = "gui_ad_editorTip_6"						text = "Клик по вторичному узлу:"/>
+		<text name = "gui_ad_editorTip_7"						text = "Переключение соединения"/>
+		<text name = "gui_ad_editorTip_8"						text = "с RShift = Создание реверсивной дороги"/>
 
-		<text name = "gui_ad_editorTip_9"								text = "1-ый узел это пересечение, 2-ой это соседний:"/>
-		<text name = "gui_ad_editorTip_10"								text = "с LCtrl = Переключение типа сегмента (одно/двусторонняя)"/>
-		<text name = "gui_ad_editorTip_11"								text = "с LShift = Переключение 'боковой дороги'"/>
-
-  </texts>
+		<text name = "gui_ad_editorTip_9"						text = "1-ый узел это пересечение, 2-ой это соседний:"/>
+		<text name = "gui_ad_editorTip_10"						text = "с LCtrl = Переключение типа сегмента (одно/двусторонняя)"/>
+		<text name = "gui_ad_editorTip_11"						text = "с LShift = Переключение 'боковой дороги'"/>
+	</texts>
 </l10n>
