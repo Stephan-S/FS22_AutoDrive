@@ -151,8 +151,9 @@ AutoDrive.fuelFillTypes = {
     "AIR"
 }
 
-AutoDrive.nonFillableFillTypes = {
-    "AIR" -- this fillType should not be transported
+AutoDrive.nonFillableFillTypes = { -- these fillTypes should not be transported
+    "AIR",
+	"SILAGE_ADDITIVE"
 }
 
 AutoDrive.seedFillTypes = {
