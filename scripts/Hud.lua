@@ -723,21 +723,23 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 
            AutoDrive.handleWayPointSection(vehicle, button, isUp)
 		else
-			vehicle.ad.selectedNodeId = nil
-			vehicle.ad.nodeToMoveId = nil
-			vehicle.ad.hoveredNodeId = nil
-			vehicle.ad.newcreated = nil
-            vehicle.ad.sectionWayPoints = {}
+			AutoDrive.resetMouseSelections(vehicle)
 		end
 	else
+		AutoDrive.resetMouseSelections(vehicle)
+	end
+
+	AutoDrive.mouseWheelActive = AutoDrive.mouseWheelActive or (AutoDrive.pullDownListExpanded ~= 0)
+end
+
+function AutoDrive.resetMouseSelections(vehicle)
+	if vehicle ~= nil and vehicle.ad ~= nil then
 		vehicle.ad.selectedNodeId = nil
 		vehicle.ad.nodeToMoveId = nil
 		vehicle.ad.hoveredNodeId = nil
 		vehicle.ad.newcreated = nil
-        vehicle.ad.sectionWayPoints = {}
+		vehicle.ad.sectionWayPoints = {}
 	end
-
-	AutoDrive.mouseWheelActive = AutoDrive.mouseWheelActive or (AutoDrive.pullDownListExpanded ~= 0)
 end
 
 function AutoDrive.handleWayPointSection(vehicle, button, isUp)

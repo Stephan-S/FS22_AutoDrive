@@ -53,7 +53,8 @@ ADInputManager.actionsToInputs = {
     ADRefuelVehicle = "input_refuelVehicle",
     ADToggleHudExtension = "input_toggleHudExtension",
     ADToggleAutomaticUnloadTarget = "input_toggleAutomaticUnloadTarget",
-    ADToggleAutomaticPickupTarget = "input_toggleAutomaticPickupTarget"
+    ADToggleAutomaticPickupTarget = "input_toggleAutomaticPickupTarget",
+    ADRepairVehicle = "input_repairVehicle"
 }
 
 
@@ -95,7 +96,8 @@ ADInputManager.inputsToIds = {
     input_bunkerUnloadType = 29,
     input_refuelVehicle = 30,
     input_toggleAutomaticUnloadTarget = 31,
-    input_toggleAutomaticPickupTarget = 32
+    input_toggleAutomaticPickupTarget = 32,
+    input_repairVehicle = 33
 }
 
 ADInputManager.idsToInputs = {}
@@ -491,7 +493,7 @@ function ADInputManager:input_bunkerUnloadType(vehicle)
 end
 
 function ADInputManager:input_refuelVehicle(vehicle)
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADInputManager:input_refuelVehicle ")
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADInputManager:input_refuelVehicle ")
     local refuelDestination = ADTriggerManager.getClosestRefuelDestination(vehicle, true)
     if refuelDestination ~= nil and refuelDestination >= 1 then
         -- vehicle.ad.stateModule:setFirstMarker(refuelDestination)
@@ -509,5 +511,20 @@ function ADInputManager:input_refuelVehicle(vehicle)
             refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(refuelFillTypes[1]).title
         end
         AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
+    end
+end
+
+function ADInputManager:input_repairVehicle(vehicle)
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADInputManager:input_repairVehicle ")
+    local repairDestinationMarkerNodeID = AutoDrive:getClosestRepairTrigger(vehicle)
+    if repairDestinationMarkerNodeID ~= nil then
+        if vehicle.ad.stateModule:isActive() then
+            self:input_start_stop(vehicle) --disable if already active
+        end
+        vehicle.ad.onRouteToRepair = true
+        vehicle.ad.stateModule:setMode(AutoDrive.MODE_DRIVETO)
+        self:input_start_stop(vehicle)
+    else
+        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Repair_Station;", 5000, vehicle.ad.stateModule:getName())
     end
 end

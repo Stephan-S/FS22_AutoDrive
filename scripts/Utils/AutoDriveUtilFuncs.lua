@@ -155,7 +155,7 @@ function AutoDrive.combineIsTurning(combine)
     local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, false, 50, 5)
     local fieldLengthBehind = math.abs(AutoDrive.getLengthOfFieldInFront(combine, false, 50, -5))
 
-    if (fieldLengthInFront <= 20 or fieldLengthBehind <= 20) and combine.ad.noMovementTimer.elapsedTime < 500 and not AutoDrive.getIsBufferCombine(combine) then
+    if (fieldLengthInFront <= 20 or fieldLengthBehind <= 20) and combine.ad.noMovementTimer.elapsedTime < 5000 and not AutoDrive.getIsBufferCombine(combine) then
         combineIsTurning = true
     end
 
@@ -261,11 +261,7 @@ function AutoDrive.cycleEditMode()
     if g_client ~= nil then
 
         if vehicle ~= nil and vehicle.ad ~= nil then
-            vehicle.ad.selectedNodeId = nil
-            vehicle.ad.nodeToMoveId = nil
-            vehicle.ad.hoveredNodeId = nil
-			vehicle.ad.newcreated = nil
-            vehicle.ad.sectionWayPoints = {}
+            AutoDrive.resetMouseSelections(vehicle)
         end
         if (AutoDrive.getSetting("EditorMode") == AutoDrive.EDITOR_OFF) then
             AutoDrive.setEditorMode(AutoDrive.EDITOR_EXTENDED)

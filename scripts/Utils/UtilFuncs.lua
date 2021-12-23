@@ -77,7 +77,7 @@ function AutoDrive:getTerrainHeightAtWorldPos(x, z, startingHeight)
 	local startHeight = startingHeight or getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
 	-- do a raycast from a bit above y
 	raycastClosest(x, startHeight + 3, z, 0, -1, 0, "getTerrainHeightAtWorldPos_Callback", 5, self, 12)
-	return self.raycastHeight or startingHeight
+	return self.raycastHeight or startHeight
 end
 
 --- Callback function called by AutoDrive:getTerrainHeightAtWorldPos()
@@ -581,19 +581,22 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 		p3.y = endNode.y
 
 		local prevWP = startNode
+		local secondLastWp = nil
 		local prevV = ADVectorUtils.subtract2D(p0, startNode)
 		-- we're calculting a VERY smooth curve and whenever the new point on the curve has a good distance to the last one create a new waypoint
 		-- but make sure that the last point also has a good distance to the endNode
 		for i = 1, 200 do
 			local px = AutoDrive:CatmullRomInterpolate(i, p0, startNode, endNode, p3, 200)
 			local newV = ADVectorUtils.subtract2D(prevWP, px)
-			local dAngle = math.abs(AutoDrive.angleBetween(prevV, newV))
-
-			-- only create new WP if distance to last one is > 1.5m and distance to target > 1.5m and angle to last one > 3°
-			-- or at least every 4m 
 			local distPrev = ADVectorUtils.distance2D(prevWP, px)
 			local distEnd = ADVectorUtils.distance2D(px, endNode)
-			if ( distPrev >= 1.5 and distEnd >= 1.5 and dAngle >= 3 ) or (distPrev >= 4 and distEnd >= 4) then
+
+			local minDistance = 1
+			if secondLastWp ~= nil and prevWP ~= nil then
+				minDistance = AutoDrive.getMaxDistanceForNextWp(secondLastWp, prevWP, px)
+			end
+
+			if distPrev > minDistance and distEnd >= 0.5 then
 				-- get height at terrain
 				px.y = AutoDrive:getTerrainHeightAtWorldPos(px.x, px.z, prevWP.y)
 				table.insert(self.splineInterpolation.waypoints, px)
@@ -608,7 +611,8 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 					self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y = prevWP.y
 				end
 				
-				prevWP = px -- newWP
+				secondLastWp = prevWP
+				prevWP = px
 				prevV = newV
 			end
 		end
@@ -616,6 +620,30 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 	else -- fallback to straight line connection behaviour
 		return
 	end
+end
+
+function AutoDrive.getMaxDistanceForNextWp(secondLastWp, lastWp, currentWp)
+	local angle = math.abs(AutoDrive.angleBetween({x = currentWp.x - lastWp.x, z = currentWp.z - lastWp.z}, {x = lastWp.x - secondLastWp.x, z = lastWp.z - secondLastWp.z}))
+	local max_distance = 6
+	if angle < 0.5 then
+		max_distance = 12
+	elseif angle < 1 then
+		max_distance = 6
+	elseif angle < 2 then
+		max_distance = 4
+	elseif angle < 4 then
+		max_distance = 3
+	elseif angle < 7 then
+		max_distance = 2
+	elseif angle < 14 then
+		max_distance = 1
+	elseif angle < 27 then
+		max_distance = 0.5
+	else
+		max_distance = 0.25
+	end
+
+	return max_distance
 end
 
 function AutoDrive:CatmullRomInterpolate(index, p0, p1, p2, p3, segments)

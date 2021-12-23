@@ -76,6 +76,7 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
 	local lastX, lastY, lastZ = 0,0,0
 	local length = getSplineLength(spline)
 	local secondLastX, secondLastY, secondLastZ = 0,0,0
+	local mapSize = Utils.getNoNil(g_currentMission.terrainSize, 2048) / 2
 	if length > 0 then
 		for i=0, 1, 1.0/length do
 			local posX, posY, posZ = getSplinePosition(spline, i)
@@ -111,22 +112,27 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, spline)
 					--if lastY - posY > 2 and lastY ~= 0 then -- prevent point dropping into the ground in case of bridges etc
 						--posY = lastY
 					--end
-					ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
+					if posX < mapSize and posZ < mapSize then
+						ADGraphManager:recordWayPoint(posX, posY, posZ, connectLast, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
 
-					if lastX == 0 then
-						local wpId = ADGraphManager:getWayPointsCount()
-						local wp = ADGraphManager:getWayPointById(wpId)
-						table.insert(startNodes, wp)
+						if lastX == 0 then
+							local wpId = ADGraphManager:getWayPointsCount()
+							local wp = ADGraphManager:getWayPointById(wpId)
+							table.insert(startNodes, wp)
+						end
+
+						secondLastX, secondLastY, secondLastZ = lastX, lastY, lastZ
+						lastX, lastY, lastZ = posX, posY, posZ
 					end
-
-					secondLastX, secondLastY, secondLastZ = lastX, lastY, lastZ
-					lastX, lastY, lastZ = posX, posY, posZ
 				end
 			end
 		end
         
 		local posX, posY, posZ = getSplinePosition(spline, 1)
-		ADGraphManager:recordWayPoint(posX, posY, posZ, true, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
+		
+		if posX < mapSize and posZ < mapSize then
+			ADGraphManager:recordWayPoint(posX, posY, posZ, true, false, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
+		end
 
 		local wpId = ADGraphManager:getWayPointsCount()
 		local wp = ADGraphManager:getWayPointById(wpId)

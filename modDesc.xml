@@ -7,28 +7,20 @@
 	<description>
 		<en>
 			<![CDATA[This mod can be used to create a network of routes for vehicles to drive autonomously. Once setup you can tell a tractor which is standing anywhere close to the network to drive to any point, such as the shop, field 1 or to a sell point.
-
-Changelog 2.0.0.0:
 ]]>
 		</en>
 		<de>
 			<![CDATA[Dieser Mod erlaubt es ein Netzwerk von Routen aufzuzeichnen, um dann ein Fahrzeug von jedem beliebigen Punkt zu speziell definierten Zielen, wie zum Beispiel der eigenen Farm, Feld 1 oder auch zu jedem Verkaufspunkt fahren zu lassen.
-
-Changelog 2.0.0.0:
 ]]>
 		</de>
 		<it>
 			<![CDATA[Questa mod può essere usata per creare una rete di percorsi per permettere ai veicoli di guidare autonomamente. Una volta effettuata la configurazione puoi dire a un veicolo di guidare tramite la rete verso un qualsiasi punto, come il negozio, il campo 1 o un punto vendita.
-
-Log delle modifiche 2.0.0.0:
 ]]>
 		</it>
 		<fr>
 			<![CDATA[Ce mod peut être utilisé pour créer un réseau de routes permettant aux véhicules de conduire de manière autonome. Une fois la configuration effectuée, vous pouvez indiquer à un tracteur situé près du réseau de se rendre à n’importe quel point, tel que le magasin, le champ 1 ou un point de vente.
 Créer, ajouter, modifier, supprimer vos routes ou points de destination à l'aide de l'éditeur intégré très pratique !
 Différents modes d'utilisation ont été ajoutés depuis les premières versions, et peuvent être combinés à l'utilisation du bien connu "Courseplay".
-
-Changelog 2.0.0.0:
 ]]>
 		</fr>
 		<es>
@@ -38,7 +30,7 @@ Changelog 2.0.0.0:
 			<![CDATA[Этот мод может быть использован для создания сети маршрутов для транспортных средств для автономного вождения. После настройки вы можете указать трактору, стоящему где-угодно рядом с сетью, проехать в любую точку, например, в магазин, поле №1 или в точку продажи.]]>
 		</ru>
 	</description>
-	<version>2.0.0.1</version>
+	<version>2.0.0.2</version>
 	<multiplayer supported="true" />
 	<iconFilename>icon.dds</iconFilename>
 	<extraSourceFiles>
@@ -98,6 +90,7 @@ Changelog 2.0.0.0:
 		<action name="ADToggleHudExtension" category="VEHICLE" ignoreComboMask="false" />	
 		<action name="ADToggleAutomaticUnloadTarget" category="VEHICLE" ignoreComboMask="false" />
 		<action name="ADToggleAutomaticPickupTarget" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADRepairVehicle" category="VEHICLE" ignoreComboMask="false" />		
 	</actions>
 
 	<inputBinding>

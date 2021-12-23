@@ -9,6 +9,9 @@ FollowCombineTask.STATE_CIRCLING_PATHPLANNING = 5
 FollowCombineTask.STATE_CIRCLING = 6
 FollowCombineTask.STATE_FINISHED = 7
 FollowCombineTask.STATE_WAIT_BEFORE_FINISH = 8
+FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY = 9
+FollowCombineTask.STATE_GENERATE_UTURN_PATH = 10
+FollowCombineTask.STATE_DRIVE_UTURN_PATH = 11
 
 FollowCombineTask.MAX_REVERSE_DISTANCE = 20
 FollowCombineTask.MIN_COMBINE_DISTANCE = 25
@@ -165,6 +168,13 @@ function FollowCombineTask:update(dt)
                 self.chaseTimer:timer(false)
                 self.state = FollowCombineTask.STATE_CHASING
                 return
+            elseif self.angleToCombineHeading > 150 and self.angleToCombineHeading < 210 and self.distanceToCombine < 80 and AutoDrive.experimentalFeatures.UTurn == true and not AutoDrive.getIsBufferCombine(self.combine) then
+                -- Instead of directly trying a long way around to get behind the harvester, let's wait for him to pass us by and then U-turn
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "combine turn finished - Heading inverted - wait for passby, then U-turn")
+                self.state = FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY
+                self.waitForTurnTimer:timer(false)
+                self.chaseTimer:timer(false)
+                self.waitForPassByTimer:timer(false)
             else
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "combine turn finished - Heading looks bad - stop to be able to start pathfinder")
                 self.stayOnField = true
@@ -212,6 +222,57 @@ function FollowCombineTask:update(dt)
         else
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
+        end
+    elseif self.state == FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY then
+        self.waitForPassByTimer:timer(true, 15000, dt)
+        self.vehicle.ad.specialDrivingModule:stopVehicle()
+        self.vehicle.ad.specialDrivingModule:update(dt)
+        if self.waitForPassByTimer:done() then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "passby timer elapsed - heading looks bad - set finished now")
+            self.stayOnField = true
+            self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
+            return
+        else
+            local cx, cy, cz = getWorldTranslation(self.combine.components[1].node)
+            local _, _, offsetZ = worldToLocal(self.vehicle.components[1].node, cx, cy, cz)
+            if offsetZ <= -10 then
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "combine passed us. Calculate U-turn now")
+                self.state = FollowCombineTask.STATE_GENERATE_UTURN_PATH
+                local cx, cy, cz = getWorldTranslation(self.combine.components[1].node)        
+                local offsetX, _, _ = worldToLocal(self.vehicle.components[1].node, cx, cy, cz)
+                self.vehicle:generateUTurn(offsetX > 0)
+                self.waitForPassByTimer:timer(false)
+            end
+        end
+    elseif self.state == FollowCombineTask.STATE_GENERATE_UTURN_PATH then
+        if self.vehicle.ad.uTurn ~= nil and self.vehicle.ad.uTurn.inProgress then
+            self.vehicle:generateUTurn(true)
+        elseif self.vehicle.ad.uTurn ~= nil and not self.vehicle.ad.uTurn.inProgress then
+            if self.vehicle.ad.uTurn.colliFound or self.vehicle.ad.uTurn.points == nil or #self.vehicle.ad.uTurn.points < 5 then
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "U-Turn generation failed due to collision - set finished now")
+                self.stayOnField = true
+                self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
+            else
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "U-Turn generation finished - passing points to drivePathModule now")
+                self.vehicle.ad.drivePathModule:setWayPoints(self.vehicle.ad.uTurn.points)
+                self.state = FollowCombineTask.STATE_DRIVE_UTURN_PATH
+            end
+        end
+    elseif self.state == FollowCombineTask.STATE_DRIVE_UTURN_PATH then
+        if self.vehicle.ad.drivePathModule:isTargetReached() then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "U-Turn finished")
+            if (self.angleToCombineHeading + self.angleToCombine) < 180 and self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide() then
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "passby timer elapsed - heading looks good - chasing again")
+                self.state = FollowCombineTask.STATE_CHASING
+                return
+            else
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "passby timer elapsed - heading looks bad - set finished now")
+                self.stayOnField = true
+                self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
+                return
+            end
+        else
+            self.vehicle.ad.drivePathModule:update(dt)
         end
     elseif self.state == FollowCombineTask.STATE_FINISHED then
         self:finished()

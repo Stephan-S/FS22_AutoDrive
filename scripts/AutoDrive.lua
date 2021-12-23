@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.1"
+AutoDrive.version = "2.0.0.2"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -14,7 +14,8 @@ AutoDrive.experimentalFeatures.telemetryOutput = false
 AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer = false
 AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
-AutoDrive.experimentalFeatures.DrawAlternativ = false
+AutoDrive.experimentalFeatures.UTurn = true
+AutoDrive.experimentalFeatures.FoldImplements = false
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true
@@ -118,7 +119,8 @@ AutoDrive.actions = {
 	{"ADParkVehicle", false, 0},
 	{"AD_devAction", false, 0},
 	{"ADRefuelVehicle", false, 0},
-	{"ADToggleHudExtension", true, 1}
+	{"ADToggleHudExtension", true, 1},
+	{"ADRepairVehicle", false, 0}
 }
 
 AutoDrive.colors = {
@@ -150,8 +152,9 @@ AutoDrive.fuelFillTypes = {
     "AIR"
 }
 
-AutoDrive.nonFillableFillTypes = {
-    "AIR" -- this fillType should not be transported
+AutoDrive.nonFillableFillTypes = { -- these fillTypes should not be transported
+    "AIR",
+	"SILAGE_ADDITIVE"
 }
 
 AutoDrive.seedFillTypes = {
@@ -285,6 +288,7 @@ function AutoDrive:loadMap(name)
 	BaseMission.draw = Utils.appendedFunction(BaseMission.draw, AutoDrive.drawBaseMission)
 	PlaceableHotspot.getCategory = Utils.overwrittenFunction(PlaceableHotspot.getCategory, AutoDrive.PlaceableHotspotGetCategory)
 	InGameMenuAIFrame.setMapSelectionItem = Utils.overwrittenFunction(InGameMenuAIFrame.setMapSelectionItem, AutoDrive.InGameMenuAIFrameSetMapSelectionItem)
+	MapHotspot.getRenderLast = Utils.overwrittenFunction(MapHotspot.getRenderLast, AutoDrive.MapHotspotGetRenderLast)
 end
 
 function AutoDrive:onAIFrameOpen()
@@ -295,6 +299,7 @@ end
 function AutoDrive:onAIFrameClose()
 	AutoDrive.aiFrameOpen = false
 	AutoDrive.aiFrame = nil
+	AutoDrive.aiFrameVehicle = nil
 end
 
 function AutoDrive:refreshContextInputAIFrame()
@@ -312,7 +317,7 @@ function AutoDrive:drawBaseMission()
 		AutoDrive:drawRouteOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
 			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
-		else
+		elseif g_currentMission.controlledVehicle ~= nil then
 			AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
 		end
 	end
@@ -320,7 +325,7 @@ end
 
 function AutoDrive:PlaceableHotspotGetCategory()
 	if self.isADMarker then
-		return MapHotspot.CATEGORY_AI
+		return MapHotspot.CATEGORY_PLAYER
 	end
 	return PlaceableHotspot.CATEGORY_MAPPING[self.placeableType]
 end
@@ -335,6 +340,13 @@ function AutoDrive:InGameMenuAIFrameSetMapSelectionItem(superFunc, hotspot)
 		end
 	end
 	return superFunc(self, hotspot)
+end
+
+function AutoDrive:MapHotspotGetRenderLast(superFunc)
+	if self.isADMarker then
+		return true
+	end
+	return superFunc(self)
 end
 
 function AutoDrive.drawRouteOnMap()
