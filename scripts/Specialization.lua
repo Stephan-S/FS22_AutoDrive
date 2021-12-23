@@ -169,11 +169,7 @@ function AutoDrive:onLoad(savegame)
     self.ad.onRouteToRefuel = false
     self.ad.isStoppingWithError = false
 
-    self.ad.selectedNodeId = nil
-    self.ad.nodeToMoveId = nil
-    self.ad.hoveredNodeId = nil
-    self.ad.newcreated = nil
-    self.ad.sectionWayPoints = {}
+    AutoDrive.resetMouseSelections(self)
 end
 
 function AutoDrive:onPostLoad(savegame)
@@ -1358,6 +1354,8 @@ function AutoDrive:toggleMouse()
                 end
             end
         end
+
+        AutoDrive.resetMouseSelections(self)
     end
     self.ad.lastMouseState = g_inputBinding:getShowMouseCursor()
 end

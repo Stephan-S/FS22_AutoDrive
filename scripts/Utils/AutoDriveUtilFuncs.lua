@@ -261,11 +261,7 @@ function AutoDrive.cycleEditMode()
     if g_client ~= nil then
 
         if vehicle ~= nil and vehicle.ad ~= nil then
-            vehicle.ad.selectedNodeId = nil
-            vehicle.ad.nodeToMoveId = nil
-            vehicle.ad.hoveredNodeId = nil
-			vehicle.ad.newcreated = nil
-            vehicle.ad.sectionWayPoints = {}
+            AutoDrive.resetMouseSelections(vehicle)
         end
         if (AutoDrive.getSetting("EditorMode") == AutoDrive.EDITOR_OFF) then
             AutoDrive.setEditorMode(AutoDrive.EDITOR_EXTENDED)
