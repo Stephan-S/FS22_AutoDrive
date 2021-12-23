@@ -296,6 +296,7 @@ end
 function AutoDrive:onAIFrameClose()
 	AutoDrive.aiFrameOpen = false
 	AutoDrive.aiFrame = nil
+	AutoDrive.aiFrameVehicle = nil
 end
 
 function AutoDrive:refreshContextInputAIFrame()
@@ -313,7 +314,7 @@ function AutoDrive:drawBaseMission()
 		AutoDrive:drawRouteOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
 			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
-		else
+		elseif g_currentMission.controlledVehicle ~= nil then
 			AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
 		end
 	end
