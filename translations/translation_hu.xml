@@ -47,6 +47,7 @@
 		<text name="input_ADParkVehicle"						text="AD: Parkolja le a járművet" />
 		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
 		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
+		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
 		<text name="input_ADbunkerUnloadType"					text="AD: Unload to Trailer or BGA" />
 		<text name="input_ADSwapTargets"						text="AD: Cél csere" />
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />

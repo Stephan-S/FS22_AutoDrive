@@ -120,7 +120,8 @@ AutoDrive.actions = {
 	{"ADParkVehicle", false, 0},
 	{"AD_devAction", false, 0},
 	{"ADRefuelVehicle", false, 0},
-	{"ADToggleHudExtension", true, 1}
+	{"ADToggleHudExtension", true, 1},
+	{"ADRepairVehicle", false, 0}
 }
 
 AutoDrive.colors = {

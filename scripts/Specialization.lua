@@ -167,6 +167,7 @@ function AutoDrive:onLoad(savegame)
 
     self.ad.onRouteToPark = false
     self.ad.onRouteToRefuel = false
+    self.ad.onRouteToRepair = false
     self.ad.isStoppingWithError = false
 
     AutoDrive.resetMouseSelections(self)
@@ -1093,6 +1094,7 @@ function AutoDrive:stopAutoDrive()
             self.ad.trailerModule:handleTrailerReversing(false)
             if self.ad.isStoppingWithError == true then
                 self.ad.onRouteToRefuel = false
+                self.ad.onRouteToRepair = false
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
             end
         end

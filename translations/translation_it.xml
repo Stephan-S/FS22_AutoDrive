@@ -48,6 +48,7 @@
         <text name="input_ADParkVehicle"            		text="AD: Parcheggio Veicolo" />
         <text name="input_ADSetParkDestination"         	text="AD: Assegna la prima destinazione per il parcheggio" />
         <text name="input_ADRefuelVehicle"          		text="AD: Rifornire il veicolo" />
+		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
         <text name="input_ADSwapTargets"            		text="AD: Scambia Destinazione" />
         <text name="input_ADStartCP"                		text="AD: Passa a CP/ALIVE" />
         <text name="input_ADToggleCP_AIVE"          		text="AD: Attiva/Disattiva CP/AIVE" />

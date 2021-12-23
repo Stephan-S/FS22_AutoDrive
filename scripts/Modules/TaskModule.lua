@@ -131,6 +131,9 @@ function ADTaskModule:RefuelIfNeeded()
 end
 
 function ADTaskModule:hasToRepair()
+    if self.vehicle.ad.onRouteToRepair then
+        return true
+    end
     if not AutoDrive.getSetting("autoRepair", self.vehicle) then
         return false
     end
