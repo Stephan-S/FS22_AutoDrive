@@ -258,7 +258,7 @@ end
 
 function AutoDrive.cycleEditMode()
     local vehicle = g_currentMission.controlledVehicle
-    if g_client ~= nil then
+    if g_client ~= nil and vehicle ~= nil then
 
         if vehicle ~= nil and vehicle.ad ~= nil then
             AutoDrive.resetMouseSelections(vehicle)
@@ -281,12 +281,14 @@ end
 function AutoDrive.cycleEditorShowMode()
     local vehicle = g_currentMission.controlledVehicle
 
-    if (AutoDrive.getSetting("EditorMode") == AutoDrive.EDITOR_OFF) then
-        AutoDrive.setEditorMode(AutoDrive.EDITOR_SHOW)
-    else
-        AutoDrive.setEditorMode(AutoDrive.EDITOR_OFF)
-		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
-            vehicle.ad.stateModule:disableCreationMode()
+    if g_client ~= nil and vehicle ~= nil then
+        if (AutoDrive.getSetting("EditorMode") == AutoDrive.EDITOR_OFF) then
+            AutoDrive.setEditorMode(AutoDrive.EDITOR_SHOW)
+        else
+            AutoDrive.setEditorMode(AutoDrive.EDITOR_OFF)
+            if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
+                vehicle.ad.stateModule:disableCreationMode()
+            end
         end
     end
 end
@@ -489,4 +491,15 @@ function AutoDrive:resetColorAssignment(colorKey, all)
             AutoDrive.currentColors[colorKey][i] = AutoDrive.colors[colorKey][i]
         end
     end
+end
+
+-- return the vehicle which can be AD controlled
+function AutoDrive.getADFocusVehicle(debug)
+	local vehicle = nil
+    if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil and AutoDrive.aiFrameVehicle.ad.stateModule ~= nil then
+        vehicle = AutoDrive.aiFrameVehicle
+    elseif g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle.ad.stateModule ~= nil then
+        vehicle = g_currentMission.controlledVehicle
+    end
+    return vehicle
 end
