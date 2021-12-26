@@ -35,7 +35,7 @@ function CombineUnloaderMode:reset()
     self.breadCrumbs = Queue:new()
     self.lastBreadCrumb = nil
     self.failedPathFinder = 0
-    self.trailers, self.trailerCount = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
     self.vehicle.ad.trailerModule:reset()
 end
@@ -194,9 +194,7 @@ function CombineUnloaderMode:getNextTask()
 
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
     local point = nil
-    local fillLevel, leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
-    local maxCapacity = fillLevel + leftCapacity
-    local filledToUnload = (leftCapacity <= (maxCapacity * (1 - AutoDrive.getSetting("unloadFillLevel", self.vehicle) + 0.001)))
+    local _, _, filledToUnload, _ = AutoDrive.getAllNonFuelFillLevels(self.trailers)
 
     if self.state == self.STATE_INIT then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask STATE_INIT filledToUnload %s", tostring(filledToUnload))
@@ -293,8 +291,10 @@ function CombineUnloaderMode:assignToHarvester(harvester)
         -- if combine has extended pipe, aim for that. Otherwise DriveToVehicle and choose from there
         local spec = self.combine.spec_pipe
         if spec.currentState == spec.targetState and (spec.currentState == 2 or self.combine.typeName == "combineCutterFruitPreparer") then
-            local cfillLevel, cleftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(self.combine)
-            local cFillRatio = cfillLevel / (cfillLevel + cleftCapacity)
+
+            local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectNonFuelFillLevels(self.combine)
+            local cFillRatio = cfillLevel / cfillCapacity
+            
             local cpIsCalling = false
             if harvester.cp and harvester.cp.driver and harvester.cp.driver.isWaitingForUnload then
                 cpIsCalling = harvester.cp.driver:isWaitingForUnload()
@@ -364,7 +364,7 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
             -- If we are in fruit, we should clear it
             if AutoDrive.isVehicleOrTrailerInCrop(self.vehicle, true) then
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getTaskAfterUnload ClearCropTask...")
-                nextTask = ClearCropTask:new(self.vehicle, self.combine)
+                nextTask = ClearCropTask:new(self.vehicle)
                 self.state = self.STATE_LEAVE_CROP
             else
                 self:setToWaitForCall()
@@ -495,8 +495,8 @@ function CombineUnloaderMode:getTargetTrailer()
     local trailerLeftCapacity = 0
     -- Get the next trailer that hasn't reached fill level yet
     for trailerIndex, trailer in ipairs(self.trailers) do
-        trailerFillLevel, trailerLeftCapacity = AutoDrive.getFillLevelAndCapacityOf(targetTrailer)
-        fillRatio = trailerFillLevel / (trailerFillLevel + trailerLeftCapacity)
+        local fillLevel, fillCapacity, filledToUnload, fillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(targetTrailer)
+        trailerLeftCapacity = fillFreeCapacity
         if (trailerLeftCapacity < 1) and currentTrailer < self.trailerCount then
             currentTrailer = trailerIndex
             targetTrailer = trailer
@@ -683,10 +683,6 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
     else
         --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getPipeChasePosition:IsNormalCombine")
         local rearChaseTermX = self:getRearChaseOffsetX(leftBlocked, rightBlocked)
-
-        local combineFillLevel, combineLeftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(self.combine)
-        local combineMaxCapacity = combineFillLevel + combineLeftCapacity
-        local combineFillPercent = (combineFillLevel / combineMaxCapacity) * 100
 
         local sideChasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, self.pipeSide * (sideChaseTermX + self:getPipeSlopeCorrection()), sideChaseTermZ)
         local rearChasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, rearChaseTermX, rearChaseTermZ)

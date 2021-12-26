@@ -71,18 +71,22 @@ string.randomCharset = {
 --- @param x number X Coordinate
 --- @param z number Z Coordinate
 --- @return number Height of the terrain
-function AutoDrive:getTerrainHeightAtWorldPos(x, z)
+function AutoDrive:getTerrainHeightAtWorldPos(x, z, startingHeight)
 	self.raycastHeight = nil
 	-- get a starting height with the basic function
-	local y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
+	local startHeight = startingHeight or getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
 	-- do a raycast from a bit above y
-	raycastClosest(x, y + 2, z, 0, -1, 0, "getTerrainHeightAtWorldPos_Callback", 3, self, 12)
-	return self.raycastHeight or y
+	raycastClosest(x, startHeight + 3, z, 0, -1, 0, "getTerrainHeightAtWorldPos_Callback", 5, self, 12)
+	return self.raycastHeight or startHeight
 end
 
 --- Callback function called by AutoDrive:getTerrainHeightAtWorldPos()
 function AutoDrive:getTerrainHeightAtWorldPos_Callback(hitObjectId, x, y, z, distance)
-	self.raycastHeight = y
+	if y ~= nil then
+		self.raycastHeight = y
+	--else
+		--print("Raycast returned nil value!!!")
+	end
 end
 
 function AutoDrive.streamReadStringOrEmpty(streamId)
@@ -427,38 +431,48 @@ function AutoDrive.renderTable(posX, posY, textSize, inputTable, maxDepth)
 	end
 end
 
-function AutoDrive.dumpTable(inputTable, name, maxDepth)
+function AutoDrive.dumpTable(inputTable, name, maxDepth, currentDepth)
 	maxDepth = maxDepth or 5
-	print(name .. " = {}")
-	local function dumpTableRecursively(inputTable, name, depth, maxDepth)
-		if depth >= maxDepth then
-			return
-		end
-		for k, v in pairs(inputTable) do
-			local newName = string.format("%s.%s", name, k)
-			if type(k) == "number" then
-				newName = string.format("%s[%s]", name, k)
-			end
-			if type(v) ~= "table" and type(v) ~= "function" then
-				print(string.format("%s = %s", newName, v))
-			end
-			if type(v) == "table" then
-				print(newName .. " = {}")
-				dumpTableRecursively(v, newName, depth + 1, maxDepth)
-			end
-		end
+	currentDepth = currentDepth or 0
+	if currentDepth > maxDepth then
+		return
 	end
+	if currentDepth == 0 then
+		AutoDrive.seenTables = {}
+		print(name .. " = {}")
+	end
+
+	table.insert(AutoDrive.seenTables, inputTable)
+
 	for k, v in pairs(inputTable) do
 		local newName = string.format("%s.%s", name, k)
 		if type(k) == "number" then
 			newName = string.format("%s[%s]", name, k)
 		end
-		if type(v) ~= "table" and type(v) ~= "function" then
+
+		if type(v) == "table" then
+			if not AutoDrive.seenTables[v] then
+				print(newName .. " = {}")
+				AutoDrive.dumpTable(v, newName, maxDepth, currentDepth+1)
+			end
+		else
 			print(string.format("%s = %s", newName, v))
 		end
-		if type(v) == "table" then
-			print(newName .. " = {}")
-			dumpTableRecursively(v, newName, 1, maxDepth)
+	end
+
+	if getmetatable(inputTable) ~= nil then
+		for k, v in pairs(getmetatable(inputTable)) do
+			local newName = string.format("%s.%s", name, k)
+			if type(k) == "number" then
+				newName = string.format("%s[%s]", name, k)
+			end
+
+			if type(v) == "table" then
+				print(newName .. " = {}")
+				AutoDrive.dumpTable(v, newName, maxDepth, currentDepth+1)
+			else
+				print(string.format("%s = %s", newName, v))
+			end
 		end
 	end
 end
@@ -483,6 +497,264 @@ function AutoDrive:setDebugChannel(newDebugChannel)
     AutoDriveDebugSettingsEvent.sendEvent(AutoDrive.currentDebugChannelMask)
 
 	AutoDrive.showNetworkEvents()
+end
+
+addConsoleCommand("adDumpTable", "Dump Table to log", "dumpTableToLog", AutoDrive)
+
+function AutoDrive:dumpTableToLog(input, ...)
+	local f = getfenv(0).loadstring('return ' .. input)
+	AutoDrive.dumpTable(f(), "Table:", 1)
+end
+
+function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
+	if startNode == nil or endNode == nil then
+		return
+	end
+
+	if AutoDrive.splineInterpolationUserCurvature == nil then
+		AutoDrive.splineInterpolationUserCurvature = 0.49
+	end
+
+	if table.contains(startNode.out, endNode.id) or table.contains(endNode.incoming, startNode.id) then
+		-- nodes are already connected - do not create preview
+		return
+	end
+
+	self.splineInterpolation = {
+		MIN_CURVATURE = 0.5,
+		MAX_CURVATURE = 3.5,
+		startNode = startNode,
+		p0 = nil,
+		endNode = endNode,
+		p3 = nil,
+		curvature = AutoDrive.splineInterpolationUserCurvature,
+		waypoints = { startNode },
+		valid = true
+	}
+
+	-- TODO: if we have more then one inbound or outbound connections, get the avg. vector
+	if #startNode.incoming >= 1 and #endNode.out >= 1  and AutoDrive.splineInterpolationUserCurvature >= self.splineInterpolation.MIN_CURVATURE then
+		local p0 = nil
+		for _, px in pairs(startNode.incoming) do
+			p0 = ADGraphManager:getWayPointById(px)
+			self.splineInterpolation.p0 = p0
+			break
+		end
+		local p3 = nil
+		for _, px in pairs(endNode.out) do
+			p3 = ADGraphManager:getWayPointById(px)
+			self.splineInterpolation.p3 = p3
+			break
+		end
+
+		if AutoDrive.splineInterpolationUserCurvature == 5 then
+			-- calculate the angle between start tangent and end tangent
+			local dAngle = math.abs(AutoDrive.angleBetween(
+				ADVectorUtils.subtract2D(p0, startNode),
+				ADVectorUtils.subtract2D(endNode, p3)
+			))
+			self.splineInterpolation.curvature = ADVectorUtils.linterp(0, 180, dAngle, 1.5, 2.5)
+		end
+
+		-- distance from start to end, divided by two to give it more roundness...
+		local dStartEnd = ADVectorUtils.distance2D(startNode, endNode) / self.splineInterpolation.curvature
+
+		-- we need to normalize the length of p0-start and end-p3, otherwise their length will influence the curve
+		-- get vector from p0->start
+		local vp0Start = ADVectorUtils.subtract2D(p0, startNode)
+		-- calculate unit vector of vp0Start
+		vp0Start = ADVectorUtils.unitVector2D(vp0Start)
+		-- scale it like start->end
+		vp0Start = ADVectorUtils.scaleVector2D(vp0Start, dStartEnd)
+		-- invert it
+		vp0Start = ADVectorUtils.invert2D(vp0Start)
+		-- add it to the start Vector so that we get new p0
+		p0 = ADVectorUtils.add2D(startNode, vp0Start)
+		-- make sure p0 has a y value
+		p0.y = startNode.y
+
+		-- same for end->p3, except that we do not need to invert it, but just add it to the endNode
+		local vEndp3 = ADVectorUtils.subtract2D(endNode, p3)
+		vEndp3 = ADVectorUtils.unitVector2D(vEndp3)
+		vEndp3 = ADVectorUtils.scaleVector2D(vEndp3, dStartEnd)
+		p3  = ADVectorUtils.add2D(endNode, vEndp3)
+		p3.y = endNode.y
+
+		local prevWP = startNode
+		local secondLastWp = nil
+		local prevV = ADVectorUtils.subtract2D(p0, startNode)
+		-- we're calculting a VERY smooth curve and whenever the new point on the curve has a good distance to the last one create a new waypoint
+		-- but make sure that the last point also has a good distance to the endNode
+		for i = 1, 200 do
+			local px = AutoDrive:CatmullRomInterpolate(i, p0, startNode, endNode, p3, 200)
+			local newV = ADVectorUtils.subtract2D(prevWP, px)
+			local distPrev = ADVectorUtils.distance2D(prevWP, px)
+			local distEnd = ADVectorUtils.distance2D(px, endNode)
+
+			local minDistance = 1
+			if secondLastWp ~= nil and prevWP ~= nil then
+				minDistance = AutoDrive.getMaxDistanceForNextWp(secondLastWp, prevWP, px)
+			end
+
+			if distPrev > minDistance and distEnd >= 0.5 then
+				-- get height at terrain
+				px.y = AutoDrive:getTerrainHeightAtWorldPos(px.x, px.z, prevWP.y)
+				table.insert(self.splineInterpolation.waypoints, px)
+
+				-- Trying out if this slightly delayed call results in a more stable raycastHeight detection
+				local dummy = 1
+				for i = 1, 1000 do
+					dummy = dummy + i
+				end
+				self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y = self.raycastHeight or self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y
+				if self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y == nil then
+					self.splineInterpolation.waypoints[#self.splineInterpolation.waypoints].y = prevWP.y
+				end
+				
+				secondLastWp = prevWP
+				prevWP = px
+				prevV = newV
+			end
+		end
+		table.insert(self.splineInterpolation.waypoints, endNode)
+	else -- fallback to straight line connection behaviour
+		return
+	end
+end
+
+function AutoDrive.getMaxDistanceForNextWp(secondLastWp, lastWp, currentWp)
+	local angle = math.abs(AutoDrive.angleBetween({x = currentWp.x - lastWp.x, z = currentWp.z - lastWp.z}, {x = lastWp.x - secondLastWp.x, z = lastWp.z - secondLastWp.z}))
+	local max_distance = 6
+	if angle < 0.5 then
+		max_distance = 12
+	elseif angle < 1 then
+		max_distance = 6
+	elseif angle < 2 then
+		max_distance = 4
+	elseif angle < 4 then
+		max_distance = 3
+	elseif angle < 7 then
+		max_distance = 2
+	elseif angle < 14 then
+		max_distance = 1
+	elseif angle < 27 then
+		max_distance = 0.5
+	else
+		max_distance = 0.25
+	end
+
+	return max_distance
+end
+
+function AutoDrive:CatmullRomInterpolate(index, p0, p1, p2, p3, segments)
+	local px = {x=nil, y=nil, z=nil}
+	local x = {p0.x, p1.x, p2.x, p3.x}
+	local z = {p0.z, p1.z, p2.z, p3.z}
+	local time = {0, 1, 2, 3} -- linear at start... calculate weights over time
+	local total = 0.0
+
+	for i = 2, 4 do
+		local dx = x[i] - x[i - 1]
+		local dz = z[i] - z[i - 1]
+		-- the .9 is giving the wideness and roundness of the curve,
+		-- lower values (like .25 will be more straight, while high values like .95 will be wider and rounder)
+		total = total + math.pow(dx * dx + dz * dz, 0.95)
+		time[i] = total
+	end
+    local tstart = time[2]
+	local tend = time[3]
+	local t = tstart + (index * (tend - tstart)) / segments
+
+	local L01 = p0.x * (time[2] - t) / (time[2] - time[1]) + p1.x * (t - time[1]) / (time[2] - time[1])
+	local L12 = p1.x * (time[3] - t) / (time[3] - time[2]) + p2.x * (t - time[2]) / (time[3] - time[2])
+	local L23 = p2.x * (time[4] - t) / (time[4] - time[3]) + p3.x * (t - time[3]) / (time[4] - time[3])
+	local L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
+	local L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
+	local C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
+	px.x = C12
+
+	L01 = p0.z * (time[2] - t) / (time[2] - time[1]) + p1.z * (t - time[1]) / (time[2] - time[1])
+	L12 = p1.z * (time[3] - t) / (time[3] - time[2]) + p2.z * (t - time[2]) / (time[3] - time[2])
+	L23 = p2.z * (time[4] - t) / (time[4] - time[3]) + p3.z * (t - time[3]) / (time[4] - time[3])
+	L012 = L01 * (time[3] - t) / (time[3] - time[1]) + L12 * (t - time[1]) / (time[3] - time[1])
+	L123 = L12 * (time[4] - t) / (time[4] - time[2]) + L23 * (t - time[2]) / (time[4] - time[2])
+	C12 = L012 * (time[3] - t) / (time[3] - time[2]) + L123 * (t - time[2]) / (time[3] - time[2])
+	px.z = C12
+
+	return px
+end
+
+ADVectorUtils = {}
+
+--- Calculates the unit vector on a given vector.
+--- @param vector table Table with x and z properties.
+--- @return table Unitvector as table with x and z properties.
+function ADVectorUtils.unitVector2D(vector)
+	local x, z = vector.x or 0, vector.z or 0
+	local q = math.sqrt( (x * x) + ( z * z ) )
+	return {x = x / q, z = z / q}
+end
+
+--- Scales a vector by a given scalar.
+--- @param vector table Table with x and z properties. 
+--- @param scale number Scale
+--- @return table Vector
+function ADVectorUtils.scaleVector2D(vector, scale)
+	scale = scale or 1.0
+	vector.x = ( vector.x * scale ) or 0
+	vector.z = ( vector.z * scale ) or 0
+	return vector
+end
+
+--- Returns the distance between zwo vectors using their x and z coordinates.
+--- @param vectorA table with x and z property
+--- @param vectorB table with x and z property
+--- @return number Distance between vectorA and vectorB
+function ADVectorUtils.distance2D(vectorA, vectorB)
+	return MathUtil.vector2Length(vectorA.x - vectorB.x, vectorA.z - vectorB.z)
+end
+
+--- Returns a new vector pointing from vectorA to vectorB by subtracting A from B
+--- @param vectorA table with x and z property
+--- @param vectorB table with x and z property
+--- @return table Vector pointing from A to B
+function ADVectorUtils.subtract2D(vectorA, vectorB)
+	return {x = vectorB.x - vectorA.x, z = vectorB.z - vectorA.z}
+end
+
+--- Inverts a vector with x and z properties. 
+--- @param vector table with x and z property
+--- @return table Vector inverted
+function ADVectorUtils.invert2D(vector)
+	vector.x = vector.x * -1
+	vector.z = vector.z * -1
+	return vector
+end
+
+--- Adds x and z values of two given vectors and returns a new vector with x and z properties.
+--- @param vectorA table with x and z property
+--- @param vectorB table with x and z property
+--- @return table Vector
+function ADVectorUtils.add2D(vectorA, vectorB)
+	return {x = vectorA.x + vectorB.x, z = vectorA.z + vectorB.z}
+end
+
+--- Does a linear interpolation based on the in* range and value, and returns a new value
+--- fitting in the out range. Second return value is the interpolated value between 0..1.
+--- @param inMin number Minimum value for input range
+--- @param inMax number Maximum number for input range
+--- @param inValue number Current value for input range
+--- @param outMin number Minimum value vor output range
+--- @param outMax number Maximum value for output range
+--- @return number, number Interpolated value in output range, value in range 0..1
+function ADVectorUtils.linterp(inMin, inMax, inValue, outMin, outMax)
+	-- normalize input, make min range boundary = 0, nval is between 0..1
+	local imax = inMax - inMin
+	local nval = math.clamp(0, inValue - inMin, imax) / imax
+	-- normalize output
+	local omax = outMax - outMin
+	local oval = outMin + ( omax * nval )
+	return oval, nval
 end
 
 function AutoDrive.getDebugChannelIsSet(debugChannel)
@@ -685,18 +957,30 @@ function AutoDrive:getIsActivatable(superFunc, objectToFill)
 				local oldControlledVehicle = g_currentMission.controlledVehicle
 
 				g_currentMission.controlledVehicle = vehicle
-
-				local result = superFunc(self, objectToFill)
+				local result = true
+				if superFunc ~= nil then
+					result = superFunc(self, objectToFill)
+				end
 
                 g_currentMission.controlledVehicle = oldControlledVehicle
 				return result
 			end
 		end
 	end
-	return superFunc(self, objectToFill)
+	local result = true
+	if superFunc ~= nil then
+		result = superFunc(self, objectToFill)
+	end
+	return result
 end
 
 function AutoDrive:zoomSmoothly(superFunc, offset)
+	if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid then
+		--print("splineInterpolationUserCurvature before " .. AutoDrive.splineInterpolationUserCurvature)
+		AutoDrive.splineInterpolationUserCurvature = math.clamp(0.49, AutoDrive.splineInterpolationUserCurvature + offset/12  ,3.5)
+		--print("splineInterpolationUserCurvature after " .. AutoDrive.splineInterpolationUserCurvature)
+		return
+	end
 	if not AutoDrive.mouseWheelActive then -- don't zoom camera when mouse wheel is used to scroll targets (thanks to sperrgebiet)
 		superFunc(self, offset)
 	end
@@ -720,26 +1004,34 @@ function AutoDrive:onActivateObject(superFunc, vehicle)
 end
 
 function AutoDrive:onFillTypeSelection(fillType)
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... fillType %s self.validFillableObject %s self.isLoading %s", tostring(fillType), tostring(self.validFillableObject), tostring(self.isLoading))
-    if not self.isLoading then
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... fillType %s self.validFillableObject %s self.currentFillableObject %s self.isLoading %s", tostring(fillType), tostring(self.validFillableObject), tostring(self.currentFillableObject), tostring(self.isLoading))
+	if not self.isLoading then
         if fillType ~= nil and fillType ~= FillType.UNKNOWN then
-            if self.validFillableObject == nil then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.validFillableObject == nil")
-                for _, fillableObject in pairs(self.fillableObjects) do --copied from gdn getIsActivatable to get a valid Fillable Object even without entering vehicle (needed for refuel first time)
-                    if fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
-                        self.validFillableObject = fillableObject.object
-                        self.validFillableFillUnitIndex = fillableObject.fillUnitIndex
-                    end
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.currentFillableObject == nil")
+            for _, fillableObject in pairs(self.fillableObjects) do --copied from gdn getIsActivatable to get a valid Fillable Object even without entering vehicle (needed for refuel first time)
+
+
+                local fillFreeCapacity = 0
+                if fillableObject.object.getFillUnitFreeCapacity ~= nil then
+                    fillFreeCapacity = fillableObject.object:getFillUnitFreeCapacity(fillableObject.fillUnitIndex)
+                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection fillFreeCapacity %s", tostring(fillFreeCapacity))
+                end
+
+                if fillFreeCapacity > 0 and fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
+                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
+                    self.currentFillableObject = fillableObject.object
+                    self.currentFillableFillUnitIndex = fillableObject.fillUnitIndex
+                    break
                 end
             end
-            local validFillableObject = self.validFillableObject
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection validFillableObject %s", tostring(validFillableObject))
-            if validFillableObject ~= nil then --and validFillableObject:getRootVehicle() == g_currentMission.controlledVehicle
-                local fillUnitIndex = self.validFillableFillUnitIndex
+            local currentFillableObject = self.currentFillableObject
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection currentFillableObject %s", tostring(currentFillableObject))
+            if currentFillableObject ~= nil then --and validFillableObject:getRootVehicle() == g_currentMission.controlledVehicle
+                local fillUnitIndex = self.currentFillableFillUnitIndex
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection setIsLoading")
-                self:setIsLoading(true, validFillableObject, fillUnitIndex, fillType)
+                self:setIsLoading(true, currentFillableObject, fillUnitIndex, fillType)
             end
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.isLoading %s", tostring(self.isLoading))
         end
     end
 end
@@ -890,7 +1182,7 @@ function AutoDrive:getDriveData(superFunc,dt, vX,vY,vZ)		--combine helper functi
             self.vehicle:addAIDebugText("COMBINE -> Waiting for straw to drop")
         end
         local h = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, self.vehicle.aiDriveTarget[1],0,self.vehicle.aiDriveTarget[2])
-        local x,_,z = worldToLocal(self.vehicle:getAIVehicleDirectionNode(), self.vehicle.aiDriveTarget[1],h,self.vehicle.aiDriveTarget[2])
+        local x,_,z = worldToLocal(self.vehicle:getAIDirectionNode(), self.vehicle.aiDriveTarget[1],h,self.vehicle.aiDriveTarget[2])
         local dist = MathUtil.vector2Length(vX-x, vZ-z)
         return x, z, false, 10, dist
     else
@@ -1118,4 +1410,8 @@ function AutoDrive.checkWaypointsMultipleSameOut(correctit)
 	end
 end
 
--- TODO: Maybe we should add a console command that allows to run console commands to server
+function AutoDrive.playSample(sample, volume)
+    if AutoDrive.getSetting("playSounds") and sample~= nil then
+        playSample(sample, 1, volume, 0, 0, 0)
+    end
+end

@@ -9,6 +9,9 @@ FollowCombineTask.STATE_CIRCLING_PATHPLANNING = 5
 FollowCombineTask.STATE_CIRCLING = 6
 FollowCombineTask.STATE_FINISHED = 7
 FollowCombineTask.STATE_WAIT_BEFORE_FINISH = 8
+FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY = 9
+FollowCombineTask.STATE_GENERATE_UTURN_PATH = 10
+FollowCombineTask.STATE_DRIVE_UTURN_PATH = 11
 
 FollowCombineTask.MAX_REVERSE_DISTANCE = 20
 FollowCombineTask.MIN_COMBINE_DISTANCE = 25
@@ -36,15 +39,15 @@ function FollowCombineTask:new(vehicle, combine)
     o.angleToCombineHeading = vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombineHeading()
     o.angleToCombine = vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombine()
     o.trailers = nil
-    o.combinePreCallLevel = 0
+    o.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     return o
 end
 
 function FollowCombineTask:setUp()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "Setting up FollowCombineTask")
     self.lastChaseSide = self.chaseSide
-    self.combinePreCallLevel = AutoDrive.getSetting("preCallLevel", self.combine)
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
+    self.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, true)
 end
 
@@ -72,7 +75,7 @@ function FollowCombineTask:update(dt)
                 self.state = FollowCombineTask.STATE_REVERSING -- reverse to get room from harvester
                 return
             end
-        elseif self.filled or ( not AutoDrive.getIsBufferCombine(self.combine) and self.combineFillPercent <= 0.1 and self.combinePreCallLevel > 0) then
+        elseif self.filled or ( not AutoDrive.getIsBufferCombine(self.combine) and self.combineFillPercent <= 0.1 and (not self.activeUnloading)) then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "I am filled - reversing now")
             self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH -- unload after some time to let harvester drive away
             return
@@ -165,6 +168,13 @@ function FollowCombineTask:update(dt)
                 self.chaseTimer:timer(false)
                 self.state = FollowCombineTask.STATE_CHASING
                 return
+            elseif self.angleToCombineHeading > 150 and self.angleToCombineHeading < 210 and self.distanceToCombine < 80 and AutoDrive.experimentalFeatures.UTurn == true and not AutoDrive.getIsBufferCombine(self.combine) then
+                -- Instead of directly trying a long way around to get behind the harvester, let's wait for him to pass us by and then U-turn
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "combine turn finished - Heading inverted - wait for passby, then U-turn")
+                self.state = FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY
+                self.waitForTurnTimer:timer(false)
+                self.chaseTimer:timer(false)
+                self.waitForPassByTimer:timer(false)
             else
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "combine turn finished - Heading looks bad - stop to be able to start pathfinder")
                 self.stayOnField = true
@@ -213,6 +223,57 @@ function FollowCombineTask:update(dt)
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
         end
+    elseif self.state == FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY then
+        self.waitForPassByTimer:timer(true, 15000, dt)
+        self.vehicle.ad.specialDrivingModule:stopVehicle()
+        self.vehicle.ad.specialDrivingModule:update(dt)
+        if self.waitForPassByTimer:done() then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "passby timer elapsed - heading looks bad - set finished now")
+            self.stayOnField = true
+            self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
+            return
+        else
+            local cx, cy, cz = getWorldTranslation(self.combine.components[1].node)
+            local _, _, offsetZ = worldToLocal(self.vehicle.components[1].node, cx, cy, cz)
+            if offsetZ <= -10 then
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "combine passed us. Calculate U-turn now")
+                self.state = FollowCombineTask.STATE_GENERATE_UTURN_PATH
+                local cx, cy, cz = getWorldTranslation(self.combine.components[1].node)        
+                local offsetX, _, _ = worldToLocal(self.vehicle.components[1].node, cx, cy, cz)
+                self.vehicle:generateUTurn(offsetX > 0)
+                self.waitForPassByTimer:timer(false)
+            end
+        end
+    elseif self.state == FollowCombineTask.STATE_GENERATE_UTURN_PATH then
+        if self.vehicle.ad.uTurn ~= nil and self.vehicle.ad.uTurn.inProgress then
+            self.vehicle:generateUTurn(true)
+        elseif self.vehicle.ad.uTurn ~= nil and not self.vehicle.ad.uTurn.inProgress then
+            if self.vehicle.ad.uTurn.colliFound or self.vehicle.ad.uTurn.points == nil or #self.vehicle.ad.uTurn.points < 5 then
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "U-Turn generation failed due to collision - set finished now")
+                self.stayOnField = true
+                self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
+            else
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "U-Turn generation finished - passing points to drivePathModule now")
+                self.vehicle.ad.drivePathModule:setWayPoints(self.vehicle.ad.uTurn.points)
+                self.state = FollowCombineTask.STATE_DRIVE_UTURN_PATH
+            end
+        end
+    elseif self.state == FollowCombineTask.STATE_DRIVE_UTURN_PATH then
+        if self.vehicle.ad.drivePathModule:isTargetReached() then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "U-Turn finished")
+            if (self.angleToCombineHeading + self.angleToCombine) < 180 and self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide() then
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "passby timer elapsed - heading looks good - chasing again")
+                self.state = FollowCombineTask.STATE_CHASING
+                return
+            else
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "passby timer elapsed - heading looks bad - set finished now")
+                self.stayOnField = true
+                self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
+                return
+            end
+        else
+            self.vehicle.ad.drivePathModule:update(dt)
+        end
     elseif self.state == FollowCombineTask.STATE_FINISHED then
         self:finished()
         return
@@ -249,15 +310,16 @@ function FollowCombineTask:updateStates(dt)
     if (g_updateLoopIndex  % AutoDrive.PERF_FRAMES == 0) or self.updateStatesFirst ~= true then
         self.updateStatesFirst = true
 
-        self.cfillLevel, self.cleftCapacity = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(self.combine)
-        self.cmaxCapacity = self.cfillLevel + self.cleftCapacity
-        self.combineFillPercent = (self.cfillLevel / self.cmaxCapacity) * 100
+        local cmaxCapacity = 0
+        local cfillLevel = 0
+        cfillLevel, cmaxCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(self.combine)
+        self.combineFillPercent = (cfillLevel / cmaxCapacity) * 100
 
-        self.fillLevel, self.leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
-        local maxCapacity = self.fillLevel + self.leftCapacity
-        self.filledToUnload = (self.leftCapacity <= (maxCapacity * (1 - AutoDrive.getSetting("unloadFillLevel", self.vehicle) + 0.001)))
-        self.filled = self.leftCapacity <= 1
-        self.combinePreCallLevel = AutoDrive.getSetting("preCallLevel", self.combine)
+        local fillFreeCapacity = 0
+        _, _, self.filledToUnload, fillFreeCapacity = AutoDrive.getAllNonFuelFillLevels(self.trailers)
+        self.filled = fillFreeCapacity <= 1
+        
+        self.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     end
     self:shouldWaitForChasePos(dt)
 end

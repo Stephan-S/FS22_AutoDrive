@@ -9,7 +9,8 @@ ADSettingsPage = {}
 
 local ADSettingsPage_mt = Class(ADSettingsPage, TabbedMenuFrameElement)
 
-ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox", "headerIcon"}
+-- ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox", "headerIcon", "headerText"}
+ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox"}
 
 function ADSettingsPage:new(target)
     local element = TabbedMenuFrameElement.new(target, ADSettingsPage_mt)
@@ -51,13 +52,13 @@ function ADSettingsPage:onCreateAutoDriveSetting(element)
     local iconElem = element.elements[6]
     if iconElem ~= nil then
         if setting.isUserSpecific then
-            -- iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.USER)))
+            iconElem:setImageFilename(g_autoDriveIconFilename)
             iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.USER)))
         elseif setting.isVehicleSpecific then
-            -- iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.VEHICLE)))
+            iconElem:setImageFilename(g_autoDriveIconFilename)
             iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.VEHICLE)))
         else
-            -- iconElem:setImageUVs(nil, unpack(getNormalizedUVs(ADSettings.ICON_UV.GLOBAL)))
+            iconElem:setImageFilename(g_autoDriveIconFilename)
             iconElem:setImageUVs(nil, unpack(GuiUtils.getUVs(ADSettings.ICON_UV.GLOBAL)))
         end
     end
@@ -126,4 +127,46 @@ function ADSettingsPage:loadGUISetting(settingName, state)
     local element = self.settingElements[settingName]
     element:setState(state, false)
     self:onOptionChange(state, element)
+end
+
+function ADSettingsPage:onCreateAutoDriveHeaderText(box)
+    if self.storedHeaderKey == nil then
+        self.storedHeaderKey = box.text
+    end
+    if self.storedHeaderKey ~= nil then
+
+        local hasText = self.storedHeaderKey ~= nil and self.storedHeaderKey ~= ""
+        if hasText then
+            local text = self.storedHeaderKey
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
+function ADSettingsPage:onCreateAutoDriveText1(box)
+    if self.storedKey1 == nil then
+        self.storedKey1 = box.text
+    end
+    if self.storedKey1 ~= nil then
+
+        local hasText = self.storedKey1 ~= nil and self.storedKey1 ~= ""
+        if hasText then
+            local text = self.storedKey1
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
+function ADSettingsPage:copyAttributes(src)
+	ADSettingsPage:superClass().copyAttributes(self, src)
+    self.storedHeaderKey = src.storedHeaderKey
+    self.storedKey1 = src.storedKey1
 end

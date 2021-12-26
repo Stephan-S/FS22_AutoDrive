@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
-    <GuiElement type="empty" profile="newLayer" />
-    <GuiElement type="bitmap" profile="dialogFullscreenBg" />
 
-    <GuiElement type="bitmap" profile="yesNoDialogBg" position="0px -150px" size="810px 780px" screenAlign="topCenter" positionOrigin="topCenter">
+    <GuiElement type="bitmap" profile="yesNoDialogBg" size="740px 540px" screenAlign="topCenter" positionOrigin="topCenter">
         <GuiElement type="bitmap" profile="dialogHeaderDocked">
-            <GuiElement type="text" profile="dialogHeaderText" text="$l10n_gui_ad_routesManagerTitle" />
+            <GuiElement type="text" profile="dialogHeaderText" text="gui_ad_routesManagerTitle" id="headerText" position="0px 50px" visible="true" textUpperCase="false" onCreate="onCreateAutoDriveText1" />
+
+            <GuiElement type="text" profile="dialogTextInput" text="gui_ad_routesManagerTextTitle" position="-160px 0px" textUpperCase="false" onCreate="onCreateAutoDriveText2" />
+
+            <GuiElement type="textInput" profile="dialogTextInput" id="textInputElement" position="250px 0px" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" maxCharacters="20" text="Route 1" />
         </GuiElement>
 
-        <GuiElement type="text" profile="sleepDialogText" position="0px -25px" size="714px 20px" textAlignment="left" screenAlign="topCenter" positionOrigin="topCenter" text="$l10n_gui_ad_routesManagerTextTitle" />
+        <GuiElement type="empty" profile="autoDriveNotificationHistoryNavigationBox" >
 
-        <GuiElement type="textInput" profile="dialogTextInput" id="textInputElement" position="0px -60px" size = "720px 42px" screenAlign="topCenter" positionOrigin="topCenter" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" maxCharacters="20" text="Route 1" />
-
-        <GuiElement type="empty" profile="autoDriveRoutesManagerNavigationBox">
-
-            <GuiElement type="list" profile="autoDriveRoutesManagerList" position="1px -1px" onSelectionChanged="onListSelectionChanged" onDoubleClick="onDoubleClick" id="autoDriveRoutesManagerList">
-                <GuiElement type="listItem" profile="autoDriveRoutesManagerListItem" id="listItemTemplate">
-                    <GuiElement type="text" profile="autoDriveRoutesManagerItemText" text="Route 10" name="listItemText" />
-                    <GuiElement type="text" profile="autoDriveRoutesManagerItemDate" text="2020/02/27 18:13:44" name="listItemDate" />
+            <GuiElement type="list" profile="autoDriveNotificationHistoryList" position="10px -160px" onSelectionChanged="onListSelectionChanged" onDoubleClick="onDoubleClick" id="autoDriveRoutesManagerList">
+                <GuiElement type="listItem" profile="autoDriveNotificationHistoryListItem" id="listItemTemplate">
+                    <GuiElement type="text" profile="autoDriveNotificationHistoryItemText" text="Route 10" name="listItemText" />
+                    <GuiElement type="text" profile="autoDriveNotificationHistoryItemText" textAlignment="right" text="2020/02/27 18:13:44" name="listItemDate" />
                 </GuiElement>
             </GuiElement>
 
-            <GuiElement type="bitmap" profile="verticalGlassListSliderBackground" size="28px 598px" position="-1px -1px">
-                <GuiElement type="slider" profile="verticalGlassListSlider" size="16px 586px" dataElementId="autoDriveRoutesManagerList" handleFocus="false" />
+            <GuiElement type="bitmap" profile="verticalGlassListSliderBackground" size="28px 530px" >
+                <GuiElement type="slider" profile="verticalGlassListSlider" size="16px 518px" dataElementId="autoDriveRoutesManagerList" handleFocus="false" />
             </GuiElement>
         </GuiElement>
 
         <GuiElement type="flowLayout" profile="buttonBoxDocked">
             <GuiElement type="button" profile="buttonBack" text="$l10n_button_back" onClick="onClickBack" />
-            <GuiElement type="button" profile="buttonOK" text="$l10n_gui_ad_button_export" onClick="onClickOk" />
-            <GuiElement type="button" profile="buttonCancel" text="$l10n_gui_ad_button_import" onClick="onClickCancel" />
+            <GuiElement type="button" profile="buttonOK" text="gui_ad_button_export" onClick="onClickOk" textUpperCase="false" onCreate="onCreateAutoDriveText3" />
+            <GuiElement type="button" profile="buttonCancel" text="gui_ad_button_import" onClick="onClickCancel" textUpperCase="false" onCreate="onCreateAutoDriveText4" />
             <GuiElement type="button" profile="buttonActivate" text="$l10n_button_delete" onClick="onClickActivate" />
         </GuiElement>
     </GuiElement>

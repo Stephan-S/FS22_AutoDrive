@@ -295,6 +295,9 @@ function PathFinderModule:startPathPlanningToVehicle(targetVehicle, targetDistan
     self.goingToPipe = false
     self.chasingVehicle = true
     self.isSecondChasingVehicle = true
+    if targetVehicle.ad ~= nil and targetVehicle.ad.pathFinderModule ~= nil and targetVehicle.ad.pathFinderModule.fruitToCheck ~= nil then
+        self.fruitToCheck = targetVehicle.ad.pathFinderModule.fruitToCheck
+    end
 end
 
 function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
@@ -1978,8 +1981,10 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
     local lengthMiddle = MathUtil.vector3Length(worldPosMiddle.x - x2, terrain3 - terrain2, worldPosMiddle.z - z2)
     local angleBetween = math.atan(math.abs(terrain1 - terrain2) / length)
     local angleBetweenCenter = math.atan(math.abs(terrain3 - terrain2) / lengthMiddle)
+    
+    local waterY = g_currentMission.environmentAreaSystem:getWaterYAtWorldPosition(worldPosMiddle.x, terrain3, worldPosMiddle.z) or -200
 
-    local belowGroundLevel = terrain1 < g_currentMission.waterY - 0.5 or terrain2 < g_currentMission.waterY - 0.5 or terrain3 < g_currentMission.waterY - 0.5
+    local belowGroundLevel = terrain1 < waterY - 0.5 or terrain2 < waterY - 0.5 or terrain3 < waterY - 0.5
 
     if belowGroundLevel then
         if self.vehicle ~= nil and self.vehicle.ad ~= nil and self.vehicle.ad.debug ~= nil and AutoDrive.debugVehicleMsg ~= nil then

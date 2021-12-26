@@ -140,7 +140,8 @@ end
 
 function UnloadBGATask:getCurrentStates()
     self.shovelFillLevel = self:getShovelFillLevel()
-    self.trailerFillLevel, self.trailerLeftCapacity = AutoDrive.getFillLevelAndCapacityOf(self.targetTrailer)
+    local fillLevel, fillCapacity, filledToUnload, fillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(self.targetTrailer)
+    self.trailerLeftCapacity = fillFreeCapacity
     self.bunkerFillLevel = 10000 --self:getBunkerFillLevel();
 
     self.targetUnloadTriggerFree = false
@@ -161,7 +162,8 @@ end
 function UnloadBGATask:checkIfPossibleToRestart()
     if self.targetTrailer == nil then
         self.targetTrailer, self.targetDriver = self:findCloseTrailer()
-        self.trailerFillLevel, self.trailerLeftCapacity = AutoDrive.getFillLevelAndCapacityOf(self.targetTrailer)
+        local fillLevel, fillCapacity, filledToUnload, fillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(self.targetTrailer)
+        self.trailerLeftCapacity = fillFreeCapacity
     end
     if self.targetBunker == nil then
         self.targetBunker = self:getTargetBunker()
@@ -669,8 +671,8 @@ function UnloadBGATask:findCloseTrailer()
                 local _, trailers = self:vehicleHasTrailersAttached(vehicle)
                 for _, trailer in pairs(trailers) do
                     if trailer ~= nil then
-                        local trailerLeftCapacity = 0
-                        _, trailerLeftCapacity = AutoDrive.getFillLevelAndCapacityOf(trailer)
+                        local fillLevel, fillCapacity, filledToUnload, trailerLeftCapacity = AutoDrive.getObjectNonFuelFillLevels(trailer)
+
                         if trailerLeftCapacity >= 10 then
                             closestDistance = AutoDrive.getDistanceBetween(trailer, self.vehicle)
                             closest = vehicle
@@ -688,14 +690,12 @@ function UnloadBGATask:findCloseTrailer()
 end
 
 function UnloadBGATask:vehicleHasTrailersAttached(vehicle)
-    local trailers, _ = AutoDrive.getTrailersOf(vehicle)
+    local trailers, trailerCount = AutoDrive.getAllUnits(vehicle)
     local tipTrailers = {}
     if trailers ~= nil then
         for _, trailer in pairs(trailers) do
-            local trailerFillLevel = 0
-            local trailerLeftCapacity = 0
-            trailerFillLevel, trailerLeftCapacity = AutoDrive.getFillLevelAndCapacityOf(trailer)
-            local maxCapacity = trailerFillLevel + trailerLeftCapacity
+            _, maxCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(trailer)
+            
             if trailer.typeName == "trailer" or (maxCapacity >= 7000) then
                 table.insert(tipTrailers, trailer)
             end
@@ -708,10 +708,8 @@ end
 function UnloadBGATask:checkCurrentTrailerStillValid()
     if self.targetTrailer ~= nil and self.targetDriver ~= nil then
         local tooFast = math.abs(self.targetDriver.lastSpeedReal) > 0.002
-        --local trailerFillLevel = 0
-        local trailerLeftCapacity = 0
-        _, trailerLeftCapacity = AutoDrive.getFillLevelAndCapacityOf(self.targetTrailer)
-        local tooFull = trailerLeftCapacity < 1
+        local fillLevel, fillCapacity, filledToUnload, fillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(self.targetTrailer)
+        local tooFull = fillFreeCapacity < 1
 
         return not (tooFull or tooFast)
     end

@@ -29,27 +29,5 @@ function AutoDrive.devAction(vehicle)
 end
 
 function AutoDrive.devAutoDriveInit()
-    Logging.info("[AD] Info: g_server %s g_client %s g_dedicatedServerInfo %s getUserProfileAppPath %s getIsClient %s getIsServer %s isMasterUser %s", tostring(g_server), tostring(g_client), tostring(g_dedicatedServerInfo), tostring(getUserProfileAppPath()), tostring(g_currentMission:getIsClient()), tostring(g_currentMission:getIsServer()), tostring(g_currentMission.isMasterUser))
-
-    Logging.info("[AD] AutoDrive.devAutoDriveInit roadSplines...")
-    if g_currentMission.aiSystem ~= nil and g_currentMission.aiSystem.roadSplines ~= nil then
-        for _, spline in pairs(g_currentMission.aiSystem.roadSplines) do 
-            Logging.info("[AD] roadSpline %s", tostring(spline))
-        end
-    else
-        Logging.info("[AD] AutoDrive.devAutoDriveInit roadSplines not found!")
-    end
-    Logging.info("[AD] AutoDrive.devAutoDriveInit roadSplines end")
-
-    Logging.info("[AD] AutoDrive.devAutoDriveInit delayedRoadSplines...")
-    if g_currentMission.aiSystem ~= nil and g_currentMission.aiSystem.delayedRoadSplines ~= nil then
-        for _, spline in pairs(g_currentMission.aiSystem.delayedRoadSplines) do 
-            Logging.info("[AD] delayedRoadSpline %s", tostring(spline))
-        end
-    else
-        Logging.info("[AD] AutoDrive.devAutoDriveInit delayedRoadSplines not found!")
-    end
-    Logging.info("[AD] AutoDrive.devAutoDriveInit delayedRoadSplines end")
-
-    
+    Logging.info("[AD] Info: g_server %s g_client %s g_dedicatedServer %s g_dedicatedServerInfo %s getUserProfileAppPath %s getIsClient %s getIsServer %s isMasterUser %s", tostring(g_server), tostring(g_client), tostring(g_dedicatedServer), tostring(g_dedicatedServerInfo), tostring(getUserProfileAppPath()), tostring(g_currentMission:getIsClient()), tostring(g_currentMission:getIsServer()), tostring(g_currentMission.isMasterUser))
 end

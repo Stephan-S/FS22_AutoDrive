@@ -50,9 +50,11 @@ ADInputManager.actionsToInputs = {
     ADParkVehicle = "input_parkVehicle",
     ADSetParkDestination = "input_setParkDestination",
     AD_devAction = "input_devAction",
-    AD_open_tipOfTheDay = "input_openTipOfTheDay",
     ADRefuelVehicle = "input_refuelVehicle",
-    ADToggleHudExtension = "input_toggleHudExtension"
+    ADToggleHudExtension = "input_toggleHudExtension",
+    ADToggleAutomaticUnloadTarget = "input_toggleAutomaticUnloadTarget",
+    ADToggleAutomaticPickupTarget = "input_toggleAutomaticPickupTarget",
+    ADRepairVehicle = "input_repairVehicle"
 }
 
 
@@ -92,7 +94,10 @@ ADInputManager.inputsToIds = {
     input_record_subPrio = 27,
     input_record_subPrioDual = 28,
     input_bunkerUnloadType = 29,
-    input_refuelVehicle = 30
+    input_refuelVehicle = 30,
+    input_toggleAutomaticUnloadTarget = 31,
+    input_toggleAutomaticPickupTarget = 32,
+    input_repairVehicle = 33
 }
 
 ADInputManager.idsToInputs = {}
@@ -140,12 +145,6 @@ end
 function ADInputManager:input_openColorSettings()
     AutoDrive.onOpenColorSettings()
 end
-
-function ADInputManager:input_openTipOfTheDay(vehicle)
-    AutoDrive.onOpenTipOfTheDay()
-end
-
-
 
 function ADInputManager:input_editMapMarker(vehicle)
     if AutoDrive.isEditorModeEnabled() then
@@ -236,7 +235,7 @@ function ADInputManager:input_toggleMouse()
 end
 
 function ADInputManager:input_routesManager()
-    if (AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer == true and g_dedicatedServerInfo ~= nil) or g_dedicatedServerInfo == nil then
+    if (AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer == true and g_dedicatedServer ~= nil) or g_dedicatedServer == nil then
         AutoDrive.onOpenRoutesManager()
     end
 end
@@ -281,7 +280,7 @@ function ADInputManager:input_start_stop(vehicle)
                     if otherVehicle.ad.stateModule.AIVEActiveBeforeSave and otherVehicle.acParameters ~= nil then
                         g_currentMission:requestToEnterVehicle(otherVehicle)
                         otherVehicle.acParameters.enabled = true
-                        otherVehicle:startAIVehicle(nil, false, g_currentMission.player.farmId)
+                        otherVehicle:toggleAIVehicle()
                     end                    
 				end
 			end
@@ -289,7 +288,7 @@ function ADInputManager:input_start_stop(vehicle)
         end
     end
 
-    --AutoDrive.dumpTable(g_currentMission.aiSystem.roadSplines, "g_currentMission.aiSystem.roadSplines", 4)
+    --AutoDrive.dumpTable(ADTriggerManager.tipTriggers, "ADTriggerManager.tipTriggers", 4)
 end
 
 function ADInputManager:input_incLoopCounter(vehicle)
@@ -475,6 +474,14 @@ function ADInputManager:input_toggleCP_AIVE(vehicle) -- select CP or AIVE
     end
 end
 
+function ADInputManager:input_toggleAutomaticUnloadTarget(vehicle)
+    vehicle.ad.stateModule:toggleAutomaticUnloadTarget()
+end
+
+function ADInputManager:input_toggleAutomaticPickupTarget(vehicle)
+    vehicle.ad.stateModule:toggleAutomaticPickupTarget()
+end
+
 function ADInputManager:input_devAction(vehicle)
     if AutoDrive.devAction ~= nil then
         AutoDrive.devAction(vehicle)
@@ -486,17 +493,10 @@ function ADInputManager:input_bunkerUnloadType(vehicle)
 end
 
 function ADInputManager:input_refuelVehicle(vehicle)
-    -- make sure we know which refuel type to check for   
-    local refuelFillType = AutoDrive.getRequiredRefuel(vehicle, true)
-    if refuelFillType > 0 then
-        if vehicle.ad.stateModule:getRefuelFillType() ~= refuelFillType then
-            vehicle.ad.stateModule:setRefuelFillType(refuelFillType)
-        end
-    end
-
-    local refuelDestination = ADTriggerManager.getClosestRefuelDestination(vehicle)
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADInputManager:input_refuelVehicle ")
+    local refuelDestination = ADTriggerManager.getClosestRefuelDestination(vehicle, true)
     if refuelDestination ~= nil and refuelDestination >= 1 then
-        vehicle.ad.stateModule:setFirstMarker(refuelDestination)
+        -- vehicle.ad.stateModule:setFirstMarker(refuelDestination)
         vehicle.ad.stateModule:removeCPCallback()
         if vehicle.ad.stateModule:isActive() then
             self:input_start_stop(vehicle) --disable if already active
@@ -504,8 +504,27 @@ function ADInputManager:input_refuelVehicle(vehicle)
         vehicle.ad.stateModule:setMode(AutoDrive.MODE_DRIVETO)
         vehicle.ad.onRouteToRefuel = true
         self:input_start_stop(vehicle)
-    else       
-        local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(vehicle.ad.stateModule:getRefuelFillType()).title
+    else
+        local refuelFillTypes = AutoDrive.getRequiredRefuels(vehicle, true)
+        local refuelFillTypeTitle = ""
+        if #refuelFillTypes > 0 then
+            refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(refuelFillTypes[1]).title
+        end
         AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
+    end
+end
+
+function ADInputManager:input_repairVehicle(vehicle)
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADInputManager:input_repairVehicle ")
+    local repairDestinationMarkerNodeID = AutoDrive:getClosestRepairTrigger(vehicle)
+    if repairDestinationMarkerNodeID ~= nil then
+        if vehicle.ad.stateModule:isActive() then
+            self:input_start_stop(vehicle) --disable if already active
+        end
+        vehicle.ad.onRouteToRepair = true
+        vehicle.ad.stateModule:setMode(AutoDrive.MODE_DRIVETO)
+        self:input_start_stop(vehicle)
+    else
+        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Repair_Station;", 5000, vehicle.ad.stateModule:getName())
     end
 end

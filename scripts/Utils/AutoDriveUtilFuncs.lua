@@ -18,7 +18,7 @@ function AutoDrive.isTrailerInCrop(vehicle, enlargeDetectionArea)
         widthFactor = 1.5
     end
 
-    local trailers, trailerCount = AutoDrive.getTrailersOf(vehicle)
+    local trailers, trailerCount = AutoDrive.getAllUnits(vehicle)
     local trailer = trailers[trailerCount]
     local inCrop = false
     if trailer ~= nil then
@@ -52,6 +52,14 @@ function AutoDrive:checkIsConnected(toCheck, other)
     for _, impl in pairs(toCheck:getAttachedImplements()) do
         if impl.object ~= nil then
             if impl.object == other then
+                return true
+            end
+
+            if impl.object.spec_baleGrab ~= nil and impl.object.spec_baleGrab.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_baleGrab.dynamicMountedObjects, other) then
+                return true
+            end
+
+            if impl.object.spec_dynamicMountAttacher ~= nil and impl.object.spec_dynamicMountAttacher.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_dynamicMountAttacher.dynamicMountedObjects, other) then
                 return true
             end
 
@@ -106,35 +114,50 @@ end
 
 -- return fillType to refuel or nil if no refuel required
 --[[
-ignoreFillLevel:
-- only useful for diesel and electricCharge - def is included in most cases with diesel
-- how to decide to pick diesel or def?
+ignoreFillLevel: if true the fuel type is captured of level < 90%
 ]]
-function AutoDrive.getRequiredRefuel(vehicle, ignoreFillLevel)
-    local spec = vehicle.spec_motorized
-    local ret = 0
+function AutoDrive.getRequiredRefuels(vehicle, ignoreFillLevel)
+    local ret = {}
+    local minFillLevel = 0.90   -- to prevent cycles between different fuel fillTypes we take 90% as full level
+    if vehicle ~= nil then
+        local spec = vehicle.spec_motorized
+        if spec ~= nil and spec.consumersByFillTypeName ~= nil then
 
-    if spec ~= nil and spec.consumersByFillTypeName ~= nil then
-        if spec.consumersByFillTypeName.diesel ~= nil and spec.consumersByFillTypeName.diesel.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.diesel.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
-            ret = g_fillTypeManager:getFillTypeIndexByName('DIESEL')
-        end
-        if spec.consumersByFillTypeName.def ~= nil and spec.consumersByFillTypeName.def.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.def.fillUnitIndex) < AutoDrive.REFUEL_LEVEL) then
-            ret = g_fillTypeManager:getFillTypeIndexByName('DEF')
-        end
-        if spec.consumersByFillTypeName.electricCharge ~= nil and spec.consumersByFillTypeName.electricCharge.fillUnitIndex ~= nil and (vehicle:getFillUnitFillLevelPercentage(spec.consumersByFillTypeName.electricCharge.fillUnitIndex) < AutoDrive.REFUEL_LEVEL or ignoreFillLevel) then
-            ret = g_fillTypeManager:getFillTypeIndexByName('ELECTRICCHARGE')
+            for fillTypeName, consumer in pairs(spec.consumersByFillTypeName) do
+                local currentFillLevelPercentage = vehicle:getFillUnitFillLevelPercentage(consumer.fillUnitIndex)
+                local needFuel = (currentFillLevelPercentage < AutoDrive.REFUEL_LEVEL or (ignoreFillLevel and (currentFillLevelPercentage < minFillLevel)))
+                if needFuel then
+                    if not table.contains(AutoDrive.nonFillableFillTypes, fillTypeName) then
+                        table.insert(ret, consumer.fillType)
+                    end
+                end
+            end
         end
     end
-
     return ret
 end
 
 function AutoDrive.combineIsTurning(combine)
     local cpIsTurning = combine.cp ~= nil and (combine.cp.isTurning or (combine.cp.turnStage ~= nil and combine.cp.turnStage > 0))
     local cpIsTurningTwo = combine.cp ~= nil and combine.cp.driver and (combine.cp.driver.turnIsDriving or (combine.cp.driver.fieldworkState ~= nil and combine.cp.driver.fieldworkState == combine.cp.driver.states.TURNING))
-    local aiIsTurning = (combine.getAIIsTurning ~= nil and combine:getAIIsTurning() == true)
+    local aiIsTurning = false
+    local rootVehicle = nil
+    if combine.getRootVehicle ~= nil then
+        rootVehicle = combine:getRootVehicle()
+        if rootVehicle ~= nil then
+            aiIsTurning = rootVehicle.getAIFieldWorkerIsTurning ~= nil and rootVehicle:getAIFieldWorkerIsTurning()
+        end
+    end
     --local combineSteering = combine.rotatedTime ~= nil and (math.deg(combine.rotatedTime) > 30)
     local combineIsTurning = cpIsTurning or cpIsTurningTwo or aiIsTurning --or combineSteering
+
+    --Check if we are close to the field borders and about to turn
+    local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, false, 50, 5)
+    local fieldLengthBehind = math.abs(AutoDrive.getLengthOfFieldInFront(combine, false, 50, -5))
+
+    if (fieldLengthInFront <= 20 or fieldLengthBehind <= 20) and combine.ad.noMovementTimer.elapsedTime < 5000 and not AutoDrive.getIsBufferCombine(combine) then
+        combineIsTurning = true
+    end
 
     --local b = AutoDrive.boolToString
     --print("cpIsTurning: " .. b(cpIsTurning) .. " cpIsTurningTwo: " .. b(cpIsTurningTwo) .. " aiIsTurning: " .. b(aiIsTurning) .. " combineIsTurning: " .. b(combineIsTurning) .. " driveForwardDone: " .. b(combine.ad.driveForwardTimer:done()))
@@ -199,7 +222,7 @@ function AutoDrive.isVehicleInBunkerSiloArea(vehicle)
                 return true
             end
 
-            local trailers, trailerCount = AutoDrive.getTrailersOf(vehicle)
+            local trailers, trailerCount = AutoDrive.getAllUnits(vehicle)
             if trailerCount > 0 then
                 for _, trailer in pairs(trailers) do
                     if AutoDrive.isTrailerInBunkerSiloArea(trailer, trigger) then
@@ -238,17 +261,13 @@ function AutoDrive.cycleEditMode()
     if g_client ~= nil then
 
         if vehicle ~= nil and vehicle.ad ~= nil then
-            vehicle.ad.selectedNodeId = nil
-            vehicle.ad.nodeToMoveId = nil
-            vehicle.ad.hoveredNodeId = nil
-			vehicle.ad.newcreated = nil
-            vehicle.ad.sectionWayPoints = {}
+            AutoDrive.resetMouseSelections(vehicle)
         end
         if (AutoDrive.getSetting("EditorMode") == AutoDrive.EDITOR_OFF) then
             AutoDrive.setEditorMode(AutoDrive.EDITOR_EXTENDED)
         else
             AutoDrive.setEditorMode(AutoDrive.EDITOR_OFF)
-            if g_server ~= nil and g_client ~= nil and g_dedicatedServerInfo == nil then
+            if g_server ~= nil and g_client ~= nil and g_dedicatedServer == nil then
                 -- in SP always delete color selection wayPoints if there are any
                 ADGraphManager:deleteColorSelectionWayPoints()
             end
@@ -335,6 +354,24 @@ function AutoDrive.getAllImplements(vehicle)
     end
 end
 
+function AutoDrive.getAllAttachedObjects(vehicle)
+    local allImp = {}
+    
+    if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
+        
+        local function addAllAttached(obj)
+            for _, imp in pairs(obj:getAttachedImplements()) do
+                addAllAttached(imp.object)
+                table.insert(allImp, imp.object)
+            end
+        end
+
+        addAllAttached(vehicle)
+    end
+
+    return allImp
+end
+
 -- set or delete park destination for selected vehicle, tool from user input action, client mode!
 function AutoDrive.setActualParkDestination(vehicle)
     local actualParkDestination = -1
@@ -394,7 +431,7 @@ end
 -- This is the alternative MP approach
 function AutoDrive:getIsEntered(vehicle)
     local user = nil
-    if g_dedicatedServerInfo ~= nil and vehicle ~= nil and g_currentMission.userManager ~= nil and g_currentMission.userManager.getUserByConnection ~= nil and vehicle.getOwner ~= nil then
+    if g_dedicatedServer ~= nil and vehicle ~= nil and g_currentMission.userManager ~= nil and g_currentMission.userManager.getUserByConnection ~= nil and vehicle.getOwner ~= nil then
         -- MP
         user = g_currentMission.userManager:getUserByConnection(vehicle:getOwner())
     else

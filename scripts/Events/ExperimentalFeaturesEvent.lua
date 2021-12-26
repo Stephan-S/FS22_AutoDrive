@@ -4,7 +4,6 @@ AutoDriveExperimentalFeaturesEvent_mt = Class(AutoDriveExperimentalFeaturesEvent
 InitEventClass(AutoDriveExperimentalFeaturesEvent, "AutoDriveExperimentalFeaturesEvent")
 
 function AutoDriveExperimentalFeaturesEvent.emptyNew()
-	print("AutoDriveExperimentalFeaturesEvent:emptyNew")
     local self = Event.new(AutoDriveExperimentalFeaturesEvent_mt)
     return self
 end
@@ -35,7 +34,7 @@ function AutoDriveExperimentalFeaturesEvent:run(connection)
         -- If the event is coming from the server, both clients and server have to act
         if self.featureName ~= "" then
             AutoDrive.experimentalFeatures[self.featureName] = self.state
-            print(string.format("AutoDrive.experimentalFeatures.%s = %s", self.featureName, AutoDrive.experimentalFeatures[self.featureName]))
+            -- print(string.format("AutoDrive.experimentalFeatures.%s = %s", self.featureName, AutoDrive.experimentalFeatures[self.featureName]))
         end
     end
 end

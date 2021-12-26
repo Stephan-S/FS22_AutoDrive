@@ -6,7 +6,6 @@ AutoDriveStartStopEvent_mt = Class(AutoDriveStartStopEvent, Event)
 InitEventClass(AutoDriveStartStopEvent, "AutoDriveStartStopEvent")
 
 function AutoDriveStartStopEvent.emptyNew()
-	print("AutoDriveStartStopEvent:emptyNew")
     local self = Event.new(AutoDriveStartStopEvent_mt)
     return self
 end

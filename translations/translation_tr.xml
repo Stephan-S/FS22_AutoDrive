@@ -48,11 +48,14 @@
         <text name="input_ADParkVehicle"                                                                    text="AD: Aracı park et"  />
 		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
 		<text name="input_ADRefuelVehicle"						                                                      text="AD: Refuel vehicle" />
+		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
         <text name="input_ADSwapTargets"                                                                    text="AD: Hedefleri değiştir"  />
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         			                                      text="AD: Developer Action" />		
 		<text name="input_AD_open_tipOfTheDay" 					                                                    text="AD: Open Tip of the day" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
         <text name="hud_avoidFruit"                                                                         text="AD: Meyvelerden kaçının"  />
         <text name="hud_startCp"                                                                            text="AD: CP / AIVE'ı varış noktasında başlatın"  />
         <text name="AD_parkVehicle_noPosSet"                                                                text="Park yeri atanmadı. Lütfen halihazırda seçili olan hedefi sağ fare tuşu ile atayın."  />
@@ -66,7 +69,8 @@
         <text name="AD_No_Trailer"                                                                          text="dorse bulamadım"  />
         <text name="AD_No_Bunker"                                                                           text="Bunker silosu bulamadı"  />
         <text name="AD_No_Shovel"                                                                           text="bağlı bir kürek bulamadım"  />
-        <text name="AD_No_Refuel_Station"						                                                        text="could not find refuel station for:" />
+        <text name="AD_No_Refuel_Station"						                                            text="could not find refuel station for:" />
+		<text name="AD_No_Repair_Station"						                                            text="could not find repair station for:" />
         <text name="AD_MODE_DRIVETO"                                                                        text="Sürüş"  />
         <text name="AD_MODE_DELIVERTO"                                                                      text="Teslim etmek"  />
         <text name="AD_MODE_PICKUPANDDELIVER"                                                               text="Toplama ve Teslim Etme"  />
@@ -164,6 +168,8 @@
         <text name="gui_ad_showTooltips_tooltip"                                                            text="Gösterge Paneli'nde düğme araç ipuçlarını gösterin."  />
         <text name="gui_ad_enterTargetNameTitle_add"                                                        text="Hedef Ekle"  />
         <text name="gui_ad_enterTargetNameTitle_edit"                                                       text="Hedefi Düzenleyin"  />
+		<text name="gui_ad_activeUnloading"						                                            text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				                                            text="Unload harvesters while driving." />
         <text name="gui_ad_enterTargetNameText"                                                             text="Hedef adı girin:"  />
         <text name="gui_ad_createButtonText"                                                                text="Oluşturmak"  />
         <text name="gui_ad_enterDriverNameTitle"                                                            text="Sürücüyü Yeniden Adlandır"  />
@@ -172,6 +178,8 @@
         <text name="gui_ad_enterGroupNameText"                                                              text="Klasör adını girin:"  />
         <text name="gui_ad_autoRefuel"                                                                      text="Otomatik Yakıt Doldurma"  />
         <text name="gui_ad_autoRefuel_tooltip"                                                              text="Yakıt seviyesi düşükken yakıt ikmali hedefine (yakıt tetiğine yakın) gidin."  />
+		<text name="gui_ad_autoRepair"							                                            text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					                                            text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
         <text name="gui_ad_filter"                                                                          text="Filtrele"  />
         <text name="gui_ad_enterDestinationFilterTitle"                                                     text="Hedefin filtre metnini değiştir"  />
         <text name="gui_ad_enterDestinationFilterText"                                                      text="Filtre metni ekleyin:"  />
@@ -195,6 +203,8 @@
         <text name="gui_ad_secondEditorModeAllowed_tooltip"                                                 text="LCTRL'yi basılı tutmak yerine rota manipülasyonu için 2. düzenleyici modunu kullanın"  />
         <text name="gui_ad_wideHUD"                                                                         text="Geniş HUD"  />
         <text name="gui_ad_wideHUD_tooltip"                                                                 text="HUD'da birkaç ayar düğmesine daha izin veren geniş HUD modunu kullanın"  />
+        <text name="gui_ad_playSounds"							                                            text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					                                            text="Enables the sound effects for mouse clicks and notifications" />
         <text name="gui_ad_syncMultiTargets"                                                                text="Birden çok hedefi senkronize et"  />
         <text name="gui_ad_syncMultiTargets_tooltip"                                                        text="Birden çok hedef için aynı klasörü kullanan birden çok sürücü, sonraki hedefleri senkronize edecek"  />
         <text name="gui_ad_enableParkAtJobFinished"                                                         text="Park işi tamamlandı"  />
@@ -214,6 +224,10 @@
 		<text name="gui_ad_AL_right"                            text="Unload right" />
 		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_scanConfirmationText"                text="Should AutoDrive generate a route network from the traffic and helper data on the map?" />
+		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
+		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
 
         <text name="gui_ad_settingsPage_title"                                                              text="Ayarlar - AutoDrive"  />
         <text name="gui_ad_userSettingsPage_title"                                                          text="Kullanıcı Ayarları - AutoDrive"  />
@@ -221,10 +235,11 @@
         <text name="gui_ad_combineUnloadSettingsPage_title"                                                 text="Biçerdöver boşaltma ayarları - AutoDrive"  />
         <text name="gui_ad_debugSettingsPage_title"                                                         text="Hata Ayıklama Ayarları - AutoDrive"  />
         <text name="gui_ad_eFeaturesSettingsPage_title"                                                     text="Deneysel Özellik Ayarları - AutoDrive"  />
-		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		                                            text="Non-functional Settings - AutoDrive" />
         <text name="gui_ad_restoreButtonText"                                                               text="Onarmak"  />
         <text name="gui_ad_settingsClosingDialog_title"                                                     text="Tüm değişiklikler kaybolacak"  />
         <text name="gui_ad_settingsClosingDialog_text"                                                      text="Ayarları kaydetmeden kapatmak istediğinizden emin misiniz?"  />
+		<text name="gui_ad_setDefaultButtonText" 				                                            text="Set as default" />
                                                                                                             
         <text name="gui_ad_routesManagerTitle"                                                              text="Rota Yöneticisi"  />
         <text name="gui_ad_routesManagerTextTitle"                                                          text="Rota adını girin:"  />
@@ -355,6 +370,7 @@
         <text name="AD_task_wait_for_combine_turn"                                                          text="Biçerdöverin dönüşünü bekleyin"  />
         <text name="AD_task_drive_to_load_point"                                                            text="Yükleme noktasına sürün"  />
         <text name="AD_task_drive_to_refuel_point"                                                          text="Yakıt ikmal istasyonuna git"  />
+		<text name="AD_task_drive_to_repair_point"				                                            text="Drive to repair station" />
         <text name="AD_task_stop_and_disable"                                                               text="Durduruluyor"  />
         <text name="AD_task_drive_to_unload_point"                                                          text="Boşaltma noktasına sürün"  />
         <text name="AD_task_wait_for_call"                                                                  text="Çağrı bekleniyor"  />

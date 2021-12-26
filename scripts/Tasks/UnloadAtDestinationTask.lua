@@ -31,12 +31,13 @@ function UnloadAtDestinationTask:setUp()
         self.state = UnloadAtDestinationTask.STATE_DRIVING
         self.vehicle.ad.drivePathModule:setPathTo(self.destinationID)
     end
-    self.trailers, _ = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
     self.waitForALUnload = false
 end
 
 function UnloadAtDestinationTask:update(dt)
+    self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = false
     if self.state == UnloadAtDestinationTask.STATE_PATHPLANNING then
         if self.vehicle.ad.pathFinderModule:hasFinished() then
             self.wayPoints = self.vehicle.ad.pathFinderModule:getPath()
@@ -76,7 +77,7 @@ function UnloadAtDestinationTask:update(dt)
             if not self.vehicle.ad.trailerModule:isActiveAtTrigger() then
                 --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtDestinationTask:update isTargetReached isActiveAtTrigger")
                 AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, true)
-                local fillLevel, _ = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
+                local fillLevel = AutoDrive.getAllFillLevels(self.trailers)
                 if fillLevel <= 1 or self.isContinued or (((AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders")) and (not ((self.vehicle.ad.drivePathModule:getIsReversing() and self.vehicle.ad.trailerModule:getBunkerTrigger() ~= nil)))) then
                     --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "UnloadAtDestinationTask:update fillLevel <= 1")
                     AutoDrive.setAugerPipeOpen(self.trailers, false)
@@ -84,6 +85,9 @@ function UnloadAtDestinationTask:update(dt)
                 else
                    -- AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtDestinationTask:update Wait at unload point until unloaded somehow")
                     -- Wait at unload point until unloaded somehow
+                    --Keep motor running. Maybe we could check if the current trailer need Power to be unloaded or not
+                    self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = true
+
                     self.vehicle.ad.specialDrivingModule:stopVehicle()
                     self.vehicle.ad.specialDrivingModule:update(dt)
                     if self.vehicle.ad.trailerModule:getHasAL() == true then
@@ -105,6 +109,7 @@ function UnloadAtDestinationTask:update(dt)
                     self.vehicle.ad.drivePathModule:update(dt)
                 else
                     --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtDestinationTask:update isTargetReached NOT isActiveAtTrigger stopVehicle")
+                    self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = true
                     self.vehicle.ad.specialDrivingModule:stopVehicle()
                     self.vehicle.ad.specialDrivingModule:update(dt)
                 end

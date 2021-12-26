@@ -48,11 +48,14 @@
 		<text name="input_ADParkVehicle"						text="AD: Zaparkuj pojazd" />
 		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
 		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
+		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
 		<text name="input_ADSwapTargets"						text="AD: Zamień cele" />
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         text="AD: Akcja deweloperska" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Otwórz podpowiedź dnia" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Unikaj upraw" />
 		<text name="hud_startCp"								text="AD: Uruchom CP / AIVE po dotarciu do celu" />
 		<text name="AD_parkVehicle_noPosSet"					text="Nie przydzielono parkingu. Przypisz wybrany cel trasy za pomocą prawego kliku." />
@@ -68,6 +71,7 @@
 		<text name="AD_No_Bunker"								text="nie mogłem znaleźć silosu" />
 		<text name="AD_No_Shovel"								text="nie mogłem znaleźć łychy" />
 		<text name="AD_No_Refuel_Station"						text="nie mogłem znaleźć miejsca napełniania:" />
+		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_MODE_DRIVETO"							text="Jazda" />
 		<text name="AD_MODE_DELIVERTO"							text="Rozładunek" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Odbiór i rozładunek" />
@@ -159,6 +163,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Odległość do celów, przy której są wykrywane i aktywowane triggery." />
 		<text name="gui_ad_useBeaconLights"						text="Światła ostrzegawcze" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Używaj świateł ostrzegawczych na drodze." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Ogranicz odnajdywanie trasy do obszaru pola" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Jeżeli pojazd rozładowujący jest zaparkowany na polu, będzie szukał trasy tylko do granic pola." />
 		<text name="gui_ad_showTooltips"						text="Pokaż podpowiedzi" />
@@ -173,6 +179,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Podaj nazwę folderu:" />
 		<text name="gui_ad_autoRefuel"							text="Automatyczne tankowanie" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Jedź do miejsca tankowania (blisko triggera z paliwem), kiedy poziom paliwa jest niski." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtr" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Zmień tekst filtrowania celów" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Podaj tekst filtrowania:" />
@@ -196,6 +204,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Drugi tryb edycji pozwala zmieniać trasy bez przytrzymywania wciśniętego LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Szeroki interfejs" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Użyj trybu szerokiego interfejsu, który pozwala umieścić kilka dodatkowych przycisków ustawień na interfejsie" />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizuj wiele celów" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Różni kierowcy wykorzystujący ten sam folder do różnych celów zsynchronizują następny cel" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkuj po zakończeniu pracy" />
@@ -215,6 +225,10 @@
 		<text name="gui_ad_AL_right"                            text="Unload right" />
 		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_scanConfirmationText"                text="Czy AutoDrive powinien generować sieć tras na podstawie danych o ruchu drogowym i pomocnikach na mapie?" />
+		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
+		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
 
 		<text name="gui_ad_settingsPage_title"					text="Ustawienia - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Ustawienia użytkownika - AutoDrive" />
@@ -226,6 +240,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Przywrócenie" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Wszystkie zmiany zostaną utracone" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Czy na pewno chcesz zamknąć ustawienia bez zapisywania?" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Manager tras" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Podaj nazwę trasy:" />
@@ -356,6 +371,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Oczekiwanie na kombajn" />
 		<text name="AD_task_drive_to_load_point"				text="Przejazd do punktu załadunku" />
 		<text name="AD_task_drive_to_refuel_point"				text="Przejazd do stacji paliw" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Zatrzymanie" />
 		<text name="AD_task_drive_to_unload_point"				text="Przejazd do punktu rozładunku" />
 		<text name="AD_task_wait_for_call"						text="Oczekiwanie na wezwanie" />	

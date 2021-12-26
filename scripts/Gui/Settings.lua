@@ -9,7 +9,7 @@ ADSettings = {}
 
 local ADSettings_mt = Class(ADSettings, TabbedMenu)
 
-ADSettings.CONTROLS = {"autoDriveSettings", "autoDriveUserSettings", "autoDriveVehicleSettings", "autoDriveCombineUnloadSettings", "autoDriveDebugSettings", "autoDriveExperimentalFeaturesSettings", "autoDriveEnvironmentSettings"}
+ADSettings.CONTROLS = {"autoDriveVehicleSettings", "autoDriveCombineUnloadSettings", "autoDriveUserSettings", "autoDriveSettings", "autoDriveEnvironmentSettings",  "autoDriveDebugSettings", "autoDriveExperimentalFeaturesSettings"}
 
 --- Page tab UV coordinates for display elements.
 --AD specific iconUVs
@@ -28,10 +28,10 @@ ADSettings.TAB_UV = {
 ]]
 
 ADSettings.TAB_UV = {
-    SETTINGS_GENERAL = {720, 0, 64, 64},
+    SETTINGS_GENERAL = {0, 0, 64, 64},
     SETTINGS_VEHICLE = {650, 0, 64, 64},
     SETTINGS_USER = {0, 130, 64, 64},
-    SETTINGS_UNLOAD = {128, 76, 64, 64},
+    SETTINGS_UNLOAD = {0, 0, 128, 128},
     SETTINGS_DEBUG = {588, 140, 64, 64},
     SETTINGS_EXPFEAT = {0, 270, 64, 64},
     SETTINGS_ENVIRONMENT = {134, 0, 64, 64}
@@ -47,14 +47,15 @@ ADSettings.ICON_UVa= {
 ]]
 
 ADSettings.ICON_UV = {
-    GLOBAL = {720, 0, 64, 64},
-    VEHICLE = {650, 0, 64, 64},
-    USER = {0, 130, 64, 64}
+    GLOBAL = {0, 0, 64, 64},
+    VEHICLE = {260, 0, 64, 64},
+    USER = {0, 120, 70, 85}
 }
 
 ADSettings.ICON_COLOR = {
     DEFAULT = {1, 1, 1, 1},
-    CHANGED = {0.9910, 0.3865, 0.0100, 1}
+    -- CHANGED = {0.9910, 0.3865, 0.0100, 1}
+    CHANGED = {0.9910, 0.03865, 0.0100, 1}
 }
 
 function ADSettings:new()
@@ -91,20 +92,9 @@ function ADSettings:setupPages()
         end
         return false
     end
---[[
-    local orderedPages = {
-        {self.autoDriveSettings, alwaysEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_GENERAL, false},
-        {self.autoDriveUserSettings, alwaysEnabled, g_baseUIFilename, ADSettings.TAB_UV.SETTINGS_USER, false},
-        {self.autoDriveVehicleSettings, vehicleEnabled, g_baseUIFilename, ADSettings.TAB_UV.SETTINGS_VEHICLE, false},
-        {self.autoDriveCombineUnloadSettings, combineEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
-        {self.autoDriveEnvironmentSettings, vehicleEnabled, g_baseUIFilename, ADSettings.TAB_UV.SETTINGS_ENVIRONMENT, false},
-        {self.autoDriveDebugSettings, developmentControlsEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_DEBUG, true},
-        {self.autoDriveExperimentalFeaturesSettings, alwaysEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_EXPFEAT, true}
-    }
-]]
     local orderedPages = {
         {self.autoDriveVehicleSettings, vehicleEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_VEHICLE, false},
-        {self.autoDriveCombineUnloadSettings, combineEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
+        {self.autoDriveCombineUnloadSettings, combineEnabled, g_autoDriveUIFilename, ADSettings.TAB_UV.SETTINGS_UNLOAD, false},
         {self.autoDriveUserSettings, alwaysEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_USER, false},
         {self.autoDriveSettings, alwaysEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_GENERAL, false},
         {self.autoDriveEnvironmentSettings, vehicleEnabled, g_iconsUIFilename, ADSettings.TAB_UV.SETTINGS_ENVIRONMENT, false},
@@ -114,13 +104,12 @@ function ADSettings:setupPages()
 
     for i, pageDef in ipairs(orderedPages) do
         local page, predicate, uiFilename, iconUVs, isAutonomous = unpack(pageDef)
-        --local normalizedIconUVs = getNormalizedUVs(iconUVs)
         local normalizedIconUVs = GuiUtils.getUVs(iconUVs)
-        self:registerPage(page, i, predicate)
+        local pageRoot, position = self:registerPage(page, i, predicate)
         self:addPageTab(page, uiFilename, normalizedIconUVs) -- use the global here because the value changes with resolution settings
         page.isAutonomous = isAutonomous
-        --page.headerIcon:setImageFilename(uiFilename)
-        --page.headerIcon:setImageUVs(nil, unpack(normalizedIconUVs))
+        -- page.headerIcon:setImageFilename(uiFilename)
+        -- page.headerIcon:setImageUVs(nil, unpack(normalizedIconUVs))
         if page.setupMenuButtonInfo ~= nil then
             page:setupMenuButtonInfo(self)
         end
@@ -143,10 +132,11 @@ end
 --- Define default properties and retrieval collections for menu buttons.
 function ADSettings:setupMenuButtonInfo()
     self.defaultMenuButtonInfo = {
-        {inputAction = InputAction.MENU_BACK, text = self.l10n:getText("button_back"), callback = self:makeSelfCallback(self.onClickBack), showWhenPaused = true},
-        {inputAction = InputAction.MENU_ACCEPT, text = self.l10n:getText("button_apply"), callback = self:makeSelfCallback(self.onClickOK), showWhenPaused = true},
-        {inputAction = InputAction.MENU_CANCEL, text = self.l10n:getText("button_reset"), callback = self:makeSelfCallback(self.onClickReset), showWhenPaused = true},
-        {inputAction = InputAction.MENU_ACTIVATE, text = self.l10n:getText("gui_ad_restoreButtonText"), callback = self:makeSelfCallback(self.onClickRestore), showWhenPaused = true}
+        {inputAction = InputAction.MENU_BACK, text = g_i18n:getText("button_back"), callback = self:makeSelfCallback(self.onClickBack), showWhenPaused = true},
+        {inputAction = InputAction.MENU_ACCEPT, text = g_i18n:getText("button_apply"), callback = self:makeSelfCallback(self.onClickOK), showWhenPaused = true},
+        {inputAction = InputAction.MENU_CANCEL, text = g_i18n:getText("button_reset"), callback = self:makeSelfCallback(self.onClickReset), showWhenPaused = true},
+        {inputAction = InputAction.MENU_ACTIVATE, text = g_i18n:getText("gui_ad_restoreButtonText"), callback = self:makeSelfCallback(self.onClickRestore), showWhenPaused = true},
+        {inputAction = InputAction.MENU_EXTRA_1, text = g_i18n:getText("gui_ad_setDefaultButtonText"), callback = self:makeSelfCallback(self.onClickSetDefault), showWhenPaused = true}
     }
 end
 
@@ -185,6 +175,27 @@ function ADSettings:onClickRestore()
     self:restorePage(page)
 end
 
+function ADSettings:onClickSetDefault()
+    if self:pagesHasChanges() then
+        for settingName, setting in pairs(AutoDrive.settings) do
+            local newSetting = setting
+            if setting.isVehicleSpecific and g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle.ad.settings[settingName] ~= nil then
+                newSetting = g_currentMission.controlledVehicle.ad.settings[settingName]
+                if g_currentMission.controlledVehicle.ad.settings[settingName].new ~= nil then
+                    g_currentMission.controlledVehicle.ad.settings[settingName].current = g_currentMission.controlledVehicle.ad.settings[settingName].new
+                end
+                if (not newSetting.isUserSpecific) and newSetting.new ~= nil and newSetting.new ~= setting.userDefault then
+                    -- We could even print this with our debug system, but since GIANTS itself prints every changed config, for the moment we will do the same
+                    -- Logging.info('Default setting \'%s\' changed from "%s" to "%s"', settingName, setting.values[setting.userDefault], setting.values[newSetting.new])
+                    setting.userDefault = newSetting.new
+                end
+            end            
+        end
+
+        AutoDriveUpdateSettingsEvent.sendEvent(g_currentMission.controlledVehicle)
+    end
+end
+
 function ADSettings:applySettings()
     if self:pagesHasChanges() then
         local userSpecificHasChanges = false
@@ -195,7 +206,7 @@ function ADSettings:applySettings()
             end
             if setting.new ~= nil and setting.new ~= setting.current then
                 -- We could even print this with our debug system, but since GIANTS itself prints every changed config, for the moment we will do the same
-                Logging.info('Setting \'%s\' changed from "%s" to "%s"', settingName, setting.values[setting.current], setting.values[setting.new])
+                -- Logging.info('Setting \'%s\' changed from "%s" to "%s"', settingName, setting.values[setting.current], setting.values[setting.new])
                 setting.current = setting.new
                 if setting.isUserSpecific then
                     userSpecificHasChanges = true
@@ -237,11 +248,16 @@ function ADSettings:restorePage(page)
     for settingName, _ in pairs(page.settingElements) do
         if AutoDrive.settings[settingName] ~= nil then
             local setting = AutoDrive.settings[settingName]
-            -- We will restore only global settings to prevent confusion but we could even restore vehicle settings if it will be requested in future
-            if not setting.isVehicleSpecific then
-                setting.new = setting.default
-                page:loadGUISetting(settingName, setting.default)
+            if setting.isVehicleSpecific and g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle.ad.settings[settingName] ~= nil then
+                setting = g_currentMission.controlledVehicle.ad.settings[settingName]
             end
+
+            if AutoDrive.settings[settingName].userDefault ~= nil then
+                setting.new = AutoDrive.settings[settingName].userDefault
+            else
+                setting.new = setting.default
+            end
+            page:loadGUISetting(settingName, setting.new)
         end
     end
 end

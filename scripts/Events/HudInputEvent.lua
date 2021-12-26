@@ -8,7 +8,6 @@ AutoDriveHudInputEventEvent_mt = Class(AutoDriveHudInputEventEvent, Event)
 InitEventClass(AutoDriveHudInputEventEvent, "AutoDriveHudInputEventEvent")
 
 function AutoDriveHudInputEventEvent.emptyNew()
-	print("AutoDriveHudInputEventEvent:emptyNew")
     local self = Event.new(AutoDriveHudInputEventEvent_mt)
     return self
 end

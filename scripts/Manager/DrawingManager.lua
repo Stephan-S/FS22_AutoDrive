@@ -203,9 +203,17 @@ function ADDrawingManager:drawObjects_alternative(obj, dFunc, iFunc)
     end
 
     local fileToUse
-    if obj.usesSelection then
-        local iconSetToUse = AutoDrive.getSetting("iconSetToUse")
-        fileToUse = obj.fileNames[iconSetToUse]
+    if obj.usesSelection then        
+        if obj.lastDrawFileUsed ~= AutoDrive.getSetting("iconSetToUse") then
+            -- cleaning up not needed objects
+            for _, id in pairs(obj.itemIDs) do
+                -- make invisible unused items
+                setVisibility(id, false)
+            end
+            obj.itemIDs = {}
+        end
+        fileToUse = obj.fileNames[AutoDrive.getSetting("iconSetToUse")]
+        obj.lastDrawFileUsed = AutoDrive.getSetting("iconSetToUse")
     else
         fileToUse = obj.fileName
     end
@@ -346,7 +354,7 @@ function ADDrawingManager:drawLine(id, task)
     setRotation(id, rotX, rotY, 0)
 
     -- Update line color
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity, false)
 
     -- Update line visibility
     setVisibility(id, true)
@@ -382,7 +390,7 @@ function ADDrawingManager:drawArrow(id, task)
     setRotation(id, rotX, rotY, 0)
 
     -- Update arrow color
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity, false)
 
     -- Update arrow visibility
     setVisibility(id, true)
@@ -390,7 +398,7 @@ end
 
 function ADDrawingManager:drawSmallSphere(id, task)
     setTranslation(id, task.x, task.y + self.yOffset, task.z)
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity, false)
     setVisibility(id, true)
 end
 
@@ -407,6 +415,6 @@ end
 function ADDrawingManager:drawSphere(id, task)
     setTranslation(id, task.x, task.y + self.yOffset, task.z)
     setScale(id, task.scale, task.scale, task.scale)
-    setShaderParameter(id, "color", task.r, task.g, task.b, self.emittivity + task.a, false)
+    setShaderParameter(id, "lineColor", task.r, task.g, task.b, self.emittivity + task.a, false)
     setVisibility(id, true)
 end

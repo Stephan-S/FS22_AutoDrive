@@ -21,7 +21,7 @@ function EmptyHarvesterTask:new(vehicle, combine)
     o.waitTimer = AutoDriveTON:new()
     o.holdCPCombineTimer = AutoDriveTON:new()
     o.trailers = nil
-    o.trailercount = 0
+    o.trailerCount = 0
     o.tractorTrainLength = 0
     return o
 end
@@ -29,7 +29,7 @@ end
 function EmptyHarvesterTask:setUp()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "Setting up EmptyHarvesterTask")
     self.vehicle.ad.pathFinderModule:startPathPlanningToPipe(self.combine, false)
-    self.trailers, self.trailercount = AutoDrive.getTrailersOf(self.vehicle, false)
+    self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, true)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, true)
 end
@@ -91,16 +91,17 @@ function EmptyHarvesterTask:update(dt)
             end
         end
 
-        local combineFillLevel, _ = AutoDrive.getFilteredFillLevelAndCapacityOfAllUnits(self.combine)
+        local combineFillLevel, _, _ = AutoDrive.getObjectNonFuelFillLevels(self.combine)
+
         if combineFillLevel > 1 and self.combine.getDischargeState ~= nil and self.combine:getDischargeState() ~= Dischargeable.DISCHARGE_STATE_OFF then
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
         else
             --Is the current trailer filled or is the combine empty?
-            local _, leftCapacity = AutoDrive.getFillLevelAndCapacityOfAll(self.trailers)
+            local _, _, filledToUnload = AutoDrive.getAllNonFuelFillLevels(self.trailers)
             local distanceToCombine = AutoDrive.getDistanceBetween(self.vehicle, self.combine)
 
-            if combineFillLevel <= 0.1 or leftCapacity <= 0.1 then
+            if combineFillLevel <= 0.1 or filledToUnload then
                 local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
                 self.reverseStartLocation = {x = x, y = y, z = z}
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "EmptyHarvesterTask:update - next: EmptyHarvesterTask.STATE_UNLOADING_FINISHED")
@@ -126,7 +127,7 @@ function EmptyHarvesterTask:update(dt)
         local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
         local distanceToReversStart = MathUtil.vector2Length(x - self.reverseStartLocation.x, z - self.reverseStartLocation.z)
         local overallLength
-        if self.trailercount <= 1 then
+        if self.trailerCount <= 1 then
             overallLength = math.max(self.vehicle.size.length * 2, 15) -- 2x tractor length, min. 15m
         else
             overallLength = self.tractorTrainLength -- complete train length

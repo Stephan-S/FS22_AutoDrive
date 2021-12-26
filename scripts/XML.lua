@@ -1,4 +1,4 @@
-function AutoDrive.loadStoredXML()
+function AutoDrive.loadStoredXML(loadInitConfig)
 	if g_server == nil then
 		return
 	end
@@ -16,7 +16,7 @@ function AutoDrive.loadStoredXML()
 		local adXml = loadXMLFile("AutoDrive_XML", xmlFile)
 		AutoDrive.readFromXML(adXml)
 		delete(adXml)
-	else
+	elseif loadInitConfig then
 		AutoDrive.loadInitConfig(xmlFile_new)
 	end
 end
@@ -73,9 +73,19 @@ function AutoDrive.readFromXML(xmlFile)
 		return
 	end
 
-	AutoDrive.HudX = getXMLFloat(xmlFile, "AutoDrive.HudX")
-	AutoDrive.HudY = getXMLFloat(xmlFile, "AutoDrive.HudY")
-	AutoDrive.showingHud = getXMLBool(xmlFile, "AutoDrive.HudShow")
+	local idString = getXMLString(xmlFile, "AutoDrive.waypoints.id")
+	if idString == nil or idString == "" then
+		idString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.id")
+	end
+
+	--maybe map was opened and saved, but no waypoints recorded with AutoDrive!
+	if idString == nil then
+		return
+	end
+
+	AutoDrive.HudX = Utils.getNoNil(getXMLFloat(xmlFile, "AutoDrive.HudX"), AutoDrive.HudX)
+	AutoDrive.HudY = Utils.getNoNil(getXMLFloat(xmlFile, "AutoDrive.HudY"), AutoDrive.HudY)
+	AutoDrive.showingHud = Utils.getNoNil(getXMLBool(xmlFile, "AutoDrive.HudShow"), AutoDrive.showingHud)
 
 	AutoDrive.currentDebugChannelMask = getXMLInt(xmlFile, "AutoDrive.currentDebugChannelMask") or 0
 
@@ -85,6 +95,11 @@ function AutoDrive.readFromXML(xmlFile)
 			if value ~= nil then
 				AutoDrive.settings[settingName].current = value
 			end
+		end
+
+		local value = getXMLFloat(xmlFile, "AutoDrive." .. settingName .. "_userDefault")
+		if value ~= nil then
+			AutoDrive.settings[settingName].userDefault = value
 		end
 	end
 
@@ -134,16 +149,6 @@ function AutoDrive.readFromXML(xmlFile)
 		mapMarkerCounter = mapMarkerCounter + 1
 	end
 	-- done loading Map Markers
-
-	local idString = getXMLString(xmlFile, "AutoDrive.waypoints.id")
-	if idString == nil or idString == "" then
-		idString = getXMLString(xmlFile, "AutoDrive." .. AutoDrive.loadedMap .. ".waypoints.id")
-	end
-
-	--maybe map was opened and saved, but no waypoints recorded with AutoDrive!
-	if idString == nil then
-		return
-	end
 
 	ADGraphManager:resetWayPoints()
 
@@ -264,9 +269,6 @@ function AutoDrive.readFromXML(xmlFile)
     -- if debug channel for road network was saved and loaded, the debug wayPoints shall be created
     ADGraphManager:createDebugMarkers()
 
-	AutoDrive.tipOfTheDay.currentTipId = getXMLInt(xmlFile, "AutoDrive.lastTipOfTheDay") or 1
-	AutoDrive.tipOfTheDay.highestTipId = getXMLInt(xmlFile, "AutoDrive.highestTipOfTheDay") or 1
-	
     Logging.info("[AD] AutoDrive.readFromXML waypoints: %s", tostring(ADGraphManager:getWayPointsCount()))
     Logging.info("[AD] AutoDrive.readFromXML markers: %s", tostring(#ADGraphManager:getMapMarkers()))
     Logging.info("[AD] AutoDrive.readFromXML groups: %s", tostring(table.count(ADGraphManager:getGroups())))
@@ -289,6 +291,9 @@ function AutoDrive.saveToXML(xmlFile)
 	for settingName, setting in pairs(AutoDrive.settings) do
 		if not setting.isVehicleSpecific then
 			setXMLFloat(xmlFile, "AutoDrive." .. settingName, AutoDrive.settings[settingName].current)
+		end
+		if setting.userDefault ~= nil then
+			setXMLFloat(xmlFile, "AutoDrive." .. settingName .. "_userDefault", AutoDrive.settings[settingName].userDefault)
 		end
 	end
 
@@ -351,9 +356,6 @@ function AutoDrive.saveToXML(xmlFile)
 		end
 	end
 
-	setXMLInt(xmlFile, "AutoDrive.lastTipOfTheDay", AutoDrive.tipOfTheDay.currentTipId)
-	setXMLInt(xmlFile, "AutoDrive.highestTipOfTheDay", AutoDrive.tipOfTheDay.highestTipId)
-	
 	saveXMLFile(xmlFile)
 	if g_client == nil then
 		Logging.info("[AD] AutoDrive.saveToXML waypoints: %s", tostring(ADGraphManager:getWayPointsCount()))

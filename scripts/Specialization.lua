@@ -32,11 +32,11 @@ function AutoDrive.registerEventListeners(vehicleType)
 end
 
 function AutoDrive.registerOverwrittenFunctions(vehicleType)
-    SpecializationUtil.registerOverwrittenFunction(vehicleType, "updateAILights",                       AutoDrive.updateAILights)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getCanMotorRun",                       AutoDrive.getCanMotorRun)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle",                         AutoDrive.leaveVehicle)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
 end
 
 function AutoDrive.registerFunctions(vehicleType)
@@ -52,7 +52,10 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "getWayPointsInRange", AutoDrive.getWayPointsInRange)
     SpecializationUtil.registerFunction(vehicleType, "getWayPointIdsInRange", AutoDrive.getWayPointIdsInRange)
     SpecializationUtil.registerFunction(vehicleType, "onDrawEditorMode", AutoDrive.onDrawEditorMode)
+    SpecializationUtil.registerFunction(vehicleType, "onDrawPreviews", AutoDrive.onDrawPreviews)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
+    SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
+    SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)    
 end
 
 function AutoDrive.registerEvents(vehicleType)
@@ -83,7 +86,7 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
 end
 
 function AutoDrive.initSpecialization()
-    print("Calling AutoDrive initSpecialization")
+    -- print("Calling AutoDrive initSpecialization")
     local schema = Vehicle.xmlSchema
     schema:setXMLSpecializationType("AutoDrive")
 
@@ -108,14 +111,18 @@ function AutoDrive.initSpecialization()
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#speedLimit", "speedLimit")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#fieldSpeedLimit", "fieldSpeedLimit")
     schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#driverName", "driverName")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#lastActive", "lastActive")
     schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#AIVElastActive", "AIVElastActive")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#parkDestination", "parkDestination")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#bunkerUnloadType", "bunkerUnloadType")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticUnloadTarget", "automaticUnloadTarget")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticPickupTarget", "automaticPickupTarget")   
 end
 
 function AutoDrive:onPreLoad(savegame)
     if self.spec_autodrive == nil then
         self.spec_autodrive = AutoDrive
-        AutoDrive.debugMsg(self, "AutoDrive:onPreLoad")
+        -- AutoDrive.debugMsg(self, "AutoDrive:onPreLoad")
         -- AutoDriveRegister.addModTranslations(g_i18n)
     end
 end
@@ -160,13 +167,10 @@ function AutoDrive:onLoad(savegame)
 
     self.ad.onRouteToPark = false
     self.ad.onRouteToRefuel = false
+    self.ad.onRouteToRepair = false
     self.ad.isStoppingWithError = false
 
-    self.ad.selectedNodeId = nil
-    self.ad.nodeToMoveId = nil
-    self.ad.hoveredNodeId = nil
-    self.ad.newcreated = nil
-    self.ad.sectionWayPoints = {}
+    AutoDrive.resetMouseSelections(self)
 end
 
 function AutoDrive:onPostLoad(savegame)
@@ -188,7 +192,7 @@ function AutoDrive:onPostLoad(savegame)
             -- local xmlFile = loadXMLFile("vehicleXML", savegame.xmlFile)
             local key = savegame.key .. ".AutoDrive"
 -- Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
-            print("Trying to load xml keys from: " .. key)
+            -- print("Trying to load xml keys from: " .. key)
 
             self.ad.stateModule:readFromXMLFile(xmlFile, key)
             AutoDrive.readVehicleSettingsFromXML(self, xmlFile, key)
@@ -243,30 +247,71 @@ function AutoDrive:onPostLoad(savegame)
     self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
     self.ad.lastDrawPosition = {x = x, z = z}
+
+    if self.spec_enterable ~= nil and self.spec_enterable.cameras ~= nil then
+        for _, camera in pairs(self.spec_enterable.cameras) do
+            camera.storedIsRotatable = camera.isRotatable
+        end
+    end
 end
 
 function AutoDrive:onWriteStream(streamId, connection)
     if self.ad == nil then
         return
     end
+
+    local count = 0
+    for _, setting in pairs(AutoDrive.settings) do
+        if setting ~= nil and setting.isVehicleSpecific and not setting.isUserSpecific then
+            count = count + 1
+        end
+    end
+
+    streamWriteUInt16(streamId, count)
+
     for settingName, setting in pairs(AutoDrive.settings) do
-        if setting ~= nil and setting.isVehicleSpecific then
+        if setting ~= nil and setting.isVehicleSpecific and not setting.isUserSpecific then
+            streamWriteString(streamId, settingName)
             streamWriteUInt16(streamId, AutoDrive.getSettingState(settingName, self))
         end
     end
+
     self.ad.stateModule:writeStream(streamId)
+
+    if self.ad.stateModule:isActive() and self.spec_aiVehicle ~= nil and self.spec_aiVehicle.currentHelper ~= nil then
+        streamWriteUInt8(streamId, self.spec_aiVehicle.currentHelper.index)
+    else
+        streamWriteUInt8(streamId, 0)
+    end
 end
 
 function AutoDrive:onReadStream(streamId, connection)
     if self.ad == nil then
         return
     end
-    for settingName, setting in pairs(AutoDrive.settings) do
-        if setting ~= nil and setting.isVehicleSpecific then
-            self.ad.settings[settingName].current = streamReadUInt16(streamId)
+
+    local count = streamReadUInt16(streamId)
+    for i = 1, count do
+        local settingName = streamReadString(streamId)
+        local value = streamReadUInt16(streamId)
+        self.ad.settings[settingName].current = value
+        self.ad.settings[settingName].new = value
+    end
+
+    self.ad.stateModule:readStream(streamId)
+
+    local helperIndex = streamReadUInt8(streamId)
+    if helperIndex > 0 then
+        local helper = g_helperManager:getHelperByIndex(helperIndex)
+        if helper ~= nil then
+            if self.spec_aiVehicle ~= nil and self.spec_aiVehicle.currentHelper == nil then
+                self.spec_aiVehicle.currentHelper = helper
+            end
+            if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper == nil then
+                self.spec_aiJobVehicle.currentHelper = helper
+            end
         end
     end
-    self.ad.stateModule:readStream(streamId)
 end
 
 function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
@@ -293,7 +338,7 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
             local driverWages = AutoDrive.getSetting("driverWages")
             local difficultyMultiplier = g_currentMission.missionInfo.buyPriceMultiplier
             local price = -dt * difficultyMultiplier * (driverWages) * 0.001 --spec.pricePerMS
-            price = price + (dt * difficultyMultiplier * 0.001)   -- add the price which AI internal already substracted
+            --price = price + (dt * difficultyMultiplier * 0.001)   -- add the price which AI internal already substracted - no longer required for FS22
             g_currentMission:addMoney(price, spec.startedFarmId, MoneyType.AI, true)
         end
     end
@@ -342,9 +387,17 @@ function AutoDrive:onUpdate(dt)
         self.ad.taskModule:abortAllTasks()
     end
 
+    AutoDrive.updateAutoDriveLights(self)
+
     --For 'legacy' purposes, this value should be kept since other mods already test for this:
     self.ad.mapMarkerSelected = self.ad.stateModule:getFirstMarkerId()
     self.ad.mapMarkerSelected_Unload = self.ad.stateModule:getSecondMarkerId()
+
+    if self.ad.isCombine then
+        AutoDrive.getLengthOfFieldInFront(self)
+    end
+
+    --AutoDrive.generateUTurn(self, false)
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
@@ -409,7 +462,10 @@ function AutoDrive:onDraw()
 
     if (AutoDrive.isEditorModeEnabled() or AutoDrive.isEditorShowEnabled()) then
         self:onDrawEditorMode()
-    end
+        if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid then
+            self:onDrawPreviews()
+        end
+    end    
 
     if AutoDrive.experimentalFeatures.redLinePosition and AutoDrive.getDebugChannelIsSet(AutoDrive.DC_VEHICLEINFO) and self.ad.frontNodeGizmo ~= nil then
         self.ad.frontNodeGizmo:createWithNode(self.ad.frontNode, getName(self.ad.frontNode), false)
@@ -480,6 +536,41 @@ function AutoDrive:onDraw()
     end
 end
 
+function AutoDrive:onDrawPreviews()    
+    --if AutoDrive:checkForCollisionOnSpline() then
+    local lastHeight = AutoDrive.splineInterpolation.startNode.y
+    local lastWp = AutoDrive.splineInterpolation.startNode
+    local arrowPosition = ADDrawingManager.arrows.position.middle
+    local collisionFree = AutoDrive:checkForCollisionOnSpline()
+    for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
+        if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
+            if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+                wp.y = lastHeight
+            end	
+            
+            if collisionFree then
+                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, unpack(AutoDrive.currentColors.ad_color_previewOk))
+                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
+            else
+                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+            end
+
+            lastWp = {x = wp.x, y = wp.y, z = wp.z}
+            lastHeight = wp.y
+        end
+    end
+
+    local targetWp = AutoDrive.splineInterpolation.endNode
+    if collisionFree then
+        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, unpack(AutoDrive.currentColors.ad_color_previewOk))
+        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
+    else
+        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+    end
+end
+
 function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex)
     if attachable["spec_FS19_addon_strawHarvest.strawHarvestPelletizer"] ~= nil then
         attachable.isPremos = true
@@ -507,11 +598,18 @@ function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointD
         end
     else
         local supportedFillTypes = {}
-        for _, trailer in pairs(AutoDrive.getTrailersOf(self, false)) do
+        local trailers, trailerCount = AutoDrive.getAllUnits(self)
+        for index, trailer in ipairs(trailers) do
             if trailer.getFillUnits ~= nil then
                 for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
                     if trailer.getFillUnitSupportedFillTypes ~= nil then
                         for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
+                            if index == 1 then -- hide fuel types for 1st vehicle
+                                local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
+                                if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
+                                    supported = false
+                                end
+                            end
                             if supported then
                                 table.insert(supportedFillTypes, fillType)
                             end
@@ -552,7 +650,7 @@ function AutoDrive:onPreDetachImplement(implement)
 end
 
 function AutoDrive:onEnterVehicle()
-    local trailers, trailerCount = AutoDrive.getTrailersOf(self, false)
+    local trailers, trailerCount = AutoDrive.getAllUnits(self)
     -- AutoDrive.debugMsg(object, "AutoDrive:onEnterVehicle trailerCount %s", tostring(trailerCount))
     if trailerCount > 0 then
         -- AutoLoad
@@ -832,24 +930,38 @@ function AutoDrive:startAutoDrive()
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
 
-            --[[
-            if self.getAINeedsTrafficCollisionBox ~= nil then
-                if self:getAINeedsTrafficCollisionBox() then
-                    local collisionRoot = g_i3DManager:loadSharedI3DFile(self.baseDirectory .. AIVehicle.TRAFFIC_COLLISION_BOX_FILENAME, false, true, false)
-                    if collisionRoot ~= nil and collisionRoot ~= 0 then
-                        local collision = getChildAt(collisionRoot, 0)
-                        link(getRootNode(), collision)
-                        self.spec_aiVehicle.aiTrafficCollision = collision
-                        delete(collisionRoot)
+
+            
+            if self.spec_aiVehicle ~= nil then
+                if self.getAINeedsTrafficCollisionBox ~= nil then
+                    if self:getAINeedsTrafficCollisionBox() then                    
+                        if AIFieldWorker.TRAFFIC_COLLISION ~= nil and AIFieldWorker.TRAFFIC_COLLISION ~= 0 then
+                            self.spec_aiVehicle.aiTrafficCollision = AIFieldWorker.TRAFFIC_COLLISION
+                        end
                     end
                 end
+                if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+                    self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000
+                end
             end
-            self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000
 
-            --]]
+            
             g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
 
             AutoDriveStartStopEvent:sendStartEvent(self)
+
+            if AutoDrive.experimentalFeatures.FoldImplements then
+                for _, implement in pairs(self:getAttachedImplements()) do
+                    if implement ~= nil and implement.object ~= nil then
+                        if implement.object.setFoldState ~= nil then
+                            local allowed, warning = implement.object:getIsFoldAllowed(1, false)
+                            if allowed then
+                                implement.object:setFoldState(1, false)
+                            end
+                        end
+                    end
+                end
+            end
         end
     else
         Logging.devError("AutoDrive:startAutoDrive() must be called only on the server.")
@@ -933,7 +1045,7 @@ function AutoDrive:stopAutoDrive()
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
 
-                if self.ad.onRouteToPark and not self.ad.isStoppingWithError then
+                if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
                     self.ad.onRouteToPark = false
                     if self.deactivateLights ~= nil then
                         self:deactivateLights()
@@ -947,6 +1059,10 @@ function AutoDrive:stopAutoDrive()
                     for _, sensor in pairs(self.ad.sensors) do
                         sensor:setEnabled(false)
                     end
+                end
+
+                if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+                    self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
                 end
             end
 
@@ -969,14 +1085,18 @@ function AutoDrive:stopAutoDrive()
                         if self.acParameters ~= nil then
                             self.acParameters.enabled = true
                             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to AIVE with startAIVehicle")
-                            self:startAIVehicle(nil, false, self.spec_aiVehicle.startedFarmId)
+                            self:toggleAIVehicle()
                         end
                     end
                 end
             end
             
             self.ad.trailerModule:handleTrailerReversing(false)
-            self.ad.onRouteToRefuel = false
+            if self.ad.isStoppingWithError == true then
+                self.ad.onRouteToRefuel = false
+                self.ad.onRouteToRepair = false
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
+            end
         end
     else
         Logging.devError("AutoDrive:stopAutoDrive() must be called only on the server.")
@@ -988,9 +1108,6 @@ function AutoDrive:onStartAutoDrive()
     self.spec_motorized.stopMotorOnLeave = false
     self.spec_enterable.disableCharacterOnLeave = false
     self.spec_aiVehicle.isActive = true
-    self.steeringEnabled = false
-
-    self.ad.isActive = true
 
     if self.spec_aiVehicle.currentHelper == nil then
         self.spec_aiVehicle.currentHelper = g_helperManager:getRandomHelper()
@@ -1009,6 +1126,9 @@ function AutoDrive:onStartAutoDrive()
             self:setRandomVehicleCharacter()
             self.ad.vehicleCharacter = self.spec_enterable.vehicleCharacter
         end
+        if self.spec_aiJobVehicle ~= nil then
+            self.spec_aiJobVehicle.currentHelper = self.spec_aiVehicle.currentHelper
+        end
         if self.spec_enterable.controllerFarmId ~= nil and self.spec_enterable.controllerFarmId ~= 0 then
             self.spec_aiVehicle.startedFarmId = self.spec_enterable.controllerFarmId
         else
@@ -1024,13 +1144,19 @@ function AutoDrive:onStartAutoDrive()
         end
     end
 
+    if self.spec_motorized.motor ~= nil then
+        self.spec_motorized.motor:setGearShiftMode(VehicleMotor.SHIFT_MODE_AUTOMATIC)
+    end
+
     AutoDriveHud:createMapHotspot(self)
 
-    if AutoDrive.getSetting("enableParkAtJobFinished", self) and ((self.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER) or (self.ad.stateModule:getMode() == AutoDrive.MODE_DELIVERTO)) then
-        local actualParkDestination = self.ad.stateModule:getParkDestinationAtJobFinished()
-        if actualParkDestination >= 1 then
-        else
-            AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+    if g_server ~= nil then
+        if AutoDrive.getSetting("enableParkAtJobFinished", self) and ((self.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER) or (self.ad.stateModule:getMode() == AutoDrive.MODE_DELIVERTO)) then
+            local actualParkDestination = self.ad.stateModule:getParkDestinationAtJobFinished()
+            if actualParkDestination >= 1 then
+            else
+                AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+            end
         end
     end
 end
@@ -1053,11 +1179,9 @@ end
 
 function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
     if not hasCallbacks then
-        if self.raiseAIEvent ~= nil and not isStartingAIVE then
-            self:raiseAIEvent("onAIEnd", "onAIImplementEnd")
-        end
-
-        self.ad.isActive = false
+        --if self.raiseAIEvent ~= nil and not isStartingAIVE then
+            --self:raiseAIEvent("onAIFieldWorkerEnd", "onAIImplementEnd")
+        --end
 
         self.spec_aiVehicle.isActive = false
         self.forceIsActive = false
@@ -1067,14 +1191,24 @@ function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
             g_helperManager:releaseHelper(self.spec_aiVehicle.currentHelper)
         end
         self.spec_aiVehicle.currentHelper = nil
+        if self.spec_aiJobVehicle ~= nil then
+            self.spec_aiJobVehicle.currentHelper = nil
+        end
 
         if self.restoreVehicleCharacter ~= nil then
             self:restoreVehicleCharacter()
         end
 
-        if self.steeringEnabled == false then
-            self.steeringEnabled = true
+        if self.spec_motorized.motor ~= nil then
+            self.spec_motorized.motor:setGearShiftMode(self.spec_motorized.gearShiftMode)
         end
+    end
+
+    -- In case we get this event before the status has been updated with the readStream
+    if self.ad.stateModule:isActive() then
+        -- Set this to false without raising flags. The update should already be on the wire
+        -- Otherwise this following requestActionEventUpdate will not allow user input since the AI is still active
+        self.ad.stateModule.active = false
     end
 
     self:requestActionEventUpdate()
@@ -1215,7 +1349,7 @@ function AutoDrive:toggleMouse()
         if self.spec_enterable ~= nil and self.spec_enterable.cameras ~= nil then
             for _, camera in pairs(self.spec_enterable.cameras) do
                 camera.storedAllowTranslation = camera.allowTranslation
-                camera.storedIsRotatable = camera.isRotatable
+                --camera.storedIsRotatable = camera.isRotatable
                 camera.allowTranslation = false
                 camera.isRotatable = false
             end
@@ -1235,6 +1369,8 @@ function AutoDrive:toggleMouse()
                 end
             end
         end
+
+        AutoDrive.resetMouseSelections(self)
     end
     self.ad.lastMouseState = g_inputBinding:getShowMouseCursor()
 end
@@ -1251,17 +1387,24 @@ function AutoDrive:leaveVehicle(superFunc)
     superFunc(self)
 end
 
-function AutoDrive:updateAILights(superFunc)
+function AutoDrive:updateAutoDriveLights()
     if self.ad ~= nil and self.ad.stateModule:isActive() then
         -- If AutoDrive is active, then we take care of lights our self
         local spec = self.spec_lights
         local dayMinutes = g_currentMission.environment.dayTime / (1000 * 60)
-        local needLights = (dayMinutes > g_currentMission.environment.nightStartMinutes or dayMinutes < g_currentMission.environment.nightEndMinutes)
+        local needLights = not g_currentMission.environment.isSunOn -- (dayMinutes > g_currentMission.environment.nightStartMinutes or dayMinutes < g_currentMission.environment.nightEndMinutes)
         if needLights then
-            local x, y, z = getWorldTranslation(self.components[1].node)
-            if spec.lightsTypesMask ~= spec.aiLightsTypesMask and AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(spec.aiLightsTypesMask)
+            local x, y, z = getWorldTranslation(self.components[1].node)            
+            if spec.aiLightsTypesMaskWork ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMaskWork and AutoDrive.checkIsOnField(x, y, z) then
+                self:setLightsTypesMask(spec.aiLightsTypesMaskWork)
+                return
             end
+            
+            if spec.aiLightsTypesMask ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMask and not AutoDrive.checkIsOnField(x, y, z) then
+                self:setLightsTypesMask(spec.aiLightsTypesMask)
+                return
+            end
+
             if spec.lightsTypesMask ~= 1 and not AutoDrive.checkIsOnField(x, y, z) then
                 self:setLightsTypesMask(1)
             end
@@ -1270,9 +1413,6 @@ function AutoDrive:updateAILights(superFunc)
                 self:setLightsTypesMask(0)
             end
         end
-        return
-    else
-        superFunc(self)
     end
 end
 
@@ -1290,4 +1430,159 @@ end
 
 function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
     return superFunc(self) and not self.ad.stateModule:isActive()
+end
+
+function AutoDrive:getActiveFarm(superFunc)
+    if self.spec_aiVehicle ~= 0 and self.spec_aiVehicle.startedFarmId and self.ad.stateModule:isActive() then
+        return self.spec_aiVehicle.startedFarmId
+    else
+        return superFunc(self)
+    end
+end
+
+function AutoDrive:generateUTurn(left)
+    if self.ad.uTurn == nil then
+        self.ad.uTurn = {}
+        self.ad.uTurn.expectedColliCallbacks = 0
+        self.ad.uTurn.inProgress = false
+        self.ad.uTurn.doneChecking = true
+    end
+    if not self.ad.uTurn.inProgress then
+        self.ad.uTurn.doneChecking = false
+        self.ad.uTurn.inProgress = true
+        
+        local radius = AutoDrive.getDriverRadius(self, true)
+        local vehX, vehY, vehZ = getWorldTranslation(self.components[1].node)
+        local resolution = 20
+
+        -- Determine area to check
+        local points = {}
+        if left then
+            for i = 1, (resolution + 1) do
+                local circlePoint = {   x = -math.cos((i-1) * math.pi / resolution) * radius + radius,
+                                        y = math.sin((i-1) * math.pi / resolution) * radius }
+                local worldX, _, worldZ = localToWorld(self.components[1].node, circlePoint.x, 0, circlePoint.y)
+                local point = { x = worldX, y = vehY, z = worldZ }
+                local rayCastResult = AutoDrive:getTerrainHeightAtWorldPos(worldX, worldZ)
+                point.y = rayCastResult or point.y
+                local dummy = 1
+                for i = 1, 1000 do
+                    dummy = dummy + i
+                end
+                point.y = AutoDrive.raycastHeight or point.y
+                
+                table.insert(points, point)
+            end
+            local worldX, _, worldZ = localToWorld(self.components[1].node, 2*radius, 0, -1)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, 2*radius, 0, -4)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, 2*radius, 0, -8)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+        else
+            for i = 1, (resolution + 1) do
+                local circlePoint = {   x = math.cos((i-1) * math.pi / resolution) * radius - radius,
+                                        y = math.sin((i-1) * math.pi / resolution) * radius }
+                local worldX, _, worldZ = localToWorld(self.components[1].node, circlePoint.x, 0, circlePoint.y)
+                local point = { x = worldX, y = vehY, z = worldZ }
+                local rayCastResult = AutoDrive:getTerrainHeightAtWorldPos(worldX, worldZ)
+                point.y = rayCastResult or point.y
+                local dummy = 1
+                for i = 1, 1000 do
+                    dummy = dummy + i
+                end
+                point.y = AutoDrive.raycastHeight or point.y
+                
+                table.insert(points, point)
+            end
+            local worldX, _, worldZ = localToWorld(self.components[1].node, -2*radius, 0, -1)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, -2*radius, 0, -4)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+            worldX, _, worldZ = localToWorld(self.components[1].node, -2*radius, 0, -8)
+            table.insert(points, {x=worldX, y=vehY, z=worldZ})
+        end
+
+        --- Coll check:
+        local widthX = self.size.width / 1.75
+        local height = 2.3
+        local mask = 0
+
+        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+
+        self.ad.uTurn.expectedColliCallbacks = 0
+        self.ad.uTurn.colliFound = false
+        self.ad.uTurn.points = points
+        
+        for i, wp in pairs(points) do
+            if i > 1 and i < (#points - 1) then
+                local wpLast = points[i - 1]
+                local deltaX, deltaY, deltaZ = wp.x - wpLast.x, wp.y - wpLast.y, wp.z - wpLast.z
+                local centerX, centerY, centerZ = wpLast.x + deltaX/2,  wpLast.y + deltaY/2,  wpLast.z + deltaZ/2
+                local angleRad = math.atan2(deltaX, deltaZ)
+                angleRad = AutoDrive.normalizeAngle(angleRad)
+                local length = MathUtil.vector2Length(deltaX, deltaZ) / 2
+
+                local angleX = -MathUtil.getYRotationFromDirection(deltaY, length*2)
+
+                local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallback", self, mask, true, true, true)         
+                if shapes > 0 then
+                    self.ad.uTurn.expectedColliCallbacks = self.ad.uTurn.expectedColliCallbacks + 1
+                end
+                --[[
+                local r,g,b = 0,1,0
+                if shapes > 0 then
+                    r = 1
+                    g = 0
+                    DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
+                end
+                DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
+                --]]
+            end
+        end
+    elseif self.ad.uTurn.inProgress then
+        local r,g,b = 0,1,0
+        if self.ad.uTurn.colliFound then
+            r = 1
+            g = 0
+        end
+
+        for i, p in ipairs(self.ad.uTurn.points) do
+            if i > 1 then
+                ADDrawingManager:addLineTask(self.ad.uTurn.points[i-1].x, self.ad.uTurn.points[i-1].y, self.ad.uTurn.points[i-1].z, p.x, p.y, p.z, r, g, b)
+                ADDrawingManager:addArrowTask(self.ad.uTurn.points[i-1].x, self.ad.uTurn.points[i-1].y, self.ad.uTurn.points[i-1].z, p.x, p.y, p.z, ADDrawingManager.arrows.position.middle, unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection))
+            end
+        end
+        
+        if self.ad.uTurn.doneChecking then
+            self.ad.uTurn.inProgress = false
+        end
+    end
+    
+    -- Coll check with large box
+    --local centerX, centerY, centerZ = localToWorld(vehicle.components[1].node, radius, 0, radius/2)
+    --local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallbackIgnore", nil, mask, true, true, true)    
+end
+
+function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
+    self.ad.uTurn.expectedColliCallbacks = math.max(0, self.ad.uTurn.expectedColliCallbacks - 1)
+    if transformId ~= 0 and transformId ~= g_currentMission.terrainRootNode then
+        if g_currentMission.nodeToObject[transformId] ~= nil then
+            if g_currentMission.nodeToObject[transformId] ~= self and not AutoDrive:checkIsConnected(self, g_currentMission.nodeToObject[transformId]) then
+                self.ad.uTurn.colliFound = true
+            end
+        else
+            self.ad.uTurn.colliFound = true
+        end
+    
+        if self.ad.uTurn.inProgress and (self.ad.uTurn.expectedColliCallbacks == 0 or self.ad.uTurn.colliFound) then
+            self.ad.uTurn.doneChecking = true
+        end
+    end
 end

@@ -4,7 +4,6 @@ AutoDriveSetConnectionEvent_mt = Class(AutoDriveSetConnectionEvent, Event)
 InitEventClass(AutoDriveSetConnectionEvent, "AutoDriveSetConnectionEvent")
 
 function AutoDriveSetConnectionEvent.emptyNew()
-	print("AutoDriveSetConnectionEvent.emptyNew")
     local self = Event.new(AutoDriveSetConnectionEvent_mt)
     return self
 end

@@ -49,11 +49,14 @@
 		<text name="input_ADParkVehicle"						text="AD: Fahrzeug parken" />
 		<text name="input_ADSetParkDestination"					text="AD: 1. Ziel als Parkplatz setzen" />
 		<text name="input_ADRefuelVehicle"						text="AD: Fahrzeug tanken" />
+		<text name="input_ADRepairVehicle"						text="AD: Fahrzeug reparieren" />	
 		<text name="input_ADSwapTargets"						text="AD: Ziele tauschen" />
 		<text name="input_ADStartCP"							text="AD: Übergabe an CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: CP/AIVE umschalten" />
 		<text name="input_AD_devAction"							text="AD: Entwickler Aktion" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Öffne Tip of the day" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Fruchtumfahrung" />
 		<text name="hud_startCp" 								text="AD: Starte CP / AIVE Fahrer am Zielpunkt" />
 		<text name="AD_parkVehicle_noPosSet"					text="Kein Parkplatz zugewiesen." />
@@ -69,6 +72,7 @@
 		<text name="AD_No_Bunker"								text="konnte kein Fahrsilo finden" />
 		<text name="AD_No_Shovel"								text="konnte keine Schaufel finden" />
 		<text name="AD_No_Refuel_Station"						text="konnte keine Tankstelle finden für:" />
+		<text name="AD_No_Repair_Station"						text="konnte keine Werkstatt finden für:" />
 		<text name="AD_MODE_DRIVETO"							text="Fahren" />
 		<text name="AD_MODE_DELIVERTO"							text="Abladen" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Abholen und Abliefern" />
@@ -160,6 +164,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Bis zu dieser Entfernung zum Zielpunkt wird beladen/entladen bei erkanntem Trigger." />
 		<text name="gui_ad_useBeaconLights"						text="Rundumleuchten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Ja - Außerhalb des Felds automatisch eingeschaltet / Nein - Rundumleuchten werden nicht automatisch ein- oder ausgeschaltet" />
+		<text name="gui_ad_activeUnloading"						text="Aktives Abfahren" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Ernter während der Fahrt abfahren" />
 		<text name="gui_ad_restrictToField"						text="Pfadplanung begrenzt" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Falls der Abfahrer bereits im Feld steht, wird ein Pfad im Feld gesucht." />
 		<text name="gui_ad_showTooltips"						text="Tooltips zeigen" />
@@ -174,6 +180,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Ordnernamen eingeben:" />
 		<text name="gui_ad_autoRefuel"							text="Automatisch Auftanken" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Bei einem niedrigen Tanklevel wird automatisch ein Ziel in Tankstellennähe angefahren." />
+		<text name="gui_ad_autoRepair"							text="Automatische Reparatur" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Falls das Fahrzeug oder ein Anbaugerät stark beschädigt ist, automatisch Werkstatt anfahren und reparieren" />
 		<text name="gui_ad_filter"								text="Filter" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Zielfilter ändern" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Zielfilter eingeben:" />
@@ -197,6 +205,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Nutze 2. Editormodus statt Halten der LSTRG-Taste" />
 		<text name="gui_ad_wideHUD"								text="Breites HUD" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Nutze breites HUD. Erlaubt dadurch auch zusätzliche Buttons." />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Schaltet die Soundeffekte an, die bei Mausklicks und Benachrichtigungen genuttz werden" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronisiere 'Mehrere Ziele'" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Wenn mehrere Fahrer die selben Ziele anfahren, wird die Zielauswahl synchronisiert." />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Am Ende Parken" />
@@ -216,6 +226,10 @@
 		<text name="gui_ad_AL_right"                            text="abladen rechts" />
 		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: Wartezeit für Abladen" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Nach Abladen warten bevor weitergefahren wird - meist sinnvoll bei Abladen mittig: 0-kein Warten, sonst Wartezeit wie ausgewählt" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Streckengenerierung" />
+		<text name="gui_ad_scanConfirmationText"                text="Soll AutoDrive aus den Verkehrs- und Helferdaten der Karte ein Wegenetz erzeugen?" />
+		<text name="gui_ad_noHarvesterAvailable"				text="Kein Ernter mit gleichem Ziel" />
+		<text name="gui_ad_noUnloaderAvailable"					text="Kein freier Fahrer mit gleichem Ziel" />
 
 		<text name="gui_ad_settingsPage_title"					text="Einstellungen - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Benutzereinstellungen - AutoDrive" />
@@ -227,6 +241,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Wiederherstellen" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Alle Änderungen gehen verloren" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Wirklich ohne Speichern schließen?" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Als Standard speichern" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Routen Manager" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Routennamen eingeben:" />
@@ -253,7 +268,7 @@
 		<text name="gui_ad_debugChannelBGA"						text="BGA Modus" />
 		<text name="gui_ad_debugChannelAll" 					text="Alles" />
 		
-		<text name="gui_ad_notificationHistoryTitle" 			text="Notifications" />
+		<text name="gui_ad_notificationHistoryTitle" 			text="Benachrichtigungen" />
 
 		<text name="gui_ad_colorSettingsTitle" 			        text="Farbzuweisungen" />
         <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
@@ -357,6 +372,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Drescher wenden lassen" />
 		<text name="AD_task_drive_to_load_point"				text="Fahre zu Aufladepunkt" />
 		<text name="AD_task_drive_to_refuel_point"				text="Fahre tanken" />
+		<text name="AD_task_drive_to_repair_point"				text="Fahre zur Werkstatt" />
 		<text name="AD_task_stop_and_disable"					text="Stoppen" />
 		<text name="AD_task_drive_to_unload_point"				text="Fahre zu Abladepunkt" />
 		<text name="AD_task_wait_for_call"						text="Auf Ruf warten" />	

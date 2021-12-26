@@ -647,10 +647,9 @@ function ADDrivePathModule:checkActiveAttributesSet(dt)
         self.vehicle.spec_motorized.stopMotorOnLeave = false
         self.vehicle.spec_enterable.disableCharacterOnLeave = false
 
-        if self.vehicle.steeringEnabled == true then
-            self.vehicle.steeringEnabled = false
+        if self.vehicle.spec_aiVehicle ~= nil and self.vehicle.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+            self.vehicle.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000
         end
-        --self.vehicle.spec_aiVehicle.aiTrafficCollisionTranslation[2] = -1000 --TODO_FS22
 
         if ((g_updateLoopIndex + self.vehicle.id) % AutoDrive.PERF_FRAMES == 0) then
             if self.vehicle.setBeaconLightsVisibility ~= nil and AutoDrive.getSetting("useBeaconLights", self.vehicle) then

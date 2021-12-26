@@ -49,3 +49,45 @@ end
 function ADEnterGroupNameGui:onEscPressed()
     self:onClickBack()
 end
+
+function ADEnterGroupNameGui:onCreateAutoDriveHeaderText(box)
+    if self.storedHeaderKey == nil then
+        self.storedHeaderKey = box.text
+    end
+    if self.storedHeaderKey ~= nil then
+
+        local hasText = self.storedHeaderKey ~= nil and self.storedHeaderKey ~= ""
+        if hasText then
+            local text = self.storedHeaderKey
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
+function ADEnterGroupNameGui:onCreateAutoDriveText1(box)
+    if self.storedKey1 == nil then
+        self.storedKey1 = box.text
+    end
+    if self.storedKey1 ~= nil then
+
+        local hasText = self.storedKey1 ~= nil and self.storedKey1 ~= ""
+        if hasText then
+            local text = self.storedKey1
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
+function ADEnterGroupNameGui:copyAttributes(src)
+	ADEnterGroupNameGui:superClass().copyAttributes(self, src)
+    self.storedHeaderKey = src.storedHeaderKey
+    self.storedKey1 = src.storedKey1
+end

@@ -48,11 +48,14 @@
 		<text name="input_ADParkVehicle"						text="AD: Estacionar veículo" />
 		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
 		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
+		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
 		<text name="input_ADSwapTargets"						text="AD: Trocar targets" />
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Evitar cultura" />
 		<text name="hud_startCp"								text="AD: Iniciar o CP / AIVE no destino" />
 		<text name="AD_parkVehicle_noPosSet"					text="Nenhum destino de estacionamento atribuído. Atribua o destino atualmente selecionado com o botão direito do mouse." />
@@ -67,6 +70,7 @@
 		<text name="AD_No_Bunker"								text="não encontra o silo bunker" />
 		<text name="AD_No_Shovel"								text="não encontra pá conectada" />
 		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_MODE_DRIVETO"							text="Conduzir" />
 		<text name="AD_MODE_DELIVERTO"							text="Entregar" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Pegar e Entregar" />
@@ -160,6 +164,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distância ao alvo em que os gatilhos são detectados e ativados." />
 		<text name="gui_ad_useBeaconLights"						text="Pirilampos" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Use pirilampos na estrada." />
+		<text name="gui_ad_activeUnloading"						text="Active unloading" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Restringir o pathfinder ao campo" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Se o descarregador já estiver estacionado no campo, ele limitará o pathfinder aos limites do campo." />
 		<text name="gui_ad_showTooltips"						text="Mostrar dicas de ferramentas" />
@@ -174,6 +180,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Inserir nome da pasta:" />
 		<text name="gui_ad_autoRefuel"							text="Reabastecimento Automático" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Dirija até o destino de reabastecimento (próximo ao gatilho de reabastecimento) quando o nível de combustível estiver baixo." />
+		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
 		<text name="gui_ad_filter"								text="Filtro" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Alterar texto do filtro de destino" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Inserir texto do filtro:" />
@@ -197,6 +205,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Use 2. modo editor para manipulação de rota em vez de manter pressionada a tecla LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Wide HUD" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Use o modo Wide HUD, que também permite mais alguns botões de configuração no HUD" />
+		<text name="gui_ad_playSounds"							text="Sound" />
+		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_syncMultiTargets"					text="Sincronizar vários alvos" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Vários condutores usando a mesma pasta para múltiplos alvos sincronizarão os próximos alvos" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Estacionar no Trabalho concluído" />
@@ -216,6 +226,10 @@
 		<text name="gui_ad_AL_right"                            text="Unload right" />
 		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_scanConfirmationText"                text="A AutoDrive deve gerar uma rede de rotas a partir dos dados do tráfego e do ajudante no mapa?" />
+		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
+		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
 
 		<text name="gui_ad_settingsPage_title"					text="Configurações - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="User Settings - AutoDrive" />
@@ -227,6 +241,7 @@
 		<text name="gui_ad_restoreButtonText"					text="Restaurar" />
 		<text name="gui_ad_settingsClosingDialog_title"			text="Todas as alterações serão perdidas" />
 		<text name="gui_ad_settingsClosingDialog_text"			text="Tem certeza de que deseja fechar as configurações sem guardar?" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
 
 		<text name="gui_ad_routesManagerTitle" 					text="Gerenciador de rotas" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Inserir nome da rota:" />
@@ -357,6 +372,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Aguarde a vez da ceifeira" />
 		<text name="AD_task_drive_to_load_point"				text="Dirija até o ponto de carregamento" />
 		<text name="AD_task_drive_to_refuel_point"				text="Dirija até a estação de reabastecimento" />
+		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
 		<text name="AD_task_stop_and_disable"					text="Para" />
 		<text name="AD_task_drive_to_unload_point"				text="Dirija até o ponto de descarga" />
 		<text name="AD_task_wait_for_call"						text="Aguardar chamada" />

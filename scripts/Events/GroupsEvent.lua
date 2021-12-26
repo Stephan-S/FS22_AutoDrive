@@ -6,7 +6,6 @@ AutoDriveGroupsEvent_mt = Class(AutoDriveGroupsEvent, Event)
 InitEventClass(AutoDriveGroupsEvent, "AutoDriveGroupsEvent")
 
 function AutoDriveGroupsEvent.emptyNew()
-	print("AutoDriveGroupsEvent:emptyNew")
 	local self = Event.new(AutoDriveGroupsEvent_mt)
 	return self
 end

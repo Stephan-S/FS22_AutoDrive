@@ -3,8 +3,8 @@
 --
 -- Author: Stephan
 -- Email: Stephan910@web.de
--- Date: 02.02.2019
--- Version: 1.0.0.0
+-- Date: 17.12.2021
+-- Version: 2.0.0.2
 
 -- #############################################################################
 
@@ -28,6 +28,7 @@ source(Utils.getFilename("scripts/Hud/HudSettingsButton.lua", g_currentModDirect
 source(Utils.getFilename("scripts/Hud/HudIcon.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudSpeedmeter.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/PullDownList.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Hud/HudHarvesterInfo.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Events/GroupsEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/UserDataEvent.lua", g_currentModDirectory))
@@ -52,6 +53,7 @@ source(Utils.getFilename("scripts/Events/Graph/RecordWayPointEvent.lua", g_curre
 source(Utils.getFilename("scripts/Events/Graph/MoveWayPointEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/Graph/RoutesUploadEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/Graph/SetConnectionEvent.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Events/Graph/CreateSplineConnectionEvent.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Utils/AutoDriveTON.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Utils/TrailerUtil.lua", g_currentModDirectory))
@@ -66,6 +68,7 @@ source(Utils.getFilename("scripts/Utils/PathFinderUtils.lua", g_currentModDirect
 source(Utils.getFilename("scripts/Utils/AutoDriveUtilFuncs.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Utils/SortedQueue.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Utils/DevFuncs.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Utils/TrafficSplineUtils.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Manager/RoutesManager.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Manager/DrawingManager.lua", g_currentModDirectory))
@@ -97,6 +100,7 @@ source(Utils.getFilename("scripts/Tasks/ExitFieldTask.lua", g_currentModDirector
 source(Utils.getFilename("scripts/Tasks/FollowVehicleTask.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/ReverseFromBadLocationTask.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/ParkTask.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/RepairTask.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Modules/DrivePathModule.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Modules/CollisionDetectionModule.lua", g_currentModDirectory))
@@ -126,13 +130,13 @@ source(Utils.getFilename("scripts/Gui/ColorSettingsGUI.lua", g_currentModDirecto
 source(Utils.getFilename("scripts/Gui/EnterDriverNameGUI.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/EnterGroupNameGUI.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/EnterTargetNameGUI.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/ScanConfirmationGUI.lua", g_currentModDirectory))
+
 source(Utils.getFilename("scripts/Gui/EnterDestinationFilterGUI.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/SettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/DebugSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/ExperimentalFeaturesSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/Settings.lua", g_currentModDirectory))
-source(Utils.getFilename("scripts/Gui/TipOfTheDayGUI.lua", g_currentModDirectory))
-source(Utils.getFilename("scripts/TipOfTheDayHandler.lua", g_currentModDirectory))
 
 AutoDriveRegister = {}
 AutoDriveRegister.version = g_modManager:getModByName(g_currentModName).version
@@ -145,44 +149,6 @@ if g_specializationManager:getSpecializationByName("AutoDrive") == nil then
     g_specializationManager:addSpecialization("AutoDrive", "AutoDrive", Utils.getFilename("scripts/AutoDrive.lua", g_currentModDirectory), nil)
 end
 
-function AutoDrive.dumpTable_temp(inputTable, name, maxDepth)
-    maxDepth = maxDepth or 5
-    print(name .. " = {}")
-    local function dumpTableRecursively(inputTable, name, depth, maxDepth)
-        if depth >= maxDepth then
-            return
-        end
-        for k, v in pairs(inputTable) do
-            local newName = string.format("%s.%s", name, k)
-            if type(k) == "number" then
-                newName = string.format("%s[%s]", name, k)
-            end
-            if type(v) ~= "table" and type(v) ~= "function" then
-                print(string.format("%s = %s", newName, v))
-            end
-            if type(v) == "table" then
-                print(newName .. " = {}")
-                dumpTableRecursively(v, newName, depth + 1, maxDepth)
-            end
-        end
-    end
-    for k, v in pairs(inputTable) do
-        local newName = string.format("%s.%s", name, k)
-        if type(k) == "number" then
-            newName = string.format("%s[%s]", name, k)
-        end
-        if type(v) ~= "table" and type(v) ~= "function" then
-            print(string.format("%s = %s", newName, v))
-        end
-        if type(v) == "table" then
-            print(newName .. " = {}")
-            dumpTableRecursively(v, newName, 1, maxDepth)
-        end
-    end
-end
-
---AutoDrive.dumpTable_temp(TypeManager, "TypeManager", 2)
-
 function AutoDriveRegister.register()
 
     if AutoDrive == nil then
@@ -193,7 +159,7 @@ function AutoDriveRegister.register()
     for vehicleType, typeDef in pairs(g_vehicleTypeManager.types) do
         if typeDef ~= nil and vehicleType ~= "locomotive" and vehicleType ~= "horse" and (not typeDef.hasADSpec == true) then
             if AutoDrive.prerequisitesPresent(typeDef.specializations) then
-                Logging.info('[AD] Attached to vehicleType "%s"', vehicleType)
+                --Logging.info('[AD] Attached to vehicleType "%s"', vehicleType)
                 if typeDef.specializationsByName[AutoDrive.ADSpecName] == nil then
                     g_vehicleTypeManager:addSpecialization(vehicleType, AutoDrive.ADSpecName)
                     typeDef.hasADSpec = true

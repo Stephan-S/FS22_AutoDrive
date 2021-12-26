@@ -1,12 +1,12 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.0-RC1"
+AutoDrive.version = "2.0.0.2"
 
 AutoDrive.directory = g_currentModDirectory
 
 g_autoDriveUIFilename = AutoDrive.directory .. "textures/GUI_Icons.dds"
 g_autoDriveDebugUIFilename = AutoDrive.directory .. "textures/gui_debug_Icons.dds"
 g_autoDriveDebugUIFilename_BC7 = AutoDrive.directory .. "textures/gui_debug_Icons_BC7.dds"
-g_autoDriveTipOfTheDayUIFilename = AutoDrive.directory .. "textures/tipOfTheDay_icons.dds"
+g_autoDriveIconFilename = g_iconsUIFilename
 
 AutoDrive.experimentalFeatures = {}
 AutoDrive.experimentalFeatures.redLinePosition = false
@@ -14,7 +14,8 @@ AutoDrive.experimentalFeatures.telemetryOutput = false
 AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer = false
 AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
-AutoDrive.experimentalFeatures.DrawAlternativ = false
+AutoDrive.experimentalFeatures.UTurn = true
+AutoDrive.experimentalFeatures.FoldImplements = false
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true
@@ -64,6 +65,14 @@ AutoDrive.EDITOR_ON = 2
 AutoDrive.EDITOR_EXTENDED = 3
 AutoDrive.EDITOR_SHOW = 4
 
+AutoDrive.SCAN_DIALOG_NONE = 0
+AutoDrive.SCAN_DIALOG_OPEN = 1
+AutoDrive.SCAN_DIALOG_RESULT_YES = 2
+AutoDrive.SCAN_DIALOG_RESULT_NO = 3
+AutoDrive.SCAN_DIALOG_RESULT_DONE = 4
+AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_NONE
+
+
 AutoDrive.MAX_BUNKERSILO_LENGTH = 100 -- length of bunker silo where speed should be lowered
 
 -- number of frames for performance modulo operation
@@ -75,6 +84,8 @@ AutoDrive.enableSphrere = true
 
 AutoDrive.FLAG_NONE = 0
 AutoDrive.FLAG_SUBPRIO = 1
+AutoDrive.FLAG_TRAFFIC_SYSTEM = 2
+AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 
 AutoDrive.actions = {
 	{"ADToggleMouse", true, 1},
@@ -107,9 +118,9 @@ AutoDrive.actions = {
 	{"AD_continue", false, 3},
 	{"ADParkVehicle", false, 0},
 	{"AD_devAction", false, 0},
-	{"AD_open_tipOfTheDay", false, 0},
 	{"ADRefuelVehicle", false, 0},
-	{"ADToggleHudExtension", true, 1}
+	{"ADToggleHudExtension", true, 1},
+	{"ADRepairVehicle", false, 0}
 }
 
 AutoDrive.colors = {
@@ -126,10 +137,31 @@ AutoDrive.colors = {
 	ad_color_selectedNode = {0, 1, 0, 0.15},
 	ad_color_currentConnection = {1, 1, 1, 1},
 	ad_color_closestLine = {1, 0, 0, 1},
-	ad_color_editorHeightLine = {1, 1, 1, 1}
+	ad_color_editorHeightLine = {1, 1, 1, 1},
+	ad_color_previewOk = {0.3, 0.9, 0, 1},
+	ad_color_previewNotOk = {1, 0.1, 0, 1}
 }
 
 AutoDrive.currentColors = {} -- this will hold the current colors, derived from default colors above, overwritten by local settings
+
+AutoDrive.fuelFillTypes = {
+    "DIESEL",
+    "METHANE",
+    "ELECTRICCHARGE",
+    "DEF",
+    "AIR"
+}
+
+AutoDrive.nonFillableFillTypes = { -- these fillTypes should not be transported
+    "AIR",
+	"SILAGE_ADDITIVE"
+}
+
+AutoDrive.seedFillTypes = {
+    'SEEDS',
+    'FERTILIZER',
+    'LIQUIDFERTILIZER'
+}
 
 function AutoDrive:onAllModsLoaded()
 	-- ADThirdPartyModsManager:load()
@@ -137,35 +169,24 @@ end
 
 function AutoDrive:restartMySavegame()
 	if g_server then
-		restartApplication(" -autoStartSavegameId 1")
-	end
-end
-
-function AutoDrive:restartMySavegame()
-	if g_server then
-		restartApplication(" -autoStartSavegameId 1")
+		restartApplication(" -autoStartSavegameId 1", true)
 	end
 end
 
 function AutoDrive:loadMap(name)
-	local index = 0
 	Logging.info("[AD] Start register later loaded mods...")
     --ADThirdPartyModsManager:load()
 	-- second iteration to register AD to vehicle types which where loaded after AD
     AutoDriveRegister.register()
     AutoDriveRegister.registerVehicleData()
 	Logging.info("[AD] Start register later loaded mods end")
-	index = index + 1
-	Logging.info("[AutoDrive] Index: %d",index)
 
 	addConsoleCommand('restartMySavegame', 'Restart my savegame', 'restartMySavegame', self)
 
-	-- if g_server ~= nil then
-		-- AutoDrive.AutoDriveSync = AutoDriveSync:new(g_server ~= nil, g_client ~= nil)
-		-- AutoDrive.AutoDriveSync:register(false)
-	-- end
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	if g_server ~= nil then
+		AutoDrive.AutoDriveSync = AutoDriveSync.new(g_server ~= nil, g_client ~= nil)
+		AutoDrive.AutoDriveSync:register(false)
+	end
 
 	AutoDrive:loadGUI()
 
@@ -178,14 +199,8 @@ function AutoDrive:loadMap(name)
 	AutoDrive.loadedMap = string.gsub(AutoDrive.loadedMap, ":", "_")
 	AutoDrive.loadedMap = string.gsub(AutoDrive.loadedMap, ";", "_")
 	AutoDrive.loadedMap = string.gsub(AutoDrive.loadedMap, "'", "_")
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	Logging.info("[AD] Parsed map title: %s", AutoDrive.loadedMap)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	-- That's probably bad, but for the moment I can't find another way to know if development controls are enabled
 	local gameXmlFilePath = getUserProfileAppPath() .. "game.xml"
@@ -197,106 +212,48 @@ function AutoDrive:loadMap(name)
 			end
 		end
 	end
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	ADGraphManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	AutoDrive.loadStoredXML()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
     AutoDrive:resetColorAssignment(0, true)     -- set default colors
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
     AutoDrive.readLocalSettingsFromXML()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-    
 	ADUserDataManager:load()
 	if g_server ~= nil then
 		ADUserDataManager:loadFromXml()
 	end
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 
 	AutoDrive.Hud = AutoDriveHud:new()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	AutoDrive.Hud:loadHud()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
-
 
 	-- Save Configuration when saving savegame
 	FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, AutoDrive.saveSavegame)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	LoadTrigger.onActivateObject = Utils.overwrittenFunction(LoadTrigger.onActivateObject, AutoDrive.onActivateObject)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-	AIDriveStrategyCombine.getDriveData = Utils.overwrittenFunction(AIDriveStrategyCombine.getDriveData, AutoDrive.getDriveData)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	--AIDriveStrategyCombine.getDriveData = Utils.overwrittenFunction(AIDriveStrategyCombine.getDriveData, AutoDrive.getDriveData)
 
 	LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-	LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-    if g_company then
-        if g_company.loadingTrigger then 
-            if g_company.loadingTrigger.onFillTypeSelection then
-                g_company.loadingTrigger.onFillTypeSelection = Utils.appendedFunction(g_company.loadingTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection);
-            end
-        end
-    end
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
 
 	VehicleCamera.zoomSmoothly = Utils.overwrittenFunction(VehicleCamera.zoomSmoothly, AutoDrive.zoomSmoothly)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-	-- LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
-    -- LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+	LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
+    --LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
 
-	-- LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
+	LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
     -- LoadTrigger.delete = Utils.prependedFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	Placeable.onBuy = Utils.appendedFunction(Placeable.onBuy, ADTriggerManager.onPlaceableBuy)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
-	MapHotspot.getHasDetails = Utils.overwrittenFunction(MapHotspot.getHasDetails, AutoDrive.mapHotSpotClicked)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	MapHotspot.getIsVisible = Utils.overwrittenFunction(MapHotspot.getIsVisible, AutoDrive.MapHotspot_getIsVisible)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
+	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
 
 	--FarmStats.saveToXMLFile = Utils.appendedFunction(FarmStats.saveToXMLFile, AutoDrive.FarmStats_saveToXMLFile)
 	--index = index + 1
@@ -307,61 +264,189 @@ function AutoDrive:loadMap(name)
 	--Logging.info("[AD] Index: %d",index)
 
 	FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	FSBaseMission.removeVehicle = Utils.prependedFunction(FSBaseMission.removeVehicle, AutoDrive.preRemoveVehicle)
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADRoutesManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADDrawingManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADMessagesManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADHarvestManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-        ADScheduler:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
+    ADScheduler:load()
 
 	ADInputManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
 	ADMultipleTargetsManager:load()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
-
 	AutoDrive.initTelemetry()
-	index = index + 1
-	Logging.info("[AD] Index: %d",index)
 
-	AutoDrive.initTipOfTheDay()
-	index = index + 1
-	Logging.info("[AD] load map end: %d",index)
+	InGameMenuAIFrame.onFrameOpen = Utils.appendedFunction(InGameMenuAIFrame.onFrameOpen, AutoDrive.onAIFrameOpen)
+	InGameMenuAIFrame.onFrameClose = Utils.appendedFunction(InGameMenuAIFrame.onFrameClose, AutoDrive.onAIFrameClose)
+	InGameMenuAIFrame.refreshContextInput = Utils.appendedFunction(InGameMenuAIFrame.refreshContextInput, AutoDrive.refreshContextInputAIFrame)
+	BaseMission.draw = Utils.appendedFunction(BaseMission.draw, AutoDrive.drawBaseMission)
+	PlaceableHotspot.getCategory = Utils.overwrittenFunction(PlaceableHotspot.getCategory, AutoDrive.PlaceableHotspotGetCategory)
+	InGameMenuAIFrame.setMapSelectionItem = Utils.overwrittenFunction(InGameMenuAIFrame.setMapSelectionItem, AutoDrive.InGameMenuAIFrameSetMapSelectionItem)
+	MapHotspot.getRenderLast = Utils.overwrittenFunction(MapHotspot.getRenderLast, AutoDrive.MapHotspotGetRenderLast)
 end
 
+function AutoDrive:onAIFrameOpen()
+	AutoDrive.aiFrameOpen = true
+	AutoDrive.aiFrame = self
+end
+
+function AutoDrive:onAIFrameClose()
+	AutoDrive.aiFrameOpen = false
+	AutoDrive.aiFrame = nil
+	AutoDrive.aiFrameVehicle = nil
+end
+
+function AutoDrive:refreshContextInputAIFrame()
+	if AutoDrive.aiFrameOpen then		
+		local hotspot = self.currentHotspot
+		if hotspot ~= nil then
+			local vehicle = InGameMenuMapUtil.getHotspotVehicle(hotspot)
+			AutoDrive.aiFrameVehicle = vehicle
+		end
+	end
+end
+
+function AutoDrive:drawBaseMission()
+	if AutoDrive.aiFrameOpen then		
+		AutoDrive:drawRouteOnMap()
+		if AutoDrive.aiFrameVehicle ~= nil then
+			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
+		elseif g_currentMission.controlledVehicle ~= nil then
+			AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
+		end
+	end
+end
+
+function AutoDrive:PlaceableHotspotGetCategory()
+	if self.isADMarker then
+		return MapHotspot.CATEGORY_PLAYER
+	end
+	return PlaceableHotspot.CATEGORY_MAPPING[self.placeableType]
+end
+
+function AutoDrive:InGameMenuAIFrameSetMapSelectionItem(superFunc, hotspot)
+	if hotspot ~= nil and hotspot.isADMarker and AutoDrive.aiFrameOpen then
+		if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+			if AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
+				AutoDriveHudInputEventEvent:sendFirstMarkerEvent(AutoDrive.aiFrameVehicle, hotspot.markerID)
+				return
+			end
+		end
+	end
+	return superFunc(self, hotspot)
+end
+
+function AutoDrive:MapHotspotGetRenderLast(superFunc)
+	if self.isADMarker then
+		return true
+	end
+	return superFunc(self)
+end
+
+function AutoDrive.drawRouteOnMap()
+	if AutoDrive.aiFrame == nil then
+		return
+	end
+	
+	local vehicle = g_currentMission.controlledVehicle
+	if AutoDrive.aiFrameVehicle ~= nil then
+		vehicle = AutoDrive.aiFrameVehicle
+	end
+
+	if vehicle == nil then
+		return
+	end
+
+	if AutoDrive.courseOverlayId == nil then
+		AutoDrive.courseOverlayId = createImageOverlay('data/shared/default_normal.dds')
+	end
+
+	local dx, dz, dx2D, dy2D, width, rotation, r, g, b
+
+	local WPs, currentWp = vehicle.ad.drivePathModule:getWayPoints()
+	if WPs ~= nil then
+		local lastWp = nil
+		local skips = 0
+		for index, wp in pairs(WPs) do
+			if skips == 0 then
+				if lastWp ~= nil and index >= currentWp then
+					local startX, startY, _, _ = AutoDrive.getScreenPosFromWorldPos(lastWp.x, lastWp.z)
+					local endX, endY, _, _ = AutoDrive.getScreenPosFromWorldPos(wp.x, wp.z)
+								
+					if startX and startY and endX and endY then
+						dx2D = endX - startX;
+						dy2D = ( endY - startY ) / g_screenAspectRatio;
+						width = MathUtil.vector2Length(dx2D, dy2D);
+			
+						dx = wp.x - lastWp.x;
+						dz = wp.z - lastWp.z;
+						rotation = MathUtil.getYRotationFromDirection(dx, dz) - math.pi * 0.5;
+			
+						local lineThickness = 2 / g_screenHeight
+						setOverlayColor( AutoDrive.courseOverlayId, 0.3, 0.5, 0.56, 1)
+						setOverlayRotation( AutoDrive.courseOverlayId, rotation, 0, 0)
+						
+						renderOverlay( AutoDrive.courseOverlayId, startX, startY, width, lineThickness )
+					end
+					setOverlayRotation( AutoDrive.courseOverlayId, 0, 0, 0 ) -- reset overlay rotation
+				end
+				lastWp = wp
+			end
+			skips = (skips + 1) % 1
+		end
+	end
+end
+
+function AutoDrive.getScreenPosFromWorldPos(worldX, worldZ)
+	local objectX = (worldX + AutoDrive.aiFrame.ingameMapBase.worldCenterOffsetX) / AutoDrive.aiFrame.ingameMapBase.worldSizeX * 0.5 + 0.25
+	local objectZ = (worldZ + AutoDrive.aiFrame.ingameMapBase.worldCenterOffsetZ) / AutoDrive.aiFrame.ingameMapBase.worldSizeZ * 0.5 + 0.25
+	local x, y, _, _ = AutoDrive.aiFrame.ingameMapBase.layout:getMapObjectPosition(objectX, objectZ, 0, 0, 0, true)
+	
+	return x, y
+end
+
+
 function AutoDrive:init()
+
+    -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:init start...")
+
 	if g_server == nil then
 		-- Here we could ask to server the initial sync
 		AutoDriveUserConnectedEvent.sendEvent()
 	else
 		ADGraphManager:checkYPositionIntegrity()
-		ADGraphManager:checkSubPrioIntegrity()
 	end
 
 	AutoDrive.updateDestinationsMapHotspots()
 	AutoDrive:registerDestinationListener(AutoDrive, AutoDrive.updateDestinationsMapHotspots)
+
+	if AutoDrive.notificationSample == nil then
+		local fileName = Utils.getFilename( "sounds/notification_ok.ogg", AutoDrive.directory)
+		AutoDrive.notificationSample = createSample("AutoDrive_Notification_ok")
+		loadSample(AutoDrive.notificationSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/notification_warning.ogg", AutoDrive.directory)
+		AutoDrive.notificationWarningSample = createSample("AutoDrive_Notification_warning")
+		loadSample(AutoDrive.notificationWarningSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/click_up.ogg", AutoDrive.directory)
+		AutoDrive.mouseClickSample = createSample("AutoDrive_mouseClick")
+		loadSample(AutoDrive.mouseClickSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/recordWaypoint.ogg", AutoDrive.directory)
+		AutoDrive.recordWaypointSample = createSample("AutoDrive_recordWaypoint")
+		loadSample(AutoDrive.recordWaypointSample, fileName, false)
+
+		fileName = Utils.getFilename( "sounds/selectedWayPoint.ogg", AutoDrive.directory)
+		AutoDrive.selectedWayPointSample = createSample("AutoDrive_selectedWayPoint")
+		loadSample(AutoDrive.selectedWayPointSample, fileName, false)
+	end
 end
 
 function AutoDrive:saveSavegame()
@@ -394,8 +479,8 @@ function AutoDrive:deleteMap()
 	if AutoDrive.mapHotspotsBuffer ~= nil then
 		-- Removing and deleting all map hotspots
 		for _, mh in pairs(AutoDrive.mapHotspotsBuffer) do
-			g_currentMission:removeMapHotspot(mh)
-			mh:delete()
+			-- g_currentMission:removeMapHotspot(mh)
+			-- mh:delete()
 		end
 	end
 	AutoDrive.mapHotspotsBuffer = {}
@@ -432,6 +517,12 @@ end
 
 function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	local vehicle = g_currentMission.controlledVehicle
+	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
+	
+	if not mouseActiveForAutoDrive then
+		AutoDrive.lastButtonDown = nil
+		return
+	end
 
 	if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.nToolTipWait ~= nil then
 		if vehicle.ad.sToolTip ~= "" then
@@ -443,14 +534,61 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 		end
 	end
 
-	if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and AutoDrive.Hud.showHud == true then
-		AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
+		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then		
+			if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle then
+				AutoDrive.Hud:mouseEvent(AutoDrive.aiFrameVehicle, posX, posY, isDown, isUp, button)
+			else
+				AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+			end
+		end
+
+		ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 
-	ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
+	if button > 0 and button <= 3 and isDown then
+		AutoDrive.lastButtonDown = button
+	elseif button > 0 and isUp and AutoDrive.lastButtonDown == button then
+		AutoDrive.lastButtonDown = nil
+	end
 end
 
 function AutoDrive:update(dt)	
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_NONE and ADGraphManager:getWayPointsCount() == 0 then
+        if g_server ~= nil and g_dedicatedServer == nil then
+            -- open dialog
+			if g_gui.currentGui == nil then
+				-- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_OPEN")
+				AutoDrive.onOpenScanConfirmation()
+				AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_OPEN
+			end
+			return
+        else
+            -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update dedi -> SCAN_DIALOG_RESULT_NO")
+            AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_NO
+        end
+    end
+
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_OPEN then
+        -- dialog still open
+        return
+    end
+
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_YES then
+        AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
+        -- dialog closed with yes
+        -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_YES")
+        AutoDrive:adParseSplines()
+        AutoDrive:createJunctionCommand()
+    end
+
+    if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_RESULT_NO then
+        AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_RESULT_DONE
+        -- dialog closed with no
+        -- AutoDrive.debugMsg(nil, "[AD] AutoDrive:update SCAN_DIALOG_RESULT_NO")
+        AutoDrive.loadStoredXML(true)
+    end
+
 	if AutoDrive.isFirstRun == nil then
 		AutoDrive.isFirstRun = false
 		self:init()
@@ -469,7 +607,7 @@ function AutoDrive:update(dt)
 	end
 
 	if AutoDrive.Hud ~= nil then
-		if AutoDrive.Hud.showHud == true then
+		if AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen then
 			AutoDrive.Hud:update(dt)
 		end
 	end
@@ -483,8 +621,7 @@ function AutoDrive:update(dt)
 	ADTriggerManager:update(dt)
 	ADRoutesManager:update(dt)
 
-	AutoDrive.handleTelemetry(dt)
-	AutoDrive.handleTipOfTheDay(dt)
+	AutoDrive.handleTelemetry(dt)	
 end
 
 function AutoDrive:draw()

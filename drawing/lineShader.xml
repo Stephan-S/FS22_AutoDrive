@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<CustomShader version="5">
+    <Parameters>
+        <Parameter name = "lineColor" target = "lineColor" type = "float4" defaultValue = "0.75 1.0 1.0 1.0" />
+    </Parameters>
+    <UvUsages/>
+    <LodLevel startDistance="0">
+        <CodeInjections>		
+            <CodeInjection position = "OBJECT_PARAMETERS">
+<![CDATA[
+    float4 lineColor;
+]]>
+            </CodeInjection>
+            <CodeInjection position="POST_DIFFUSE_COLOR_FS">
+<![CDATA[
+	diffuseColor.rgb *= object.lineColor.rgb;
+]]>
+			</CodeInjection>
+            <CodeInjection position="EMISSIVE_FS">
+<![CDATA[
+	emissiveColor.rgb = object.lineColor.rgb * object.lineColor.a;
+]]>
+			</CodeInjection>
+        </CodeInjections>
+    </LodLevel>
+</CustomShader>

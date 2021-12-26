@@ -84,8 +84,8 @@ AutoDrive.settings.collisionHeigth = {
         "3.75 m",
         "4.0 m"
     },
-    default = 8,
-    current = 8,
+    default = 5,
+    current = 5,
     text = "gui_ad_collisionHeigth",
     tooltip = "gui_ad_collisionHeigth_tooltip",
     translate = false,
@@ -751,6 +751,17 @@ AutoDrive.settings.useBeaconLights = {
     isVehicleSpecific = true
 }
 
+AutoDrive.settings.activeUnloading = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_activeUnloading",
+    tooltip = "gui_ad_activeUnloading_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
 AutoDrive.settings.restrictToField = {
     values = {false, true},
     texts = {"gui_ad_no", "gui_ad_yes"},
@@ -781,6 +792,17 @@ AutoDrive.settings.autoRefuel = {
     current = 2,
     text = "gui_ad_autoRefuel",
     tooltip = "gui_ad_autoRefuel_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
+AutoDrive.settings.autoRepair = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_autoRepair",
+    tooltip = "gui_ad_autoRepair_tooltip",
     translate = true,
     isVehicleSpecific = true
 }
@@ -935,17 +957,6 @@ AutoDrive.settings.autoTrailerCover = {
     isVehicleSpecific = true
 }
 
-AutoDrive.settings.showTipOfTheDay = {
-    values = {false, true},
-    texts = {"gui_ad_no", "gui_ad_yes"},
-    default = 2,
-    current = 2,
-    text = "gui_ad_showTipOfTheDay",
-    tooltip = "gui_ad_showTipOfTheDay_tooltip",
-    translate = true,
-    isVehicleSpecific = false
-}
-
 AutoDrive.settings.ALUnload = {
     values = {0, 1, 2, 3, 4},
     texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
@@ -965,6 +976,18 @@ AutoDrive.settings.ALUnloadWaitTime = {
     tooltip = "gui_ad_ALUnloadWaitTime_tooltip",
     translate = false,
     isVehicleSpecific = true
+}
+
+AutoDrive.settings.playSounds = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_playSounds",
+    tooltip = "gui_ad_playSounds_tooltip",
+    translate = true,
+    isVehicleSpecific = false,
+    isUserSpecific = true
 }
 
 function AutoDrive.getSetting(settingName, vehicle)
@@ -1020,7 +1043,12 @@ function AutoDrive.copySettingsToVehicle(vehicle)
             settingVehicle.values = setting.values
             settingVehicle.texts = setting.texts
             settingVehicle.default = setting.default
-            settingVehicle.current = setting.current
+            settingVehicle.userDefault = setting.userDefault
+            if setting.userDefault ~= nil then
+                settingVehicle.current = setting.userDefault
+            else
+                settingVehicle.current = setting.default
+            end
             settingVehicle.text = setting.text
             settingVehicle.tooltip = setting.tooltip
             settingVehicle.translate = setting.translate
@@ -1036,7 +1064,12 @@ function AutoDrive.readVehicleSettingsFromXML(vehicle, xmlFile, key)
             local settingVehicle = {}
             settingVehicle.values = setting.values
             settingVehicle.default = setting.default
-            settingVehicle.current = setting.current
+            settingVehicle.userDefault = setting.userDefault
+            if setting.userDefault ~= nil then
+                settingVehicle.current = setting.userDefault
+            else
+                settingVehicle.current = setting.default
+            end
             vehicle.ad.settings[settingName] = settingVehicle
 
             if xmlFile:hasProperty(key) then

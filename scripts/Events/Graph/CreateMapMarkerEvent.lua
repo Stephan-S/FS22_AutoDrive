@@ -4,7 +4,6 @@ AutoDriveCreateMapMarkerEvent_mt = Class(AutoDriveCreateMapMarkerEvent, Event)
 InitEventClass(AutoDriveCreateMapMarkerEvent, "AutoDriveCreateMapMarkerEvent")
 
 function AutoDriveCreateMapMarkerEvent.emptyNew()
-	print("AutoDriveCreateMapMarkerEvent.emptyNew")
 	local self = Event.new(AutoDriveCreateMapMarkerEvent_mt)
 	return self
 end

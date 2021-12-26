@@ -171,7 +171,6 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	self.row4 = self.posY + (self.pullDownRowOffset + 3) * self.borderY + (self.pullDownRowOffset + 2) * self.buttonHeight
 	self.rowHeader = self.posY + (self.pullDownRowOffset + 4) * self.borderY + (self.pullDownRowOffset + 3) * self.buttonHeight
 
-	print("Background width: " .. self.width .. " height: " .. self.height)
 	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.posY - 2 * self.gapHeight, self.width, self.height + 5 * self.gapHeight, AutoDrive.directory .. "textures/Background.dds", 0, "background"))
 
 	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.rowHeader, self.width, self.headerHeight, AutoDrive.directory .. "textures/Header.dds", 1, "header"))
@@ -187,19 +186,18 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	posX = posX - closeWidth - self.gapWidth
 	table.insert(self.hudElements, ADHudButton:new(posX, posY, closeWidth, closeHeight, "input_toggleHudExtension", nil, nil, nil, "", 1, true))
 
-	posX = posX - closeWidth - self.gapWidth
-	table.insert(self.hudElements, ADHudButton:new(posX, posY, closeWidth, closeHeight, "input_openTipOfTheDay", nil, nil, nil, "", 1, true))
-
-	-- axel - is this used?
-	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.row4, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/destination.dds", 1, "destinationOverlay"))
+	
+	table.insert(self.hudElements, ADHudButton:new(self.posX + self.gapWidth, self.row4, self.iconWidth, self.iconHeight, "input_toggleAutomaticPickupTarget", nil, nil, nil, "input_ADToggleAutomaticPickupTarget", 1, true))
+	--table.insert(self.hudElements, ADHudIcon:new(self.posX, self.row4, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/destination.dds", 1, "destinationOverlay"))
 	-- 1st destination
 	self.targetPullDownList = ADPullDownList:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row4, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight, ADPullDownList.TYPE_TARGET, 1)
 	table.insert(self.hudElements, self.targetPullDownList)
 
-	table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row3, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/tipper_overlay.dds", 1, "unloadOverlay"))
+	table.insert(self.hudElements, ADHudButton:new(self.posX + self.gapWidth, self.row3, self.iconWidth, self.iconHeight, "input_toggleAutomaticUnloadTarget", nil, nil, nil, "input_ADToggleAutomaticUnloadTarget", 1, true))
+	--table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row3, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/tipper_overlay.dds", 1, "unloadOverlay"))
 
 	table.insert(self.hudElements, ADPullDownList:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row3, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight, ADPullDownList.TYPE_UNLOAD, 1))
-
+	
 	table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row2, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/fruit_overlay.dds", 1, "fruitOverlay"))
 
 	table.insert(
@@ -213,6 +211,8 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 			1
 		)
 	)
+	table.insert(self.hudElements, HudHarvesterInfo:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row2, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight))
+
 
 	-------- BASE ROW BUTTONS --------------
 	self:AddButton("input_start_stop", nil, nil, nil, "input_ADEnDisable", 1, true)
@@ -360,8 +360,8 @@ function AutoDriveHud:refreshHudElementsLayerSequence()
 	)
 end
 
-function AutoDriveHud:drawHud(vehicle)	
-	if vehicle == g_currentMission.controlledVehicle then
+function AutoDriveHud:drawHud(vehicle)
+	if vehicle == g_currentMission.controlledVehicle or AutoDrive.aiFrameOpen then
 		local uiScale = g_gameSettings:getValue("uiScale")
 		if AutoDrive.getSetting("guiScale") ~= 0 then
 			uiScale = AutoDrive.getSetting("guiScale")
@@ -375,9 +375,6 @@ function AutoDriveHud:drawHud(vehicle)
 			self:createHudAt(self.posX, self.posY)
 		end
 		self.lastUIScale = uiScale
-
-		--local ovWidth = self.Background.width
-		--local ovHeight = self.Background.height
 
 		for _, element in ipairs(self.hudElements) do -- `ipairs` is important, as we want "index-value pairs", not "key-value pairs". https://stackoverflow.com/a/55109411
 			element:onDraw(vehicle, uiScale)
@@ -444,18 +441,25 @@ function AutoDriveHud:toggleHud(vehicle)
 end
 
 function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
-	local mouseActiveForAutoDrive = (g_gui.currentGui == nil) and (g_inputBinding:getShowMouseCursor() == true)
+	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
+	
 	if mouseActiveForAutoDrive then
 		local mouseEventHandled = false
+		if AutoDrive.splineInterpolation ~= nil then			
+			AutoDrive.splineInterpolation.valid = false
+		end
 		AutoDrive.mouseWheelActive = false
 		-- Start with highest layer value (last in array), and then iterate backwards.
 		for i = #self.hudElements, 1, -1 do
 			local element = self.hudElements[i]
 			local layer = element.layer
-			mouseEventHandled = element:mouseEvent(vehicle, posX, posY, isDown, isUp, button, layer)
+			mouseEventHandled, silent = element:mouseEvent(vehicle, posX, posY, isDown, isUp, button, layer)
 			if mouseEventHandled then
 				-- Maybe a PullDownList have been expanded/collapsed, so need to refresh layer sequence
 				self:refreshHudElementsLayerSequence()
+				if silent == nil or silent == false then
+					AutoDrive.playSample(AutoDrive.mouseClickSample, 0.45)
+				end
 				break
 			end
 		end
@@ -470,6 +474,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 			else
 				self:moveHud(posX, posY)
 			end
+			mouseEventHandled = true
 		end
 
 		vehicle.ad.hoveredNodeId = nil
@@ -503,44 +508,75 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 				AutoDrive.moveNodeToMousePos(vehicle.ad.nodeToMoveId)
 			end
 			if vehicle.ad.hoveredNodeId ~= nil then
+				if vehicle.ad.selectedNodeId ~= nil then
+					AutoDrive:createSplineInterpolationBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId))
+				end
+
 				-- waypoint at mouse position
                 if button == 1 and isUp
                     and not AutoDrive.leftLSHIFTmodifierKeyPressed
                     and not AutoDrive.leftCTRLmodifierKeyPressed
                     and not AutoDrive.leftALTmodifierKeyPressed 
-                    -- and AutoDrive.rightSHIFTmodifierKeyPressed   -- see below !!!
+                    --and AutoDrive.rightSHIFTmodifierKeyPressed   -- see below !!!
                     then
 					-- left mouse button to select point / connect to already selected point
 					if vehicle.ad.selectedNodeId ~= nil then
 						if vehicle.ad.selectedNodeId ~= vehicle.ad.hoveredNodeId then
-							-- connect selected point with hovered point
-							AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
-							ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
-							if AutoDrive.leftLSHIFTmodifierKeyPressed then
-								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleWayPointAsSubPrio 1 selectedNodeId %d", vehicle.ad.selectedNodeId)
-								ADGraphManager:toggleWayPointAsSubPrio(vehicle.ad.selectedNodeId)
+							if not table.contains(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId).out, vehicle.ad.hoveredNodeId) then
+								-- connect selected point with hovered point
+
+								if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid and AutoDrive.splineInterpolation.waypoints ~= nil and #AutoDrive.splineInterpolation.waypoints > 2 then								
+									local waypoints = {}
+									local lastHeight = ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId).y
+									for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
+										if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
+											if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+												wp.y = lastHeight
+											end
+											table.insert(waypoints, {x=wp.x, y=wp.y, z=wp.z})
+											lastHeight = wp.y
+										end
+									end
+
+									ADGraphManager:createSplineConnection(vehicle.ad.selectedNodeId, waypoints, vehicle.ad.hoveredNodeId)
+								else
+									AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
+									ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
+									if AutoDrive.leftLSHIFTmodifierKeyPressed then
+										AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleWayPointAsSubPrio 1 selectedNodeId %d", vehicle.ad.selectedNodeId)
+										ADGraphManager:toggleWayPointAsSubPrio(vehicle.ad.selectedNodeId)
+									end
+								end
+
+								AutoDrive.splineInterpolationUserCurvature = nil
+							else
+								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
+								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), AutoDrive.rightSHIFTmodifierKeyPressed)
 							end
 						end
-
+							
+						AutoDrive.playSample(AutoDrive.selectedWayPointSample, 0.75)
 						-- unselect point
 						AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent unselect point selectedNodeId = nil")
 						vehicle.ad.selectedNodeId = nil
-						adjustedPaths = true
+						adjustedPaths = true	
 					else
 						-- select point
 						-- no selectedNodeId: hoveredNodeId is now selectedNodeId
                         vehicle.ad.selectedNodeId = vehicle.ad.hoveredNodeId
                         AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent select point selectedNodeId %d", vehicle.ad.selectedNodeId)
+						
+						AutoDrive.playSample(AutoDrive.selectedWayPointSample, 0.75)
 
                         -- color assignment goes in here
-                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServerInfo == nil then
+                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServer == nil then
                             local colorPoint = ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId)
                             if colorPoint ~= nil and colorPoint.colors ~= nil then
                                 AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent point.colors %.3f %.3f %.3f", colorPoint.colors[1], colorPoint.colors[2], colorPoint.colors[3])
                                 vehicle.ad.selectedColorNodeId = vehicle.ad.selectedNodeId
                                     -- only allowed in single player game
                                 ADInputManager:input_openColorSettings()
-                            end
+							end
                         end
 					end
 				end
@@ -643,7 +679,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 							end
 						end
 
-                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServerInfo == nil then
+                        if AutoDrive.experimentalFeatures.colorAssignmentMode and g_server ~= nil and g_client ~= nil and g_dedicatedServer == nil then
                             -- only allowed in single player game to create the color selection
                             AutoDrive.createColorSelectionWayPoints(vehicle)
                         else
@@ -687,21 +723,23 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 
            AutoDrive.handleWayPointSection(vehicle, button, isUp)
 		else
-			vehicle.ad.selectedNodeId = nil
-			vehicle.ad.nodeToMoveId = nil
-			vehicle.ad.hoveredNodeId = nil
-			vehicle.ad.newcreated = nil
-            vehicle.ad.sectionWayPoints = {}
+			AutoDrive.resetMouseSelections(vehicle)
 		end
 	else
+		AutoDrive.resetMouseSelections(vehicle)
+	end
+
+	AutoDrive.mouseWheelActive = AutoDrive.mouseWheelActive or (AutoDrive.pullDownListExpanded ~= 0)
+end
+
+function AutoDrive.resetMouseSelections(vehicle)
+	if vehicle ~= nil and vehicle.ad ~= nil then
 		vehicle.ad.selectedNodeId = nil
 		vehicle.ad.nodeToMoveId = nil
 		vehicle.ad.hoveredNodeId = nil
 		vehicle.ad.newcreated = nil
-        vehicle.ad.sectionWayPoints = {}
+		vehicle.ad.sectionWayPoints = {}
 	end
-
-	AutoDrive.mouseWheelActive = AutoDrive.mouseWheelActive or (AutoDrive.pullDownListExpanded ~= 0)
 end
 
 function AutoDrive.handleWayPointSection(vehicle, button, isUp)
@@ -831,29 +869,21 @@ function AutoDriveHud:closeAllPullDownLists(vehicle)
 	self:refreshHudElementsLayerSequence()
 end
 
---blatant copy of Courseplay's implementation. So all credit goes to their dev team :-)
 function AutoDriveHud:createMapHotspot(vehicle)
-	--[[
-	--local hotspotX, _, hotspotZ = getWorldTranslation(vehicle.rootNode)
-	local _, textSize = getNormalizedScreenValues(0, 6) --Textsize local _, textSize = getNormalizedScreenValues(0, 9)
-	local _, textOffsetY = getNormalizedScreenValues(0, 15) --Distance to icon -- local _, textOffsetY = getNormalizedScreenValues(0, 24)
-	local width, height = getNormalizedScreenValues(10, 10) --Triggersize -- local width, height = getNormalizedScreenValues(18, 18)
-	vehicle.ad.mapHotspot = MapHotspot:new("adDriver", MapHotspot.CATEGORY_AI)
-	vehicle.ad.mapHotspot:setSize(width, height)
-	vehicle.ad.mapHotspot:setLinkedNode(vehicle.components[1].node)
-	vehicle.ad.mapHotspot:setText("AD:")
-	if vehicle.name ~= nil then
-		vehicle.ad.mapHotspot:setText("AD: " .. vehicle.name)
+	local _, textOffsetY = getNormalizedScreenValues(0, -5)
+	
+	vehicle.ad.mapHotspot = AIHotspot.new()
+	vehicle.ad.mapHotspot:setAIHelperName("AD: " .. vehicle.ad.stateModule:getName())
+	vehicle.ad.mapHotspot:setVehicle(vehicle)
+	if vehicle.getOwnerFarmId ~= nil then
+		vehicle.ad.mapHotspot:setOwnerFarmId(vehicle:getOwnerFarmId())
 	end
-	vehicle.ad.mapHotspot:setText("AD: " .. vehicle.ad.stateModule:getName())
-	vehicle.ad.mapHotspot:setImage(nil, getNormalizedUVs(MapHotspot.UV.HELPER), {0.052, 0.1248, 0.672, 1})
-	vehicle.ad.mapHotspot:setBackgroundImage(nil, getNormalizedUVs(MapHotspot.UV.HELPER))
-	vehicle.ad.mapHotspot:setIconScale(0.4) --Iconsize vehicle.ad.mapHotspot:setIconScale(0.7)
-	vehicle.ad.mapHotspot:setTextOptions(textSize, nil, textOffsetY, {1, 1, 1, 1}, Overlay.ALIGN_VERTICAL_MIDDLE)
-	vehicle.ad.mapHotspot:setColor({0.0, 0.569, 0.835, 1})
+	vehicle.ad.mapHotspot.textOffsetY = textOffsetY
+
+	vehicle.ad.mapHotspot.icon = Overlay.new(AIHotspot.FILENAME, 0, 0, getNormalizedScreenValues(40, 40))
+	vehicle.ad.mapHotspot.icon:setUVs(AIHotspot.UVS)
 
 	g_currentMission:addMapHotspot(vehicle.ad.mapHotspot)
-	--]]
 end
 
 function AutoDriveHud:deleteMapHotspot(vehicle)
@@ -876,20 +906,42 @@ end
 
 function AutoDrive:ingameMapElementMouseEvent(superFunc, posX, posY, isDown, isUp, button, eventUsed)
 	eventUsed = superFunc(self, posX, posY, isDown, isUp, button, eventUsed)
-	if not eventUsed then
-		if isUp and button == Input.MOUSE_BUTTON_RIGHT then
-			for _, hotspot in pairs(self.ingameMap.hotspots) do
-				if self.ingameMap.filter[hotspot.category] and hotspot.visible and hotspot.category ~= MapHotspot.CATEGORY_FIELD_DEFINITION and hotspot.category ~= MapHotspot.CATEGORY_COLLECTABLE and hotspot:getIsActive() then
-					if GuiUtils.checkOverlayOverlap(posX, posY, hotspot.x, hotspot.y, hotspot:getWidth(), hotspot:getHeight(), nil) then
-						if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") and hotspot.isADMarker and g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil then
-							AutoDriveHudInputEventEvent:sendSecondMarkerEvent(g_currentMission.controlledVehicle, hotspot.markerID)
-						end
-						break
-					end
-				end
+
+    if isUp and button == Input.MOUSE_BUTTON_LEFT then
+        local hotspot = g_currentMission.hud.ingameMap.selectedHotspot
+        if hotspot ~= nil and hotspot.isADMarker then
+			local targetVehicle = g_currentMission.controlledVehicle
+			if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
+				targetVehicle = AutoDrive.aiFrameVehicle
 			end
-		end
-	end
+            if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+                if targetVehicle ~= nil and targetVehicle.ad ~= nil then
+                    AutoDriveHudInputEventEvent:sendFirstMarkerEvent(targetVehicle, hotspot.markerID)
+                    return
+                end
+            end
+        end
+    end
+
+    if isUp and button == Input.MOUSE_BUTTON_RIGHT then
+        for _, hotspot in pairs(self.ingameMap.hotspots) do
+            if hotspot.isADMarker then
+                local hotspotPosX, hotspotPosY =  hotspot.icon:getPosition()
+                if GuiUtils.checkOverlayOverlap(posX, posY, hotspotPosX, hotspotPosY, hotspot:getWidth(), hotspot:getHeight(), nil) then
+                    if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+                        local targetVehicle = g_currentMission.controlledVehicle
+						if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
+							targetVehicle = AutoDrive.aiFrameVehicle
+						end
+						if targetVehicle ~= nil and targetVehicle.ad ~= nil then
+                            AutoDriveHudInputEventEvent:sendSecondMarkerEvent(targetVehicle, hotspot.markerID)
+                        end
+                    end
+                    break
+                end
+            end
+        end
+    end
 
 	return eventUsed
 end
@@ -902,48 +954,182 @@ function AutoDrive:MapHotspot_getIsVisible(superFunc)
 	return superReturn and ((not self.isADMarker) or AutoDrive.getSetting("showMarkersOnMap"))
 end
 
+function AutoDrive.getPlayerHotspot()
+--[[
+    spec.playerHotspot = PlayerHotspot.new()
+    spec.playerHotspot:setVehicle(self)
+
+    g_currentMission:addInteractiveVehicle(self)
+    g_currentMission:addEnterableVehicle(self)
+
+    if spec.playerHotspot ~= nil then
+        spec.playerHotspot:setOwnerFarmId(self:getActiveFarm())
+        g_currentMission:addMapHotspot(spec.playerHotspot)
+    end
+]]
+        local mapHotspot = PlayerHotspot.new()
+
+        -- mapHotspot:setOwnerFarmId(self:getActiveFarm())
+        -- mapHotspot:setOwnerFarmId(0) -- all, visitor etc. ???
+
+--[[
+        mapHotspot.ownerFarmId = g_currentMission.player.farmId
+        mapHotspot.clickArea.area[1] = 0.13
+        mapHotspot.clickArea.area[2] = 0.13
+        mapHotspot.clickArea.area[3] = 0.74
+        mapHotspot.clickArea.area[4] = 0.74
+]]
+
+        -- mapHotspot.isHotspotSelectionActive = true ???
+    return mapHotspot
+end
+
+function AutoDrive.getTourHotspot()
+--[[
+    if self.mapHotspot == nil then
+        self.mapHotspot = TourHotspot.new()
+        g_currentMission:addMapHotspot(self.mapHotspot)
+    end
+
+    self.mapHotspot:setWorldPosition(x, z)
+
+    -- Find 'hidden' icon used internally only
+    local h = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x,y,z)
+    if y > h then
+        g_currentMission:setMapTargetHotspot(self.mapHotspot)
+        g_currentMission.disableMapTargetHotspotHiding = true
+    else
+        g_currentMission:setMapTargetHotspot(nil)
+        g_currentMission.disableMapTargetHotspotHiding = false
+    end
+]]
+        local mapHotspot = TourHotspot.new()
+
+--[[
+        mapHotspot.ownerFarmId = g_currentMission.player.farmId
+        mapHotspot.clickArea.area[1] = 0.13
+        mapHotspot.clickArea.area[2] = 0.13
+        mapHotspot.clickArea.area[3] = 0.74
+        mapHotspot.clickArea.area[4] = 0.74
+]]
+        -- mapHotspot.isHotspotSelectionActive = true ???
+    return mapHotspot
+end
+
+function AutoDrive.getPlaceableHotspot()
+--[[
+        local hotspot = PlaceableHotspot.new()
+        hotspot:setPlaceable(self)
+
+        local hotspotTypeName = self.xmlFile:getValue(key .. "#type", "UNLOADING")
+        local hotspotType = PlaceableHotspot.getTypeByName(hotspotTypeName)
+        if hotspotType == nil then
+            Logging.xmlWarning(self.xmlFile, "Unknown placeable hotspot type '%s'. Falling back to type 'UNLOADING'\nAvailable types: %s", hotspotTypeName, table.concatKeys(PlaceableHotspot.TYPE, " "))
+            hotspotType = PlaceableHotspot.TYPE.UNLOADING
+        end
+        hotspot:setPlaceableType(hotspotType)
+
+        local linkNode = self.xmlFile:getValue(key .. "#linkNode", nil, self.components, self.i3dMappings) or self.rootNode
+        if linkNode ~= nil then
+            local x, _, z = getWorldTranslation(linkNode)
+            hotspot:setWorldPosition(x, z)
+        end
+
+        local teleportNode = self.xmlFile:getValue(key .. "#teleportNode", nil, self.components, self.i3dMappings)
+        if teleportNode ~= nil then
+            local x, y, z = getWorldTranslation(teleportNode)
+            hotspot:setTeleportWorldPosition(x, y, z)
+        end
+
+        local worldPositionX, worldPositionZ = self.xmlFile:getValue(key .. "#worldPosition", nil)
+        if worldPositionX ~= nil then
+            hotspot:setWorldPosition(worldPositionX, worldPositionZ)
+        end
+
+        local teleportX, teleportY, teleportZ = self.xmlFile:getValue(key .. "#teleportWorldPosition", nil)
+        if teleportX ~= nil then
+            if g_currentMission ~= nil then
+                teleportY = math.max(teleportY, getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, teleportX, 0, teleportZ))
+            end
+            hotspot:setTeleportWorldPosition(teleportX, teleportY, teleportZ)
+        end
+
+        local text = self.xmlFile:getValue(key.."#text", nil)
+        if text ~= nil then
+            text = g_i18n:convertText(text, self.customEnvironment)
+            hotspot:setName(text)
+        end
+]]
+        local mapHotspot = PlaceableHotspot.new()
+
+--[[
+        mapHotspot.ownerFarmId = g_currentMission.player.farmId
+        mapHotspot.clickArea.area[1] = 0.13
+        mapHotspot.clickArea.area[2] = 0.13
+        mapHotspot.clickArea.area[3] = 0.74
+        mapHotspot.clickArea.area[4] = 0.74
+]]
+        -- mapHotspot.isHotspotSelectionActive = true ???
+
+        mapHotspot:setPlaceableType(PlaceableHotspot.TYPE.UNLOADING)
+        -- mapHotspot:setTeleportWorldPosition(x, y, z)
+
+
+    return mapHotspot
+end
+
 function AutoDrive.updateDestinationsMapHotspots()
-	--[[
     AutoDrive.debugPrint(nil, AutoDrive.DC_DEVINFO, "AutoDrive.updateDestinationsMapHotspots()")
+
     local width, height = getNormalizedScreenValues(9, 9)
 
     if AutoDrive.mapHotspotsBuffer ~= nil then
         -- Removing all old map hotspots
-        for _, mh in pairs(AutoDrive.mapHotspotsBuffer) do
-            g_currentMission:removeMapHotspot(mh)
-            mh:delete()
+        for _, mapHotspot in pairs(AutoDrive.mapHotspotsBuffer) do
+            g_currentMission:removeMapHotspot(mapHotspot)
+            mapHotspot:delete()
         end
     end
     AutoDrive.mapHotspotsBuffer = {}
-    
+
     -- Updating and adding hotspots
     for index, marker in ipairs(ADGraphManager:getMapMarkers()) do
-        local mh
+        -- local mapHotspot = TourHotspot.new()
+        local mapHotspot = PlaceableHotspot.new()
+        -- local mapHotspot = AutoDrive.getPlayerHotspot()
+
+        mapHotspot.width, mapHotspot.height = getNormalizedScreenValues(40, 40)
+        mapHotspot.isVisible = true
+        mapHotspot.icon = Overlay.new(g_autoDriveUIFilename, 0, 0, mapHotspot.width, mapHotspot.height )
+        mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
+
         if marker.isADDebug == true then
             -- map hotspot debug
-            mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
-            --mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({780, 780, 234, 234}))
---function GuiUtils.getUVs(str, ref, defaultValue, rotation)
-			mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({780, 780, 234, 234}))
+            mapHotspot.isADDebug = true
+            -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
+			mapHotspot.icon:setUVs(GuiUtils.getUVs({780, 780, 234, 234}))
         else
-            mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_OTHER)
-            --mh:setImage(g_autoDriveUIFilename, getNormalizedUVs({0, 512, 128, 128}))
-			mh:setImage(g_autoDriveUIFilename, GuiUtils.getUVs({0, 512, 128, 128}))
+            -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_OTHER)
+			mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
         end
-        mh:setSize(width, height)
-        mh:setTextOptions(0)
-        mh.isADMarker = true
-        mh:setText(marker.name)
+
+        mapHotspot.isADMarker = true
+        mapHotspot.markerID = index
+        
         local wp = ADGraphManager:getWayPointById(marker.id)
         if wp ~= nil then
-            mh:setWorldPosition(wp.x, wp.z)
-            mh.enabled = true
-            mh.markerID = index
-            g_currentMission:addMapHotspot(mh)
-            table.insert(AutoDrive.mapHotspotsBuffer, mh)
+
+            g_currentMission:addMapHotspot(mapHotspot)
+            table.insert(AutoDrive.mapHotspotsBuffer, mapHotspot)
+
+            mapHotspot:setWorldPosition(wp.x, wp.z)
+
+            mapHotspot:setTeleportWorldPosition(wp.x, wp.y + 2, wp.z)
+
+            mapHotspot:setName(marker.name)
+
         end
     end
-	--]]
 end
 
 function AutoDrive.createColorSelectionWayPoints(vehicle)

@@ -87,6 +87,7 @@ function ADTaskModule:update(dt)
         end
     else
         self:RefuelIfNeeded()
+        self:RepairIfNeeded()
     
         -- No refuel needed or no refuel trigger available
         if self.activeTask == nil then
@@ -104,12 +105,9 @@ function ADTaskModule:hasToRefuel()
     if not AutoDrive.getSetting("autoRefuel", self.vehicle) then
         return false
     end
-    local refuelFillType = AutoDrive.getRequiredRefuel(self.vehicle)
-    if refuelFillType > 0 then
-        -- refuel required
-        if self.vehicle.ad.stateModule:getRefuelFillType() ~= refuelFillType then
-            self.vehicle.ad.stateModule:setRefuelFillType(refuelFillType)
-        end
+    local refuelFillTypes = AutoDrive.getRequiredRefuels(self.vehicle, self.vehicle.ad.onRouteToRefuel)
+    if #refuelFillTypes > 0 then
+        self.vehicle.ad.stateModule:setRefuelFillType(refuelFillTypes[1])
         return true
     else
         return false
@@ -118,14 +116,47 @@ end
 
 function ADTaskModule:RefuelIfNeeded()
     if self:hasToRefuel() then
-        local refuelDestinationMarkerID = ADTriggerManager.getClosestRefuelDestination(self.vehicle)
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADTaskModule:RefuelIfNeeded hasToRefuel")
+        local refuelDestinationMarkerID = ADTriggerManager.getClosestRefuelDestination(self.vehicle, self.vehicle.ad.onRouteToRefuel)
         if refuelDestinationMarkerID ~= nil then
             self.activeTask = RefuelTask:new(self.vehicle, ADGraphManager:getMapMarkerById(refuelDestinationMarkerID).id)
         else
             self.vehicle.ad.isStoppingWithError = true
             self.vehicle:stopAutoDrive()
-            local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(self.vehicle.ad.stateModule:getRefuelFillType()).title
+            local fillType = self.vehicle.ad.stateModule:getRefuelFillType()
+            local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(fillType).title
             AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, self.vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
+        end
+    end
+end
+
+function ADTaskModule:hasToRepair()
+    if self.vehicle.ad.onRouteToRepair then
+        return true
+    end
+    if not AutoDrive.getSetting("autoRepair", self.vehicle) then
+        return false
+    end
+    local repairNeeded = false
+    local attachedObjects = AutoDrive.getAllAttachedObjects(self.vehicle)
+    table.insert(attachedObjects, self.vehicle)
+    for _, attachedObject in pairs(attachedObjects) do
+        repairNeeded = repairNeeded or (attachedObject.spec_wearable ~= nil and attachedObject.spec_wearable.damage > 0.6)
+    end
+
+    return repairNeeded
+end
+
+function ADTaskModule:RepairIfNeeded()
+    if self:hasToRepair() then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADTaskModule:RepairIfNeeded hasToRepair")
+        local repairDestinationMarkerNodeID = AutoDrive:getClosestRepairTrigger(self.vehicle)
+        if repairDestinationMarkerNodeID ~= nil then
+            self.activeTask = RepairTask:new(self.vehicle, repairDestinationMarkerNodeID.marker)
+        else
+            --self.vehicle.ad.isStoppingWithError = true
+            --self.vehicle:stopAutoDrive()
+            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Repair_Station;", 5000, self.vehicle.ad.stateModule:getName())
         end
     end
 end

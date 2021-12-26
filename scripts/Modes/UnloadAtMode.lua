@@ -55,6 +55,17 @@ function UnloadAtMode:getNextTask()
 	if self.state == UnloadAtMode.STATE_TO_TARGET then
 		-- STATE_TO_TARGET - drive to unload destination
 		AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtMode:getNextTask STATE_TO_TARGET UnloadAtDestinationTask...")
+
+        if self.vehicle.ad.stateModule:getAutomaticUnloadTarget() then
+            local sellingStation = ADTriggerManager:getHighestPayingSellStation(self.vehicle.ad.stateModule:getFillType())
+            if sellingStation ~= nil then
+                local wpId = ADTriggerManager:getMarkerAtStation(sellingStation, self.vehicle)
+                if wpId > 0 then                    
+                    self.vehicle.ad.stateModule:setFirstMarkerByWayPointId(wpId)
+                end
+            end
+        end
+
 		nextTask = UnloadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getFirstMarker().id)
 		self.state = UnloadAtMode.STATE_PARK
     elseif self.state == UnloadAtMode.STATE_PARK then

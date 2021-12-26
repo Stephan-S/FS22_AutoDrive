@@ -223,26 +223,6 @@ function ADGraphManager:checkYPositionIntegrity()
 	end
 end
 
-function ADGraphManager:checkSubPrioIntegrity()
-	for _, wp in pairs(self.wayPoints) do
-		if wp.x >= -1.01 and wp.x <= -0.99 and wp.z >= -1.01 and wp.z <= -0.99 then
-			-- Found old sub prio marker
-			-- Transfer to new style now
-			for __, wpInner in pairs(self.wayPoints) do
-				if wpInner.id ~= wp.id then
-					for _, neighborId in pairs(wpInner.out) do
-						if neighborId == wp.id then
-							self:toggleWayPointAsSubPrio(wpInner.id)
-						end
-					end
-				end
-			end
-
-			self:removeWayPoint(wp.id)
-		end
-	end
-end
-
 function ADGraphManager:removeWayPoint(wayPointId, sendEvent)
 	if wayPointId ~= nil and wayPointId >= 0 and self.wayPoints[wayPointId] ~= nil then
 		if sendEvent == nil or sendEvent == true then
@@ -256,26 +236,32 @@ function ADGraphManager:removeWayPoint(wayPointId, sendEvent)
 
 			-- Removing incoming node reference on all out nodes
 			for _, id in pairs(wayPoint.out) do
-				local incomingId = table.indexOf(self.wayPoints[id].incoming, wayPoint.id)
-				if incomingId ~= nil then
-					table.remove(self.wayPoints[id].incoming, incomingId)
-				end
+                if self.wayPoints[id] ~= nil and self.wayPoints[id].incoming ~= nil and wayPoint.id ~= nil then
+                    local incomingId = table.indexOf(self.wayPoints[id].incoming, wayPoint.id)
+                    if incomingId ~= nil then
+                        table.remove(self.wayPoints[id].incoming, incomingId)
+                    end
+                end
 			end
 
 			-- Removing out node reference on all incoming nodes
 			for _, id in pairs(wayPoint.incoming) do
-				local outId = table.indexOf(self.wayPoints[id].out, wayPoint.id)
-				if outId ~= nil then
-					table.remove(self.wayPoints[id].out, outId)
-				end
+                if self.wayPoints[id] ~= nil and self.wayPoints[id].out ~= nil and wayPoint.id ~= nil then
+                    local outId = table.indexOf(self.wayPoints[id].out, wayPoint.id)
+                    if outId ~= nil then
+                        table.remove(self.wayPoints[id].out, outId)
+                    end
+                end
 			end
 
 			if #wayPoint.incoming == 0 then
 				-- This is a reverse node, so we can't rely on the incoming table
 				for _, wp in pairs(self.wayPoints) do
-					if table.contains(wp.out, wayPoint.id) then
-						table.removeValue(wp.out, wayPoint.id)
-					end
+                    if wp.out ~= nil and wayPoint.id ~= nil then
+                        if table.contains(wp.out, wayPoint.id) then
+                            table.removeValue(wp.out, wayPoint.id)
+                        end
+                    end
 				end
 			end
 
@@ -345,7 +331,7 @@ function ADGraphManager:renameMapMarker(newName, markerId, sendEvent)
 end
 
 function ADGraphManager:createMapMarkerOnClosest(vehicle, markerName, sendEvent)
-	if vehicle ~= nil and markerName:len() > 1 then
+	if vehicle ~= nil and markerName:len() >= 1 then
 		-- Finding closest waypoint
 		local closest, _ = vehicle:getClosestWayPoint()
 		if closest ~= nil and closest ~= -1 and self.wayPoints[closest] ~= nil then
@@ -375,7 +361,7 @@ function ADGraphManager:createMapMarker(markerId, markerName, sendEvent)
 end
 
 function ADGraphManager:addGroup(groupName, sendEvent)
-	if groupName:len() > 1 and self.groups[groupName] == nil then
+	if groupName:len() >= 1 and self.groups[groupName] == nil then
 		if sendEvent == nil or sendEvent == true then
 			-- Propagating group creation all over the network
 			AutoDriveGroupsEvent.sendEvent(groupName, AutoDriveGroupsEvent.TYPE_ADD)
@@ -681,6 +667,15 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 			return
 		end
 	end
+
+    -- play sound only on client with enabled editor mode
+    if g_client ~= nil then
+        local vehicle = g_currentMission.controlledVehicle
+        if vehicle ~= nil and vehicle.ad ~= nil and AutoDrive.isInExtendedEditorMode() then
+            AutoDrive.playSample(AutoDrive.recordWaypointSample, 0.25)
+        end
+    end
+
 	local newId = self:getWayPointsCount() + 1
 	local newWp = self:createNode(newId, x, y, z, {}, {}, flags)
 	self:setWayPoint(newWp)
@@ -1035,6 +1030,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
         end
 		local count1 = 1
 		local count2 = 1
+		local count3 = 1
 		local mapMarkerCounter = #self:getMapMarkers() + 1
 		for i, wp in pairs(network) do
             -- mark wayPoint without outgoing connection
@@ -1083,6 +1079,28 @@ function ADGraphManager:createDebugMarkers(updateMap)
                     end
                 end
             end
+
+            -- mark wayPoint without outgoing connection
+            if wp.out ~= nil then
+                for _, wp_out in pairs(wp.out) do
+                    local missingIncoming = self:checkForMissingIncoming(wp, self:getWayPointById(wp_out))
+                    if missingIncoming then
+                        local debugMapMarkerName = "3_" .. tostring(count3)
+
+                        -- create the mapMarker
+                        local mapMarker = {}
+                        mapMarker.name = debugMapMarkerName
+                        mapMarker.group = ADGraphManager.debugGroupName
+                        mapMarker.markerIndex = mapMarkerCounter
+                        mapMarker.id = wp.id
+                        mapMarker.isADDebug = true
+                        self:setMapMarker(mapMarker)
+
+                        count3 = count3 + 1
+                        mapMarkerCounter = mapMarkerCounter + 1
+                    end
+                end
+            end
 		end
 	end
     if shouldUpdateMap == true then
@@ -1108,6 +1126,32 @@ function ADGraphManager:checkForWrongReverseStart(wp_ref, wp_current, wp_ahead)
     end
 
     return reverseStart
+end
+
+function ADGraphManager:checkForMissingIncoming(wp_current)
+    local ret = false
+
+    if wp_current == nil then
+        return ret
+    end
+    local reverseFound = false
+    if wp_current.incoming ~= nil and #wp_current.incoming == 0 then
+
+        -- search for a possible reverse connection
+        for _, wp in pairs(self.wayPoints) do
+            if wp.out ~= nil and wp_current.id ~= nil then
+                if table.contains(wp.out, wp_current.id) then
+                    reverseFound = true
+                    break
+                end
+            end
+        end
+        if not reverseFound then
+            -- the waypoint has no incoming connection
+            ret = true
+        end
+    end
+    return ret
 end
 
 function ADGraphManager:toggleWayPointAsSubPrio(wayPointId)
@@ -1375,4 +1419,47 @@ function ADGraphManager:deleteColorSelectionWayPoints()
             actualID = actualID - 1
         end
     end
+end
+
+function ADGraphManager:removeNodesWithFlag(flagToRemove)
+	local network = self:getWayPoints()	
+	local pointsToDelete = {}
+	for i, wp in pairs(network) do
+		if bitAND(wp.flags, flagToRemove) > 0 then
+			table.insert(pointsToDelete, wp.id)
+		end
+	end
+
+	-- sort the wayPoints to delete in descant order to ensure correct linkage deletion
+	local sort_func = function(a, b)
+		return a > b
+	end
+	table.sort(pointsToDelete, sort_func)
+
+	for i = 1, #pointsToDelete do
+		ADGraphManager:removeWayPoint(pointsToDelete[i])
+	end
+end
+
+function ADGraphManager:createSplineConnection(start, waypoints, target, sendEvent)
+	if sendEvent == nil or sendEvent == true then
+		-- Propagating connection toggling all over the network
+		CreateSplineConnectionEvent.sendEvent(start, waypoints, target)
+	else
+		local lastId = start
+		local lastHeight = ADGraphManager:getWayPointById(start).y
+		for wpId, wp in pairs(waypoints) do
+			if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
+				wp.y = lastHeight
+			end
+			self:createWayPoint(wp.x, wp.y, wp.z, sendEvent)
+			local createdId = self:getWayPointsCount()
+			self:toggleConnectionBetween(ADGraphManager:getWayPointById(lastId), ADGraphManager:getWayPointById(createdId), false, false)
+			lastId = createdId
+			lastHeight = wp.y
+		end
+
+		local wp = self:getWayPointById(lastId)
+		self:toggleConnectionBetween(wp, self:getWayPointById(target), false, false)
+	end
 end

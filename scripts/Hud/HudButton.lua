@@ -23,8 +23,14 @@ end
 function ADHudButton:readImages()
     local images = {}
     local counter = 1
+
+    local path = self.primaryAction
+    if self.primaryAction == "input_toggleAutomaticPickupTarget" then
+        path = "input_toggleAutomaticUnloadTarget"
+    end
+
     while counter <= 19 do
-        images[counter] = AutoDrive.directory .. "textures/" .. self.primaryAction .. "_" .. counter .. ".dds"
+        images[counter] = AutoDrive.directory .. "textures/" .. path .. "_" .. counter .. ".dds"
         counter = counter + 1
     end
     return images
@@ -118,7 +124,7 @@ function ADHudButton:getNewState(vehicle)
     end
 
     if self.primaryAction == "input_routesManager" then
-        if (AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer == true and g_dedicatedServerInfo ~= nil) or g_dedicatedServerInfo == nil then
+        if (AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer == true and g_dedicatedServer ~= nil) or g_dedicatedServer == nil then
             self.isVisible = AutoDrive.isEditorModeEnabled()
         end
     end
@@ -180,6 +186,44 @@ function ADHudButton:getNewState(vehicle)
             newState = 2
         end
     end
+    
+    if self.primaryAction == "input_toggleAutomaticUnloadTarget" then
+        self.isVisible = (vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD)
+
+        if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD then            
+            if vehicle.ad.stateModule:getAutomaticPickupTarget() then
+                newState = 5
+            else
+                newState = 4
+            end
+        elseif vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
+            if vehicle.ad.stateModule:getAutomaticUnloadTarget() then
+                newState = 3
+            else
+                newState = 2
+            end
+        elseif vehicle.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD then
+            newState = 2
+        end
+    end
+
+    if self.primaryAction == "input_toggleAutomaticPickupTarget" then
+        if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD then            
+            newState = 1
+        elseif vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
+            if vehicle.ad.stateModule:getAutomaticPickupTarget() then
+                newState = 5
+            else
+                newState = 4
+            end
+        elseif vehicle.ad.stateModule:getMode() == AutoDrive.MODE_DELIVERTO then
+            if vehicle.ad.stateModule:getAutomaticUnloadTarget() then
+                newState = 3
+            else
+                newState = 2
+            end
+        end
+    end
 
     return newState
 end
@@ -207,8 +251,28 @@ function ADHudButton:act(vehicle, posX, posY, isDown, isUp, button)
             end
 
         end
+
+        if self.primaryAction == "input_toggleAutomaticUnloadTarget" or self.primaryAction == "input_toggleAutomaticPickupTarget" then
+            self:actOnIcons(vehicle, posX, posY, isDown, isUp, button)
+            return
+        end
+
         if button == 1 and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
+            local storedVehicle = nil
+            if self.primaryAction == "input_start_stop" then
+                if vehicle ~= g_currentMission.controlledVehicle then
+                    storedVehicle = g_currentMission.controlledVehicle
+                    g_currentMission.controlledVehicle = vehicle
+                    --g_currentMission:requestToEnterVehicle(vehicle)
+                end
+            end
             ADInputManager:onInputCall(vehicle, self.primaryAction)
+            if storedVehicle ~= nil then
+                SpecializationUtil.raiseEvent(vehicle, "onUpdate", 16, false, false, false)
+                g_currentMission.controlledVehicle = storedVehicle
+                --g_currentMission:requestToEnterVehicle(storedVehicle)
+                g_inputBinding:setShowMouseCursor(true)
+        end
             return true
         elseif (button == 3 or button == 2) and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
             ADInputManager:onInputCall(vehicle, self.secondaryAction)
@@ -220,6 +284,34 @@ function ADHudButton:act(vehicle, posX, posY, isDown, isUp, button)
             ADInputManager:onInputCall(vehicle, self.quatenaryAction)
             return true
         end
+
+        if button > 0 and button < 4 and isDown then
+            return true, true
+        end
+    end
+
+    return false
+end
+
+function ADHudButton:actOnIcons(vehicle, posX, posY, isDown, isUp, button)
+    if button == 1 and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
+        if self.primaryAction == "input_toggleAutomaticUnloadTarget" then
+            if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
+                ADInputManager:onInputCall(vehicle, self.primaryAction)
+            elseif vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD then
+                ADInputManager:onInputCall(vehicle, "input_toggleAutomaticPickupTarget")
+            end
+        end
+
+        if self.primaryAction == "input_toggleAutomaticPickupTarget" then
+            if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
+                ADInputManager:onInputCall(vehicle, self.primaryAction)
+            elseif vehicle.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD then
+                ADInputManager:onInputCall(vehicle, "input_toggleAutomaticUnloadTarget")
+            end
+        end
+
+        return true
     end
 
     return false

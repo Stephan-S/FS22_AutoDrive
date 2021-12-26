@@ -484,7 +484,8 @@ function ADPullDownList:createSelection_FillType()
     local supportedFillTypes = nil
     self.autoLoadFillTypes = nil
     if g_currentMission.controlledVehicle ~= nil then
-        for _, trailer in pairs(AutoDrive.getTrailersOf(g_currentMission.controlledVehicle, false)) do
+        local trailers, _ = AutoDrive.getAllUnits(g_currentMission.controlledVehicle)
+        for trailerIndex, trailer in ipairs(trailers) do
             supportedFillTypes = {}
             if AutoDrive:hasAL(trailer) then
                 -- AutoLoad
@@ -494,7 +495,15 @@ function ADPullDownList:createSelection_FillType()
                     for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
                         if trailer.getFillUnitSupportedFillTypes ~= nil then
                             for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
+                                
+                                if trailerIndex == 1 then -- hide fuel types for 1st vehicle
+                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
+                                    if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
+                                        supported = false
+                                    end
+                                end
                                 if supported then
+                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
                                     table.insert(supportedFillTypes, fillType)
                                 end
                             end
@@ -510,7 +519,7 @@ function ADPullDownList:createSelection_FillType()
     local fillTypeIndex = 1
     local itemListIndex = 1
     local lastIndexReached = false
-
+    self.options[1][itemListIndex] = {displayName = "", returnValue = 0}
     if self.autoLoadFillTypes ~= nil and #self.autoLoadFillTypes > 0 then
         -- AutoLoad
         for i = 1, #self.autoLoadFillTypes do
@@ -588,8 +597,11 @@ function ADPullDownList:getNewState_FillType(vehicle)
                 -- AutoDrive.debugMsg(vehicle, "ADPullDownList:getNewState_FillType 2 self.text %s", tostring(self.text))
             end
         else
-            self.text = g_fillTypeManager:getFillTypeByIndex(vehicle.ad.stateModule:getFillType()).title
-            -- AutoDrive.debugMsg(vehicle, "ADPullDownList:getNewState_FillType 3 self.text %s", tostring(self.text))
+            if vehicle.ad.stateModule:getFillType() ~= g_fillTypeManager:getFillTypeIndexByName('UNKNOWN') then
+                self.text = g_fillTypeManager:getFillTypeByIndex(vehicle.ad.stateModule:getFillType()).title
+            else
+                self.text = ""
+            end
         end
     end
     return newState, newSelection

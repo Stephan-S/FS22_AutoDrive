@@ -71,14 +71,9 @@ function AutoDriveVehicleData:onPostLoad(savegame)
         if savegame ~= nil then
             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.onPostLoad self.isServer")
             local xmlFile = savegame.xmlFile
-            local key = savegame.key .. ".FS22_AutoDrive.AutoDriveVehicleData"
-
-            if xmlFile:hasProperty(key) then
-                self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#WorkToolParkDestination"), -1)
-                if self.advd.parkDestination == -1 then
-                    -- change tag in vehicles.xml from WorkToolParkDestination to parkDestination as all park destinations are in vehicle data now
-                    self.advd.parkDestination = Utils.getNoNil(getXMLInt(xmlFile, key .. "#parkDestination"), -1)
-                end
+            local adkey = savegame.key .. ".AutoDrive"
+            if xmlFile:hasProperty(adkey) then
+                self.advd.parkDestination = Utils.getNoNil(xmlFile:getValue(adkey .. "#parkDestination"), -1)
             end            
         end
     end
@@ -91,7 +86,7 @@ onEnterVehicle is used here to detect an already selected worktool and send it's
 ]]
 function AutoDriveVehicleData:onEnterVehicle()
     local actualparkDestination = -1
-    if g_dedicatedServerInfo == nil then
+    if g_dedicatedServer == nil then
         -- only send the client event to server
         local selectedWorkTool = AutoDrive.getSelectedWorkTool(self, true)
         if selectedWorkTool ~= nil and selectedWorkTool.advd ~= nil then
@@ -117,7 +112,7 @@ onSelect is used here to detect an actualy selected worktool and send it's park 
 ]]
 function AutoDriveVehicleData:onSelect()
     local actualparkDestination = -1
-    if g_dedicatedServerInfo == nil then
+    if g_dedicatedServer == nil then
         -- only send the client event to server
         if self.advd ~= nil then
             actualparkDestination = self.advd.parkDestination
@@ -142,7 +137,7 @@ onPreDetach is used here, as with automatic engine start the vehicle is not sele
 ]]
 function AutoDriveVehicleData:onPreDetach(attacherVehicle, implement)
     local actualparkDestination = -1
-    if g_dedicatedServerInfo == nil then
+    if g_dedicatedServer == nil then
         -- only send the client event to server
         if attacherVehicle.advd ~= nil then
             actualparkDestination = attacherVehicle.advd.parkDestination
@@ -171,11 +166,9 @@ function AutoDriveVehicleData:saveToXMLFile(xmlFile, key)
         actualparkDestination = -1
     end
     if actualparkDestination ~= nil and actualparkDestination > 0 then
-        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.saveToXMLFile parkDestination %s", tostring(self.advd.parkDestination))
-        if self.isServer then
-            setXMLInt(xmlFile, key .. "#saved_by_server", 1)
-        end
-        setXMLInt(xmlFile, key .. "#parkDestination", actualparkDestination)
+        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDriveVehicleData.saveToXMLFile actualparkDestination %s", tostring(actualparkDestination))
+        local adKey = string.gsub(key, "FS22_AutoDrive.AutoDriveVehicleData", "AutoDrive")
+        xmlFile:setValue(adKey .. "#parkDestination", actualparkDestination)
     end
 end
 
@@ -278,7 +271,6 @@ AutoDriveVehicleDataEventAssignParkDestination_mt = Class(AutoDriveVehicleDataEv
 InitEventClass(AutoDriveVehicleDataEventAssignParkDestination, "AutoDriveVehicleDataEventAssignParkDestination")
 
 function AutoDriveVehicleDataEventAssignParkDestination.emptyNew()
-	-- print("AutoDriveVehicleDataEventAssignParkDestination:emptyNew")
     local self = Event.new(AutoDriveVehicleDataEventAssignParkDestination_mt)
     return self
 end
