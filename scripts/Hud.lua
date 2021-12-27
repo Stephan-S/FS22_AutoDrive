@@ -358,12 +358,14 @@ end
 
 function AutoDriveHud:refreshHudElementsLayerSequence()
 	-- Sort the elements by their layer index, for optimizing drawHud and mouseEvent methods
-	table.sort(
-		self.hudElements,
-		function(a, b)
-			return a.layer < b.layer
-		end
-	)
+	if self.hudElements ~= nil then
+		table.sort(
+			self.hudElements,
+			function(a, b)
+				return a.layer < b.layer
+			end
+		)
+	end
 end
 
 function AutoDriveHud:drawHud(vehicle)
@@ -871,9 +873,11 @@ function AutoDriveHud:has_value(tab, val)
 end
 
 function AutoDriveHud:closeAllPullDownLists(vehicle)
-	for _, hudElement in pairs(self.hudElements) do
-		if hudElement.collapse ~= nil and hudElement.state ~= nil and hudElement.state == ADPullDownList.STATE_EXPANDED then
-			hudElement:collapse(vehicle, false)
+	if self.hudElements ~= nil then
+		for _, hudElement in pairs(self.hudElements) do
+			if hudElement.collapse ~= nil and hudElement.state ~= nil and hudElement.state == ADPullDownList.STATE_EXPANDED then
+				hudElement:collapse(vehicle, false)
+			end
 		end
 	end
 	-- PullDownList(s) have been collapsed, so need to refresh layer sequence
