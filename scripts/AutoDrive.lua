@@ -294,6 +294,7 @@ end
 function AutoDrive:onAIFrameOpen()
 	AutoDrive.aiFrameOpen = true
 	AutoDrive.aiFrame = self
+	AutoDrive.aiFrameVehicle = g_currentMission.controlledVehicle
 end
 
 function AutoDrive:onAIFrameClose()
