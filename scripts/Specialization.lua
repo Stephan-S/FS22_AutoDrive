@@ -373,7 +373,12 @@ end
 function AutoDrive:onUpdate(dt)
     if self.isServer and self.ad.stateModule:isActive() then
         self.ad.recordingModule:update(dt)
-        self.ad.taskModule:update(dt)
+        if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
+            self.ad.taskModule:update(dt)
+        else
+            self.ad.specialDrivingModule:stopVehicle()
+            self.ad.specialDrivingModule:update(dt)
+        end
         if self.lastMovedDistance > 0 then
             g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
         end
@@ -396,8 +401,6 @@ function AutoDrive:onUpdate(dt)
     if self.ad.isCombine then
         AutoDrive.getLengthOfFieldInFront(self)
     end
-
-    --AutoDrive.generateUTurn(self, false)
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
@@ -951,16 +954,7 @@ function AutoDrive:startAutoDrive()
             AutoDriveStartStopEvent:sendStartEvent(self)
 
             if AutoDrive.experimentalFeatures.FoldImplements then
-                for _, implement in pairs(self:getAttachedImplements()) do
-                    if implement ~= nil and implement.object ~= nil then
-                        if implement.object.setFoldState ~= nil then
-                            local allowed, warning = implement.object:getIsFoldAllowed(1, false)
-                            if allowed then
-                                implement.object:setFoldState(1, false)
-                            end
-                        end
-                    end
-                end
+                AutoDrive.foldAllImplements(self)
             end
         end
     else

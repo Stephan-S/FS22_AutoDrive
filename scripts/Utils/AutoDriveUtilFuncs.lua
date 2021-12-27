@@ -356,7 +356,7 @@ function AutoDrive.getAllImplements(vehicle)
     end
 end
 
-function AutoDrive.getAllAttachedObjects(vehicle)
+function AutoDrive.getAllAttachedObjects(vehicle, includeVehicle)
     local allImp = {}
     
     if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
@@ -371,7 +371,44 @@ function AutoDrive.getAllAttachedObjects(vehicle)
         addAllAttached(vehicle)
     end
 
+    if includeVehicle then
+        table.insert(allImp, vehicle)
+    end
+
     return allImp
+end
+
+function AutoDrive.foldAllImplements(vehicle)
+    local implements = AutoDrive.getAllAttachedObjects(vehicle, true)
+    for _, implement in pairs(implements) do
+        local spec = implement.spec_foldable
+        if implement.spec_foldable ~= nil then
+            local allowed = implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection
+            if allowed then
+                Foldable.actionControllerFoldEvent(implement, -1)
+            end
+        end
+    end
+end
+
+function AutoDrive.getAllImplementsFolded(vehicle)
+    local implements = AutoDrive.getAllAttachedObjects(vehicle, true)
+    for _, implement in pairs(implements) do
+        if not AutoDrive.isVehicleFolded(implement) then
+            return false
+        end
+    end
+
+    return true
+end
+
+function AutoDrive.isVehicleFolded(vehicle)
+    local spec = vehicle.spec_foldable
+    if spec ~= nil and #spec.foldingParts > 0 then
+        return spec.turnOnFoldDirection == -1 and spec.foldAnimTime >= 0.99 or spec.turnOnFoldDirection == 1 and spec.foldAnimTime <= 0.01
+    end
+    
+    return true
 end
 
 -- set or delete park destination for selected vehicle, tool from user input action, client mode!
