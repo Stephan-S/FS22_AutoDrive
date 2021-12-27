@@ -45,27 +45,18 @@ function AutoDrive:checkIsConnected(toCheck, other)
     if toCheck == nil or other == nil then
         return false
     end
-    if toCheck.getAttachedImplements == nil then
-        return false
-    end
+    
+    for _, implement in pairs(AutoDrive.getAllImplements(toCheck, true)) do
+        if implement == other then
+            return true
+        end
 
-    for _, impl in pairs(toCheck:getAttachedImplements()) do
-        if impl.object ~= nil then
-            if impl.object == other then
-                return true
-            end
+        if implement.spec_baleGrab ~= nil and implement.spec_baleGrab.dynamicMountedObjects ~= nil and table.contains(implement.spec_baleGrab.dynamicMountedObjects, other) then
+            return true
+        end
 
-            if impl.object.spec_baleGrab ~= nil and impl.object.spec_baleGrab.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_baleGrab.dynamicMountedObjects, other) then
-                return true
-            end
-
-            if impl.object.spec_dynamicMountAttacher ~= nil and impl.object.spec_dynamicMountAttacher.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_dynamicMountAttacher.dynamicMountedObjects, other) then
-                return true
-            end
-
-            if impl.object.getAttachedImplements ~= nil then
-                isAttachedToMe = isAttachedToMe or AutoDrive:checkIsConnected(impl.object, other)
-            end
+        if implement.spec_dynamicMountAttacher ~= nil and implement.spec_dynamicMountAttacher.dynamicMountedObjects ~= nil and table.contains(implement.spec_dynamicMountAttacher.dynamicMountedObjects, other) then
+            return true
         end
     end
 
@@ -296,67 +287,29 @@ end
 function AutoDrive.getSelectedWorkTool(vehicle)
     local selectedWorkTool = nil
 
-    if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
-        local allImp = {}
-        -- Credits to Tardis from FS17
-        local function addAllAttached(obj)
-            for _, imp in pairs(obj:getAttachedImplements()) do
-                addAllAttached(imp.object)
-                table.insert(allImp, imp)
-            end
-        end
-
-        addAllAttached(vehicle)
-
-        if allImp ~= nil then
-            for i = 1, #allImp do
-                local imp = allImp[i]
-                if imp ~= nil and imp.object ~= nil and imp.object:getIsSelected() then
-                    selectedWorkTool = imp.object
-                    break
-                end
-            end
+    for _, implement in pairs(AutoDrive.getAllImplements(vehicle)) do
+        if implement.getIsSelected ~= nil and implement:getIsSelected() then
+            selectedWorkTool = implement
         end
     end
+
     return selectedWorkTool
 end
 
 function AutoDrive.getVehicleLeadingEdge(vehicle)
     local leadingEdge = 0
     local implements = AutoDrive.getAllImplements(vehicle)
-    if implements ~= nil then
-        for i = 1, #implements do
-            local implement = implements[i]
-            if implement ~= nil and implement.object ~= nil then
-                local implementX, implementY, implementZ = getWorldTranslation(implement.object.components[1].node)
-                local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
-                if diffZ > 0 and implement.object.size.length ~= nil then                    
-                    leadingEdge = math.max(leadingEdge, diffZ + (implement.object.size.length / 2) - (vehicle.size.length / 2))
-                end
-            end
+    for _, implement in pairs(implements) do
+        local implementX, implementY, implementZ = getWorldTranslation(implement.components[1].node)
+        local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
+        if diffZ > 0 and implement.size.length ~= nil then                    
+            leadingEdge = math.max(leadingEdge, diffZ + (implement.size.length / 2) - (vehicle.size.length / 2))
         end
     end
     return leadingEdge
 end
 
-function AutoDrive.getAllImplements(vehicle)
-    if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
-        local allImp = {}
-        -- Credits to Tardis from FS17
-        local function addAllAttached(obj)
-            for _, imp in pairs(obj:getAttachedImplements()) do
-                addAllAttached(imp.object)
-                table.insert(allImp, imp)
-            end
-        end
-
-        addAllAttached(vehicle)
-
-        return allImp
-    end
-end
-
-function AutoDrive.getAllAttachedObjects(vehicle, includeVehicle)
+function AutoDrive.getAllImplements(vehicle, includeVehicle)
     local allImp = {}
     
     if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
@@ -379,7 +332,7 @@ function AutoDrive.getAllAttachedObjects(vehicle, includeVehicle)
 end
 
 function AutoDrive.foldAllImplements(vehicle)
-    local implements = AutoDrive.getAllAttachedObjects(vehicle, true)
+    local implements = AutoDrive.getAllImplements(vehicle, true)
     for _, implement in pairs(implements) do
         local spec = implement.spec_foldable
         if implement.spec_foldable ~= nil then
@@ -392,7 +345,7 @@ function AutoDrive.foldAllImplements(vehicle)
 end
 
 function AutoDrive.getAllImplementsFolded(vehicle)
-    local implements = AutoDrive.getAllAttachedObjects(vehicle, true)
+    local implements = AutoDrive.getAllImplements(vehicle, true)
     for _, implement in pairs(implements) do
         if not AutoDrive.isVehicleFolded(implement) then
             return false
@@ -476,7 +429,11 @@ function AutoDrive:getIsEntered(vehicle)
     else
         -- SP
         if vehicle ~= nil and vehicle.getIsEntered ~= nil then
-            return vehicle:getIsEntered()
+            if vehicle.getIsControlled ~= nil then
+                return vehicle:getIsEntered() or vehicle:getIsControlled()
+            else
+                return vehicle:getIsEntered()
+            end
         end
     end
     return user ~= nil

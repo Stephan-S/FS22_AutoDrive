@@ -119,13 +119,11 @@ function AutoDrive.isPipeOut(combine)
         if spec.currentState == spec.targetState and (spec.currentState == 2 or combine.typeName == "combineCutterFruitPreparer") then
             return true
         end
-    else
-        if combine.getAttachedImplements ~= nil then
-            for _, implement in pairs(combine:getAttachedImplements()) do
-                if (implement.object.spec_pipe ~= nil and implement.object.spec_combine ~= nil) then
-                    if implement.object.spec_pipe.currentState == implement.object.spec_pipe.targetState and (implement.object.spec_pipe.currentState == 2 or implement.object.typeName == "combineCutterFruitPreparer") then
-                        return true
-                    end
+    else        
+        for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
+            if (implement.spec_pipe ~= nil and implement.spec_combine ~= nil) then
+                if implement.spec_pipe.currentState == implement.spec_pipe.targetState and (implement.spec_pipe.currentState == 2 or implement.typeName == "combineCutterFruitPreparer") then
+                    return true
                 end
             end
         end
@@ -135,11 +133,9 @@ end
 
 function AutoDrive.isSugarcaneHarvester(combine)
     local isSugarCaneHarvester = combine.typeName == "combineCutterFruitPreparer"
-    if combine.getAttachedImplements ~= nil then
-        for _, implement in pairs(combine:getAttachedImplements()) do
-            if implement ~= nil and implement ~= combine and (implement.object == nil or implement.object ~= combine) then
-                isSugarCaneHarvester = false
-            end
+    for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
+        if implement ~= combine then
+            isSugarCaneHarvester = false
         end
     end
     return isSugarCaneHarvester
@@ -183,50 +179,38 @@ function AutoDrive.getFrontToolWidth(vehicle, forced)
     end
     local widthOfFrontTool = 0
 
-    if vehicle.getAttachedImplements ~= nil then
-        -- check for AIMarkers
-        for _, impl in pairs(vehicle:getAttachedImplements()) do
-            local tool = impl.object
-            if tool ~= nil then
+    -- check for AIMarkers
+    local implements = AutoDrive.getAllImplements(vehicle, false)
+    for _, implement in pairs(implements) do
+        --Check if tool is in front of vehicle
+        local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
+        local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
+        if offsetZ > 0 then
+            widthOfFrontTool = math.max(widthOfFrontTool, AutoDrive.getAIMarkerWidth(implement))
+        end
+    end
+
+    if widthOfFrontTool == 0 then
+        -- check for AISizeMarkers
+        for _, implement in pairs(implements) do
+            --Check if tool is in front of vehicle
+            local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
+            local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
+            if offsetZ > 0 then
+                widthOfFrontTool = math.max(widthOfFrontTool, AutoDrive.getAISizeMarkerWidth(implement))
+            end
+        end
+    end
+
+    if widthOfFrontTool == 0 then
+        -- if AIMarkers not available or returned 0, get tool size as defined in vehicle XML - the worst case, see rsmDS900.xml
+        for _, implement in pairs(implements) do
+            if implement.size.width ~= nil then
                 --Check if tool is in front of vehicle
-                local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
+                local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
                 local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
                 if offsetZ > 0 then
-                    if AutoDrive.getAIMarkerWidth(tool) > widthOfFrontTool then
-                        widthOfFrontTool = AutoDrive.getAIMarkerWidth(tool)
-                    end
-                end
-            end
-        end
-
-        if widthOfFrontTool == 0 then
-            -- check for AISizeMarkers
-            for _, impl in pairs(vehicle:getAttachedImplements()) do
-                local tool = impl.object
-                if tool ~= nil then
-                    --Check if tool is in front of vehicle
-                    local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
-                    local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
-                    if offsetZ > 0 then
-                        if AutoDrive.getAISizeMarkerWidth(tool) > widthOfFrontTool then
-                            widthOfFrontTool = AutoDrive.getAISizeMarkerWidth(tool)
-                        end
-                    end
-                end
-            end
-        end
-
-        if widthOfFrontTool == 0 then
-            -- if AIMarkers not available or returned 0, get tool size as defined in vehicle XML - the worst case, see rsmDS900.xml
-            for _, impl in pairs(vehicle:getAttachedImplements()) do
-                local tool = impl.object
-                if tool ~= nil and tool.size.width ~= nil then
-                    --Check if tool is in front of vehicle
-                    local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
-                    local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
-                    if offsetZ > 0 then
-                        widthOfFrontTool = math.abs(tool.size.width)
-                    end
+                    widthOfFrontTool = math.abs(implement.size.width)
                 end
             end
         end
@@ -245,16 +229,14 @@ function AutoDrive.getFrontToolLength(vehicle)
     end
     local lengthOfFrontTool = 0
 
-    if vehicle.getAttachedImplements ~= nil then
-        for _, impl in pairs(vehicle:getAttachedImplements()) do
-            local tool = impl.object
-            if tool ~= nil and tool.size.width ~= nil then
-                --Check if tool is in front of vehicle
-                local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
-                local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
-                if offsetZ > 0 then
-                    lengthOfFrontTool = math.abs(tool.size.length)
-                end
+    local implements = AutoDrive.getAllImplements(vehicle, false)
+    for _, implement in pairs(implements) do
+        if implement.size.width ~= nil then
+            --Check if tool is in front of vehicle
+            local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
+            local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
+            if offsetZ > 0 then
+                lengthOfFrontTool = math.abs(implement.size.length)
             end
         end
     end
