@@ -215,13 +215,7 @@ function ADTrailerModule:canBeHandledInReverse()
         self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     end
 
-    local hasTurnTable = false
-    for _, trailer in pairs(self.trailers) do
-         if #trailer.components > 1 then
-            hasTurnTable = true
-        end
-    end
-    return #self.trailers < 2 --and not hasTurnTable 
+    return #self.trailers <= 2
 end
 
 -- Code snippets used from mod: FS19_TrailerJointBlock - credits to Northern_Strike
