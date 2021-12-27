@@ -1026,7 +1026,7 @@ function AutoDrive:onFillTypeSelection(fillType)
             end
             local currentFillableObject = self.currentFillableObject
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection currentFillableObject %s", tostring(currentFillableObject))
-            if currentFillableObject ~= nil then --and validFillableObject:getRootVehicle() == g_currentMission.controlledVehicle
+            if currentFillableObject ~= nil then
                 local fillUnitIndex = self.currentFillableFillUnitIndex
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection setIsLoading")
                 self:setIsLoading(true, currentFillableObject, fillUnitIndex, fillType)

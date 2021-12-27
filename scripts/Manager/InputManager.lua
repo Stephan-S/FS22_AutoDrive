@@ -2,61 +2,60 @@ ADInputManager = {}
 
 -- same order as in modDesc.xml
 ADInputManager.actionsToInputs = {
-    ADSilomode = "input_silomode",
-    ADPreviousMode = "input_previousMode",
-    ADRecord = "input_record",
-    ADRecord_Dual = "input_record_dual",
-    ADRecord_SubPrio = "input_record_subPrio",
-    ADRecord_SubPrioDual = "input_record_subPrioDual",    
-    ADEnDisable = "input_start_stop",
-    ADSelectTarget = "input_nextTarget",
-    ADSelectPreviousTarget = "input_previousTarget",
-    ADSelectTargetUnload = "input_nextTarget_Unload",
-    ADSelectPreviousTargetUnload = "input_previousTarget_Unload",
-    ADActivateDebug = "input_debug",
-    ADDisplayMapPoints = "input_displayMapPoints",
-    ADDebugSelectNeighbor = "input_showNeighbor",
-    ADDebugCreateConnection = "input_toggleConnection",
-    ADDebugToggleConnectionInverted = "input_toggleConnectionInverted",
-    ADDebugChangeNeighbor = "input_nextNeighbor",
-    ADDebugPreviousNeighbor = "input_previousNeighbor",
-    ADDebugCreateMapMarker = "input_createMapMarker",
-    ADRenameMapMarker = "input_editMapMarker",
-    ADDebugDeleteDestination = "input_removeMapMarker",
-    ADNameDriver = "input_nameDriver",
-    ADSetDestinationFilter = "input_setDestinationFilter",
-    AD_Speed_up = "input_increaseSpeed",
-    AD_Speed_down = "input_decreaseSpeed",
-    AD_FieldSpeed_up = "input_increaseFieldSpeed",
-    AD_FieldSpeed_down = "input_decreaseFieldSpeed",
-    ADToggleHud = "input_toggleHud",
-    ADToggleMouse = "input_toggleMouse",
-    COURSEPLAY_MOUSEACTION_SECONDARY = "input_toggleMouse",
-    ADDebugDeleteWayPoint = "input_removeWaypoint",
-    AD_routes_manager = "input_routesManager",
-    ADSelectNextFillType = "input_nextFillType",
-    ADSelectPreviousFillType = "input_previousFillType",
-    ADOpenGUI = "input_openGUI",
-    ADCallDriver = "input_callDriver",
-    ADGoToVehicle = "input_goToVehicle",
-    ADIncLoopCounter = "input_incLoopCounter",
-    ADDecLoopCounter = "input_decLoopCounter",
-    ADSwapTargets = "input_swapTargets",
-    ADStartCP = "input_startCp",
-    ADToggleCP_AIVE = "input_toggleCP_AIVE",
-    AD_open_notification_history = "input_openNotificationHistory",
-    -- AD_open_colorSettings = "input_openColorSettings",
-    AD_continue = "input_continue",
-    ADParkVehicle = "input_parkVehicle",
-    ADSetParkDestination = "input_setParkDestination",
-    AD_devAction = "input_devAction",
-    ADRefuelVehicle = "input_refuelVehicle",
-    ADToggleHudExtension = "input_toggleHudExtension",
-    ADToggleAutomaticUnloadTarget = "input_toggleAutomaticUnloadTarget",
-    ADToggleAutomaticPickupTarget = "input_toggleAutomaticPickupTarget",
-    ADRepairVehicle = "input_repairVehicle"
+    {"ADSilomode", "input_silomode", true},
+    {"ADPreviousMode", "input_previousMode", true},
+    {"ADRecord", "input_record", false},
+    {"ADRecord_Dual", "input_record_dual", false},
+    {"ADRecord_SubPrio", "input_record_subPrio", false},
+    {"ADRecord_SubPrioDual", "input_record_subPrioDual", false},
+    {"ADEnDisable", "input_start_stop", true},
+    {"ADSelectTarget", "input_nextTarget", true},
+    {"ADSelectPreviousTarget", "input_previousTarget", true},
+    {"ADSelectTargetUnload", "input_nextTarget_Unload", true},
+    {"ADSelectPreviousTargetUnload", "input_previousTarget_Unload", true},
+    {"ADActivateDebug", "input_debug", false},
+    {"ADDisplayMapPoints", "input_displayMapPoints", false},
+    {"ADDebugSelectNeighbor", "input_showNeighbor", false},
+    {"ADDebugCreateConnection", "input_toggleConnection", false},
+    {"ADDebugToggleConnectionInverted", "input_toggleConnectionInverted", false},
+    {"ADDebugChangeNeighbor", "input_nextNeighbor", false},
+    {"ADDebugPreviousNeighbor", "input_previousNeighbor", false},
+    {"ADDebugCreateMapMarker", "input_createMapMarker", false},
+    {"ADRenameMapMarker", "input_editMapMarker", false},
+    {"ADDebugDeleteDestination", "input_removeMapMarker", false},
+    {"ADNameDriver", "input_nameDriver", true},
+    {"ADSetDestinationFilter", "input_setDestinationFilter", true},
+    {"AD_Speed_up", "input_increaseSpeed", true},
+    {"AD_Speed_down", "input_decreaseSpeed", true},
+    {"AD_FieldSpeed_up", "input_increaseFieldSpeed", true},
+    {"AD_FieldSpeed_down", "input_decreaseFieldSpeed", true},
+    {"ADToggleHud", "input_toggleHud", false},
+    {"ADToggleMouse", "input_toggleMouse", true},
+    {"COURSEPLAY_MOUSEACTION_SECONDARY", "input_toggleMouse", false},
+    {"ADDebugDeleteWayPoint", "input_removeWaypoint", false},
+    {"AD_routes_manager", "input_routesManager", false},
+    {"ADSelectNextFillType", "input_nextFillType", true},
+    {"ADSelectPreviousFillType", "input_previousFillType", true},
+    {"ADOpenGUI", "input_openGUI", true},
+    {"ADCallDriver", "input_callDriver", false},
+    {"ADGoToVehicle", "input_goToVehicle", false},
+    {"ADIncLoopCounter", "input_incLoopCounter", true},
+    {"ADDecLoopCounter", "input_decLoopCounter", true},
+    {"ADSwapTargets", "input_swapTargets", true},
+    {"ADStartCP", "input_startCp", true},
+    {"ADToggleCP_AIVE", "input_toggleCP_AIVE", true},
+    {"AD_open_notification_history", "input_openNotificationHistory", false},
+    -- {"AD_open_colorSettings", "input_openColorSettings", false},
+    {"AD_continue", "input_continue", true},
+    {"ADParkVehicle", "input_parkVehicle", true},
+    {"ADSetParkDestination", "input_setParkDestination", false},
+    {"AD_devAction", "input_devAction", false},
+    {"ADRefuelVehicle", "input_refuelVehicle", false},
+    {"ADToggleHudExtension", "input_toggleHudExtension", true},
+    {"ADToggleAutomaticUnloadTarget", "input_toggleAutomaticUnloadTarget", true},
+    {"ADToggleAutomaticPickupTarget", "input_toggleAutomaticPickupTarget", true},
+    {"ADRepairVehicle", "input_repairVehicle", false}
 }
-
 
 --[[
 tool selection not proper on dedi servers as known!
@@ -64,76 +63,62 @@ That's why the following event is only taken on clients and send as event in the
 input_setParkDestination
 ]]
 -- inputs to send to server
-ADInputManager.inputsToIds = {
-    input_start_stop = 1,
-    input_incLoopCounter = 2,
-    input_decLoopCounter = 3,
-    -- input_setParkDestination = 4,
-    input_silomode = 5,
-    input_previousMode = 6,
-    input_record = 7,
-    input_record_dual = 8,
-    input_debug = 9,
-    input_displayMapPoints = 10,
-    input_increaseSpeed = 11,
-    input_decreaseSpeed = 12,
-    input_increaseFieldSpeed = 13,
-    input_decreaseFieldSpeed = 14,
-    input_nextTarget_Unload = 15,
-    input_previousTarget_Unload = 16,
-    input_nextFillType = 17,
-    input_previousFillType = 18,
-    input_continue = 19,
-    input_callDriver = 20,
-    input_parkVehicle = 21,
-    input_swapTargets = 22,
-    input_nextTarget = 23,
-    input_previousTarget = 24,
-    input_startCp = 25,
-    input_toggleCP_AIVE = 26,
-    input_record_subPrio = 27,
-    input_record_subPrioDual = 28,
-    input_bunkerUnloadType = 29,
-    input_refuelVehicle = 30,
-    input_toggleAutomaticUnloadTarget = 31,
-    input_toggleAutomaticPickupTarget = 32,
-    input_repairVehicle = 33
-}
-
+ADInputManager.inputsToIds = {}
 ADInputManager.idsToInputs = {}
 
 function ADInputManager:load()
+    for k, v in pairs(self.actionsToInputs) do
+        self.inputsToIds[self.actionsToInputs[k][2]] = k
+    end
     for k, v in pairs(self.inputsToIds) do
         self.idsToInputs[v] = k
     end
 end
 
 function ADInputManager.onActionCall(vehicle, actionName)
-    local input = ADInputManager.actionsToInputs[actionName]
-    if type(input) ~= "string" or input == "" then
-        Logging.devError("[AutoDrive] Action '%s' = '%s'", actionName, input)
-        return
-    end
+    local controlledVehicle = g_currentMission.controlledVehicle
 
-    ADInputManager:onInputCall(vehicle, input)
+    for k, v in pairs(ADInputManager.actionsToInputs) do
+        local action = ADInputManager.actionsToInputs[k][1]
+        local allowed = ADInputManager.actionsToInputs[k][3] or (controlledVehicle ~= nil and controlledVehicle == vehicle)
+
+        if action == actionName and allowed then
+            local input = ADInputManager.actionsToInputs[k][2]
+            if type(input) ~= "string" or input == "" then
+                Logging.devError("[AutoDrive] Action '%s' = '%s'", actionName, input)
+                return
+            end
+            ADInputManager:onInputCall(vehicle, input)
+            break
+        end
+    end
 end
 
 function ADInputManager:onInputCall(vehicle, input, sendEvent)
-    local func = self[input]
-    if type(func) ~= "function" then
-        Logging.devError("[AutoDrive] Input '%s' = '%s'", input, type(func))
-        return
-    end
+    local controlledVehicle = g_currentMission.controlledVehicle
+    for k, v in pairs(ADInputManager.actionsToInputs) do
+        local allowed = ADInputManager.actionsToInputs[k][3] or (controlledVehicle ~= nil and controlledVehicle == vehicle)
+        if input == ADInputManager.actionsToInputs[k][2] and allowed then
+            local func = self[input]
+            if type(func) ~= "function" then
+                Logging.devError("[AutoDrive] Input '%s' = '%s'", input, type(func))
+                return
+            end
 
-    if sendEvent == nil or sendEvent == true then
-        local inputId = self.inputsToIds[input]
-        if inputId ~= nil then
-            AutoDriveInputEventEvent.sendEvent(vehicle, inputId)
-            return
+            if sendEvent == nil or sendEvent == true then
+                local inputId = self.inputsToIds[input]
+                if inputId ~= nil then
+                    AutoDriveInputEventEvent.sendEvent(vehicle, inputId)
+                    return
+                end
+            end
+
+            func(ADInputManager, vehicle)
+            break
         end
     end
 
-    func(ADInputManager, vehicle)
+
 end
 
 -- Sender only events
@@ -274,17 +259,17 @@ function ADInputManager:input_start_stop(vehicle)
                     --Doesn't work yet, if vehicle hasn't been entered before apparently. So we need to check what to call before, to setup all required variables.
                     
                     if otherVehicle.ad.stateModule.activeBeforeSave then
-                        g_currentMission:requestToEnterVehicle(otherVehicle)
+                        -- g_currentMission:requestToEnterVehicle(otherVehicle)
                         otherVehicle.ad.stateModule:getCurrentMode():start()
                     end
                     if otherVehicle.ad.stateModule.AIVEActiveBeforeSave and otherVehicle.acParameters ~= nil then
-                        g_currentMission:requestToEnterVehicle(otherVehicle)
+                        -- g_currentMission:requestToEnterVehicle(otherVehicle)
                         otherVehicle.acParameters.enabled = true
                         otherVehicle:toggleAIVehicle()
                     end                    
 				end
 			end
-            g_currentMission:requestToEnterVehicle(vehicle)
+            -- g_currentMission:requestToEnterVehicle(vehicle)
         end
     end
 

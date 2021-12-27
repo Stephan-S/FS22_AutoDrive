@@ -483,8 +483,10 @@ end
 function ADPullDownList:createSelection_FillType()
     local supportedFillTypes = nil
     self.autoLoadFillTypes = nil
-    if g_currentMission.controlledVehicle ~= nil then
-        local trailers, _ = AutoDrive.getAllUnits(g_currentMission.controlledVehicle)
+	local vehicle = AutoDrive.getADFocusVehicle()
+
+    if vehicle ~= nil then
+        local trailers, _ = AutoDrive.getAllUnits(vehicle)
         for trailerIndex, trailer in ipairs(trailers) do
             supportedFillTypes = {}
             if AutoDrive:hasAL(trailer) then

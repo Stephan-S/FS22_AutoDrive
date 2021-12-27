@@ -235,15 +235,6 @@ function ADHudButton:act(vehicle, posX, posY, isDown, isUp, button)
         vehicle.ad.sToolTipInfo = nil
         vehicle.ad.toolTipIsSetting = false
 
-        if self.primaryAction == "input_debug" then
-            if button == 1 and isUp then
-                AutoDrive.cycleEditMode()
-                return true
-            elseif (button == 3 or button == 2) and isUp then
-                AutoDrive.cycleEditorShowMode()
-                return true
-            end
-        end
         if self.primaryAction == "input_parkVehicle" then
             local actualParkDestination = vehicle.ad.stateModule:getParkDestinationAtJobFinished()
             if actualParkDestination >= 1 and ADGraphManager:getMapMarkerById(actualParkDestination) ~= nil then
@@ -259,20 +250,8 @@ function ADHudButton:act(vehicle, posX, posY, isDown, isUp, button)
 
         if button == 1 and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
             local storedVehicle = nil
-            if self.primaryAction == "input_start_stop" then
-                if vehicle ~= g_currentMission.controlledVehicle then
-                    storedVehicle = g_currentMission.controlledVehicle
-                    g_currentMission.controlledVehicle = vehicle
-                    --g_currentMission:requestToEnterVehicle(vehicle)
-                end
-            end
             ADInputManager:onInputCall(vehicle, self.primaryAction)
-            if storedVehicle ~= nil then
-                SpecializationUtil.raiseEvent(vehicle, "onUpdate", 16, false, false, false)
-                g_currentMission.controlledVehicle = storedVehicle
-                --g_currentMission:requestToEnterVehicle(storedVehicle)
-                g_inputBinding:setShowMouseCursor(true)
-        end
+            SpecializationUtil.raiseEvent(vehicle, "onUpdate", 16, false, false, false)
             return true
         elseif (button == 3 or button == 2) and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
             ADInputManager:onInputCall(vehicle, self.secondaryAction)

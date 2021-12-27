@@ -90,17 +90,23 @@ function AutoDriveHud:loadHud()
 		self.posX = AutoDrive.HudX
 		self.posY = AutoDrive.HudY
 	end
-	AutoDriveHud:createHudAt(self.posX, self.posY)
 	self.isMoving = false
 	self.isShowingTips = false
+	self.stateHud = 0
+	self.statesHud = 0
+	self.showHud = false
 end
 
 function AutoDriveHud:createHudAt(hudX, hudY)
+    local vehicle = AutoDrive.getADFocusVehicle()
+    if vehicle == nil then
+        -- no vehicle with AD in focus
+        return
+    end
 	local uiScale = g_gameSettings:getValue("uiScale")
 	if AutoDrive.getSetting("guiScale") ~= 0 then
 		uiScale = AutoDrive.getSetting("guiScale")
 	end
-	local vehicle = g_currentMission.controlledVehicle
 	local numButtons = 7
 	local numButtonRows = 2
 	local buttonSize = 32
@@ -148,7 +154,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 
 	self.Speed = "50"
 	self.Target = "Not Ready"
-	self.showHud = false
+	self.showHud = true
 	self.stateHud = 0
 	self.statesHud = 0
 
@@ -376,16 +382,20 @@ function AutoDriveHud:drawHud(vehicle)
 		end
 		self.lastUIScale = uiScale
 
-		for _, element in ipairs(self.hudElements) do -- `ipairs` is important, as we want "index-value pairs", not "key-value pairs". https://stackoverflow.com/a/55109411
-			element:onDraw(vehicle, uiScale)
-		end
+        if self.hudElements ~= nil then
+            for _, element in ipairs(self.hudElements) do -- `ipairs` is important, as we want "index-value pairs", not "key-value pairs". https://stackoverflow.com/a/55109411
+                element:onDraw(vehicle, uiScale)
+            end
+        end
 	end
 end
 
 function AutoDriveHud:update(dt)
-	for _, element in ipairs(self.hudElements) do -- `ipairs` is important, as we want "index-value pairs", not "key-value pairs". https://stackoverflow.com/a/55109411
-		element:update(dt)
-	end
+    if self.hudElements ~= nil then
+        for _, element in ipairs(self.hudElements) do -- `ipairs` is important, as we want "index-value pairs", not "key-value pairs". https://stackoverflow.com/a/55109411
+            element:update(dt)
+        end
+    end
 end
 
 function AutoDriveHud:toggleHudExtension(vehicle)
@@ -449,21 +459,22 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 			AutoDrive.splineInterpolation.valid = false
 		end
 		AutoDrive.mouseWheelActive = false
-		-- Start with highest layer value (last in array), and then iterate backwards.
-		for i = #self.hudElements, 1, -1 do
-			local element = self.hudElements[i]
-			local layer = element.layer
-			mouseEventHandled, silent = element:mouseEvent(vehicle, posX, posY, isDown, isUp, button, layer)
-			if mouseEventHandled then
-				-- Maybe a PullDownList have been expanded/collapsed, so need to refresh layer sequence
-				self:refreshHudElementsLayerSequence()
-				if silent == nil or silent == false then
-					AutoDrive.playSample(AutoDrive.mouseClickSample, 0.45)
-				end
-				break
-			end
-		end
-
+        if self.hudElements ~= nil then
+            -- Start with highest layer value (last in array), and then iterate backwards.
+            for i = #self.hudElements, 1, -1 do
+                local element = self.hudElements[i]
+                local layer = element.layer
+                mouseEventHandled, silent = element:mouseEvent(vehicle, posX, posY, isDown, isUp, button, layer)
+                if mouseEventHandled then
+                    -- Maybe a PullDownList have been expanded/collapsed, so need to refresh layer sequence
+                    self:refreshHudElementsLayerSequence()
+                    if silent == nil or silent == false then
+                        AutoDrive.playSample(AutoDrive.mouseClickSample, 0.45)
+                    end
+                    break
+                end
+            end
+        end
 		if (not mouseEventHandled) and (AutoDrive.pullDownListExpanded > 0) and (button >= 1 and button <= 3 and isUp) then
 			AutoDrive.Hud:closeAllPullDownLists(vehicle)
 		end
@@ -894,31 +905,16 @@ function AutoDriveHud:deleteMapHotspot(vehicle)
 	end
 end
 
-function AutoDrive:mapHotSpotClicked(superFunc)
-	if self.isADMarker and AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
-		if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil then
-			AutoDriveHudInputEventEvent:sendFirstMarkerEvent(g_currentMission.controlledVehicle, self.markerID)
-		end
-	end
-
-	return self.hasDetails
-end
-
 function AutoDrive:ingameMapElementMouseEvent(superFunc, posX, posY, isDown, isUp, button, eventUsed)
 	eventUsed = superFunc(self, posX, posY, isDown, isUp, button, eventUsed)
 
     if isUp and button == Input.MOUSE_BUTTON_LEFT then
         local hotspot = g_currentMission.hud.ingameMap.selectedHotspot
         if hotspot ~= nil and hotspot.isADMarker then
-			local targetVehicle = g_currentMission.controlledVehicle
-			if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
-				targetVehicle = AutoDrive.aiFrameVehicle
-			end
-            if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
-                if targetVehicle ~= nil and targetVehicle.ad ~= nil then
-                    AutoDriveHudInputEventEvent:sendFirstMarkerEvent(targetVehicle, hotspot.markerID)
-                    return
-                end
+            local targetVehicle = AutoDrive.getADFocusVehicle()
+            if targetVehicle ~= nil and AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+                AutoDriveHudInputEventEvent:sendFirstMarkerEvent(targetVehicle, hotspot.markerID)
+                return
             end
         end
     end
@@ -928,14 +924,9 @@ function AutoDrive:ingameMapElementMouseEvent(superFunc, posX, posY, isDown, isU
             if hotspot.isADMarker then
                 local hotspotPosX, hotspotPosY =  hotspot.icon:getPosition()
                 if GuiUtils.checkOverlayOverlap(posX, posY, hotspotPosX, hotspotPosY, hotspot:getWidth(), hotspot:getHeight(), nil) then
-                    if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
-                        local targetVehicle = g_currentMission.controlledVehicle
-						if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
-							targetVehicle = AutoDrive.aiFrameVehicle
-						end
-						if targetVehicle ~= nil and targetVehicle.ad ~= nil then
-                            AutoDriveHudInputEventEvent:sendSecondMarkerEvent(targetVehicle, hotspot.markerID)
-                        end
+                    local targetVehicle = AutoDrive.getADFocusVehicle()
+                    if targetVehicle ~= nil and AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
+                        AutoDriveHudInputEventEvent:sendSecondMarkerEvent(targetVehicle, hotspot.markerID)
                     end
                     break
                 end
