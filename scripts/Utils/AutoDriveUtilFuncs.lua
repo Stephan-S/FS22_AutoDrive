@@ -315,9 +315,11 @@ function AutoDrive.getAllImplements(vehicle, includeVehicle)
     if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
         
         local function addAllAttached(obj)
-            for _, imp in pairs(obj:getAttachedImplements()) do
-                addAllAttached(imp.object)
-                table.insert(allImp, imp.object)
+            if obj.getAttachedImplements ~= nil then
+                for _, imp in pairs(obj:getAttachedImplements()) do
+                    addAllAttached(imp.object)
+                    table.insert(allImp, imp.object)
+                end
             end
         end
 

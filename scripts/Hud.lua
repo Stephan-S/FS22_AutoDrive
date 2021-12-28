@@ -577,6 +577,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 						-- select point
 						-- no selectedNodeId: hoveredNodeId is now selectedNodeId
                         vehicle.ad.selectedNodeId = vehicle.ad.hoveredNodeId
+                        AutoDrive.splineInterpolationUserCurvature = nil
                         AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent select point selectedNodeId %d", vehicle.ad.selectedNodeId)
 						
 						AutoDrive.playSample(AutoDrive.selectedWayPointSample, 0.75)
