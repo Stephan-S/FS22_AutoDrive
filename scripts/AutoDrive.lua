@@ -328,7 +328,7 @@ end
 
 function AutoDrive:PlaceableHotspotGetCategory()
 	if self.isADMarker then
-		return MapHotspot.CATEGORY_PLAYER
+		return MapHotspot.CATEGORY_STEERABLE--MapHotspot.CATEGORY_PLAYER
 	end
 	return PlaceableHotspot.CATEGORY_MAPPING[self.placeableType]
 end

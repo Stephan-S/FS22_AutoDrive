@@ -1097,15 +1097,14 @@ function AutoDrive.updateDestinationsMapHotspots()
         mapHotspot.isVisible = true
         mapHotspot.icon = Overlay.new(g_autoDriveUIFilename, 0, 0, mapHotspot.width, mapHotspot.height )
         mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
+		mapHotspot.iconSmall = Overlay.new(g_autoDriveUIFilename, 0, 0, mapHotspot.width, mapHotspot.height)
+		mapHotspot.iconSmall:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
 
         if marker.isADDebug == true then
             -- map hotspot debug
             mapHotspot.isADDebug = true
             -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
-			mapHotspot.icon:setUVs(GuiUtils.getUVs({780, 780, 234, 234}))
-        else
-            -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_OTHER)
-			mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
+			mapHotspot.icon:setUVs(GuiUtils.getUVs({780, 780, 234, 234}))			
         end
 
         mapHotspot.isADMarker = true
@@ -1113,7 +1112,6 @@ function AutoDrive.updateDestinationsMapHotspots()
         
         local wp = ADGraphManager:getWayPointById(marker.id)
         if wp ~= nil then
-
             g_currentMission:addMapHotspot(mapHotspot)
             table.insert(AutoDrive.mapHotspotsBuffer, mapHotspot)
 
@@ -1122,7 +1120,6 @@ function AutoDrive.updateDestinationsMapHotspots()
             mapHotspot:setTeleportWorldPosition(wp.x, wp.y + 2, wp.z)
 
             mapHotspot:setName(marker.name)
-
         end
     end
 end
