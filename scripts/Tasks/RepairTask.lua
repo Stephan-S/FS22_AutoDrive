@@ -70,7 +70,8 @@ end
 function RepairTask:abort()
 end
 
-function RepairTask:finished()
+function RepairTask:finished()    
+    self.vehicle.ad.onRouteToRepair = false
     local callBackFunction = self.vehicle.ad.callBackFunction
     local callBackObject = self.vehicle.ad.callBackObject
     local callBackArg = self.vehicle.ad.callBackArg
