@@ -61,6 +61,7 @@ end
 function AutoDrive.registerEvents(vehicleType)
     SpecializationUtil.registerEvent(vehicleType, "onStartAutoDrive")
     SpecializationUtil.registerEvent(vehicleType, "onStopAutoDrive")
+    SpecializationUtil.registerEvent(vehicleType, "onAutoDriveParked")
 end
 
 function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
@@ -1038,6 +1039,10 @@ function AutoDrive:stopAutoDrive()
             else
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+
+                if self.ad.onRouteToPark then 
+                    SpecializationUtil.raiseEvent(self, "onAutoDriveParked")
+                end
 
                 if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
                     self.ad.onRouteToPark = false
