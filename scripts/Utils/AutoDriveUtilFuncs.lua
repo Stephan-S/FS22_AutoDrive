@@ -6,12 +6,6 @@ function AutoDrive.createWayPointRelativeToVehicle(vehicle, offsetX, offsetZ)
     return wayPoint
 end
 
-function AutoDrive.createWayPointRelativeToNode(node, offsetX, offsetZ)
-    local wayPoint = {}
-    wayPoint.x, wayPoint.y, wayPoint.z = localToWorld(node, offsetX, 0, offsetZ)
-    return wayPoint
-end
-
 function AutoDrive.isTrailerInCrop(vehicle, enlargeDetectionArea)
     local widthFactor = 1
     if enlargeDetectionArea then
@@ -157,30 +151,6 @@ function AutoDrive.combineIsTurning(combine)
         return false
     end
     return true
-end
-
-function AutoDrive.pointIsBetweenTwoPoints(x, z, startX, startZ, endX, endZ)
-    local xInside = (startX >= x and endX <= x) or (startX <= x and endX >= x)
-    local zInside = (startZ >= z and endZ <= z) or (startZ <= z and endZ >= z)
-    return xInside and zInside
-end
-
-function AutoDrive.semanticVersionToValue(versionString)
-    local codes = versionString:split(".")
-    local value = 0
-    if codes ~= nil then
-        for i, code in ipairs(codes) do
-            local subCodes = code:split("-")
-            if subCodes ~= nil and subCodes[1] ~= nil then
-                value = value * 10 + tonumber(subCodes[1])
-                if subCodes[2] ~= nil then
-                    value = value + (tonumber(subCodes[2]) / 1000)
-                end
-            end
-        end
-    end
-
-    return value
 end
 
 function AutoDrive.mouseIsAtPos(position, radius)

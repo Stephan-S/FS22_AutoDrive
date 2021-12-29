@@ -159,7 +159,6 @@ function ADGraphManager:pathFromTo(startWaypointId, targetWaypointId, preferredN
 				preferredNeighbors = {}
 			end
 			wp = ADPathCalculator:GetPath(startWaypointId, targetWaypointId, preferredNeighbors)
-			--wp = AutoDrive:dijkstraLiveShortestPath(startWaypointId, targetWaypointId)
 		end
 	end
 	return wp
@@ -174,7 +173,6 @@ function ADGraphManager:pathFromToMarker(startWaypointId, markerId)
 			return wp
 		else
 			wp = ADPathCalculator:GetPath(startWaypointId, targetId, {})
-			--wp = AutoDrive:dijkstraLiveShortestPath(startWaypointId, targetId)
 		end
 	end
 	return wp
@@ -206,7 +204,6 @@ function ADGraphManager:FastShortestPath(start, markerName, markerId)
 	end
 
 	wp = ADPathCalculator:GetPath(start_id, target_id, {})
-	--wp = AutoDrive:dijkstraLiveShortestPath(start_id, target_id)
 	return wp
 end
 

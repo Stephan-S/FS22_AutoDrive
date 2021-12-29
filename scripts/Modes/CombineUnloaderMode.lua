@@ -387,18 +387,6 @@ function CombineUnloaderMode:shouldUnloadAtTrigger()
     return self.state == self.STATE_DRIVE_TO_UNLOAD
 end
 
-function CombineUnloaderMode:getNodeName(node)
-    if node == 0 then
-        return "nil"
-    end
-
-    local name = getName(node)
-    if name == nil then
-        name = "nil"
-    end
-    return name
-end
-
 function CombineUnloaderMode:getUnloaderOnSide()
     local vehicleX, vehicleY, vehicleZ = getWorldTranslation(self.vehicle.components[1].node)
     -- local combineX, combineY, combineZ = getWorldTranslation(self.combine.components[1].node)

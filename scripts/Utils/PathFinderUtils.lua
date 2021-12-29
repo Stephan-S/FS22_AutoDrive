@@ -69,7 +69,6 @@ AutoDrive.implementsAllowedForReverseDriving = {
 ,"trailerlow"
 }
 
-
 function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
 -- return true for implements allowed move reverse
     local ret = false
@@ -109,4 +108,3 @@ function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
 
     return ret
 end
-

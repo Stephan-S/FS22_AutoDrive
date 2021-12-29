@@ -161,42 +161,6 @@ function AutoDrive.getObjectNonFuelFillLevels(object)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
--- new, used ???
---[[
-function AutoDrive.getObjectFuelFillLevels(object)
-    if object == nil then
-        return 0, 0, false, 0
-    end
-    local rootVehicle = object:getRootVehicle()
-    if rootVehicle == nil then
-        return 0, 0, false, 0
-    end
-
-    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0.001
-
-    if object.getFillUnits ~= nil then
-        for fillUnitIndex, _ in pairs(object:getFillUnits()) do
-
-            for fillType, _ in pairs(object:getFillUnitSupportedFillTypes(fillUnitIndex)) do
-                local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-
-                if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
-                    local unitFillLevel = object:getFillUnitFillLevel(fillUnitIndex)
-                    local unitCapacity = object:getFillUnitCapacity(fillUnitIndex)
-                    local unitFreeCapacity = object:getFillUnitFreeCapacity(fillUnitIndex)
-                    fillLevel    = fillLevel    + unitFillLevel
-                    fillCapacity = fillCapacity + unitCapacity
-                    fillFreeCapacity = fillFreeCapacity + unitFreeCapacity
-                    break
-                end
-            end
-        end
-    end
-    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
-    return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
-end
-]]
-
 -- new, consider game mass setting
 function AutoDrive.getIsFillUnitFull(vehicle, fillUnitIndex)
     if vehicle == nil or fillUnitIndex == nil then

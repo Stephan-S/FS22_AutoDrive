@@ -4,14 +4,6 @@ AutoDrive.CHASEPOS_REAR = 3
 AutoDrive.CHASEPOS_FRONT = 4
 AutoDrive.CHASEPOS_UNKNOWN = 0
 
-function AutoDrive.getNodeName(node)
-    if node == nil then
-        return "nil"
-    else
-        return getName(node)
-    end
-end
-
 function AutoDrive.getIsBufferCombine(vehicle)
     return vehicle ~= nil and vehicle.spec_combine ~= nil and vehicle.spec_combine.isBufferCombine == true
 end
