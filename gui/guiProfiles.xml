@@ -201,7 +201,6 @@
     <Profile name="autoDriveSettingsHeaderIcon" extends="baseReference">
         <Value name="debugEnabled" value="false"/>
         <Value name="imageFilename" value="g_iconsUIFilename"/>
-        <!-- <Value name="imageFilename" value="g_autoDriveDebugUIFilename_BC7"/> -->
         <Value name="imageSize" value="1024 1024"/>
         <Value name="size" value="64px 64px"/>
         <Value name="visible" value="false"/>

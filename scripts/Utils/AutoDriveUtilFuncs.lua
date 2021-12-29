@@ -150,8 +150,6 @@ function AutoDrive.combineIsTurning(combine)
         combineIsTurning = true
     end
 
-    --local b = AutoDrive.boolToString
-    --print("cpIsTurning: " .. b(cpIsTurning) .. " cpIsTurningTwo: " .. b(cpIsTurningTwo) .. " aiIsTurning: " .. b(aiIsTurning) .. " combineIsTurning: " .. b(combineIsTurning) .. " driveForwardDone: " .. b(combine.ad.driveForwardTimer:done()))
     if not combineIsTurning then --(combine.ad.driveForwardTimer:done() and (not combine:getIsBufferCombine()))
         return false
     end
