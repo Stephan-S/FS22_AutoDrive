@@ -48,7 +48,7 @@
 		<text name="input_ADParkVehicle"						text="AD: Отправить на парковку" />
 		<text name="input_ADSetParkDestination"					text="AD: Назначить 1-ю локацию как парковку" />
 		<text name="input_ADRefuelVehicle"						text="AD: Заправить технику" />
-		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
+		<text name="input_ADRepairVehicle"						text="AD: Ремонтировать технику" />	
 		<text name="input_ADSwapTargets"						text="AD: Сменить локации" />
 		<text name="input_ADStartCP"							text="AD: Передать управление CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Переключение CP/AIVE" />
@@ -437,7 +437,6 @@
 		
 		6. Настройки экспериментальных функций - эти настройки относятся к функциям, которые мы в настоящее время тестируем / разрабатываем, но еще не считаются стабильными. Используйте на свой страх и риск." />
 		
-		<text name = "gui_ad_editorTip_1"								text = "Одинарный клик ЛКМ:"/>
 		<text name = "gui_ad_editorTip_1"								text = "Одинарный клик ЛКМ:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Только мышь: Выбор 1-ой точки"/>
 		<text name = "gui_ad_editorTip_3"								text = "с LCtrl = Создать узел"/>
