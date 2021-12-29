@@ -609,7 +609,7 @@ function AutoDrive.trailerIsInTriggerList(trailer, trigger, fillUnitIndex)
     end
 
     if trigger ~= nil and trigger.validFillableObject ~= nil and trigger.validFillableFillUnitIndex ~= nil and activatable then
-        --print("Activateable: " .. string(activatable) .. " isLoading: " .. string(trigger.isLoading))
+        --print("Activateable: " .. tostring(activatable) .. " isLoading: " .. tostring(trigger.isLoading))
         if activatable and trigger.validFillableObject == trailer and trigger.validFillableFillUnitIndex == fillUnitIndex then
             --print("Is trailer and correctFillUnitIndex: " .. fillUnitIndex)
             return true

@@ -674,7 +674,7 @@ function ADTrailerModule:areAllTrailersClosed(dt)
                 senseUnloading = true
             end
         end
-        --print("Tipstate: " .. tipState .. " dischargeState: " .. dischargeState .. " senseUnloading: " .. string(senseUnloading) .. " lastFillLevel: " .. self.lastFillLevel .. " current: " .. self.fillLevel)
+        --print("Tipstate: " .. tipState .. " dischargeState: " .. dischargeState .. " senseUnloading: " .. tostring(senseUnloading) .. " lastFillLevel: " .. self.lastFillLevel .. " current: " .. self.fillLevel)
         senseUnloading = senseUnloading or tipState == Trailer.TIPSTATE_OPENING or tipState == Trailer.TIPSTATE_CLOSING
         if not trailer.noDischargeTimer:timer((not senseUnloading) or (tipState == Trailer.TIPSTATE_CLOSED and dischargeState == Dischargeable.DISCHARGE_STATE_OFF), 500, dt) then
             allClosed = false

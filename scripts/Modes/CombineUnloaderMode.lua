@@ -87,7 +87,7 @@ function CombineUnloaderMode:monitorTasks(dt)
 end
 
 function CombineUnloaderMode:notifyAboutFailedPathfinder()
-    --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. string(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
+    --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. tostring(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
     if self.vehicle.ad.pathFinderModule.completelyBlocked and ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 then
         self.failedPathFinder = self.failedPathFinder + 1
     --print("Increased Failed pathfinder count to: " .. self.failedPathFinder)
