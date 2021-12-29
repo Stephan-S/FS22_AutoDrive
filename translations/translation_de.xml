@@ -54,7 +54,6 @@
 		<text name="input_ADStartCP"							text="AD: Übergabe an CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: CP/AIVE umschalten" />
 		<text name="input_AD_devAction"							text="AD: Entwickler Aktion" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Öffne Tip of the day" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Fruchtumfahrung" />
@@ -395,49 +394,6 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "Kombiniere CP/AD Buttons"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "aus: default / einfach: CP: sek. Maus-Aktion > Maus an + aus, AD: HUD ein/ausblenden > beide Huds an + aus / voll: wie 'einfach', aber Huds können einzeln durchgeschaltet werden / Erforderlich: Deaktiviere Rechtsklick HUD im CP Menü "/>
 	
-	
-		<text name="gui_ad_showTipOfTheDay"						text="Tip des Tages" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip des Tages beim Start des Spiels anzeigen" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Beim nächsten Start wieder anzeigen" />
-		<text name="ad_next_tip" 								text="Nächster" />
-		<text name="ad_totd_01_title" 							text="Verschiedene Funktionen" />
-		<text name="ad_totd_01_text" 							text="Viele Knöpfe im AutoDrive HUD haben mehrere Funktionen. Dabei ist die Hauptfunktion immer mit der linken Maustaste zu erreichen. Die zweite Funktion liegt dann auf der mittleren und der rechten Maustaste. 
-		
-		Und ein paar Knöpfe haben sogar eine dritte und vierte Belegung die durch gleichzeitiges Drücken der linken Shift Taste bedient werden kann. Aktuell ist dies der Aufnahme-Knopf." />
-		<text name="ad_totd_02_title" 							text="Verschiedene Streckentypen" />
-		<text name="ad_totd_02_text" 							text="Ein AutoDrive Netzwerk kann aktuell aus 4 verschiedenen Streckentypen bestehen.
-
-		1. Eine ganz normale Strecke (grün). Hier können die Fahrzeuge nur entlang der Pfeilrichtung fahren. Eine Aufnahme kann durch einen Klick mit der linken Maustaste auf den 'Aufzeichnen' Knopf im Hud gestartet werden.
-		
-		2. Beidseitig befahrbare Strecken (blau). Hier können Fahrzeuge aus beiden Richtungen kommend entlang fahren. Eine Aufnahme kann durch einen Klick mit entweder der mittleren oder der rechten Maustaste auf den 'Aufzeichnen' Knopf im Hud gestartet werden.
-		
-		3. Rückwärtsstrecken (hellblau) - Hier können die Fahrzeuge entlang der Pfeilrichtung zurücksetzen. Diese Pfade können während einer normalen Aufzeichnung erstellt werden indem man einfach rückwärts fährt.
-		
-		4. Nebenstrecken - Diese werden bei der Pfadplanung nach Möglichkeit vermieden und nur benutzt wenn das Ziel auf diesem Weg liegt oder ein Umweg unverhältnismäßig lang wäre. Eine Aufnahme kann durch gleichzeitiges Drücken von LSHIFT + Maustaste links (bzw. mittlere oder rechte für duale Strecken) auf den 'Aufzeichnen' Knopf gestartet werden." />
-		<text name="ad_totd_03_title" 							text="Drescher Abfahren - 1" />
-		<text name="ad_totd_03_text" 							text="Das Drescher Abfahren ist ein sehr komplexes Thema zu dem man vermutlich ganze Vorträge halten könnte :-)
-		
-		Aber hier schon mal ein paar grundlegende Tips:
-		
-		1. Damit ein Drescher seinen Abfahrer finden und rufen kann müssen sie beide das selbe Ziel im AutoDrive Fenster ausgewählt haben. Auf dem Drescher muss AutoDrive aber natürlich inaktiv bleiben! Alternativ gibt es die Option 'Abfahrer finden' in den Einstellungen. Dann wird der naheste Abfahrer im Umkreis von 300m gerufen.
-		
-		2. AutoDrive kann sowohl Häcksler als auch Drescher während der Fahrt abtanken. Bei einem Drescher muss dazu nur in dem Einstellungen 'Früher rufen ab' auf den gwünschten Startwert gestellt werden. Also für dauerhafte Abtankung dann entsprechend auf 0%." />
-		<text name="ad_totd_04_title" 							text="Einstellungen" />
-		<text name="ad_totd_04_text" 							text="Es gibt aktuell 6 verschiedene Einstellungsreiter.
-
-		1. Allgemeine Einstellungen - Gelten für jedes Fahrzeug
-
-		2. Benutzer Einstellungen - Gelten pro Spieler (auch im MP). Und dienen hauptsächlich um die AutoDrive Anzeige anpassen zu können.
-
-		3. Fahrzeug Einstellungen - Diese Einstellungen gelten nur für das aktuelle Fahrzeug
-
-		4. Drescher Einstellungen - Nur bei Dreschern/Häckslern zu sehen. Hier kann man steuern wie/wann Abfahrer von diesem Drescher gerufen werden.
-
-		5. Debug Einstellungen - Falls ihr auf Fehler mit AutoDrive stoßen solltet, könnt ihr hier entweder alle aktivieren oder bereits eine Vorauswahl treffen, damit ein erstelltes Log alle wichtigen Informationen enthält.
-		
-		6. Experimentelle Features - Hier findet ihr Einstellungen die sich explizit auf Features beziehen die wir aktuell testen möchten und noch nicht als 100% getestet und/oder geeignet für den nächsten Release ansehen." />
-		
 		<text name = "gui_ad_editorTip_1"								text = "Einfacher Mausklick links:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Nur Maus: 1. Punkt auswählen"/>
 		<text name = "gui_ad_editorTip_3"								text = "LSTRG = Punkt erstellen"/>

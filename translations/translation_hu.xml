@@ -53,7 +53,6 @@
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Termény kikerülése" />
@@ -375,46 +374,6 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
 	
-		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
-		<text name="ad_next_tip" 								text="Next" />
-		<text name="ad_totd_01_title" 							text="Multiple functions" />
-		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
-		
-		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
-		<text name="ad_totd_02_title" 							text="Different types of roads" />
-		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
-
-		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
-		
-		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
-		
-		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
-		
-		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
-		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
-		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
-		
-		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
-		
-		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
-		<text name="ad_totd_04_title" 							text="Settings - 1" />
-		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
-
-		1. General settings - Applied for all vehicles.
-
-		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
-
-		3. Vehicle settings - Applied only for the current vehicle.
-
-		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
-
-		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
-		
-		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
-		
 		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>

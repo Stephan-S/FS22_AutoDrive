@@ -54,7 +54,6 @@
 		<text name="input_ADStartCP"							text="AD: Overdracht aan CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Wissel tussen CP/AIVE" />
 		<text name="input_AD_devAction"                         text="AD: Ontwikkelaars actie" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open tip van de dag" />
 		<text name="input_ADToggleAutomaticPickupTarget"		text="AD: Automatische laad bestemming aan/uit" />
 		<text name="input_ADToggleAutomaticUnloadTarget"		text="AD: Automatische los bestemming aan/uit" />
 		<text name="hud_avoidFruit"								text="AD: Fruit vermijden" />
@@ -397,46 +396,6 @@
 		<text name="gui_ad_combineCPADHudMouse"					text="Combineer CP/AD knoppen"/>
     	<text name="gui_ad_combineCPADHudMouse_tooltip"			text="uit: standaard / simpel: CP: 2e muis actie > muis aan + uit, AD: tonen/verbergen Hud > beide huds aan + uit / vol: als simpel, maar huds tonen/verbergen in engele stap / Vereist: Schakel rechtsklik HUD uit bij CP instellingen"/>
 	
-		<text name="gui_ad_showTipOfTheDay"						text="Tip van de dag" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip van de dag weergeven elke keer als het spel start" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip van de dag" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Weergeven bij volgende start" />
-		<text name="ad_next_tip" 								text="Volgende" />
-		<text name="ad_totd_01_title" 							text="Meerdere functies" />
-		<text name="ad_totd_01_text" 							text="Veel knoppen in AutoDrive hebben meerdere functies. De hoofdfunctie kan altijd met de linkermuisknop worden geactiveerd. De secundaire functie kan worden geactiveerd met de middelste of de rechter muisknop. 
-		
-		Verscheidene knoppen hebben zelfs een derde en vierde functie die kunnen worden gebruikt door de linker shift-toets ingedrukt te houden terwijl op de knop wordt geklikt. Momenteel geldt dit alleen voor de opnameknop." />
-		<text name="ad_totd_02_title" 							text="Verschillende soorten wegen" />
-		<text name="ad_totd_02_text" 							text="Een AutoDrive netwerk kan uit 4 verschillende soorten wegen bestaan.
-
-		1. Een standaard wegvak (groen). Voertuigen kunnen rijden in de richting die is aangegeven met de pijlen. Om een standaardweg op te nemen, klikt u met de linkermuisknop op de opnameknop.
-		
-		2. Wegen met tweerichtingsverkeer (blauw). Hier mogen voertuigen in beide richtingen rijden en zullen ze inkomend verkeer in de tegengestelde richting blokkeren. Je kunt dubbelrichtingswegen vastleggen met de secundaire functie op de opnameknop. Gebruik dus de middelste of de rechter muisknop.
-		
-		3. Achteruitrij-secties (lichtblauw) - Voertuigen kunnen op deze secties alleen in de achteruitversnelling rijden. Handig voor parkeren en uitladen in krappe ruimtes. Gewoon achteruit rijden tijdens een standaard opnamesessie.
-		
-		4. Zijweg - Dit type wegsegment wordt gewoonlijk vermeden door de routeplanning tenzij de bestemming zich op dit wegsegment bevindt. Om een zijweg op te nemen, gebruikt u de derde en vierde functie van de opnameknop." />
-		<text name="ad_totd_03_title" 							text="Oogstmachine ontladen - 1" />
-		<text name="ad_totd_03_text" 							text="Een paar basistips voor het gebruik van AutoDrive voor het ontladen van oogstmachines:
-		
-		1. Om een oogstmachine automatisch een ontlader te laten oproepen, selecteert u gewoon dezelfde bestemming in de AutoDrive HUD van de oogstmachine als u voor de ontlader hebt geselecteerd. Deze bestemming is meestal een doel dicht bij het veld, zodat de ontlader een route kan plannen naar de oogstmachine. Als alternatief kan je ook de instelling 'Bestuurder zoeken' activeren, die ervoor zorgt dat de oogstmachine zoekt naar elke beschikbare ontlader binnen een bereik van 300m.
-		
-		2. AutoDrive kan zowel oogstmachines als veldhakselaars tijdens het rijden lossen. Om deze functie voor veldhakselaars in te schakelen, hoeft u alleen de instelling 'Vulniveau eerder oproepen' in te stellen op 0%." />
-		<text name="ad_totd_04_title" 							text="Instellingen - 1" />
-		<text name="ad_totd_04_text" 							text="Er zijn momenteel 6 verschillende instelling pagina's.
-
-		1. Algemene instellingen - van toepassing op alle voertuigen.
-
-		2. Gebruikersinstellingen - Van toepassing op de huidige speler (ook in MP). Dit zijn instellingen om te bepalen hoe AutoDrive wordt weergegeven en niet hoe het werkt.
-
-		3. Voertuiginstellingen - Alleen van toepassing op het huidige voertuig.
-
-		4. Oogstmachine instellingen - Alleen zichtbaar als je in een oogstmachine zit. Hier kun je bepalen hoe deze oogstmachine zijn ontladers oproept.
-
-		5. Debug instellingen - Deze instellingen maken wat visuele debug informatie mogelijk, en wat nog belangrijker is, extra log berichten. Dus schakel dit in als u tegen problemen of fouten aanloopt en u een logbestand naar de ontwikkelaars wilt sturen.
-		
-		6. Experimentele functies - Deze instellingen hebben betrekking op functies die we momenteel aan het testen/ontwikkelen zijn, maar die nog niet als stabiel worden beschouwd. Gebruik op eigen risico." />
-		
 		<text name = "gui_ad_editorTip_1"								text = "Eenvoudige linker muisklik:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Alleen muis: 1 punt selecteren"/>
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Routepunt maken"/>

@@ -53,7 +53,6 @@
         <text name="input_ADStartCP"                		text="AD: Passa a CP/ALIVE" />
         <text name="input_ADToggleCP_AIVE"          		text="AD: Attiva/Disattiva CP/AIVE" />
         <text name="input_AD_devAction"             		text="AD: Azione dello sviluppatore" />
-        <text name="input_AD_open_tipOfTheDay"          	text="AD: Suggerimento del giorno aperto" />
         <text name="input_ADToggleAutomaticPickupTarget"    	text="AD: Attiva/Disattiva il target di ritiro automatico" />
         <text name="input_ADToggleAutomaticUnloadTarget"    	text="AD: Attiva/Disattiva obiettivo di scaricamento automatico" />
         <text name="hud_avoidFruit"                 		text="AD: Evita raccolto" />
@@ -395,36 +394,6 @@
         <text name="gui_ad_combineCPADHudMouse"         	text="Combinare i pulsanti CP/AD"/>
         <text name="gui_ad_combineCPADHudMouse_tooltip"     	text="Spento: standard / semplice: CP: sec azione del mouse > mouse on + off, AD: attiva/disattiva Hud > entrambi gli hud on + off / completo: come semplice ma gli hud si attivano in singoli passaggi / Richiesto: disabilita il tasto destro del mouse HUD nelle impostazioni CP"/>
     
-        <text name="gui_ad_showTipOfTheDay"        	text="Consiglio del giorno" />
-        <text name="gui_ad_showTipOfTheDay_tooltip"     text="Suggerimento del giorno visualizzato ad ogni inizio del gioco" />
-        <text name="gui_ad_tipOfTheDayTitle"        	text="Consiglio del giorno" />
-        <text name="gui_ad_tipOfTheDayActive"       	text="Mostra al prossimo avvio" />
-        <text name="ad_next_tip"            		text="Nuovo consiglio" />
-        <text name="ad_totd_01_title"           	text="Funzioni multiple" />
-        <text name="ad_totd_01_text"            	text="Molti pulsanti in AutoDrive hanno più funzioni. La funzione principale è sempre attivabile con il tasto sinistro del mouse. La funzione secondaria può essere attivata con il tasto centrale o con il tasto destro del mouse.
-        Diversi pulsanti hanno anche una terza e una quarta funzione che possono essere utilizzate scorrendo con la rotella del mouse sopra detti pulsanti. Per ora, quelli sono i limitatori di velocità e il pulsante di registrazione." />
-        
-        <text name="ad_totd_02_title"   text="Diversi tipi di strade" />
-        <text name="ad_totd_02_text"    text="Una rete AutoDrive può contenere 4 diversi tipi di strade.
-        1. Un segmento di strada standard (verde). I veicoli possono viaggiare lungo la direzione contrassegnata dalle frecce. Per iniziare a registrare una strada standard, è sufficiente fare clic con il pulsante sinistro del mouse sul pulsante di registrazione.
-        2. Strade a doppia direzione (blu). Qui, i veicoli possono viaggiare in entrambe le direzioni e bloccheranno il traffico in entrata nella direzione opposta. È possibile registrare percorsi a doppia direzione con la funzione secondaria sul pulsante di registrazione. Quindi usa il tasto centrale o il tasto destro del mouse.
-        3. Sezioni di retromarcia (azzurro) - I veicoli possono viaggiare solo in retromarcia lungo queste sezioni. Utile per parcheggiare e scaricare in spazi ristretti. Guida semplicemente all'indietro durante una sessione di registrazione standard.
-        4. Strada laterale - Questo tipo di segmento di strada viene solitamente evitato dalla pianificazione del percorso a meno che l'obiettivo non sia su questo segmento di strada. Per registrare una strada laterale, usa la rotellina del mouse verso l'alto mentre tieni premuto il pulsante di registrazione." />
-        
-        <text name="ad_totd_03_title"   text="Trebbiatura - 1" />
-        <text name="ad_totd_03_text"    text="Alcuni suggerimenti di base per l'utilizzo di AutoDrive per scaricare le mietitrebbie:
-        1. Per consentire a una mietitrice di chiamare automaticamente uno scaricatore, seleziona semplicemente la stessa destinazione nell'HUD AutoDrive della mietitrice che hai selezionato per lo scaricatore. Questo punto dovrebbe di solito essere un obiettivo vicino al campo in modo che lo scaricatore possa pianificare un percorso verso la mietitrice. In alternativa è anche possibile abilitare l'impostazione 'Trova conducente' che farà sì che la mietitrice cercherà qualsiasi scaricatore disponibile in un raggio di 300 m.
-        2. AutoDrive può scaricare sia mietitrebbie che trebbiatrici in movimento. Per abilitare questa funzione per le mietitrebbie, è sufficiente impostare l'impostazione 'Livello pre-chiamata' su 0%." />
-        <text name="ad_totd_04_title"   text="Impostazione - 1" />
- 
-        <text name="ad_totd_04_text"    text="Attualmente ci sono 6 diverse pagine di impostazione.
-        1. Impostazioni generali: valide per tutti i veicoli.
-        2. Impostazioni utente - Applicate al lettore corrente (anche in MP). Queste sono le impostazioni per controllare come viene visualizzato AutoDrive e non come funziona.
-        3. Impostazioni veicolo - Applicate solo per il veicolo corrente.
-        4. Impostazioni della mietitrice - Visibile solo all'interno di una mietitrice. Qui puoi controllare come questo harevster chiama scaricatori.
-        5. Impostazioni di debug: queste impostazioni abilitano alcuni feedback visivi di debug e, soprattutto, messaggi di registro aggiuntivi. Quindi abilitalo se riscontri problemi o bug e ti stai preparando a inviare un file di registro agli sviluppatori.
-        6. Funzionalità sperimentali - Queste impostazioni si riferiscono a funzionalità che stiamo attualmente testando/sviluppando ma che non sono ancora considerate stabili. Utilizzare a proprio rischio." />
- 
         <text name="gui_ad_editorTip_1"     text="Semplice clic con il tasto sinistro del mouse:"/>
         <text name="gui_ad_editorTip_2"     text="Solo mouse: seleziona 1. punto"/>
         <text name="gui_ad_editorTip_3"     text="LCTRL = Crea nodo"/>

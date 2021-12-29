@@ -53,7 +53,6 @@
 		<text name="input_ADStartCP"							text="AD: Použít CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Přepnout CP/AIVE" />
 		<text name="input_AD_devAction"                         			text="AD: Vývojářské Akce" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Otevřít Tip dne" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Přepnout cíl automatického vyzvednutí" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Přepnout cíl automatického vyložení" />
 		<text name="hud_avoidFruit"								text="AD: Nevjíždět do porostu" />
@@ -394,45 +393,6 @@
 		<text name = "gui_CPAD_full"							text = "plný"/>
 		<text name = "gui_ad_combineCPADHudMouse"				text = "kombine CP/AD Tlačítka"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "vypnutý: výchozí/ jednoduché: CP: sekundární tlačítko myši > myš zapnutá + vypnutá, AD: Přepnout Hud> oba Hudy zapnuto + vypnuto / plný: stejně jednoduché, ale přepínání Hudu v jednotlivých krocích / požadováno: Zakázat pravé tlačítko HUD v nastavení CP"/>
-		<text name="gui_ad_showTipOfTheDay"						text="Tip dne" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip dne se zobrazí při každém začátku hry" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip odne" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Zobrazit při dalším startu" />
-		<text name="ad_next_tip" 								text="Následující" />
-		<text name="ad_totd_01_title" 							text="Více funkcí" />
-		<text name="ad_totd_01_text" 							text="Mnoho tlačítek v AutoDrive má více funkcí. Hlavní funkci lze vždy aktivovat levým tlačítkem myši. Sekundární funkci lze aktivovat buď prostředním nebo pravým tlačítkem myši.
-		
-		Některá tlačítka mají dokonce třetí a čtvrtou funkci, kterou lze použít podržením levé klávesy Shift při kliknutí na tlačítko. V současnosti to platí pouze pro tlačítko záznamu." />
-		<text name="ad_totd_02_title" 							text="Různé typy silnic" />
-		<text name="ad_totd_02_text" 							text="Síť AutoDrive může obsahovat 4 různé typy silnic.
-
-		1. Standardní segment silnice (zelený). Vozidla mohou jet ve směru označeném šipkami. Chcete-li zahájit záznam standardní silnice, jednoduše klikněte levým tlačítkem na tlačítko záznamu.
-												      
-		2. Obousměrné silnice (modrá). Zde mohou vozidla jet v obou směrech a budou blokovat přijíždějící provoz v protisměru. Pomocí sekundární funkce na tlačítku záznamu můžete zaznamenávat trasy v obou směrech. Použijte tedy buď prostřední nebo pravé tlačítko myši.
-												      
-		3. Couvací úseky (světle modré) - Vozidla mohou po těchto úsekech jet pouze se zpátečkou. Užitečné pro parkování a vykládání na úzkých místech. Jednoduše jeďte pozpátku během standardní relace nahrávání. 
-												      
-		4. Vedlejší silnice – Tomuto typu segmentu silnice se plánování cesty obvykle vyhýbá, pokud cíl není na tomto segmentu silnice. Pro záznam vedlejší silnice použijte třetí a čtvrtou funkci tlačítka záznamu." />
-		<text name="ad_totd_03_title" 							text="Sklizeň kombajnem - 1" />
-		<text name="ad_totd_03_text" 							text="Několik základních tipů pro použití AutoDrive pro vykládání sklízecích mlátiček:
-		
-		1. Chcete-li, aby kombajn automaticky zavolal odvozce, jednoduše vyberte v HUD AutoDrive HUD kombajnu stejné místo určení, jaké jste vybrali pro odvozce. Tento bod by měl být obvykle cílem blízko pole, takže odvozce pak může naplánovat trasu směrem ke kombajnu. Alternativně můžete také povolit nastavení „Najít řidiče“, které způsobí, že kombajn vyhledá jakéhokoli dostupného odvozce v dosahu 300 m. 
-												      
-		2. AutoDrive dokáže vyložit jak sklízecí mlátičky, tak mlátičky na cestách. Chcete-li povolit tuto funkci pro sklízecí mlátičky, jednoduše nastavte nastavení „Úroveň předvolání“ na 0 %." />
-		<text name="ad_totd_04_title" 							text="Nastavení - 1" />
-		<text name="ad_totd_04_text" 							text="Aktuálně existuje 6 různých stránek nastavení.
-
-		1. Obecná nastavení – platí pro všechna vozidla.
-
-		2. Uživatelské nastavení – platí pro aktuálního hráče (také v MP). Toto jsou nastavení, která řídí, jak se AutoDrive zobrazuje a ne jak funguje.
-
-		3. Nastavení vozidla – Platí pouze pro aktuální vozidlo.
-
-		4. Nastavení kombajnu – Viditelné pouze v kombajnu. Zde můžete ovládat, jak tento kombajn přivolává své odvozce.
-
-		5. Nastavení ladění – Tato nastavení umožňují vizuální zpětnou vazbu při ladění a co je důležitější, další zprávy protokolu. Povolte to, pokud narazíte na problémy nebo chyby a připravujete se na odeslání souboru protokolu vývojářům. 
-		
-		6. Experimentální funkce – Tato nastavení se týkají funkcí, které aktuálně testujeme/vyvíjíme, ale které ještě nejsou považovány za stabilní. Použití na vlastní nebezpečí." />
 		
 		<text name = "gui_ad_editorTip_1"								text = "Jednoduché kliknutí levým tlačítkem myši:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Pouze myš: Vyberte 1. bod"/>

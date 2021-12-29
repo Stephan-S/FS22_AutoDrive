@@ -53,7 +53,6 @@
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         text="AD: Akcja deweloperska" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Otwórz podpowiedź dnia" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Unikaj upraw" />
@@ -393,47 +392,6 @@
 		<text name = "gui_CPAD_full"							text = "pełne"/>		
 		<text name = "gui_ad_combineCPADHudMouse"				text = "połącz przyciski CP/AD"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "wyłączone: domyślnie / proste: CP: druga akcja myszą  > mysz wł. + wył., AD: Pokaż interfejs > oba interfejsy wł. + wył. / pełne: tak jak proste, ale pokaż interfejsy w prostych krokach / Wymagane: Wyłączenie w ustawieniach CP pokazywania interfejsu za pomocą prawego kliku"/>
-		
-		
-		<text name="gui_ad_showTipOfTheDay"						text="Podpowiedź dnia" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Podpowiedź dnia wyświetlana przy każdym uruchomieniu gry" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Podpowiedź dnia" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Pokaż przy następnym uruchomieniu" />
-		<text name="ad_next_tip" 								text="Następna" />
-		<text name="ad_totd_01_title" 							text="Wiele funkcji" />
-		<text name="ad_totd_01_text" 							text="Wiele przycisków w AutoDrive ma więcej niż jedną funkcję. Główna funkcja uruchamiana jest zawsze za pomocą lewego przycisku myszy. Funkcja drugorzędna może być aktywowana za pomocą środkowego lub prawego przycisku myszy. 
-		
-		Kilka przycisków ma nawet trzecią i czwartą funkcję, które mogą być wybrane za pomocą kółka myszy po najechaniu kursorem na te przycisk. Obecnie taką funkcjonalność mają przyciski ograniczenia prędkości i trybu nagrywania trasy." />
-		<text name="ad_totd_02_title" 							text="Różne typy tras" />
-		<text name="ad_totd_02_text" 							text="Sieć dróg w AutoDrive może zawierać 4 typy tras.
-		
-		1. Standardowy segment trasy (zielony). Pojazdy podążają wzdłuż trasy zgodnie z kierunkiem wyznaczonym prze strzałki. W celu rozpoczęcia nagrywania standardowej trasy, wystarczy kliknąć lewym przyciskiem myszy na przycisku nagrywania.
-		
-		2. Trasa dwukierunkowa (niebieska). W tym przypadku pojazdy mogą jeździć w obu kierunkach i będą blokować inne nadjeżdżające z przeciwnego kierunku. Trasę dwukierunkową można nagrywać za pomocą drugorzędnej funkcji przycisku nagrywania. Aby ją włączyć należy użyć środkowego lub prawego przycisku myszy.
-		
-		3. Sekcja cofania (jasny niebieski) - pojazdy po tej sekcji mogą jeździć tylko na wstecznym. Użyteczna do parkowania w ciasnych miejscach. Nagrywa się ją podczas cofania przy włączonym trybie nagrywania standardowej trasy.
-		
-		4. Droga boczna - Tend typ segmentu trasy jest zazwyczaj pomijany przy planowaniu celu, chyba, że cel znajduje się bezpośredni na nim. W celu wybrania trybu nagrywania drogi bocznej należy użyć kółka myszy po najechaniu kursorem na przycisk nagrywania." />
-		<text name="ad_totd_03_title" 							text="Koszenie upraw - 1" />
-		<text name="ad_totd_03_text" 							text="Kilka podpowiedzi do używania AutoDrive w celu rozładowywania kombajnów:
-		
-		1. Aby kombajn mógł automatycznie wezwać pojazd rozładowujący, wystarczy wybrać ten sam cel w interfejsie AutoDrive dla kombajnu oraz dla rozładowującego. Zazwyczaj powinien to być cel blisko pola, aby rozładowujący mógł później zaplanować trasę do kombajnu na polu. Alternatywnie można włączyć ustawienie 'Znajdź kierowcę', które spowoduje, że kombajn będzie poszukiwał dostępnego rozładowującego w promieniu 300m.
-		
-		2. AutoDrive może rozładowywać kombajny i sieczkarnie na bieżąco. Aby włączyć tą funkcję rozładowywania kombajnów wystarczy ustawić opcję 'Wezwij kierowcę przy' na 0%." />
-		<text name="ad_totd_04_title" 							text="Ustawienia - 1" />
-		<text name="ad_totd_04_text" 							text="Obecnie jest 6 stron różnych ustawień.
-		
-		1. Ustawienia - dotyczące wszystkich pojazdów.
-		
-		2. Ustawienia użytkownika - dotyczące obecnego gracza (także w trybie wieloosobowym). Te ustawienia kontrolują wygląda interfejsu AutoDrive, ale nie jego funkcje.
-		
-		3. Ustawienia pojazdu - aplikowane tylko dla obecnie używanego pojazdu.
-		
-		4. Ustawienia rozładowywania kombajnu - widoczne tylko podczas kierowania kombajnem. Pozwalają kontrolować w jaki sposób wzywania są rozładowujący.
-		
-		5. Ustawienia debugowania - Tes ustawienia włączają wyświetlanie dodatkowych informacji na ekranie oraz w logu gry. Należy włączyć je w przypadku wystąpienia problemów lub błędów przed wysłaniem logu gry do deweloperów.
-		
-		6. Ustawienia funkcji eksperymentalnych - Te ustawienia związane są z funkcjonalnościami, które są obecnie w fazie testów/rozwijania, ale nie są uznane za stabilne. Korzystaj z nich na własną odpowiedzialność." />
 		
 		<text name = "gui_ad_editorTip_1"								text = "Prosty klik lewym przyciskiem:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Tylko mysz: Zaznacz pierwszy punkt"/>

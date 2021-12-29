@@ -53,7 +53,6 @@
 		<text name="input_ADStartCP"							text="AD: Iniciar CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Cambiar a CP/AIVE" />
 		<text name="input_AD_devAction"                         			text="AD: funciones dev" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: ¡Truco del día!" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Cambiar a carga automática en destino" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Cambiar a descarga automática en destino" />
 		<text name="hud_avoidFruit"								text="AD: Evitar destruir cosechas" />
@@ -393,46 +392,6 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "Combinar Botones CP/AD"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "Off: Por Defecto / Simple: CP: Bot.Sec.Raton > Raton ON + Off, AD: Alternar Hud > Ambos Huds On + Off / Lleno: Así de simple, pero los Huds alternar en pasos simples / Requerido: Desactivar Click Derecho HUD en ajustes CP"/>
 	
-		<text name="gui_ad_showTipOfTheDay"						text="Consejo del Día" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Sugerencia del día que se muestra en cada inicio del juego" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Consejo del Día" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Mostrar en el próximo inicio" />
-		<text name="ad_next_tip" 								text="Siguiente" />
-		<text name="ad_totd_01_title" 							text="Multiples funciones" />
-		<text name="ad_totd_01_text" 							text="Muchos botones de AutoDrive tienen múltiples funciones. La función principal siempre se puede activar con el botón izquierdo del ratón. La función secundaria se puede activar con el botón central o con el botón derecho del ratón.
-		
-		Varios botones incluso tienen una tercera y cuarta función que se puede usar con el desplazamiento de la rueda del ratón en la parte superior de dichos botones. Por ahora, esos son los limitadores de velocidad y el botón de grabación." />
-		<text name="ad_totd_02_title" 							text="Diferentes tipos de carreteras." />
-		<text name="ad_totd_02_text" 							text="Una red AutoDrive puede contener 4 tipos diferentes de carreteras.
-
-		1. Un tramo de carretera estándar (verde). Los vehículos pueden viajar en la dirección marcada con las flechas. Para comenzar a grabar una carretera estándar, simplemente haga clic con el botón izquierdo en el botón de grabación.
-		
-		2. Carreteras de doble dirección (azul). Aquí, los vehículos pueden viajar en ambas direcciones y bloquearán el tráfico entrante en la dirección opuesta. Puede grabar rutas de doble dirección con la función secundaria en el botón de grabación. Por lo tanto, use el botón central o el botón derecho del ratón.
-		
-		3. Secciones Marcha Atrás (azul claro): los vehículos solo pueden viajar marcha atrás a lo largo de estas secciones. Útil para estacionar y descargar en lugares estrechos. Simplemente conduzca hacia atrás durante una sesión de grabación estándar.
-		
-		4. Carretera lateral: la planificación de la ruta suele evitar este tipo de tramo de carretera, a menos que el objetivo esté en este tramo de carretera. Para grabar una carretera secundaria, use la rueda del mouse hacia arriba mientras mantiene el botón de grabación." />
-		<text name="ad_totd_03_title" 							text="Combinando Cosechadoras - 1" />
-		<text name="ad_totd_03_text" 							text="Algunos consejos básicos para usar AutoDrive para descargar cosechadoras combinadas:
-		
-		1. Para permitir que una cosechadora llame automáticamente a un remolque, simplemente seleccione el mismo destino en el HUD de AutoDrive de la cosechadora que ha seleccionado para el remolque. Por lo general, este punto debe ser un objetivo cercano al campo para que el remolque pueda planificar una ruta hacia la cosechadora. Alternativamente, también puede habilitar la configuración 'Buscar conductor' que hará que la cosechadora busque cualquier remolque disponible en un rango de 300 m.
-		
-		2. AutoDrive puede descargar tanto cosechadoras como picadoras sobre la marcha. Para habilitar esta función para cosechadoras combinadas, simplemente configure el ajuste 'Nivel previo a la llamada' en 0%." />
-		<text name="ad_totd_04_title" 							text="Ajustes - 1" />
-		<text name="ad_totd_04_text" 							text="Actualmente hay 6 páginas de configuración diferentes.
-
-		1. Ajustes Generales - Aplicado a todos los vehículos.
-
-		2. Ajustes Usuarios - Aplicado al jugador actual (también en MP). Estas son configuraciones para controlar cómo se muestra AutoDrive y no cómo funciona.
-
-		3. Ajustes Vehículo - Aplicado solo para el vehículo actual.
-
-		4. Ajustes Cosechadora - Solo visible dentro de una cosechadora. Aquí puede controlar cómo la cosechadora llama a sus remolques.
-
-		5. Ajustes Depuración - Esta configuración permite algunos comentarios de depuración visual y, lo que es más importante, mensajes de registro adicionales. Así que habilítelo si tiene problemas o errores y se está preparando para enviar un archivo de registro a los desarrolladores.
-		
-		6. Funciones experimentales - Estos ajustes se relacionan con funciones que están en desarrollo y testeo actualmente, por lo que aún no se consideran estables. Úselo bajo su propio riesgo." />
-		
 		<text name = "gui_ad_editorTip_1"								text = "Simple clic izquierdo del ratón:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Sólo ratón: Seleccione 1. punto"/>
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Crear nodo"/>
