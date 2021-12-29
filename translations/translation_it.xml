@@ -8,7 +8,7 @@
         <text name="input_ADToggleMouse"            		text="AD: Mostra/Nascondi mouse" />
         <text name="input_ADEnDisable"              		text="AD: Abilita/Disabilita" />
         <text name="input_ADSilomode"               		text="AD: Cambia modalità" />
-        <text name="input_ADPreviousMode"           		text="AD: Previous mode" />
+        <text name="input_ADPreviousMode"           		text="AD: Modalità precedente" />
         <text name="input_ADRecord"                 		text="AD: Registra" />
         <text name="input_ADRecord_Dual"            		text="AD: Registra percorso a 2 strade" />
         <text name="input_ADRecord_SubPrio"             	text="AD: Registra percorso secondario" />
@@ -48,7 +48,7 @@
         <text name="input_ADParkVehicle"            		text="AD: Parcheggio Veicolo" />
         <text name="input_ADSetParkDestination"         	text="AD: Assegna la prima destinazione per il parcheggio" />
         <text name="input_ADRefuelVehicle"          		text="AD: Rifornire il veicolo" />
-		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
+	<text name="input_ADRepairVehicle"			text="AD: Ripara il veicolo" />	
         <text name="input_ADSwapTargets"            		text="AD: Scambia Destinazione" />
         <text name="input_ADStartCP"                		text="AD: Passa a CP/ALIVE" />
         <text name="input_ADToggleCP_AIVE"          		text="AD: Attiva/Disattiva CP/AIVE" />
@@ -62,7 +62,7 @@
         <text name="AD_parkVehicle_selected"            	text="Seleziona Parcheggio veicolo: " />
         <text name="AD_Driver_of"               		text="L'autista di" />
         <text name="AD_has_reached"                 		text="Ha raggiunto" />
-        <text name="AD_got_stuck"               		text="si è bloccato" />
+        <text name="AD_got_stuck"               		text="Si è bloccato" />
         <text name="AD_cannot_reach"                		text="Non può raggiungere" />
         <text name="AD_cannot_find_path"            		text="Impossibile calcolare un percorso" />
         <text name="AD_new_marker"              		text="Nuovo obbiettivo:" />
@@ -268,7 +268,7 @@
         <text name="gui_ad_debugChannelBGA"             	text="Modalità BGA" />
         <text name="gui_ad_debugChannelAll"             	text="Tutto" />
         
-        <text name="gui_ad_notificationHistoryTitle"        text="Notifiche" />
+        <text name="gui_ad_notificationHistoryTitle"    text="Notifiche" />
  
         <text name="gui_ad_colorSettingsTitle"          text="Assegnazioni dei colori" />
  

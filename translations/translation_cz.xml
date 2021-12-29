@@ -4,15 +4,15 @@
 	<texts>
 		<text name="UNKNOWN"									text="Neznámý" />
 		<text name="input_ADToggleHud"							text="AD: Zobrazit HUD" />
-		<text name="input_ADToggleHudExtension"					text="AD: Show HUD infos" />
+		<text name="input_ADToggleHudExtension"					text="AD: Zobrazit HUD informace" />
 		<text name="input_ADToggleMouse"						text="AD: Zobrazit myš" />
 		<text name="input_ADEnDisable"							text="AD: Vyp./Zapnout" />
 		<text name="input_ADSilomode"							text="AD: Změnit mod" />
-		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
+		<text name="input_ADPreviousMode"						text="AD: Předchozí mod" />
 		<text name="input_ADRecord"								text="AD: Záznam" />
-		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
-		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
-		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
+		<text name="input_ADRecord_Dual"						text="AD: Záznam 2 směrné cesty" />
+		<text name="input_ADRecord_SubPrio"						text="AD: Záznam vedlejší cesty" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Záznam 2 směrné vedlejší cesty" />
 		<text name="input_ADSelectTarget"						text="AD: Následující cíl" />
 		<text name="input_ADSelectPreviousTarget"				text="AD: Předchozí cíl" />
 		<text name="input_AD_Speed_up"							text="AD: Zvýšit rychlost" />
@@ -23,12 +23,12 @@
 		<text name="input_ADSelectTargetUnload"					text="AD: Následující vykládka" />
 		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Předchozí vykládka" />
 		<text name="input_ADActivateDebug"						text="AD: Editovat trasu" />
-		<text name="input_ADDisplayMapPoints"					text="AD: Show waypoints" />
+		<text name="input_ADDisplayMapPoints"					text="AD: Zobrazit waypointy" />
 		<text name="input_ADDebugSelectNeighbor"				text="AD: Vybrat sousední bod" />
 		<text name="input_ADDebugChangeNeighbor"				text="AD: Změnit sousední bod" />
-		<text name="input_ADDebugPreviousNeighbor"				text="AD: Select previous Neighbour Point" />
+		<text name="input_ADDebugPreviousNeighbor"				text="AD: Vybrat předchozí Sousední bod" />
 		<text name="input_ADDebugCreateConnection"				text="AD: Vytvořit spojení" />
-		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Toggle connection between inverted" />
+		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Přepnout spojení mezi obrácené " />
 		<text name="input_ADDebugCreateMapMarker"				text="AD: Vytvořit nový cíl" />
 		<text name="input_ADRenameMapMarker"					text="AD: Přejmenovat cíl" />
 		<text name="input_ADDebugDeleteWayPoint"				text="AD: Smazat cíl" />
@@ -39,23 +39,23 @@
 		<text name="input_ADCallDriver"							text="AD: Zavolat řidiče" />
 		<text name="input_ADGoToVehicle"						text="AD: Jít na vozidlo" />
 		<text name="input_ADNameDriver"							text="AD: Přiřadit jméno řidiče" />
-		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
-		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
-		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
-		<text name="input_ADIncLoopCounter"						text="AD: Zvýšit počítadlo" />
-		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
-		<text name="input_ADbunkerUnloadType"					text="AD: Unload to Trailer or BGA" />
+		<text name="input_ADSetDestinationFilter"				text="AD: Filtr cílů" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: Zvýšit polní rychlost" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: Snížit polní rychlost" />
+		<text name="input_ADIncLoopCounter"						text="AD: Zvýšit počet jízd" />
+		<text name="input_ADDecLoopCounter"						text="AD: Snížit počet jízd" />
+		<text name="input_ADbunkerUnloadType"					text="AD: Vyložit do vleku nebo BGA" />
 		<text name="input_ADParkVehicle"						text="AD: Zaparkovat vozidlo" />
-		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
-		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
-		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
+		<text name="input_ADSetParkDestination"					text="AD: přiřadit 1. cíl pro parkování " />
+		<text name="input_ADRefuelVehicle"						text="AD: Dotankovat vozidlo" />
+		<text name="input_ADRepairVehicle"						text="AD: Opravit vozidlo" />	
 		<text name="input_ADSwapTargets"						text="AD: Zaměnit cíle" />
-		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
-		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
-		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
-		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
-		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
+		<text name="input_ADStartCP"							text="AD: Použít CP/AIVE" />
+		<text name="input_ADToggleCP_AIVE"						text="AD: Přepnout CP/AIVE" />
+		<text name="input_AD_devAction"                         			text="AD: Vývojářské Akce" />
+		<text name="input_AD_open_tipOfTheDay" 					text="AD: Otevřít Tip dne" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Přepnout cíl automatického vyzvednutí" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Přepnout cíl automatického vyložení" />
 		<text name="hud_avoidFruit"								text="AD: Nevjíždět do porostu" />
 		<text name="hud_startCp" 								text="AD: Start CP / AIVE v místě určení" />
 		<text name="AD_parkVehicle_noPosSet"					text="Vozidlo nemá parkoviště. Vyberte cíl a stiskněte pravého tlačítka myši." />
@@ -70,7 +70,7 @@
 		<text name="AD_No_Bunker"								text="Nemohu nalézt silážní jámu" />
 		<text name="AD_No_Shovel"								text="Lžíce není připojena" />
 		<text name="AD_No_Refuel_Station"						text="nemůžu najít benzinku pro:" />
-		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
+		<text name="AD_No_Repair_Station"						text="nemohl najít servisní dílnu pro :" />
 		<text name="AD_MODE_DRIVETO"							text="Jízda" />
 		<text name="AD_MODE_DELIVERTO"							text="Vykládka" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Nakládka a odvoz" />
@@ -164,8 +164,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Rozsah, ve kterém jsou detekovány aktivní triggery (např. osivo a hnojivo)." />
 		<text name="gui_ad_useBeaconLights"						text="Zapnout maják" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Použití majáku na silnici" />
-		<text name="gui_ad_activeUnloading"						text="Active unloading" />
-		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
+		<text name="gui_ad_activeUnloading"						text="Aktivní vykládání" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Vykládka kombajnu za jízdy." />
 		<text name="gui_ad_restrictToField"						text="Vyhledávat cestu jen na poli" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Pokud odvozce parkuje na poli, bude vyhledávaní cesty omezeno je na pole vymezené okrajem tohoto pole" />
 		<text name="gui_ad_showTooltips"						text="Zobrazit HUD nápovědu" />
@@ -180,8 +180,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Vytvořit název adresáře:" />
 		<text name="gui_ad_autoRefuel"							text="Automatické dotankování" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Při nízké hladině paliva jeď k benzince (pokud je v blízkosti trigger benzinky)." />
-		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
-		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
+		<text name="gui_ad_autoRepair"							text="Automatické opravy" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Jeďte na místo určení v dílně (blízko spouště pro opravu), když je úroveň opotřebení příliš vysoká." />
 		<text name="gui_ad_filter"								text="Filtr" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Změna cíle filtrovat text" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Vložte text filtru:" />
@@ -205,8 +205,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Použijte 2. režim editoru pro manipulaci s trasou namísto přidržení LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Široký HUD" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Použijte široký režim HUD, který také umožňuje několik dalších tlačítek pro nastavení v HUD" />
-		<text name="gui_ad_playSounds"							text="Sound" />
-		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
+		<text name="gui_ad_playSounds"							text="Zvuk" />
+		<text name="gui_ad_playSounds_tooltip"					text="Umožňuje zvukové efekty pro kliknutí myší a upozornění" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizujte více cílů" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Více řidičů používá stejnou složku s více cíly a budou  sychronizovány s dalšími cíly" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkovat po dokončení práce" />
@@ -215,21 +215,21 @@
 		<text name="gui_ad_autoTipSide_tooltip"                 text="Ano - AutoDrive automaticky vybere stranu vykládky / Ne - použije se již vybraná strana vykládky" />
 		<text name="gui_ad_autoTrailerCover"                    text="Automatické plachtování přívěsu" />
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Ano - AutoDrive podle potřeby otevírá a zavírá kryty přívěsu / Ne - kryty přívěsu nebude AutoDrive otevírat ani zavírat" />
-		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning manoeuvre" />
-		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
-		<text name="gui_ad_AL_off"                              text="Unload Off" />
-		<text name="gui_ad_AL_center"                           text="Unload center" />
-		<text name="gui_ad_AL_left"                             text="Unload left" />
-		<text name="gui_ad_AL_behind"                           text="Unload behind" />
-		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
-		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manévr otáčení dopředu" />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Ano – Odvozce AutoDrive se snaží naplánovat cestu vpřed, aby se přizpůsobila 90° otočením sklízecí mlátičky. / Ne - Odvozce před otočením zacouvají" />
+		<text name="gui_ad_ALUnload"                            text="Snadné automatické nakládání: Poloha vykládání" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Vypnuto bez automatického vykládání, vykládání uprostřed na nakládací plošině, poloha vykládání vozidla vlevo / za / vpravo (Poloha závisí na nastavení vozidla, ne AD!)" />
+		<text name="gui_ad_AL_off"                              text="Vyložení Vypnuto" />
+		<text name="gui_ad_AL_center"                           text="Vyložet na střed" />
+		<text name="gui_ad_AL_left"                             text="Vyložit vlevo" />
+		<text name="gui_ad_AL_behind"                           text="Vyložit dozadu" />
+		<text name="gui_ad_AL_right"                            text="Vyložit vpravo" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: čekací čas po vyložení" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Čekací doba po vyložení, než budete pokračovat v jízdě – užitečné pro vykládání na střed: 0 – žádné čekání, čekejte zvolenou dobu" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generování sítě" />
 		<text name="gui_ad_scanConfirmationText"                text="Měla by aplikace AutoDrive generovat síť tras z dopravních a pomocných dat na mapě?" />
-		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
-		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
+		<text name="gui_ad_noHarvesterAvailable"				text="Nebyl nalezen žádný kombajn se stejným cílem" />
+		<text name="gui_ad_noUnloaderAvailable"					text="Není k dispozici žádný odvozce se stejným cílem" />
 		
 		<text name="gui_ad_settingsPage_title"					text="Nastavení - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Uživatelské nastavení - AutoDrive" />
@@ -237,9 +237,9 @@
 		<text name="gui_ad_combineUnloadSettingsPage_title"		text="Nastavení vyložení kombajnu - AutoDrive" />
 		<text name="gui_ad_debugSettingsPage_title" 			text="Nastavení ladění - AutoDrive" />
 		<text name="gui_ad_eFeaturesSettingsPage_title" 		text="Nastavení experimentálních funkcí - AutoDrive" />
-		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Nastavení - AutoDrive" />
 		<text name="gui_ad_restoreButtonText" 					text="Obnovit" />
-		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Nastavit jako výchozí" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Všechny změny budou ztraceny" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Jste si jistí, že chcete vypnout nastavení bez uložení změn?" />
 		
@@ -270,25 +270,25 @@
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Oznámení" />
 
-		<text name="gui_ad_colorSettingsTitle" 			        text="Color Assignments" />
+		<text name="gui_ad_colorSettingsTitle" 			        text="Přiřazení barev" />
         <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
-		<text name="ad_color_singleConnection" 			        text="01 line of single-way connection" />
-		<text name="ad_color_dualConnection" 			        text="02 line of dual-way connection" />
-		<text name="ad_color_reverseConnection" 			    text="03 line of reverse connection" />
-		<text name="ad_color_default" 			                text="04 waypoint on sinle and reverse connection" />
-		<text name="ad_color_subPrioSingleConnection" 			text="05 line of secondary single-way connection" />
-		<text name="ad_color_subPrioDualConnection" 			text="06 line of secondary dual-way connection" />
-		<text name="ad_color_subPrioNode" 			            text="07 secondary waypoint" />
-		<text name="ad_color_hoveredNode" 			            text="08 hovered waypoint" />
-		<text name="ad_color_previousNode" 			            text="09 connected previous waypoint" />
-		<text name="ad_color_nextNode" 			                text="10 connected next waypoint" />
-		<text name="ad_color_selectedNode" 			            text="11 selected waypoint" />
-		<text name="ad_color_currentConnection" 			    text="12 line next path" />
-		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
-		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+		<text name="ad_color_singleConnection" 			        text="01 linie jednosměrného připojení" />
+		<text name="ad_color_dualConnection" 			        text="02 linie obousměrného připojení" />
+		<text name="ad_color_reverseConnection" 			    text="03 linie zpětného připojení" />
+		<text name="ad_color_default" 			                text="04 trasový bod na jednoduchém a zpětném připojení" />
+		<text name="ad_color_subPrioSingleConnection" 			text="05 linie vedlejšího jednosměrného připojení" />
+		<text name="ad_color_subPrioDualConnection" 			text="06 linie vedlejšího obousměrného připojení" />
+		<text name="ad_color_subPrioNode" 			            text="07 vedlejší trasový bod" />
+		<text name="ad_color_hoveredNode" 			            text="08 Vysící trasový bod" />
+		<text name="ad_color_previousNode" 			            text="09 připojený předchozí trasový bod" />
+		<text name="ad_color_nextNode" 			                text="10 připojený následující trasový bod" />
+		<text name="ad_color_selectedNode" 			            text="11 vybraný trasový bod" />
+		<text name="ad_color_currentConnection" 			    text="12 linie další cesty" />
+		<text name="ad_color_closestLine" 			            text="13 linie od vozidla k nejbližšímu trasovému bodu" />
+		<text name="ad_color_editorHeightLine" 			        text="14 linie z povrchového traťového bodu k bodu nad vozidlem" />
 
 		<text name="button_delete_all" 							text="Smazat všechny" />
-		<text name="button_reset_selected" 					    text="Reset selected" />
+		<text name="button_reset_selected" 					    text="Resetovat vybrané" />
 
 		<text name="ad_helpCategory_1"							text="AutoDrive" />
 		
@@ -387,65 +387,65 @@
 		<text name="AD_task_exiting_field"						text="Opouštím pole" />
 		<text name="AD_task_reversing_from_collision"			text="Vyhledávám čistou oblast" />
         <text name="AD_task_drive_to_park"				        text="Jedu na parkovací místo" />
-		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
+		<text name="AD_task_unload_area_in_fruit"			    text="Plocha pro vykládku je blokována" />
 
 		<text name = "gui_CPAD_off"								text = "vypnutý"/>
 		<text name = "gui_CPAD_simple"							text = "jednoduchý"/>
 		<text name = "gui_CPAD_full"							text = "plný"/>
-		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Tlačítka"/>
+		<text name = "gui_ad_combineCPADHudMouse"				text = "kombine CP/AD Tlačítka"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "vypnutý: výchozí/ jednoduché: CP: sekundární tlačítko myši > myš zapnutá + vypnutá, AD: Přepnout Hud> oba Hudy zapnuto + vypnuto / plný: stejně jednoduché, ale přepínání Hudu v jednotlivých krocích / požadováno: Zakázat pravé tlačítko HUD v nastavení CP"/>
-		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
-		<text name="ad_next_tip" 								text="Next" />
-		<text name="ad_totd_01_title" 							text="Multiple functions" />
-		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
+		<text name="gui_ad_showTipOfTheDay"						text="Tip dne" />
+		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip dne se zobrazí při každém začátku hry" />
+		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip odne" />
+		<text name="gui_ad_tipOfTheDayActive" 					text="Zobrazit při dalším startu" />
+		<text name="ad_next_tip" 								text="Následující" />
+		<text name="ad_totd_01_title" 							text="Více funkcí" />
+		<text name="ad_totd_01_text" 							text="Mnoho tlačítek v AutoDrive má více funkcí. Hlavní funkci lze vždy aktivovat levým tlačítkem myši. Sekundární funkci lze aktivovat buď prostředním nebo pravým tlačítkem myši.
 		
-		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
-		<text name="ad_totd_02_title" 							text="Different types of roads" />
-		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
+		Některá tlačítka mají dokonce třetí a čtvrtou funkci, kterou lze použít podržením levé klávesy Shift při kliknutí na tlačítko. V současnosti to platí pouze pro tlačítko záznamu." />
+		<text name="ad_totd_02_title" 							text="Různé typy silnic" />
+		<text name="ad_totd_02_text" 							text="Síť AutoDrive může obsahovat 4 různé typy silnic.
 
-		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
+		1. Standardní segment silnice (zelený). Vozidla mohou jet ve směru označeném šipkami. Chcete-li zahájit záznam standardní silnice, jednoduše klikněte levým tlačítkem na tlačítko záznamu.
+												      
+		2. Obousměrné silnice (modrá). Zde mohou vozidla jet v obou směrech a budou blokovat přijíždějící provoz v protisměru. Pomocí sekundární funkce na tlačítku záznamu můžete zaznamenávat trasy v obou směrech. Použijte tedy buď prostřední nebo pravé tlačítko myši.
+												      
+		3. Couvací úseky (světle modré) - Vozidla mohou po těchto úsekech jet pouze se zpátečkou. Užitečné pro parkování a vykládání na úzkých místech. Jednoduše jeďte pozpátku během standardní relace nahrávání. 
+												      
+		4. Vedlejší silnice – Tomuto typu segmentu silnice se plánování cesty obvykle vyhýbá, pokud cíl není na tomto segmentu silnice. Pro záznam vedlejší silnice použijte třetí a čtvrtou funkci tlačítka záznamu." />
+		<text name="ad_totd_03_title" 							text="Sklizeň kombajnem - 1" />
+		<text name="ad_totd_03_text" 							text="Několik základních tipů pro použití AutoDrive pro vykládání sklízecích mlátiček:
 		
-		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
+		1. Chcete-li, aby kombajn automaticky zavolal odvozce, jednoduše vyberte v HUD AutoDrive HUD kombajnu stejné místo určení, jaké jste vybrali pro odvozce. Tento bod by měl být obvykle cílem blízko pole, takže odvozce pak může naplánovat trasu směrem ke kombajnu. Alternativně můžete také povolit nastavení „Najít řidiče“, které způsobí, že kombajn vyhledá jakéhokoli dostupného odvozce v dosahu 300 m. 
+												      
+		2. AutoDrive dokáže vyložit jak sklízecí mlátičky, tak mlátičky na cestách. Chcete-li povolit tuto funkci pro sklízecí mlátičky, jednoduše nastavte nastavení „Úroveň předvolání“ na 0 %." />
+		<text name="ad_totd_04_title" 							text="Nastavení - 1" />
+		<text name="ad_totd_04_text" 							text="Aktuálně existuje 6 různých stránek nastavení.
+
+		1. Obecná nastavení – platí pro všechna vozidla.
+
+		2. Uživatelské nastavení – platí pro aktuálního hráče (také v MP). Toto jsou nastavení, která řídí, jak se AutoDrive zobrazuje a ne jak funguje.
+
+		3. Nastavení vozidla – Platí pouze pro aktuální vozidlo.
+
+		4. Nastavení kombajnu – Viditelné pouze v kombajnu. Zde můžete ovládat, jak tento kombajn přivolává své odvozce.
+
+		5. Nastavení ladění – Tato nastavení umožňují vizuální zpětnou vazbu při ladění a co je důležitější, další zprávy protokolu. Povolte to, pokud narazíte na problémy nebo chyby a připravujete se na odeslání souboru protokolu vývojářům. 
 		
-		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
+		6. Experimentální funkce – Tato nastavení se týkají funkcí, které aktuálně testujeme/vyvíjíme, ale které ještě nejsou považovány za stabilní. Použití na vlastní nebezpečí." />
 		
-		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
-		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
-		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
-		
-		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
-		
-		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
-		<text name="ad_totd_04_title" 							text="Settings - 1" />
-		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
+		<text name = "gui_ad_editorTip_1"								text = "Jednoduché kliknutí levým tlačítkem myši:"/>
+		<text name = "gui_ad_editorTip_2"								text = "Pouze myš: Vyberte 1. bod"/>
+		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Vytvořit uzel"/>
+		<text name = "gui_ad_editorTip_4"								text = "LALT = Smazat uzel"/>
+		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Přepnout bod jako vedlejší silnici"/>
 
-		1. General settings - Applied for all vehicles.
+		<text name = "gui_ad_editorTip_6"								text = "Kliknutím na druhý uzel:"/>
+		<text name = "gui_ad_editorTip_7"								text = "Přepnout připojení"/>
+		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Vytvořte couvací cestu"/>
 
-		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
-
-		3. Vehicle settings - Applied only for the current vehicle.
-
-		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
-
-		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
-		
-		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
-		
-		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
-		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
-		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>
-		<text name = "gui_ad_editorTip_4"								text = "LALT = Delete node"/>
-		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Toggle point as side road"/>
-
-		<text name = "gui_ad_editorTip_6"								text = "Clicking on second node:"/>
-		<text name = "gui_ad_editorTip_7"								text = "Toggle connection"/>
-		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Create reverse road"/>
-
-		<text name = "gui_ad_editorTip_9"								text = "1. node is intersection, second it's neighbor:"/>
-		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Toggle segment type (normal/dual)"/>
-		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Toggle side road"/>
+		<text name = "gui_ad_editorTip_9"								text = "1. uzel je průsečík, za druhé je to soused:"/>
+		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Přepnout typ segmentu (normální/duální)"/>
+		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Přepnout vedlejší silnici"/>
 	</texts>
 </l10n>
