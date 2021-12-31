@@ -49,6 +49,7 @@
 		<text name="input_ADSetParkDestination"					text="AD: Назначить 1-ю локацию как парковку" />
 		<text name="input_ADRefuelVehicle"						text="AD: Заправить технику" />
 		<text name="input_ADRepairVehicle"						text="AD: Ремонтировать технику" />
+		<text name="input_ADRepairVehicle"						text="AD: Ремонтировать технику" />
 		<text name="input_ADSwapTargets"						text="AD: Сменить локации" />
 		<text name="input_ADStartCP"							text="AD: Передать управление CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Переключение CP/AIVE" />
@@ -325,15 +326,15 @@
 		<text name="gui_ad_combineCPADHudMouse"					text="Объединение клавиш CP/AD"/>
 		<text name="gui_ad_combineCPADHudMouse_tooltip"			text="ВЫКЛ: по умолчанию. ПРОСТОЕ: CP: ПКМ > указатель вкл+выкл, AD: скрыть/отобразить HUD > оба HUD вкл+выкл. ПОЛНОЕ: как и ПРОСТОЕ, но оба HUD вкл/выкл индивидуально (у CP необходимо отключить открытие HUD правой кнопкой)."/>
 
-		<text name = "gui_ad_editorTip_1"						text = "Одинарный клик ЛКМ:"/>
-		<text name = "gui_ad_editorTip_2"						text = "Только мышь: Выбор 1-ой точки"/>
-		<text name = "gui_ad_editorTip_3"						text = "с LCtrl = Создать узел"/>
-		<text name = "gui_ad_editorTip_4"						text = "с LAlt = Удалить узел"/>
-		<text name = "gui_ad_editorTip_5"						text = "с LShift = Переключение точки на 'боковую дорогу'"/>
+		<text name = "gui_ad_editorTip_1"								text = "Одинарный клик ЛКМ:"/>
+		<text name = "gui_ad_editorTip_2"								text = "Только мышь: Выбор 1-ой точки"/>
+		<text name = "gui_ad_editorTip_3"								text = "с LCtrl = Создать узел"/>
+		<text name = "gui_ad_editorTip_4"								text = "с LAlt = Удалить узел"/>
+		<text name = "gui_ad_editorTip_5"								text = "с LShift = Переключение точки на 'боковую дорогу'"/>
 
-		<text name = "gui_ad_editorTip_6"						text = "Клик по вторичному узлу:"/>
-		<text name = "gui_ad_editorTip_7"						text = "Переключение соединения"/>
-		<text name = "gui_ad_editorTip_8"						text = "с RShift = Создание реверсивной дороги"/>
+		<text name = "gui_ad_editorTip_6"								text = "Клик по вторичному узлу:"/>
+		<text name = "gui_ad_editorTip_7"								text = "Переключение соединения"/>
+		<text name = "gui_ad_editorTip_8"								text = "с RShift = Создание реверсивной дороги"/>
 
 		<text name = "gui_ad_editorTip_9"						text = "1-ый узел это пересечение, 2-ой это соседний:"/>
 		<text name = "gui_ad_editorTip_10"						text = "с LCtrl = Переключение типа сегмента (одно/двусторонняя)"/>
