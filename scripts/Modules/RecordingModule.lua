@@ -30,7 +30,7 @@ function ADRecordingModule:start(dual, subPrio)
 
     local rearOffset = 0
     _, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
-    if self.trailerCount > 0 then
+    if self.trailerCount > 1 then
         rearOffset = -6
     end
 
@@ -84,7 +84,7 @@ function ADRecordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgno
     end
 
     local rearOffset = 0
-    if self.trailerCount > 0 then
+    if self.trailerCount > 1 then
         rearOffset = -6
     end
 
