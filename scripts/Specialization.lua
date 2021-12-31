@@ -374,15 +374,18 @@ end
 function AutoDrive:onUpdate(dt)
     if self.isServer and self.ad.stateModule:isActive() then
         self.ad.recordingModule:update(dt)
-        if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
-            self.ad.taskModule:update(dt)
-        else
-            self.ad.specialDrivingModule:stopVehicle()
-            self.ad.specialDrivingModule:update(dt)
-        end
-        if self.lastMovedDistance > 0 then
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
-        end
+
+        --if self.ad.specialDrivingModule:executeUTurn(dt, true, true) then
+            if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
+                self.ad.taskModule:update(dt)
+            else
+                self.ad.specialDrivingModule:stopVehicle()
+                self.ad.specialDrivingModule:update(dt)
+            end
+            if self.lastMovedDistance > 0 then
+                g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
+            end
+        --end
     end
 
     self.ad.stateModule:update(dt)
@@ -398,10 +401,6 @@ function AutoDrive:onUpdate(dt)
     --For 'legacy' purposes, this value should be kept since other mods already test for this:
     self.ad.mapMarkerSelected = self.ad.stateModule:getFirstMarkerId()
     self.ad.mapMarkerSelected_Unload = self.ad.stateModule:getSecondMarkerId()
-
-    if self.ad.isCombine then
-        AutoDrive.getLengthOfFieldInFront(self)
-    end
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)

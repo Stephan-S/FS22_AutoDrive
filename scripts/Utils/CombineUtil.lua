@@ -240,17 +240,29 @@ function AutoDrive.getFrontToolLength(vehicle)
     return lengthOfFrontTool
 end
 
---onlyWithFruit is not yet implemented and ignored for now
 function AutoDrive.getLengthOfFieldInFront(vehicle, onlyWithFruit, maxRange, stepLength)
     local maxSearchRange = maxRange or 50
     local acceptOnlyWithFruit = onlyWithFruit or false
     local stepLength = stepLength or 5
     
-    local length = 0
+    local length = 10
     local foundField = true
+    local fruitType = nil
     while foundField do
         local worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, 0, 0, length + stepLength)
         foundField = AutoDrive.checkIsOnField(worldPosX, 0, worldPosZ)
+
+        if acceptOnlyWithFruit then
+            local foundFruit = false
+            local corners = AutoDrive.getCornersForAreaRelativeToVehicle(vehicle, 0, length, 3, stepLength)
+            if fruitType == nil then
+                foundFruit, fruitType = AutoDrive.checkForUnknownFruitInArea(corners)
+            else
+                foundFruit = AutoDrive.checkForFruitTypeInArea(corners, fruitType)
+            end
+            foundField = foundField and foundFruit        
+        end
+
         length = length + stepLength
         if math.abs(length) >= maxSearchRange then
             foundField = false
@@ -258,4 +270,41 @@ function AutoDrive.getLengthOfFieldInFront(vehicle, onlyWithFruit, maxRange, ste
     end
 
     return length
+end
+
+-- 3
+-- |
+-- |
+-- 1 ---- 2
+--
+--
+--    v
+function AutoDrive.getCornersForAreaRelativeToVehicle(vehicle, xOffset, zOffset, width, length)
+    local corners = {}
+    local worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, xOffset - width/2, 0, zOffset)
+    corners[1] = { x = worldPosX, z = worldPosZ}
+    worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, xOffset + width/2, 0, zOffset)
+    corners[2] = { x = worldPosX, z = worldPosZ}
+    worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, xOffset - width/2, 0, zOffset + length)
+    corners[3] = { x = worldPosX, z = worldPosZ}
+
+    return corners
+end
+
+function AutoDrive.checkForUnknownFruitInArea(corners)
+    for i = 1, #g_fruitTypeManager.fruitTypes do
+        if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
+            local fruitTypeToCheck = g_fruitTypeManager.fruitTypes[i].index
+            if AutoDrive.checkForFruitTypeInArea(corners, fruitTypeToCheck) then
+                return true, fruitTypeToCheck
+            end
+        end
+    end
+    return false, nil
+end
+
+function AutoDrive.checkForFruitTypeInArea(corners, fruitType)
+    local fruitValue = 0
+    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitType, corners[1].x, corners[1].z, corners[2].x, corners[2].z, corners[3].x, corners[3].z, true, true)
+    return (fruitValue > 10)
 end
