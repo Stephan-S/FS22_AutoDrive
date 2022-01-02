@@ -177,7 +177,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	self.row4 = self.posY + (self.pullDownRowOffset + 3) * self.borderY + (self.pullDownRowOffset + 2) * self.buttonHeight
 	self.rowHeader = self.posY + (self.pullDownRowOffset + 4) * self.borderY + (self.pullDownRowOffset + 3) * self.buttonHeight
 
-	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.posY - 2 * self.gapHeight, self.width, self.height + 5 * self.gapHeight, AutoDrive.directory .. "textures/Background.dds", 0, "background"))
+	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.posY - 0 * self.gapHeight, self.width, self.height + 5 * self.gapHeight, AutoDrive.directory .. "textures/Background.dds", 0, "background"))
 
 	table.insert(self.hudElements, ADHudIcon:new(self.posX, self.rowHeader, self.width, self.headerHeight, AutoDrive.directory .. "textures/Header.dds", 1, "header"))
 
@@ -358,12 +358,14 @@ end
 
 function AutoDriveHud:refreshHudElementsLayerSequence()
 	-- Sort the elements by their layer index, for optimizing drawHud and mouseEvent methods
-	table.sort(
-		self.hudElements,
-		function(a, b)
-			return a.layer < b.layer
-		end
-	)
+	if self.hudElements ~= nil then
+		table.sort(
+			self.hudElements,
+			function(a, b)
+				return a.layer < b.layer
+			end
+		)
+	end
 end
 
 function AutoDriveHud:drawHud(vehicle)
@@ -575,6 +577,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 						-- select point
 						-- no selectedNodeId: hoveredNodeId is now selectedNodeId
                         vehicle.ad.selectedNodeId = vehicle.ad.hoveredNodeId
+                        AutoDrive.splineInterpolationUserCurvature = nil
                         AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent select point selectedNodeId %d", vehicle.ad.selectedNodeId)
 						
 						AutoDrive.playSample(AutoDrive.selectedWayPointSample, 0.75)
@@ -871,9 +874,11 @@ function AutoDriveHud:has_value(tab, val)
 end
 
 function AutoDriveHud:closeAllPullDownLists(vehicle)
-	for _, hudElement in pairs(self.hudElements) do
-		if hudElement.collapse ~= nil and hudElement.state ~= nil and hudElement.state == ADPullDownList.STATE_EXPANDED then
-			hudElement:collapse(vehicle, false)
+	if self.hudElements ~= nil then
+		for _, hudElement in pairs(self.hudElements) do
+			if hudElement.collapse ~= nil and hudElement.state ~= nil and hudElement.state == ADPullDownList.STATE_EXPANDED then
+				hudElement:collapse(vehicle, false)
+			end
 		end
 	end
 	-- PullDownList(s) have been collapsed, so need to refresh layer sequence
@@ -1093,15 +1098,14 @@ function AutoDrive.updateDestinationsMapHotspots()
         mapHotspot.isVisible = true
         mapHotspot.icon = Overlay.new(g_autoDriveUIFilename, 0, 0, mapHotspot.width, mapHotspot.height )
         mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
+		mapHotspot.iconSmall = Overlay.new(g_autoDriveUIFilename, 0, 0, mapHotspot.width, mapHotspot.height)
+		mapHotspot.iconSmall:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
 
         if marker.isADDebug == true then
             -- map hotspot debug
             mapHotspot.isADDebug = true
             -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_MISSION)
-			mapHotspot.icon:setUVs(GuiUtils.getUVs({780, 780, 234, 234}))
-        else
-            -- mh = MapHotspot:new("mapMarkerHotSpot", MapHotspot.CATEGORY_OTHER)
-			mapHotspot.icon:setUVs(GuiUtils.getUVs({0, 512, 128, 128}))
+			mapHotspot.icon:setUVs(GuiUtils.getUVs({780, 780, 234, 234}))			
         end
 
         mapHotspot.isADMarker = true
@@ -1109,7 +1113,6 @@ function AutoDrive.updateDestinationsMapHotspots()
         
         local wp = ADGraphManager:getWayPointById(marker.id)
         if wp ~= nil then
-
             g_currentMission:addMapHotspot(mapHotspot)
             table.insert(AutoDrive.mapHotspotsBuffer, mapHotspot)
 
@@ -1118,7 +1121,6 @@ function AutoDrive.updateDestinationsMapHotspots()
             mapHotspot:setTeleportWorldPosition(wp.x, wp.y + 2, wp.z)
 
             mapHotspot:setName(marker.name)
-
         end
     end
 end

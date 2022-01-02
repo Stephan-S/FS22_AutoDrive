@@ -1,60 +1,61 @@
 ADInputManager = {}
 
 -- same order as in modDesc.xml
+-- {ActionName, InputName, allowedInHelperScreen, executedOnServer}
 ADInputManager.actionsToInputs = {
-    {"ADSilomode", "input_silomode", true},
-    {"ADPreviousMode", "input_previousMode", true},
-    {"ADRecord", "input_record", false},
-    {"ADRecord_Dual", "input_record_dual", false},
-    {"ADRecord_SubPrio", "input_record_subPrio", false},
-    {"ADRecord_SubPrioDual", "input_record_subPrioDual", false},
-    {"ADEnDisable", "input_start_stop", true},
-    {"ADSelectTarget", "input_nextTarget", true},
-    {"ADSelectPreviousTarget", "input_previousTarget", true},
-    {"ADSelectTargetUnload", "input_nextTarget_Unload", true},
-    {"ADSelectPreviousTargetUnload", "input_previousTarget_Unload", true},
-    {"ADActivateDebug", "input_debug", false},
-    {"ADDisplayMapPoints", "input_displayMapPoints", false},
-    {"ADDebugSelectNeighbor", "input_showNeighbor", false},
-    {"ADDebugCreateConnection", "input_toggleConnection", false},
-    {"ADDebugToggleConnectionInverted", "input_toggleConnectionInverted", false},
-    {"ADDebugChangeNeighbor", "input_nextNeighbor", false},
-    {"ADDebugPreviousNeighbor", "input_previousNeighbor", false},
-    {"ADDebugCreateMapMarker", "input_createMapMarker", false},
-    {"ADRenameMapMarker", "input_editMapMarker", false},
-    {"ADDebugDeleteDestination", "input_removeMapMarker", false},
-    {"ADNameDriver", "input_nameDriver", true},
-    {"ADSetDestinationFilter", "input_setDestinationFilter", true},
-    {"AD_Speed_up", "input_increaseSpeed", true},
-    {"AD_Speed_down", "input_decreaseSpeed", true},
-    {"AD_FieldSpeed_up", "input_increaseFieldSpeed", true},
-    {"AD_FieldSpeed_down", "input_decreaseFieldSpeed", true},
-    {"ADToggleHud", "input_toggleHud", false},
-    {"ADToggleMouse", "input_toggleMouse", true},
-    {"COURSEPLAY_MOUSEACTION_SECONDARY", "input_toggleMouse", false},
-    {"ADDebugDeleteWayPoint", "input_removeWaypoint", false},
-    {"AD_routes_manager", "input_routesManager", false},
-    {"ADSelectNextFillType", "input_nextFillType", true},
-    {"ADSelectPreviousFillType", "input_previousFillType", true},
-    {"ADOpenGUI", "input_openGUI", true},
-    {"ADCallDriver", "input_callDriver", false},
-    {"ADGoToVehicle", "input_goToVehicle", false},
-    {"ADIncLoopCounter", "input_incLoopCounter", true},
-    {"ADDecLoopCounter", "input_decLoopCounter", true},
-    {"ADSwapTargets", "input_swapTargets", true},
-    {"ADStartCP", "input_startCp", true},
-    {"ADToggleCP_AIVE", "input_toggleCP_AIVE", true},
-    {"AD_open_notification_history", "input_openNotificationHistory", false},
+    {"ADSilomode", "input_silomode", true, true},
+    {"ADPreviousMode", "input_previousMode", true, true},
+    {"ADRecord", "input_record", false, true},
+    {"ADRecord_Dual", "input_record_dual", false, true},
+    {"ADRecord_SubPrio", "input_record_subPrio", false, true},
+    {"ADRecord_SubPrioDual", "input_record_subPrioDual", false, true},
+    {"ADEnDisable", "input_start_stop", true, true},
+    {"ADSelectTarget", "input_nextTarget", true, true},
+    {"ADSelectPreviousTarget", "input_previousTarget", true, true},
+    {"ADSelectTargetUnload", "input_nextTarget_Unload", true, true},
+    {"ADSelectPreviousTargetUnload", "input_previousTarget_Unload", true, true},
+    {"ADActivateDebug", "input_debug", false, false},
+    {"ADDisplayMapPoints", "input_displayMapPoints", false, true},
+    {"ADDebugSelectNeighbor", "input_showNeighbor", false, false},
+    {"ADDebugCreateConnection", "input_toggleConnection", false, false},
+    {"ADDebugToggleConnectionInverted", "input_toggleConnectionInverted", false, false},
+    {"ADDebugChangeNeighbor", "input_nextNeighbor", false, false},
+    {"ADDebugPreviousNeighbor", "input_previousNeighbor", false, false},
+    {"ADDebugCreateMapMarker", "input_createMapMarker", false, false},
+    {"ADRenameMapMarker", "input_editMapMarker", false, false},
+    {"ADDebugDeleteDestination", "input_removeMapMarker", false, false},
+    {"ADNameDriver", "input_nameDriver", true, false},
+    {"ADSetDestinationFilter", "input_setDestinationFilter", true, false},
+    {"AD_Speed_up", "input_increaseSpeed", true, true},
+    {"AD_Speed_down", "input_decreaseSpeed", true, true},
+    {"AD_FieldSpeed_up", "input_increaseFieldSpeed", true, true},
+    {"AD_FieldSpeed_down", "input_decreaseFieldSpeed", true, true},
+    {"ADToggleHud", "input_toggleHud", false, false},
+    {"ADToggleMouse", "input_toggleMouse", true, false},
+    {"COURSEPLAY_MOUSEACTION_SECONDARY", "input_toggleMouse", false, false},
+    {"ADDebugDeleteWayPoint", "input_removeWaypoint", false, false},
+    {"AD_routes_manager", "input_routesManager", false, false},
+    {"ADSelectNextFillType", "input_nextFillType", true, true},
+    {"ADSelectPreviousFillType", "input_previousFillType", true, true},
+    {"ADOpenGUI", "input_openGUI", true, false},
+    {"ADCallDriver", "input_callDriver", false, true},
+    {"ADGoToVehicle", "input_goToVehicle", false, false},
+    {"ADIncLoopCounter", "input_incLoopCounter", true, true},
+    {"ADDecLoopCounter", "input_decLoopCounter", true, true},
+    {"ADSwapTargets", "input_swapTargets", true, true},
+    {"ADStartCP", "input_startCp", true, true},
+    {"ADToggleCP_AIVE", "input_toggleCP_AIVE", true, true},
+    {"AD_open_notification_history", "input_openNotificationHistory", false, false},
     -- {"AD_open_colorSettings", "input_openColorSettings", false},
-    {"AD_continue", "input_continue", true},
-    {"ADParkVehicle", "input_parkVehicle", true},
-    {"ADSetParkDestination", "input_setParkDestination", false},
-    {"AD_devAction", "input_devAction", false},
-    {"ADRefuelVehicle", "input_refuelVehicle", false},
-    {"ADToggleHudExtension", "input_toggleHudExtension", true},
-    {"ADToggleAutomaticUnloadTarget", "input_toggleAutomaticUnloadTarget", true},
-    {"ADToggleAutomaticPickupTarget", "input_toggleAutomaticPickupTarget", true},
-    {"ADRepairVehicle", "input_repairVehicle", false}
+    {"AD_continue", "input_continue", true, true},
+    {"ADParkVehicle", "input_parkVehicle", true, true},
+    {"ADSetParkDestination", "input_setParkDestination", false, false},
+    {"AD_devAction", "input_devAction", false, false},
+    {"ADRefuelVehicle", "input_refuelVehicle", false, true},
+    {"ADToggleHudExtension", "input_toggleHudExtension", true, false},
+    {"ADToggleAutomaticUnloadTarget", "input_toggleAutomaticUnloadTarget", true, true},
+    {"ADToggleAutomaticPickupTarget", "input_toggleAutomaticPickupTarget", true, true},
+    {"ADRepairVehicle", "input_repairVehicle", false, true}
 }
 
 --[[
@@ -68,7 +69,9 @@ ADInputManager.idsToInputs = {}
 
 function ADInputManager:load()
     for k, v in pairs(self.actionsToInputs) do
-        self.inputsToIds[self.actionsToInputs[k][2]] = k
+        if v[4] then
+            self.inputsToIds[self.actionsToInputs[k][2]] = k
+        end
     end
     for k, v in pairs(self.inputsToIds) do
         self.idsToInputs[v] = k
@@ -97,7 +100,7 @@ end
 function ADInputManager:onInputCall(vehicle, input, sendEvent)
     local controlledVehicle = g_currentMission.controlledVehicle
     for k, v in pairs(ADInputManager.actionsToInputs) do
-        local allowed = ADInputManager.actionsToInputs[k][3] or (controlledVehicle ~= nil and controlledVehicle == vehicle)
+        local allowed = ADInputManager.actionsToInputs[k][3] or ((controlledVehicle ~= nil and controlledVehicle == vehicle) or v[4])
         if input == ADInputManager.actionsToInputs[k][2] and allowed then
             local func = self[input]
             if type(func) ~= "function" then

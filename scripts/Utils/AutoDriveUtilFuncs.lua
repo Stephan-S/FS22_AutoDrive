@@ -6,12 +6,6 @@ function AutoDrive.createWayPointRelativeToVehicle(vehicle, offsetX, offsetZ)
     return wayPoint
 end
 
-function AutoDrive.createWayPointRelativeToNode(node, offsetX, offsetZ)
-    local wayPoint = {}
-    wayPoint.x, wayPoint.y, wayPoint.z = localToWorld(node, offsetX, 0, offsetZ)
-    return wayPoint
-end
-
 function AutoDrive.isTrailerInCrop(vehicle, enlargeDetectionArea)
     local widthFactor = 1
     if enlargeDetectionArea then
@@ -45,27 +39,18 @@ function AutoDrive:checkIsConnected(toCheck, other)
     if toCheck == nil or other == nil then
         return false
     end
-    if toCheck.getAttachedImplements == nil then
-        return false
-    end
+    
+    for _, implement in pairs(AutoDrive.getAllImplements(toCheck, true)) do
+        if implement == other then
+            return true
+        end
 
-    for _, impl in pairs(toCheck:getAttachedImplements()) do
-        if impl.object ~= nil then
-            if impl.object == other then
-                return true
-            end
+        if implement.spec_baleGrab ~= nil and implement.spec_baleGrab.dynamicMountedObjects ~= nil and table.contains(implement.spec_baleGrab.dynamicMountedObjects, other) then
+            return true
+        end
 
-            if impl.object.spec_baleGrab ~= nil and impl.object.spec_baleGrab.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_baleGrab.dynamicMountedObjects, other) then
-                return true
-            end
-
-            if impl.object.spec_dynamicMountAttacher ~= nil and impl.object.spec_dynamicMountAttacher.dynamicMountedObjects ~= nil and table.contains(impl.object.spec_dynamicMountAttacher.dynamicMountedObjects, other) then
-                return true
-            end
-
-            if impl.object.getAttachedImplements ~= nil then
-                isAttachedToMe = isAttachedToMe or AutoDrive:checkIsConnected(impl.object, other)
-            end
+        if implement.spec_dynamicMountAttacher ~= nil and implement.spec_dynamicMountAttacher.dynamicMountedObjects ~= nil and table.contains(implement.spec_dynamicMountAttacher.dynamicMountedObjects, other) then
+            return true
         end
     end
 
@@ -152,15 +137,13 @@ function AutoDrive.combineIsTurning(combine)
     local combineIsTurning = cpIsTurning or cpIsTurningTwo or aiIsTurning --or combineSteering
 
     --Check if we are close to the field borders and about to turn
-    local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, false, 50, 5)
-    local fieldLengthBehind = math.abs(AutoDrive.getLengthOfFieldInFront(combine, false, 50, -5))
+    local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, true, 50, 5)
+    local fieldLengthBehind = math.abs(AutoDrive.getLengthOfFieldInFront(combine, true, 50, -5))
 
     if (fieldLengthInFront <= 20 or fieldLengthBehind <= 20) and combine.ad.noMovementTimer.elapsedTime < 5000 and not AutoDrive.getIsBufferCombine(combine) then
         combineIsTurning = true
     end
 
-    --local b = AutoDrive.boolToString
-    --print("cpIsTurning: " .. b(cpIsTurning) .. " cpIsTurningTwo: " .. b(cpIsTurningTwo) .. " aiIsTurning: " .. b(aiIsTurning) .. " combineIsTurning: " .. b(combineIsTurning) .. " driveForwardDone: " .. b(combine.ad.driveForwardTimer:done()))
     if not combineIsTurning then --(combine.ad.driveForwardTimer:done() and (not combine:getIsBufferCombine()))
         return false
     end
@@ -168,30 +151,6 @@ function AutoDrive.combineIsTurning(combine)
         return false
     end
     return true
-end
-
-function AutoDrive.pointIsBetweenTwoPoints(x, z, startX, startZ, endX, endZ)
-    local xInside = (startX >= x and endX <= x) or (startX <= x and endX >= x)
-    local zInside = (startZ >= z and endZ <= z) or (startZ <= z and endZ >= z)
-    return xInside and zInside
-end
-
-function AutoDrive.semanticVersionToValue(versionString)
-    local codes = versionString:split(".")
-    local value = 0
-    if codes ~= nil then
-        for i, code in ipairs(codes) do
-            local subCodes = code:split("-")
-            if subCodes ~= nil and subCodes[1] ~= nil then
-                value = value * 10 + tonumber(subCodes[1])
-                if subCodes[2] ~= nil then
-                    value = value + (tonumber(subCodes[2]) / 1000)
-                end
-            end
-        end
-    end
-
-    return value
 end
 
 function AutoDrive.mouseIsAtPos(position, radius)
@@ -296,82 +255,83 @@ end
 function AutoDrive.getSelectedWorkTool(vehicle)
     local selectedWorkTool = nil
 
-    if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
-        local allImp = {}
-        -- Credits to Tardis from FS17
-        local function addAllAttached(obj)
-            for _, imp in pairs(obj:getAttachedImplements()) do
-                addAllAttached(imp.object)
-                table.insert(allImp, imp)
-            end
-        end
-
-        addAllAttached(vehicle)
-
-        if allImp ~= nil then
-            for i = 1, #allImp do
-                local imp = allImp[i]
-                if imp ~= nil and imp.object ~= nil and imp.object:getIsSelected() then
-                    selectedWorkTool = imp.object
-                    break
-                end
-            end
+    for _, implement in pairs(AutoDrive.getAllImplements(vehicle)) do
+        if implement.getIsSelected ~= nil and implement:getIsSelected() then
+            selectedWorkTool = implement
         end
     end
+
     return selectedWorkTool
 end
 
 function AutoDrive.getVehicleLeadingEdge(vehicle)
     local leadingEdge = 0
     local implements = AutoDrive.getAllImplements(vehicle)
-    if implements ~= nil then
-        for i = 1, #implements do
-            local implement = implements[i]
-            if implement ~= nil and implement.object ~= nil then
-                local implementX, implementY, implementZ = getWorldTranslation(implement.object.components[1].node)
-                local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
-                if diffZ > 0 and implement.object.size.length ~= nil then                    
-                    leadingEdge = math.max(leadingEdge, diffZ + (implement.object.size.length / 2) - (vehicle.size.length / 2))
-                end
-            end
+    for _, implement in pairs(implements) do
+        local implementX, implementY, implementZ = getWorldTranslation(implement.components[1].node)
+        local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
+        if diffZ > 0 and implement.size.length ~= nil then                    
+            leadingEdge = math.max(leadingEdge, diffZ + (implement.size.length / 2) - (vehicle.size.length / 2))
         end
     end
     return leadingEdge
 end
 
-function AutoDrive.getAllImplements(vehicle)
-    if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
-        local allImp = {}
-        -- Credits to Tardis from FS17
-        local function addAllAttached(obj)
-            for _, imp in pairs(obj:getAttachedImplements()) do
-                addAllAttached(imp.object)
-                table.insert(allImp, imp)
-            end
-        end
-
-        addAllAttached(vehicle)
-
-        return allImp
-    end
-end
-
-function AutoDrive.getAllAttachedObjects(vehicle)
+function AutoDrive.getAllImplements(vehicle, includeVehicle)
     local allImp = {}
     
     if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
         
         local function addAllAttached(obj)
-            for _, imp in pairs(obj:getAttachedImplements()) do
-                addAllAttached(imp.object)
-                table.insert(allImp, imp.object)
+            if obj.getAttachedImplements ~= nil then
+                for _, imp in pairs(obj:getAttachedImplements()) do
+                    addAllAttached(imp.object)
+                    table.insert(allImp, imp.object)
+                end
             end
         end
 
         addAllAttached(vehicle)
     end
 
+    if includeVehicle then
+        table.insert(allImp, vehicle)
+    end
+
     return allImp
+end
+
+function AutoDrive.foldAllImplements(vehicle)
+    local implements = AutoDrive.getAllImplements(vehicle, true)
+    for _, implement in pairs(implements) do
+        local spec = implement.spec_foldable
+        if implement.spec_foldable ~= nil then
+            local allowed = implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection
+            if allowed then
+                Foldable.actionControllerFoldEvent(implement, -1)
+            end
+        end
+    end
+end
+
+function AutoDrive.getAllImplementsFolded(vehicle)
+    local implements = AutoDrive.getAllImplements(vehicle, true)
+    for _, implement in pairs(implements) do
+        if not AutoDrive.isVehicleFolded(implement) then
+            return false
+        end
+    end
+
+    return true
+end
+
+function AutoDrive.isVehicleFolded(vehicle)
+    local spec = vehicle.spec_foldable
+    if spec ~= nil and #spec.foldingParts > 0 then
+        return spec.turnOnFoldDirection == -1 and spec.foldAnimTime >= 0.99 or spec.turnOnFoldDirection == 1 and spec.foldAnimTime <= 0.01
+    end
+    
+    return true
 end
 
 -- set or delete park destination for selected vehicle, tool from user input action, client mode!
@@ -439,7 +399,11 @@ function AutoDrive:getIsEntered(vehicle)
     else
         -- SP
         if vehicle ~= nil and vehicle.getIsEntered ~= nil then
-            return vehicle:getIsEntered()
+            if vehicle.getIsControlled ~= nil then
+                return vehicle:getIsEntered() or vehicle:getIsControlled()
+            else
+                return vehicle:getIsEntered()
+            end
         end
     end
     return user ~= nil

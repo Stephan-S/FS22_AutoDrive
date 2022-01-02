@@ -87,7 +87,7 @@ function CombineUnloaderMode:monitorTasks(dt)
 end
 
 function CombineUnloaderMode:notifyAboutFailedPathfinder()
-    --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. AutoDrive.boolToString(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
+    --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. tostring(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
     if self.vehicle.ad.pathFinderModule.completelyBlocked and ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 then
         self.failedPathFinder = self.failedPathFinder + 1
     --print("Increased Failed pathfinder count to: " .. self.failedPathFinder)
@@ -385,18 +385,6 @@ end
 
 function CombineUnloaderMode:shouldUnloadAtTrigger()
     return self.state == self.STATE_DRIVE_TO_UNLOAD
-end
-
-function CombineUnloaderMode:getNodeName(node)
-    if node == 0 then
-        return "nil"
-    end
-
-    local name = getName(node)
-    if name == nil then
-        name = "nil"
-    end
-    return name
 end
 
 function CombineUnloaderMode:getUnloaderOnSide()

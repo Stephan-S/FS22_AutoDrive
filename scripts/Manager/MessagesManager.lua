@@ -57,7 +57,7 @@ end
 
 function ADMessagesManager:loadHud(hud)
     local textSize = getCorrectTextSize(hud.textSize)
-    hud.headerOverlay = Overlay.new(AutoDrive.directory .. "textures/Header.dds", hud.posX, hud.posY + (textSize * 1.6), 0, hud.headerOverlayHeight)
+    hud.headerOverlay = Overlay.new(AutoDrive.directory .. "textures/Header_message.dds", hud.posX, hud.posY + (textSize * 1.6), 0, hud.headerOverlayHeight)
     hud.headerOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_CENTER)
     hud.backgroundOverlay = Overlay.new(AutoDrive.directory .. "textures/messageBackground.dds", hud.posX, hud.posY + (textSize / 2.5), 0, hud.backgroundOverlayHeight)
     hud.backgroundOverlay:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER)

@@ -159,7 +159,6 @@ function ADGraphManager:pathFromTo(startWaypointId, targetWaypointId, preferredN
 				preferredNeighbors = {}
 			end
 			wp = ADPathCalculator:GetPath(startWaypointId, targetWaypointId, preferredNeighbors)
-			--wp = AutoDrive:dijkstraLiveShortestPath(startWaypointId, targetWaypointId)
 		end
 	end
 	return wp
@@ -174,7 +173,6 @@ function ADGraphManager:pathFromToMarker(startWaypointId, markerId)
 			return wp
 		else
 			wp = ADPathCalculator:GetPath(startWaypointId, targetId, {})
-			--wp = AutoDrive:dijkstraLiveShortestPath(startWaypointId, targetId)
 		end
 	end
 	return wp
@@ -206,7 +204,6 @@ function ADGraphManager:FastShortestPath(start, markerName, markerId)
 	end
 
 	wp = ADPathCalculator:GetPath(start_id, target_id, {})
-	--wp = AutoDrive:dijkstraLiveShortestPath(start_id, target_id)
 	return wp
 end
 
@@ -304,7 +301,7 @@ function ADGraphManager:removeWayPoint(wayPointId, sendEvent)
 end
 
 function ADGraphManager:renameMapMarker(newName, markerId, sendEvent)
-	if newName:len() > 1 and markerId >= 0 then
+	if newName:len() >= 1 and markerId >= 0 then
         local mapMarker = self:getMapMarkerById(markerId)
         if mapMarker == nil or mapMarker.isADDebug == true then
             -- do not allow rename debug marker
@@ -341,7 +338,7 @@ function ADGraphManager:createMapMarkerOnClosest(vehicle, markerName, sendEvent)
 end
 
 function ADGraphManager:createMapMarker(markerId, markerName, sendEvent)
-	if markerId ~= nil and markerId >= 0 and markerName:len() > 1 then
+	if markerId ~= nil and markerId >= 0 and markerName:len() >= 1 then
 		if sendEvent == nil or sendEvent == true then
 			-- Propagating marker creation all over the network
 			AutoDriveCreateMapMarkerEvent.sendEvent(markerId, markerName)
@@ -420,7 +417,7 @@ function ADGraphManager:removeGroup(groupName, sendEvent)
 end
 
 function ADGraphManager:changeMapMarkerGroup(groupName, markerId, sendEvent)
-	if groupName:len() > 1 and self.groups[groupName] ~= nil and markerId >= 0 and groupName ~= ADGraphManager.debugGroupName then
+	if groupName:len() >= 1 and self.groups[groupName] ~= nil and markerId >= 0 and groupName ~= ADGraphManager.debugGroupName then
 		if sendEvent == nil or sendEvent == true then
 			-- Propagating marker group change all over the network
 			AutoDriveChangeMapMarkerGroupEvent.sendEvent(groupName, markerId)

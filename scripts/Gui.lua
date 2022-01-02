@@ -119,9 +119,7 @@ function AutoDrive.GuiOverlay_loadOverlay(superFunc, ...)
 		return nil
 	end
 
-	if overlay.filename == "g_autoDriveDebugUIFilename_BC7" then
-		overlay.filename = g_autoDriveDebugUIFilename_BC7
-	elseif overlay.filename == "g_autoDriveDebugUIFilename" then
+	if overlay.filename == "g_autoDriveDebugUIFilename" then
 		overlay.filename = g_autoDriveDebugUIFilename
 	elseif overlay.filename == "g_autoDriveUIFilename" then
 		overlay.filename = g_autoDriveUIFilename

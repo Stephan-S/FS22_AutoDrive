@@ -4,14 +4,6 @@ AutoDrive.CHASEPOS_REAR = 3
 AutoDrive.CHASEPOS_FRONT = 4
 AutoDrive.CHASEPOS_UNKNOWN = 0
 
-function AutoDrive.getNodeName(node)
-    if node == nil then
-        return "nil"
-    else
-        return getName(node)
-    end
-end
-
 function AutoDrive.getIsBufferCombine(vehicle)
     return vehicle ~= nil and vehicle.spec_combine ~= nil and vehicle.spec_combine.isBufferCombine == true
 end
@@ -119,13 +111,11 @@ function AutoDrive.isPipeOut(combine)
         if spec.currentState == spec.targetState and (spec.currentState == 2 or combine.typeName == "combineCutterFruitPreparer") then
             return true
         end
-    else
-        if combine.getAttachedImplements ~= nil then
-            for _, implement in pairs(combine:getAttachedImplements()) do
-                if (implement.object.spec_pipe ~= nil and implement.object.spec_combine ~= nil) then
-                    if implement.object.spec_pipe.currentState == implement.object.spec_pipe.targetState and (implement.object.spec_pipe.currentState == 2 or implement.object.typeName == "combineCutterFruitPreparer") then
-                        return true
-                    end
+    else        
+        for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
+            if (implement.spec_pipe ~= nil and implement.spec_combine ~= nil) then
+                if implement.spec_pipe.currentState == implement.spec_pipe.targetState and (implement.spec_pipe.currentState == 2 or implement.typeName == "combineCutterFruitPreparer") then
+                    return true
                 end
             end
         end
@@ -135,11 +125,9 @@ end
 
 function AutoDrive.isSugarcaneHarvester(combine)
     local isSugarCaneHarvester = combine.typeName == "combineCutterFruitPreparer"
-    if combine.getAttachedImplements ~= nil then
-        for _, implement in pairs(combine:getAttachedImplements()) do
-            if implement ~= nil and implement ~= combine and (implement.object == nil or implement.object ~= combine) then
-                isSugarCaneHarvester = false
-            end
+    for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
+        if implement ~= combine then
+            isSugarCaneHarvester = false
         end
     end
     return isSugarCaneHarvester
@@ -183,50 +171,38 @@ function AutoDrive.getFrontToolWidth(vehicle, forced)
     end
     local widthOfFrontTool = 0
 
-    if vehicle.getAttachedImplements ~= nil then
-        -- check for AIMarkers
-        for _, impl in pairs(vehicle:getAttachedImplements()) do
-            local tool = impl.object
-            if tool ~= nil then
+    -- check for AIMarkers
+    local implements = AutoDrive.getAllImplements(vehicle, false)
+    for _, implement in pairs(implements) do
+        --Check if tool is in front of vehicle
+        local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
+        local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
+        if offsetZ > 0 then
+            widthOfFrontTool = math.max(widthOfFrontTool, AutoDrive.getAIMarkerWidth(implement))
+        end
+    end
+
+    if widthOfFrontTool == 0 then
+        -- check for AISizeMarkers
+        for _, implement in pairs(implements) do
+            --Check if tool is in front of vehicle
+            local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
+            local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
+            if offsetZ > 0 then
+                widthOfFrontTool = math.max(widthOfFrontTool, AutoDrive.getAISizeMarkerWidth(implement))
+            end
+        end
+    end
+
+    if widthOfFrontTool == 0 then
+        -- if AIMarkers not available or returned 0, get tool size as defined in vehicle XML - the worst case, see rsmDS900.xml
+        for _, implement in pairs(implements) do
+            if implement.size.width ~= nil then
                 --Check if tool is in front of vehicle
-                local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
+                local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
                 local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
                 if offsetZ > 0 then
-                    if AutoDrive.getAIMarkerWidth(tool) > widthOfFrontTool then
-                        widthOfFrontTool = AutoDrive.getAIMarkerWidth(tool)
-                    end
-                end
-            end
-        end
-
-        if widthOfFrontTool == 0 then
-            -- check for AISizeMarkers
-            for _, impl in pairs(vehicle:getAttachedImplements()) do
-                local tool = impl.object
-                if tool ~= nil then
-                    --Check if tool is in front of vehicle
-                    local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
-                    local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
-                    if offsetZ > 0 then
-                        if AutoDrive.getAISizeMarkerWidth(tool) > widthOfFrontTool then
-                            widthOfFrontTool = AutoDrive.getAISizeMarkerWidth(tool)
-                        end
-                    end
-                end
-            end
-        end
-
-        if widthOfFrontTool == 0 then
-            -- if AIMarkers not available or returned 0, get tool size as defined in vehicle XML - the worst case, see rsmDS900.xml
-            for _, impl in pairs(vehicle:getAttachedImplements()) do
-                local tool = impl.object
-                if tool ~= nil and tool.size.width ~= nil then
-                    --Check if tool is in front of vehicle
-                    local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
-                    local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
-                    if offsetZ > 0 then
-                        widthOfFrontTool = math.abs(tool.size.width)
-                    end
+                    widthOfFrontTool = math.abs(implement.size.width)
                 end
             end
         end
@@ -245,16 +221,14 @@ function AutoDrive.getFrontToolLength(vehicle)
     end
     local lengthOfFrontTool = 0
 
-    if vehicle.getAttachedImplements ~= nil then
-        for _, impl in pairs(vehicle:getAttachedImplements()) do
-            local tool = impl.object
-            if tool ~= nil and tool.size.width ~= nil then
-                --Check if tool is in front of vehicle
-                local toolX, toolY, toolZ = getWorldTranslation(tool.components[1].node)
-                local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
-                if offsetZ > 0 then
-                    lengthOfFrontTool = math.abs(tool.size.length)
-                end
+    local implements = AutoDrive.getAllImplements(vehicle, false)
+    for _, implement in pairs(implements) do
+        if implement.size.width ~= nil then
+            --Check if tool is in front of vehicle
+            local toolX, toolY, toolZ = getWorldTranslation(implement.components[1].node)
+            local _, _, offsetZ =  worldToLocal(vehicle.components[1].node, toolX, toolY, toolZ)
+            if offsetZ > 0 then
+                lengthOfFrontTool = math.abs(implement.size.length)
             end
         end
     end
@@ -266,17 +240,29 @@ function AutoDrive.getFrontToolLength(vehicle)
     return lengthOfFrontTool
 end
 
---onlyWithFruit is not yet implemented and ignored for now
 function AutoDrive.getLengthOfFieldInFront(vehicle, onlyWithFruit, maxRange, stepLength)
     local maxSearchRange = maxRange or 50
     local acceptOnlyWithFruit = onlyWithFruit or false
     local stepLength = stepLength or 5
     
-    local length = 0
+    local length = 10
     local foundField = true
+    local fruitType = nil
     while foundField do
         local worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, 0, 0, length + stepLength)
         foundField = AutoDrive.checkIsOnField(worldPosX, 0, worldPosZ)
+
+        if acceptOnlyWithFruit then
+            local foundFruit = false
+            local corners = AutoDrive.getCornersForAreaRelativeToVehicle(vehicle, 0, length, 3, stepLength)
+            if fruitType == nil then
+                foundFruit, fruitType = AutoDrive.checkForUnknownFruitInArea(corners)
+            else
+                foundFruit = AutoDrive.checkForFruitTypeInArea(corners, fruitType)
+            end
+            foundField = foundField and foundFruit        
+        end
+
         length = length + stepLength
         if math.abs(length) >= maxSearchRange then
             foundField = false
@@ -284,4 +270,41 @@ function AutoDrive.getLengthOfFieldInFront(vehicle, onlyWithFruit, maxRange, ste
     end
 
     return length
+end
+
+-- 3
+-- |
+-- |
+-- 1 ---- 2
+--
+--
+--    v
+function AutoDrive.getCornersForAreaRelativeToVehicle(vehicle, xOffset, zOffset, width, length)
+    local corners = {}
+    local worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, xOffset - width/2, 0, zOffset)
+    corners[1] = { x = worldPosX, z = worldPosZ}
+    worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, xOffset + width/2, 0, zOffset)
+    corners[2] = { x = worldPosX, z = worldPosZ}
+    worldPosX, _, worldPosZ = localToWorld(vehicle.components[1].node, xOffset - width/2, 0, zOffset + length)
+    corners[3] = { x = worldPosX, z = worldPosZ}
+
+    return corners
+end
+
+function AutoDrive.checkForUnknownFruitInArea(corners)
+    for i = 1, #g_fruitTypeManager.fruitTypes do
+        if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
+            local fruitTypeToCheck = g_fruitTypeManager.fruitTypes[i].index
+            if AutoDrive.checkForFruitTypeInArea(corners, fruitTypeToCheck) then
+                return true, fruitTypeToCheck
+            end
+        end
+    end
+    return false, nil
+end
+
+function AutoDrive.checkForFruitTypeInArea(corners, fruitType)
+    local fruitValue = 0
+    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitType, corners[1].x, corners[1].z, corners[2].x, corners[2].z, corners[3].x, corners[3].z, true, true)
+    return (fruitValue > 10)
 end

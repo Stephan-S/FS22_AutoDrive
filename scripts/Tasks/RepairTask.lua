@@ -51,8 +51,7 @@ function RepairTask:update(dt)
             -- Todo, for all attached objects
             local event = WearableRepairEvent.new(self.vehicle, true)
             if g_server ~= nil then
-                local implements = AutoDrive.getAllAttachedObjects(self.vehicle)
-                table.insert(implements, self.vehicle)
+                local implements = AutoDrive.getAllImplements(self.vehicle, true)
                 for _, implement in pairs(implements) do
                     if implement ~= nil and implement.repairVehicle ~= nil then
                         implement:repairVehicle()
@@ -71,7 +70,8 @@ end
 function RepairTask:abort()
 end
 
-function RepairTask:finished()
+function RepairTask:finished()    
+    self.vehicle.ad.onRouteToRepair = false
     local callBackFunction = self.vehicle.ad.callBackFunction
     local callBackObject = self.vehicle.ad.callBackObject
     local callBackArg = self.vehicle.ad.callBackArg

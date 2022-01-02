@@ -120,8 +120,8 @@ function FollowCombineTask:update(dt)
 
         if AutoDrive.combineIsTurning(self.combine) then
             -- harvester turns
-            --print("Waiting for turn now - 1- t:" ..  AutoDrive.boolToString(AutoDrive.combineIsTurning(self.combine)) .. " anglewrongtimer: " .. AutoDrive.boolToString(self.angleWrongTimer.elapsedTime > 10000))      
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "Detected combine turning: " ..  AutoDrive.boolToString(AutoDrive.combineIsTurning(self.combine)) .. " - waiting for turn to be finished next")
+            --print("Waiting for turn now - 1- t:" ..  tostring(AutoDrive.combineIsTurning(self.combine)) .. " anglewrongtimer: " .. tostring(self.angleWrongTimer.elapsedTime > 10000))      
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "Detected combine turning: " ..  tostring(AutoDrive.combineIsTurning(self.combine)) .. " - waiting for turn to be finished next")
             self.state = FollowCombineTask.STATE_WAIT_FOR_TURN
             return
         elseif ((self.combine.lastSpeedReal * self.combine.movingDirection) <= -0.00005) then

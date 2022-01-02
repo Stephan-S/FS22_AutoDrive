@@ -54,7 +54,6 @@
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         text="AD: Developer Action" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Avoid fruit" />
@@ -290,76 +289,6 @@
 		<text name="button_delete_all" 							text="Delete All" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
 
-		<text name="ad_helpCategory_1"							text="AutoDrive" />
-		
-		<text name="ad_helpTitle_01"							text="AD - Introduction" />
-		<text name="ad_helpText_01_01"							text="AutoDrive is a multipurpose tool to let your tractors navigate autonomously through the world of Farming Simulator." />
-		<text name="ad_helpText_01_02"							text="The backbone is an interconnected network of recorded points and defined destinations. For some maps, an initial network is provided with the mod. On most maps you will have to record everything yourself or import a network from another user (see import/export below)." />
-		<text name="ad_helpText_01_03"							text="Provided all destinations are properly connected to the network, AutoDrive navigates much like your typical navigation system in your car, by calculating the shortest route to the destination.So it is important to ensure that all points are connected to the network. If AutoDrive detects a disconnected point, it is marked with an ‚X‘ and should be removed or connected by the player." />
-		
-		<text name="ad_helpTitle_02"							text="AD modes - Only Drive" />
-		<text name="ad_helpText_02_01"							text="In this mode, the current vehicle will take the most suited point (by it's current direction and distance) or simply the nearest one and then use the shortest path from there to the destination and stop there. It is the most simple mode and best suited to test your new routes." />
-		
-		<text name="ad_helpTitle_03"							text="AD modes - Deliver" />
-		<text name="ad_helpText_03_01"							text="In this mode AutoDrive will drive the vehicle just like in the ‚Only Drive‘ mode but it will additionally unload the current trailer at the destination, if an unload trigger is detected." />
-		<text name="ad_helpText_03_02"							text="The destination point should be created behind the unload trigger, so that vehicles with long trailers will reach the unload trigger before reaching the destination. " />
-		<text name="ad_helpText_03_03"							text="The driver will stop at the destination regardless of it being empty or not. If you notice that your destination point isn’t far enough back, you can easily remove the destination and create it at the following point without having to remove the point it self.(see HUD-Buttons)." />
-		
-		<text name="ad_helpTitle_04"							text="AD modes - Pickup and Deliver" />
-		<text name="ad_helpText_04_01"							text="In this mode, you can select to target destinations. One for loading (the first one) and the second one for the unload point." />
-		<text name="ad_helpText_04_02"							text="If AutoDrive is activated, it will look at the current fill level of the connected trailers/implements. If this value is higher than the set ‚Unload at‘ level (see settings), the driver will directly head for the unload destination." />
-		<text name="ad_helpText_04_03"							text="Otherwise it will head for the load destination first. Depending on the selected setting (‚On empty silo‘), the driver will either wait at the load destination to be filled past the ‚Unload at‘ level or it will continue to the unload destination." />
-		<text name="ad_helpText_04_04"							text="Either way, the driver will first try to load the selected fill type on any available trigger in the provided range (see settings) before the load destination." />
-		<text name="ad_helpText_04_05"							text="Additionally you can select a repetition counter before starting the driver. If you set this counter to 2, the driver will stop after having reached the unload destination 2 times. If this setting (see HUD) is left at default, the driver will always start the next cycle." />
-		
-		<text name="ad_helpTitle_05"							text="AD modes - Load mode" />
-		<text name="ad_helpText_05_01"							text="This mode is very similar to the previously described ‘Pickup and Deliver’ mode with only a few minor exceptions. It will not respect the ‘repetition counter’." />
-		<text name="ad_helpText_05_02"							text="There is only a load destination and a target destination at which the driver will stop and disable AutoDrive." />
-		<text name="ad_helpText_05_03"							text="This mode is intended to be used as refill mode for field work. This way seeders or sprayers can be started at the field location and sent to a refill point and will return to the set field destination afterwards." />
-		<text name="ad_helpText_05_04"							text="This mode can also be used in conjunction with Courseplay. You will have to select ‘Use AutoDrive for refill/unload’ in the Courseplay HUD (not part of this documentation)." />
-		
-		<text name="ad_helpTitle_06"							text="AD modes - Combine Unloader" />
-		<text name="ad_helpText_06_01"							text="In this mode, you can again set two destinations. The first one should be a field location from where an active harvester can be reached. The second one is again an unload destination." />
-		<text name="ad_helpText_06_02"							text="This is the first mode in which AutoDrive drivers are allowed to leave the recorded path and drive on the field. This mode is quite complicated and involves many settings from the settings menu." />
-		<text name="ad_helpText_06_03"							text="So this documentation will first describe the basic behaviour and then add how the settings affect the behaviour." />
-		
-		<text name="ad_helpTitle_07"							text="AD modes - Combine Unloader - Basics - 1" />
-		<text name="ad_helpText_07_01"							text="The driver will decide on startup whether to head to the field or unload first (see ‘Pickup and Deliver). If it reaches the field location it registers itself as available driver. If a combine harvester is at 100% fill level and has an extended pipe, it will automatically go through the registered unloaders and choose the one that is nearest to him. Depending on the setting ‘Find unloader’ either all drivers in a range of 300 meters are accepted (yes) or only drivers with the same target destinations as the harvester in the AutoDrive Hud (no)." />
-		<text name="ad_helpText_07_02"							text="" />
-		<text name="ad_helpText_07_03"							text="Important: You do not have to activate AutoDrive on the harvester. Only the selected target is required." />
-		<text name="ad_helpText_07_04"							text="" />
-		<text name="ad_helpText_07_05"							text="Alternatively, the player can also call the unloader manually by assigning the keybinding ‘Call Unloader’ in the game options and using this while sitting in the harvester. If the harvester is controlled by Courseplay, AutoDrive will also call an unloader if it detects that the Courseplay driver wants to be unloaded." />
-		
-		<text name="ad_helpTitle_08"							text="AD modes - Combine Unloader - Basics - 2" />
-		<text name="ad_helpText_08_01"							text="If an unloader is called to a harvester, it will start planning a path to the extended pipe of the harvester. The path planner is a completely unique implementation and an explanation might be included as appendix to this documentation later on. The core concepts are a division of the simulated world into grid cells. These grid cells are sized according the vehicles turn radius and are checked to be fruit free (see settings), collision free, are on the field (see settings) and have a maximum slope acceptable to AI drivers. After a free path has been found, some smoothing to get rid of most sharp turns is also applied and then the driver is sent along this path to the harvester." />
-		<text name="ad_helpText_08_02"							text="" />
-		<text name="ad_helpText_08_03"							text="Note: As soon as the unload driver receives the command to drive to the harvester, the status message in the info bar of the HUD changes from ‘Waiting for combine’ to ‘Drive to combine’. Which means the path planner is now actively searching for a path. Depending on you CPU performance and your settings (‘Pathfinder time (max)’), this process may take some time and in extreme cases bring your fps down. This is usually the case if the unloader is unable to find an acceptable path to the combine. Always make sure that the space in front of the driver is obstacle free (and fruit free) and the path leading to the pipe of the harvester is also collision free (e.g. no trees fruit just behind the harvester)." />
-		<text name="ad_helpText_08_04"							text="" />
-		<text name="ad_helpText_08_05"							text="When it reaches the harvester it will check whether the unloading process is finished or if the current trailer is filled. In case of multiple trailers, the driver will drive forwards until a filling process on the next trailer is detected. After the unloading process, the driver will start driving backwards for a few meters to provide the harvester enough space to continue it’s work. Then the driver will wait a few seconds for the harvester to clear the area and start path planning back to the starting point. Upon reaching the starting point it will again register itself as available unloader and wait to be called again. If the trailer is already full at that point it will directly head for the unload destination before returning back to the field location." />
-		
-		<text name="ad_helpTitle_09"							text="AD modes - Combine Unloader - Park in field" />
-		<text name="ad_helpText_09_01"							text="If this option is set to true in the AutoDrive settings, the driver will check whether the target cell (pipe position) has detected fruit (Fruit Avoidance has to be set to true). If no fruit is detected and the driver has not yet reached it’s ‘unload at’ fill level, he will remain at the current field location. " />
-		
-		<text name="ad_helpTitle_10"							text="AD modes - Combine Unloader - Restrict to field" />
-		<text name="ad_helpText_10_01"							text="If this option is set to true, the path finder algorithm will only accept grid cells which are on the field. This setting only takes effect if the vehicle is already on the field (started on the field or parked in the field). This option should help to keep the driver on the field, especially during turn manoeuvres. " />
-		<text name="ad_helpText_10_02"							text="" />
-		<text name="ad_helpText_10_03"							text="Important: If no fruit free path can be calculated in the provided time (see settings), the path finder will go into a fallback mode which ignores fruit and field borders!" />
-		
-		<text name="ad_helpTitle_11"							text="AD modes - Combine Unloader - Fruit avoidance" />
-		<text name="ad_helpText_11_01"							text="This options ensures that the path finder will only accept grid cells that don’t contain any fruit or only have a marginal amount of fruit. Important: If no fruit free path can be calculated in the provided time (see settings), the path finder will go into a fallback mode which ignores fruit and field borders!" />
-		
-		<text name="ad_helpTitle_12"							text="AD modes - Combine Unloader - Chase combine" />
-		<text name="ad_helpText_12_01"							text="Pre call driver / Chase combine" />
-		<text name="ad_helpText_12_02"							text="" />
-		<text name="ad_helpText_12_03"							text="These options can be used to either simply follow the harvester with some distance (Pre call driver on / chase combine off). Or to have the unloader actively unload while the harvester is still driving. When the harvester reaches the set fill level (Pre call level), it will already call the driver to it’s current location. Once the driver reaches this point it will re-evaluate. If he is close to the harvester (less than 60 meters) and the ‘chase combine’ setting is on, he will start following him by line of sight. Otherwise he will retrigger a path finding process to the new harvester location. While chasing, he will sense if the pipe is currently in the fruit or not. If it isn't in the fruit, he will start targeting the pipe location, otherwise he will follow the harvester with some distance. When the driver reaches it’s ‘Unload at’ level he will immediately start planning a path to the selected field exit (see settings). Thus it makes sense to set the level to 100% in this mode. This way he won’t accidentally try to cut in front of the harvester or leave before being completely filled." />
-		<text name="ad_helpTitle_13"							text="AD modes - Unload Bunker silo" />
-		<text name="ad_helpText_13_01"							text="This mode can only be used with vehicles that have a shovel attached. The basic idea is a one-click solution to empty drive-through bunker silos. On startup, the vehicle will check for the required conditions. It needs a filled bunker silo in the vicinity (~100m?) and an attached shovel. If both conditions are met, the vehicle will initialize it’s front loader axis to acquire the correct values for up/down, load/unload and extend/retract motions. Then he will divide the bunker silo width into chunks as wide as his shovel + shovel addition (see settings) and start at the first line. If the first or the last line ends up hitting the silo wall, you should increase the shovel addition value in the settings and restart the driver. This can occur if either the shovel pickup width is not matched properly to the physical dimensions or the bunker silo definition lies inside the wall, which is not unusual since it makes it easier to develop a good looking bunker silo. After the shovel is filled and the vehicle reversed from the bunker, it will scan for a vehicle with an attached trailer (with left fill space) and start heading there." />
-		<text name="ad_helpText_13_02"							text="" />
-		<text name="ad_helpText_13_03"							text="Caution: There is currently no collision detection included in this mode!" />
-		<text name="ad_helpText_13_04"							text="" />
-		<text name="ad_helpText_13_05"							text="Since the vehicle tries to find the ideal loading position for the shovel automatically, it can happen that he lifts it’s front wheels up. There is a detection included for this scenario, which checks if all wheels are on the ground and starts lifting the shovel if this check returns false for a few hundred milliseconds." />
-
-
 		<text name="AD_task_pathfinding"						text="Planning path" />
 		<text name="AD_task_catch_up_with_combine"				text="Catching up with combine" />
 		<text name="AD_task_clearcrop"							text="Clearing crop" />
@@ -394,48 +323,6 @@
 		<text name = "gui_CPAD_full"							text = "full"/>		
 		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
-
-		
-		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
-		<text name="ad_next_tip" 								text="Next" />
-		<text name="ad_totd_01_title" 							text="Multiple functions" />
-		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
-		
-		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
-		<text name="ad_totd_02_title" 							text="Different types of roads" />
-		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
-
-		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
-		
-		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
-		
-		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
-		
-		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
-		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
-		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
-		
-		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
-		
-		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
-		<text name="ad_totd_04_title" 							text="Settings - 1" />
-		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
-
-		1. General settings - Applied for all vehicles.
-
-		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
-
-		3. Vehicle settings - Applied only for the current vehicle.
-
-		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
-
-		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
-		
-		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
-
 		
 		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>

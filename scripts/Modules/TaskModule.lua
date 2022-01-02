@@ -138,8 +138,7 @@ function ADTaskModule:hasToRepair()
         return false
     end
     local repairNeeded = false
-    local attachedObjects = AutoDrive.getAllAttachedObjects(self.vehicle)
-    table.insert(attachedObjects, self.vehicle)
+    local attachedObjects = AutoDrive.getAllImplements(self.vehicle, true)
     for _, attachedObject in pairs(attachedObjects) do
         repairNeeded = repairNeeded or (attachedObject.spec_wearable ~= nil and attachedObject.spec_wearable.damage > 0.6)
     end

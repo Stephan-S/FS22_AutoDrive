@@ -5,7 +5,6 @@ AutoDrive.directory = g_currentModDirectory
 
 g_autoDriveUIFilename = AutoDrive.directory .. "textures/GUI_Icons.dds"
 g_autoDriveDebugUIFilename = AutoDrive.directory .. "textures/gui_debug_Icons.dds"
-g_autoDriveDebugUIFilename_BC7 = AutoDrive.directory .. "textures/gui_debug_Icons_BC7.dds"
 g_autoDriveIconFilename = g_iconsUIFilename
 
 AutoDrive.experimentalFeatures = {}
@@ -235,8 +234,6 @@ function AutoDrive:loadMap(name)
 
 	LoadTrigger.onActivateObject = Utils.overwrittenFunction(LoadTrigger.onActivateObject, AutoDrive.onActivateObject)
 
-	--AIDriveStrategyCombine.getDriveData = Utils.overwrittenFunction(AIDriveStrategyCombine.getDriveData, AutoDrive.getDriveData)
-
 	LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
 
 	LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
@@ -244,24 +241,14 @@ function AutoDrive:loadMap(name)
 	VehicleCamera.zoomSmoothly = Utils.overwrittenFunction(VehicleCamera.zoomSmoothly, AutoDrive.zoomSmoothly)
 
 	LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
-    --LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
 
 	LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
-    -- LoadTrigger.delete = Utils.prependedFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
 
 	Placeable.onBuy = Utils.appendedFunction(Placeable.onBuy, ADTriggerManager.onPlaceableBuy)
 
 	MapHotspot.getIsVisible = Utils.overwrittenFunction(MapHotspot.getIsVisible, AutoDrive.MapHotspot_getIsVisible)
 
 	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
-
-	--FarmStats.saveToXMLFile = Utils.appendedFunction(FarmStats.saveToXMLFile, AutoDrive.FarmStats_saveToXMLFile)
-	--index = index + 1
-	--Logging.info("[AD] Index: %d",index)
-
-	--FarmStats.loadFromXMLFile = Utils.appendedFunction(FarmStats.loadFromXMLFile, AutoDrive.FarmStats_loadFromXMLFile)
-	--index = index + 1
-	--Logging.info("[AD] Index: %d",index)
 
 	FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
 
@@ -294,7 +281,7 @@ end
 function AutoDrive:onAIFrameOpen()
 	AutoDrive.aiFrameOpen = true
 	AutoDrive.aiFrame = self
-    AutoDrive.aiFrameVehicle = g_currentMission.controlledVehicle
+	AutoDrive.aiFrameVehicle = g_currentMission.controlledVehicle
 end
 
 function AutoDrive:onAIFrameClose()
@@ -322,15 +309,13 @@ function AutoDrive:drawBaseMission()
 		AutoDrive:drawRouteOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
 			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
-		-- elseif g_currentMission.controlledVehicle ~= nil then
-			-- AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
 		end
 	end
 end
 
 function AutoDrive:PlaceableHotspotGetCategory()
 	if self.isADMarker then
-		return MapHotspot.CATEGORY_PLAYER
+		return MapHotspot.CATEGORY_STEERABLE--MapHotspot.CATEGORY_PLAYER
 	end
 	return PlaceableHotspot.CATEGORY_MAPPING[self.placeableType]
 end
@@ -411,7 +396,6 @@ function AutoDrive.getScreenPosFromWorldPos(worldX, worldZ)
 	
 	return x, y
 end
-
 
 function AutoDrive:init()
 
@@ -537,7 +521,6 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 
 	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
         if vehicle ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then
-
             AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 		end
 

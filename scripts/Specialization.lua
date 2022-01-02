@@ -61,6 +61,7 @@ end
 function AutoDrive.registerEvents(vehicleType)
     SpecializationUtil.registerEvent(vehicleType, "onStartAutoDrive")
     SpecializationUtil.registerEvent(vehicleType, "onStopAutoDrive")
+    SpecializationUtil.registerEvent(vehicleType, "onAutoDriveParked")
 end
 
 function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
@@ -373,10 +374,18 @@ end
 function AutoDrive:onUpdate(dt)
     if self.isServer and self.ad.stateModule:isActive() then
         self.ad.recordingModule:update(dt)
-        self.ad.taskModule:update(dt)
-        if self.lastMovedDistance > 0 then
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
-        end
+
+        --if self.ad.specialDrivingModule:executeUTurn(dt, true, true) then
+            if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
+                self.ad.taskModule:update(dt)
+            else
+                self.ad.specialDrivingModule:stopVehicle()
+                self.ad.specialDrivingModule:update(dt)
+            end
+            if self.lastMovedDistance > 0 then
+                g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
+            end
+        --end
     end
 
     self.ad.stateModule:update(dt)
@@ -392,12 +401,6 @@ function AutoDrive:onUpdate(dt)
     --For 'legacy' purposes, this value should be kept since other mods already test for this:
     self.ad.mapMarkerSelected = self.ad.stateModule:getFirstMarkerId()
     self.ad.mapMarkerSelected_Unload = self.ad.stateModule:getSecondMarkerId()
-
-    if self.ad.isCombine then
-        AutoDrive.getLengthOfFieldInFront(self)
-    end
-
-    --AutoDrive.generateUTurn(self, false)
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
@@ -951,16 +954,7 @@ function AutoDrive:startAutoDrive()
             AutoDriveStartStopEvent:sendStartEvent(self)
 
             if AutoDrive.experimentalFeatures.FoldImplements then
-                for _, implement in pairs(self:getAttachedImplements()) do
-                    if implement ~= nil and implement.object ~= nil then
-                        if implement.object.setFoldState ~= nil then
-                            local allowed, warning = implement.object:getIsFoldAllowed(1, false)
-                            if allowed then
-                                implement.object:setFoldState(1, false)
-                            end
-                        end
-                    end
-                end
+                AutoDrive.foldAllImplements(self)
             end
         end
     else
@@ -1044,6 +1038,10 @@ function AutoDrive:stopAutoDrive()
             else
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+
+                if self.ad.onRouteToPark then 
+                    SpecializationUtil.raiseEvent(self, "onAutoDriveParked")
+                end
 
                 if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
                     self.ad.onRouteToPark = false

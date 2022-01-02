@@ -54,7 +54,6 @@
 		<text name="input_ADStartCP"							text="AD: Overdracht aan CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Wissel tussen CP/AIVE" />
 		<text name="input_AD_devAction"                         text="AD: Ontwikkelaars actie" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open tip van de dag" />
 		<text name="input_ADToggleAutomaticPickupTarget"		text="AD: Automatische laad bestemming aan/uit" />
 		<text name="input_ADToggleAutomaticUnloadTarget"		text="AD: Automatische los bestemming aan/uit" />
 		<text name="hud_avoidFruit"								text="AD: Fruit vermijden" />
@@ -292,76 +291,6 @@
 		<text name="button_delete_all" 							text="Alles verwijderen" />
 		<text name="button_reset_selected" 					    text="Geselecteerde terugzetten" />
 
-		<text name="ad_helpCategory_1"							text="AutoDrive" />
-		
-		<text name="ad_helpTitle_01"							text="AD - Introductie" />
-		<text name="ad_helpText_01_01"							text="AutoDrive is een multifunctionele tool om uw tractoren autonoom te laten navigeren door de wereld van Farming Simulator." />
-		<text name="ad_helpText_01_02"							text="De ruggengraat is een onderling verbonden netwerk van geregistreerde punten en gedefinieerde bestemmingen. Voor sommige kaarten wordt een initieel netwerk meegeleverd met de mod. Voor de meeste kaarten moet je alles zelf opnemen of een netwerk importeren van een andere gebruiker (zie importeren/exporteren hieronder)." />
-		<text name="ad_helpText_01_03"							text="Op voorwaarde dat alle bestemmingen correct zijn aangesloten op het netwerk, navigeert AutoDrive zoals uw navigatiesysteem in uw auto, door de kortste route naar de bestemming te berekenen. Het is dus belangrijk ervoor te zorgen dat alle punten zijn aangesloten op het netwerk. Als AutoDrive een losgekoppeld punt detecteert, wordt het gemarkeerd met een 'X' en moet het door de speler worden verwijderd of aangesloten." />
-		
-		<text name="ad_helpTitle_02"							text="AD modus - Alleen rijden" />
-		<text name="ad_helpText_02_01"							text="In deze modus zal het huidige voertuig het meest geschikte punt nemen (door zijn huidige richting en afstand) of gewoon het dichtstbijzijnde en dan de kortste weg van daar naar de bestemming gebruiken en daar stoppen. Het is de meest eenvoudige modus en het meest geschikt om uw nieuwe routes te testen." />
-		
-		<text name="ad_helpTitle_03"							text="AD modes - Afleveren" />
-		<text name="ad_helpText_03_01"							text="In deze modus zal AutoDrive het voertuig besturen zoals in de modus 'Alleen rijden', maar zal het bovendien de huidige trailer op de bestemming lossen, indien een lostrigger wordt gedetecteerd." />
-		<text name="ad_helpText_03_02"							text="Het punt van bestemming moet achter de los trigger worden gecreëerd, zodat voertuigen met lange aanhangers de los trigger bereiken voordat zij de bestemming bereiken." />
-		<text name="ad_helpText_03_03"							text="De bestuurder zal stoppen op de bestemming, ongeacht of deze leeg is of niet. Als u merkt dat uw bestemmingspunt niet ver genoeg terug ligt, kunt u gemakkelijk de bestemming verwijderen en op het volgende punt aanmaken zonder het punt zelf te moeten verwijderen.(zie HUD-Knoppen)." />
-		
-		<text name="ad_helpTitle_04"							text="AD modes - Ophalen en Afleveren" />
-		<text name="ad_helpText_04_01"							text="In deze modus kunt u twee bestemmingen kiezen. Eén voor het laden (de eerste) en de tweede voor de losplaats." />
-		<text name="ad_helpText_04_02"							text="Als AutoDrive is geactiveerd, wordt gekeken naar het huidige vulniveau van de aangesloten aanhangwagens/werktuigen. Als deze waarde hoger is dan het ingestelde niveau 'Lossen bij' (zie instellingen), gaat de bestuurder direct naar de losbestemming." />
-		<text name="ad_helpText_04_03"							text="Anders gaat hij eerst naar de laadbestemming. Afhankelijk van de gekozen instelling ('Op lege silo'), zal de bestuurder ofwel wachten op de laadbestemming om tot voorbij het 'Lossen bij' niveau gevuld te worden, ofwel zal hij verder rijden naar de losbestemming." />
-		<text name="ad_helpText_04_04"							text="In beide gevallen zal de bestuurder eerst proberen het geselecteerde type vulling te laden op elke beschikbare trigger in het opgegeven bereik (zie instellingen) voor de laadbestemming." />
-		<text name="ad_helpText_04_05"							text="Bovendien kunt u een herhalingsteller kiezen voordat u de chauffeur start. Als u deze teller op 2 zet, zal de chauffeur stoppen nadat hij de losbestemming 2 keer heeft bereikt. Als deze instelling (zie HUD) op standaard wordt gelaten, zal de chauffeur altijd de volgende cyclus starten." />
-		
-		<text name="ad_helpTitle_05"							text="AD modes - Laden" />
-		<text name="ad_helpText_05_01"							text="Deze modus lijkt sterk op de eerder beschreven 'Ophalen en Afleveren'-modus, met slechts een paar kleine uitzonderingen. De 'herhalingsteller' wordt niet gebruikt." />
-		<text name="ad_helpText_05_02"							text="Er is alleen een laadbestemming en een doelbestemming waarop de bestuurder zal stoppen en AutoDrive zal uitschakelen." />
-		<text name="ad_helpText_05_03"							text="Deze modus is bedoeld om te worden gebruikt als bijvulmodus voor veldwerk. Op die manier kunnen zaai- of spuitmachines op de veldpositie worden gestart en naar een bijvulpunt worden gestuurd, waarna ze weer terugkeren naar de ingestelde veldbestemming." />
-		<text name="ad_helpText_05_04"							text="Deze modus kan ook worden gebruikt in combinatie met Courseplay. Je moet dan 'Gebruik AutoDrive voor het bijvullen/lossen' selecteren in de Courseplay HUD (geen onderdeel van deze documentatie)." />
-		
-		<text name="ad_helpTitle_06"							text="AD modes - Oogstmachine ontlader" />
-		<text name="ad_helpText_06_01"							text="In deze modus kunt u opnieuw twee bestemmingen instellen. De eerste moet een veldpositie zijn van waaruit een actieve oogstmachine kan worden bereikt. De tweede is weer een losbestemming." />
-		<text name="ad_helpText_06_02"							text="Dit is de eerste modus waarin AutoDrive-bestuurders het geregistreerde pad mogen verlaten en op het veld mogen rijden. Deze modus is vrij ingewikkeld en vereist veel instellingen in het instellingenmenu." />
-		<text name="ad_helpText_06_03"							text="In deze documentatie zal dus eerst het basisgedrag worden beschreven en daarna zal worden aangegeven hoe de instellingen het gedrag beïnvloeden." />
-		
-		<text name="ad_helpTitle_07"							text="AD modes - Oogstmachine ontlader - Basis - 1" />
-		<text name="ad_helpText_07_01"							text="De bestuurder beslist bij het opstarten of hij naar het veld gaat of eerst gaat lossen (zie 'Ophalen en Afleveren'). Als hij de veldpositie bereikt, registreert hij zichzelf als beschikbare bestuurder. Als een maaidorser op 100% vullingsgraad is en zijn pijp uitgestoken heeft, zal hij automatisch de geregistreerde lossers doorlopen en degene kiezen die het dichtst bij hem is. Afhankelijk van de instelling 'Zoek ontlader' worden ofwel alle bestuurders binnen een bereik van 300 meter geaccepteerd (ja) of alleen bestuurders met dezelfde doelbestemmingen als de maaidorser in de AutoDrive Hud (nee)." />
-		<text name="ad_helpText_07_02"							text="" />
-		<text name="ad_helpText_07_03"							text="Belangrijk: U hoeft AutoDrive op de oogstmachine niet te activeren, alleen het geselecteerde doel is vereist." />
-		<text name="ad_helpText_07_04"							text="" />
-		<text name="ad_helpText_07_05"							text="Als alternatief kan de speler de ontlader ook handmatig oproepen door de toetsbinding 'Roep ontlader' toe te wijzen in de spelopties en deze te gebruiken terwijl hij in de oogstmachine zit. Als de oogstmachine bestuurd wordt door Courseplay, zal AutoDrive ook een ontlader oproepen als het detecteert dat de Courseplay bestuurder gelost wil worden." />
-		
-		<text name="ad_helpTitle_08"							text="AD modes - Oogstmachine ontlader - Basis - 2" />
-		<text name="ad_helpText_08_01"							text="Als een ontlader wordt aangeroepen door een oogstmachine, zal deze een pad gaan plannen naar de uitstekende pijp van de oogstmachine. De routeplanner is een geheel eigen implementatie en een toelichting zal later als appendix bij deze documentatie worden opgenomen. De kernconcepten zijn een verdeling van de gesimuleerde wereld in rastercellen. Deze raster cellen hebben de grootte van de draaicirkel van het voertuig en worden gecontroleerd of ze vrij zijn van gewassen (zie instellingen), geen botsingen hebben, op het veld zijn (zie instellingen) en een maximale helling hebben die acceptabel is voor AI bestuurders. Nadat een vrij pad is gevonden, wordt ook wat gladheid toegepast om de meeste scherpe bochten te verwijderen en dan wordt de bestuurder langs dit pad naar de oogstmachine gestuurd." />
-		<text name="ad_helpText_08_02"							text="" />
-		<text name="ad_helpText_08_03"							text="Opmerking: Zodra de ontlader de opdracht krijgt om naar de oogstmachine te rijden, verandert de statusmelding in de infobalk van de HUD van 'Wachten op oogstmachine' in 'Rijden naar oogstmachine'. Dat betekent dat de routeplanner nu actief op zoek is naar een pad. Afhankelijk van je CPU prestatie en je instellingen ('Planningstraject tijd (max)'), kan dit proces enige tijd duren en in extreme gevallen je fps omlaag brengen. Dit is meestal het geval als de ontlader geen acceptabel pad naar de oogstmachine kan vinden. Zorg er altijd voor dat de ruimte voor de bestuurder obstakelvrij is (en gewas vrij) en dat het pad dat naar de pijp van de oogstmachine leidt ook botsingsvrij is (bv. geen bomen, gewas vlak achter de oogstmachine)." />
-		<text name="ad_helpText_08_04"							text="" />
-		<text name="ad_helpText_08_05"							text="Wanneer hij de oogstmachine bereikt, controleert hij of het lossen is voltooid, dan wel of de huidige aanhangwagen is gevuld. In het geval van meerdere aanhangwagens rijdt de bestuurder vooruit tot een vulproces op de volgende aanhangwagen wordt gedetecteerd. Na het lossen begint de bestuurder een paar meter achteruit te rijden om de oogstmachine voldoende ruimte te geven om zijn werk voort te zetten. Dan wacht de bestuurder enkele seconden tot de oogstmachine de ruimte heeft vrijgemaakt en begint hij met de routeplanning terug naar het beginpunt. Bij het bereiken van het beginpunt zal hij zichzelf opnieuw registreren als beschikbare losser en wachten tot hij opnieuw wordt opgeroepen. Als de aanhanger op dat moment al vol is, gaat hij direct naar de losbestemming voordat hij terugkeert naar de veldpositie." />
-		
-		<text name="ad_helpTitle_09"							text="AD modes - Oogstmachine ontlader - Parkeer in het veld" />
-		<text name="ad_helpText_09_01"							text="Als deze optie in de AutoDrive instellingen op waar is gezet, zal de bestuurder controleren of de doelcel (pijp positie) gewas heeft gedetecteerd (Gewas vermijding moet op waar zijn gezet). Als er geen gewas is gedetecteerd en de bestuurder heeft het 'lossen bij' vulniveau nog niet bereikt, dan blijft hij op de huidige veldpositie." />
-		
-		<text name="ad_helpTitle_10"							text="AD modes - Oogstmachine ontlader - Beperken tot het veld" />
-		<text name="ad_helpText_10_01"							text="Als deze optie is ingesteld op waar, zal het routeplanner algoritme alleen rastercellen accepteren die in het veld liggen. Deze instelling heeft alleen effect als het voertuig al in het veld is (gestart in het veld of geparkeerd in het veld). Deze optie zou moeten helpen om de bestuurder in het veld te houden, vooral tijdens bochtmanoeuvres." />
-		<text name="ad_helpText_10_02"							text="" />
-		<text name="ad_helpText_10_03"							text="Belangrijk: Als er geen gewas vrij pad berekend kan worden in de opgegeven tijd (zie instellingen), gaat de routeplanner in een terugvalmodus die gewas- en veldgrenzen negeert!" />
-		
-		<text name="ad_helpTitle_11"							text="AD modes - Oogstmachine ontlader - Gewas vermijden" />
-		<text name="ad_helpText_11_01"							text="Deze optie zorgt ervoor dat de routeplanner alleen rastercellen accepteert die geen gewas bevatten of slechts een marginale hoeveelheid gewas. Belangrijk: Als er geen gewasvrij pad berekend kan worden in de opgegeven tijd (zie instellingen), zal de routeplanner in een terugvalmodus gaan die gewas en veldgrenzen negeert!" />
-		
-		<text name="ad_helpTitle_12"							text="AD modes - Oogstmachine ontlader - Oogstmachine volgen" />
-		<text name="ad_helpText_12_01"							text="Bestuurder eerder oproepen / Oogstmachine volgen" />
-		<text name="ad_helpText_12_02"							text="" />
-		<text name="ad_helpText_12_03"							text="Deze opties kunnen worden gebruikt om ofwel gewoon de oogstmachine met enige afstand te volgen (Bestuurder eerder oproepen / Oogstmachine volgen uit). Of om de ontlader actief te laten ontladen terwijl de oogstmachine nog rijdt. Wanneer de oogstmachine het ingestelde vulniveau bereikt (Eerdere oproep niveau), zal hij de bestuurder al oproepen naar zijn huidige locatie. Zodra de bestuurder dit punt bereikt, zal hij opnieuw evalueren. Als hij dicht bij de oogstmachine is (minder dan 60 meter) en de instelling "Oogstmachine achtervolgen" is ingeschakeld, zal hij hem beginnen te volgen op zichtlijn. Anders zal hij opnieuw een pad zoeken naar de nieuwe locatie van de oogstmachine. Tijdens het achtervolgen zal hij kijken of de pijp op dat moment in het gewas zit of niet. Als de pijp zich niet in het gewas bevindt, zal hij zich richten op de locatie van de pijp, anders zal hij de oogstmachine met enige afstand volgen. Wanneer de bestuurder het 'Lossen bij' niveau bereikt zal hij onmiddellijk een pad beginnen te plannen naar de geselecteerde uitgang van het veld (zie instellingen). Het is dus zinvol om in deze modus het niveau op 100% te zetten. Op die manier zal hij niet per ongeluk proberen voor de oogstmachine uit te snijden of te vertrekken voor hij volledig gevuld is." />
-		<text name="ad_helpTitle_13"							text="AD modes - Bunkersilo lossen" />
-		<text name="ad_helpText_13_01"							text="Deze modus kan alleen worden gebruikt met voertuigen waaraan een laadschop is bevestigd. Het basis idee is een één-klik oplossing om doorrij bunker silo's te legen. Bij het opstarten zal het voertuig controleren of aan de vereiste voorwaarden is voldaan. Het heeft een gevulde bunkersilo in de buurt nodig (~100m?) en een bevestigde laadschop. Als aan beide voorwaarden is voldaan, zal het voertuig zijn voorlader-as initialiseren om de juiste waarden te verkrijgen voor op/neer, laden/lossen en uit/intrekken bewegingen. Dan zal hij de bunkersilo breedte verdelen in stukken zo breed als zijn schop + schop toevoeging (zie instellingen) en beginnen bij de eerste lijn. Als de eerste of de laatste lijn de silowand raakt, moet je de waarde van de schep-toevoeging in de instellingen verhogen en de bestuurder opnieuw starten. Dit kan gebeuren als ofwel de schop opraap breedte niet goed is afgestemd met de fysieke afmetingen of als de bunkersilo definitie binnen de muur ligt, wat niet ongebruikelijk is omdat dit het makkelijker maakt om een goed uitziende bunkersilo te ontwikkelen. Nadat de schop is gevuld en het voertuig is omgekeerd van de bunker, zal het scannen voor een voertuig met een aanhanger (met vulruimte over) en daar naar toe gaan." />
-		<text name="ad_helpText_13_02"							text="" />
-		<text name="ad_helpText_13_03"							text="Let op: Er is momenteel geen botsing detectie opgenomen in deze modus!" />
-		<text name="ad_helpText_13_04"							text="" />
-		<text name="ad_helpText_13_05"							text="Omdat het voertuig automatisch de ideale laadpositie voor de schop probeert te vinden, kan het gebeuren dat hij zijn voorwielen omhoog tilt. Er is een detectie ingebouwd voor dit scenario, dat controleert of alle wielen op de grond staan en de schop begint op te tillen als deze controle gedurende een paar honderd milliseconden onjuist is." />
-		
-
 		<text name="AD_task_pathfinding"						text="Routeplanner" />
 		<text name="AD_task_catch_up_with_combine"				text="Inhaalslag maken met de oogstmachine" />
 		<text name="AD_task_clearcrop"							text="Het opruimen van het gewas" />
@@ -397,46 +326,6 @@
 		<text name="gui_ad_combineCPADHudMouse"					text="Combineer CP/AD knoppen"/>
     	<text name="gui_ad_combineCPADHudMouse_tooltip"			text="uit: standaard / simpel: CP: 2e muis actie > muis aan + uit, AD: tonen/verbergen Hud > beide huds aan + uit / vol: als simpel, maar huds tonen/verbergen in engele stap / Vereist: Schakel rechtsklik HUD uit bij CP instellingen"/>
 	
-		<text name="gui_ad_showTipOfTheDay"						text="Tip van de dag" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip van de dag weergeven elke keer als het spel start" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip van de dag" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Weergeven bij volgende start" />
-		<text name="ad_next_tip" 								text="Volgende" />
-		<text name="ad_totd_01_title" 							text="Meerdere functies" />
-		<text name="ad_totd_01_text" 							text="Veel knoppen in AutoDrive hebben meerdere functies. De hoofdfunctie kan altijd met de linkermuisknop worden geactiveerd. De secundaire functie kan worden geactiveerd met de middelste of de rechter muisknop. 
-		
-		Verscheidene knoppen hebben zelfs een derde en vierde functie die kunnen worden gebruikt door de linker shift-toets ingedrukt te houden terwijl op de knop wordt geklikt. Momenteel geldt dit alleen voor de opnameknop." />
-		<text name="ad_totd_02_title" 							text="Verschillende soorten wegen" />
-		<text name="ad_totd_02_text" 							text="Een AutoDrive netwerk kan uit 4 verschillende soorten wegen bestaan.
-
-		1. Een standaard wegvak (groen). Voertuigen kunnen rijden in de richting die is aangegeven met de pijlen. Om een standaardweg op te nemen, klikt u met de linkermuisknop op de opnameknop.
-		
-		2. Wegen met tweerichtingsverkeer (blauw). Hier mogen voertuigen in beide richtingen rijden en zullen ze inkomend verkeer in de tegengestelde richting blokkeren. Je kunt dubbelrichtingswegen vastleggen met de secundaire functie op de opnameknop. Gebruik dus de middelste of de rechter muisknop.
-		
-		3. Achteruitrij-secties (lichtblauw) - Voertuigen kunnen op deze secties alleen in de achteruitversnelling rijden. Handig voor parkeren en uitladen in krappe ruimtes. Gewoon achteruit rijden tijdens een standaard opnamesessie.
-		
-		4. Zijweg - Dit type wegsegment wordt gewoonlijk vermeden door de routeplanning tenzij de bestemming zich op dit wegsegment bevindt. Om een zijweg op te nemen, gebruikt u de derde en vierde functie van de opnameknop." />
-		<text name="ad_totd_03_title" 							text="Oogstmachine ontladen - 1" />
-		<text name="ad_totd_03_text" 							text="Een paar basistips voor het gebruik van AutoDrive voor het ontladen van oogstmachines:
-		
-		1. Om een oogstmachine automatisch een ontlader te laten oproepen, selecteert u gewoon dezelfde bestemming in de AutoDrive HUD van de oogstmachine als u voor de ontlader hebt geselecteerd. Deze bestemming is meestal een doel dicht bij het veld, zodat de ontlader een route kan plannen naar de oogstmachine. Als alternatief kan je ook de instelling 'Bestuurder zoeken' activeren, die ervoor zorgt dat de oogstmachine zoekt naar elke beschikbare ontlader binnen een bereik van 300m.
-		
-		2. AutoDrive kan zowel oogstmachines als veldhakselaars tijdens het rijden lossen. Om deze functie voor veldhakselaars in te schakelen, hoeft u alleen de instelling 'Vulniveau eerder oproepen' in te stellen op 0%." />
-		<text name="ad_totd_04_title" 							text="Instellingen - 1" />
-		<text name="ad_totd_04_text" 							text="Er zijn momenteel 6 verschillende instelling pagina's.
-
-		1. Algemene instellingen - van toepassing op alle voertuigen.
-
-		2. Gebruikersinstellingen - Van toepassing op de huidige speler (ook in MP). Dit zijn instellingen om te bepalen hoe AutoDrive wordt weergegeven en niet hoe het werkt.
-
-		3. Voertuiginstellingen - Alleen van toepassing op het huidige voertuig.
-
-		4. Oogstmachine instellingen - Alleen zichtbaar als je in een oogstmachine zit. Hier kun je bepalen hoe deze oogstmachine zijn ontladers oproept.
-
-		5. Debug instellingen - Deze instellingen maken wat visuele debug informatie mogelijk, en wat nog belangrijker is, extra log berichten. Dus schakel dit in als u tegen problemen of fouten aanloopt en u een logbestand naar de ontwikkelaars wilt sturen.
-		
-		6. Experimentele functies - Deze instellingen hebben betrekking op functies die we momenteel aan het testen/ontwikkelen zijn, maar die nog niet als stabiel worden beschouwd. Gebruik op eigen risico." />
-		
 		<text name = "gui_ad_editorTip_1"								text = "Eenvoudige linker muisklik:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Alleen muis: 1 punt selecteren"/>
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Routepunt maken"/>
