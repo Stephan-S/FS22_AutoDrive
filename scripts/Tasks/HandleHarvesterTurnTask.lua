@@ -127,18 +127,20 @@ function HandleHarvesterTurnTask:update(dt)
             self.vehicle.ad.drivePathModule:update(dt)
         end
 
-        local r,g,b = 0,1,0
-        if self.colliFound then
-            r = 1
-            g = 0
-        end
-
-        for i, p in ipairs(self.points) do
-            if i > 1 then
-                ADDrawingManager:addLineTask(self.points[i-1].x, self.points[i-1].y, self.points[i-1].z, p.x, p.y, p.z, r, g, b)
-                ADDrawingManager:addArrowTask(self.points[i-1].x, self.points[i-1].y, self.points[i-1].z, p.x, p.y, p.z, ADDrawingManager.arrows.position.middle, unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection))
+        if AutoDrive.getDebugChannelIsSet(AutoDrive.DC_COMBINEINFO) then
+            local r,g,b = 0,1,0
+            if self.colliFound then
+                r = 1
+                g = 0
             end
-        end    
+
+            for i, p in ipairs(self.points) do
+                if i > 1 then
+                    ADDrawingManager:addLineTask(self.points[i-1].x, self.points[i-1].y, self.points[i-1].z, p.x, p.y, p.z, r, g, b)
+                    ADDrawingManager:addArrowTask(self.points[i-1].x, self.points[i-1].y, self.points[i-1].z, p.x, p.y, p.z, ADDrawingManager.arrows.position.middle, unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection))
+                end
+            end
+        end
     elseif self.state == HandleHarvesterTurnTask.STATE_FINISHED then
         self:finished()
         return
@@ -216,7 +218,10 @@ function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, l
 
         AutoDrive.splineInterpolationUserCurvature = 5
         local splinePoints = AutoDrive:createSplineWithControlPoints(startPos, p0, endPoint, p3)
-
+        AutoDrive.splineInterpolation = { 
+            valid = false 
+        }
+    
         if splinePoints ~= nil and #splinePoints > 2 then
             for _, wp in pairs(splinePoints) do
                 wp.isForward = true
@@ -387,15 +392,15 @@ function HandleHarvesterTurnTask:doCollisionCheck(waypoints)
                 self.expectedColliCallbacks = self.expectedColliCallbacks + 1
                 --print("Expecting collisionTestCallbacks: " .. self.expectedColliCallbacks)
             end
-            
-            local r,g,b = 0,1,0
-            if shapes > 0 then
-                r = 1
-                g = 0
+            if AutoDrive.getDebugChannelIsSet(AutoDrive.DC_COMBINEINFO) then
+                local r,g,b = 0,1,0
+                if shapes > 0 then
+                    r = 1
+                    g = 0
+                    DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
+                end
                 DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
             end
-            DebugUtil.drawOverlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, r, g, b)
-            
             self.lastCollisionCheckIndex = i
         end
     end

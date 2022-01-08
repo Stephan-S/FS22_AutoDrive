@@ -145,7 +145,6 @@ function ADDrivePathModule:update(dt)
             if self:isCloseToWaypoint() then
                 local reverseStart, _ = self:checkForReverseSection()
                 if reverseStart then
-                    --print("Toggled driving direction to reverse")
                     self.isReversing = not self.isReversing
                     self.vehicle.ad.specialDrivingModule:reset()
                     self.vehicle.ad.specialDrivingModule.currentWayPointIndex = self:getCurrentWayPointIndex() + 1
@@ -578,7 +577,6 @@ function ADDrivePathModule:switchToNextWayPoint()
 
     local _, reverseEnd = self:checkForReverseSection()
     if reverseEnd and self.isReversing then
-        print("Toggled driving direction to forwards")
         self.isReversing = false --not self.isReversing
         self.vehicle.ad.specialDrivingModule:reset()
         self.vehicle.ad.specialDrivingModule.currentWayPointIndex = self:getCurrentWayPointIndex()
