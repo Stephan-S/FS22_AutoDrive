@@ -287,6 +287,11 @@ function ADSpecialDrivingModule:getBasicStates()
     --print("AngleToTrailer: " .. self.angleToTrailer .. " angleToPoint: " .. self.angleToPoint)
 end
 
+function ADSpecialDrivingModule:getAngleToTrailer()
+    self:getBasicStates()
+    return self.angleToTrailer
+end
+
 function ADSpecialDrivingModule:checkWayPointReached()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "ADSpecialDrivingModule:checkWayPointReached start self.currentWayPointIndex %s ", tostring(self.currentWayPointIndex))
     local distanceToTarget = MathUtil.vector2Length(self.reverseTarget.x - self.rNx, self.reverseTarget.z - self.rNz)

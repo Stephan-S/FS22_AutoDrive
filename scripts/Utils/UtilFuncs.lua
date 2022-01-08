@@ -466,6 +466,14 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 		return
 	end
 
+	AutoDrive.splineInterpolation = { 
+		startNode = startNode,
+		endNode = endNode,
+		curvature = AutoDrive.splineInterpolationUserCurvature,
+		waypoints = { startNode },
+		valid = true 
+	}
+
 	if AutoDrive.splineInterpolationUserCurvature == nil then
 		AutoDrive.splineInterpolationUserCurvature = 0.49
 	end
@@ -475,33 +483,40 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 		return
 	end
 
-	self.splineInterpolation = {
-		MIN_CURVATURE = 0.5,
-		MAX_CURVATURE = 3.5,
-		startNode = startNode,
-		p0 = nil,
-		endNode = endNode,
-		p3 = nil,
-		curvature = AutoDrive.splineInterpolationUserCurvature,
-		waypoints = { startNode },
-		valid = true
-	}
-
 	-- TODO: if we have more then one inbound or outbound connections, get the avg. vector
-	if #startNode.incoming >= 1 and #endNode.out >= 1  and AutoDrive.splineInterpolationUserCurvature >= self.splineInterpolation.MIN_CURVATURE then
+	if #startNode.incoming >= 1 and #endNode.out >= 1  and AutoDrive.splineInterpolationUserCurvature >= 0.5 then
 		local p0 = nil
 		for _, px in pairs(startNode.incoming) do
 			p0 = ADGraphManager:getWayPointById(px)
-			self.splineInterpolation.p0 = p0
+			--self.splineInterpolation.p0 = p0
 			break
 		end
 		local p3 = nil
 		for _, px in pairs(endNode.out) do
 			p3 = ADGraphManager:getWayPointById(px)
-			self.splineInterpolation.p3 = p3
+			--self.splineInterpolation.p3 = p3
 			break
-		end
+		end	
+		return AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
+	else -- fallback to straight line connection behaviour
+		return
+	end
+end
 
+function AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
+	self.splineInterpolation = {
+		MIN_CURVATURE = 0.5,
+		MAX_CURVATURE = 3.5,
+		startNode = startNode,
+		p0 = p0,
+		endNode = endNode,
+		p3 = p3,
+		curvature = AutoDrive.splineInterpolationUserCurvature,
+		waypoints = { startNode },
+		valid = true
+	}
+
+	if AutoDrive.splineInterpolationUserCurvature >= self.splineInterpolation.MIN_CURVATURE then
 		if AutoDrive.splineInterpolationUserCurvature == 5 then
 			-- calculate the angle between start tangent and end tangent
 			local dAngle = math.abs(AutoDrive.angleBetween(
@@ -572,7 +587,8 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 			end
 		end
 		table.insert(self.splineInterpolation.waypoints, endNode)
-	else -- fallback to straight line connection behaviour
+		return self.splineInterpolation.waypoints
+	else
 		return
 	end
 end
@@ -931,9 +947,7 @@ end
 
 function AutoDrive:zoomSmoothly(superFunc, offset)
 	if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid then
-		--print("splineInterpolationUserCurvature before " .. AutoDrive.splineInterpolationUserCurvature)
 		AutoDrive.splineInterpolationUserCurvature = math.clamp(0.49, AutoDrive.splineInterpolationUserCurvature + offset/12  ,3.5)
-		--print("splineInterpolationUserCurvature after " .. AutoDrive.splineInterpolationUserCurvature)
 		return
 	end
 	if not AutoDrive.mouseWheelActive then -- don't zoom camera when mouse wheel is used to scroll targets (thanks to sperrgebiet)

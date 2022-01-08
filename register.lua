@@ -99,6 +99,7 @@ source(Utils.getFilename("scripts/Tasks/FollowVehicleTask.lua", g_currentModDire
 source(Utils.getFilename("scripts/Tasks/ReverseFromBadLocationTask.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/ParkTask.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/RepairTask.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/HandleHarvesterTurnTask.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Modules/DrivePathModule.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Modules/CollisionDetectionModule.lua", g_currentModDirectory))
@@ -135,6 +136,10 @@ source(Utils.getFilename("scripts/Gui/SettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/DebugSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/ExperimentalFeaturesSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/Settings.lua", g_currentModDirectory))
+
+source(Utils.getFilename("scripts/Tasks/Turns/AbstractTurn.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/Turns/ReverseOffsetTurn.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/Turns/OffsetTurn.lua", g_currentModDirectory))
 
 AutoDriveRegister = {}
 AutoDriveRegister.version = g_modManager:getModByName(g_currentModName).version

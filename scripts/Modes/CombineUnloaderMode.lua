@@ -250,7 +250,12 @@ function CombineUnloaderMode:getNextTask()
         self:setToWaitForCall()
     elseif self.state == self.STATE_ACTIVE_UNLOAD_COMBINE then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_ACTIVE_UNLOAD_COMBINE")
-        nextTask = self:getTaskAfterUnload(filledToUnload)
+        if filledToUnload then
+            nextTask = self:getTaskAfterUnload(filledToUnload)
+        else
+            nextTask = HandleHarvesterTurnTask:new(self.vehicle, self.combine)
+            self.state = self.STATE_DRIVE_TO_COMBINE
+        end
     elseif self.state == self.STATE_FOLLOW_CURRENT_UNLOADER then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_FOLLOW_CURRENT_UNLOADER")
         if self.targetUnloader ~= nil then
@@ -504,7 +509,7 @@ function CombineUnloaderMode:getSideChaseOffsetX()
     local unloaderWidest = math.max(self.vehicle.size.width, self.targetTrailer.size.width)
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
-    local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest + headerExtra
+    local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
     local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
     -- Some combines fold up their pipe so tight that targeting it could cause a collision.
     -- So, choose the max between the two to avoid a collison

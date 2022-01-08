@@ -375,17 +375,15 @@ function AutoDrive:onUpdate(dt)
     if self.isServer and self.ad.stateModule:isActive() then
         self.ad.recordingModule:update(dt)
 
-        --if self.ad.specialDrivingModule:executeUTurn(dt, true, true) then
-            if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
-                self.ad.taskModule:update(dt)
-            else
-                self.ad.specialDrivingModule:stopVehicle()
-                self.ad.specialDrivingModule:update(dt)
-            end
-            if self.lastMovedDistance > 0 then
-                g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
-            end
-        --end
+        if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
+            self.ad.taskModule:update(dt)
+        else
+            self.ad.specialDrivingModule:stopVehicle()
+            self.ad.specialDrivingModule:update(dt)
+        end
+        if self.lastMovedDistance > 0 then
+            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
+        end
     end
 
     self.ad.stateModule:update(dt)
