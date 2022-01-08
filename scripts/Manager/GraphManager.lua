@@ -126,7 +126,7 @@ function ADGraphManager:setMapMarker(mapMarker)
 	self.mapMarkers[mapMarker.markerIndex] = mapMarker
 end
 
-function ADGraphManager:getPathTo(vehicle, waypointId)
+function ADGraphManager:getPathTo(vehicle, waypointId, startPoint)
 	local wp = {}
 
 	local x, _, z = getWorldTranslation(vehicle.components[1].node)
@@ -141,6 +141,12 @@ function ADGraphManager:getPathTo(vehicle, waypointId)
 	end
 
 	local closestWaypoint = self:findMatchingWayPointForVehicle(vehicle)
+	if startPoint ~= nil then
+		local distanceToStartPoint = MathUtil.vector2Length(x - startPoint.x, z - startPoint.z)
+		if distanceToStartPoint < 5 then
+			closestWaypoint = startPoint.id
+		end
+	end
 	if closestWaypoint ~= nil then
 		local outCandidates = self:getBestOutPoints(vehicle, closestWaypoint)
 		wp = self:pathFromTo(closestWaypoint, waypointId, outCandidates)

@@ -17,6 +17,7 @@ function ADDrivePathModule:new(vehicle)
     o.waitTimer = AutoDriveTON:new()
     o.blinkTimer = AutoDriveTON:new()
     o.brakeHysteresisActive = false
+    o.lastUsedWayPoint = nil
     ADDrivePathModule.reset(o)
     return o
 end
@@ -38,10 +39,11 @@ function ADDrivePathModule:reset()
     self.vehicle:setTurnLightState(Lights.TURNLIGHT_OFF)
     self.distanceToTarget = math.huge
     self.speedLimit = 0
+    self.lastUsedWayPoint = nil
 end
 
 function ADDrivePathModule:setPathTo(waypointId)
-    self.wayPoints = ADGraphManager:getPathTo(self.vehicle, waypointId)
+    self.wayPoints = ADGraphManager:getPathTo(self.vehicle, waypointId, self.lastUsedWayPoint)
     local destination = ADGraphManager:getMapMarkerByWayPointId(self:getLastWayPointId())
     self.vehicle.ad.stateModule:setCurrentDestination(destination)
     self:setDirtyFlag()
@@ -295,7 +297,8 @@ function ADDrivePathModule:followWaypoints(dt)
     end
 end
 
-function ADDrivePathModule:handleReachedWayPoint()
+function ADDrivePathModule:handleReachedWayPoint()    
+    self.lastUsedWayPoint = self:getCurrentWayPoint()
     if self:getNextWayPoint() ~= nil then
         self:switchToNextWayPoint()
     else
