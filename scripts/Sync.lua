@@ -127,6 +127,7 @@ function AutoDriveSync.streamWriteGraph(streamId, wayPoints, mapMarkers, groups)
         streamWriteUIntN(streamId, marker.id, self.MWPC_SEND_NUM_BITS)
         AutoDrive.streamWriteStringOrEmpty(streamId, marker.name)
         AutoDrive.streamWriteStringOrEmpty(streamId, marker.group)
+        streamWriteBool(streamId, (marker.isADDebug == true))
     end
 
     -- writing the amount of groups we are going to send
@@ -199,7 +200,12 @@ function AutoDriveSync.streamReadGraph(streamId)
     for i = 1, mapMarkerCounter do
         local markerId = streamReadUIntN(streamId, self.MWPC_SEND_NUM_BITS)
         if wayPoints[markerId] ~= nil then
-            local marker = {id = markerId, markerIndex = i, name = AutoDrive.streamReadStringOrEmpty(streamId), group = AutoDrive.streamReadStringOrEmpty(streamId)}
+            local marker = {}
+            marker.id = markerId
+            marker.markerIndex = i
+            marker.name = AutoDrive.streamReadStringOrEmpty(streamId)
+            marker.group = AutoDrive.streamReadStringOrEmpty(streamId)
+            marker.isADDebug = streamReadBool(streamId)
             mapMarkers[i] = marker
         else
             Logging.error("[AutoDriveSync] Error receiving marker %s (%s)", AutoDrive.streamReadStringOrEmpty(streamId), markerId)
