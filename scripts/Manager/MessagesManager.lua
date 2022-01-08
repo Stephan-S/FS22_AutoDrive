@@ -25,7 +25,7 @@ ADMessagesManager.huds.message.posY = 0.09
 ADMessagesManager.huds.message.headerOverlay = 0
 ADMessagesManager.huds.message.headerOverlayHeight = 0.01
 ADMessagesManager.huds.message.backgroundOverlay = 0
-ADMessagesManager.huds.message.backgroundOverlayHeight = 0.05
+ADMessagesManager.huds.message.backgroundOverlayHeight = 0.06
 ADMessagesManager.huds.message.dismissOverlay = 0
 ADMessagesManager.huds.message.infoIconOverlay = 0
 ADMessagesManager.huds.message.errorIconOverlay = 0
@@ -39,7 +39,7 @@ ADMessagesManager.huds.notification.posY = 0.92
 ADMessagesManager.huds.notification.headerOverlay = 0
 ADMessagesManager.huds.notification.headerOverlayHeight = 0.01
 ADMessagesManager.huds.notification.backgroundOverlay = 0
-ADMessagesManager.huds.notification.backgroundOverlayHeight = 0.05
+ADMessagesManager.huds.notification.backgroundOverlayHeight = 0.06
 ADMessagesManager.huds.notification.dismissOverlay = 0
 ADMessagesManager.huds.notification.goToOverlay = 0
 ADMessagesManager.huds.message.infoIconOverlay = 0
@@ -59,13 +59,13 @@ function ADMessagesManager:loadHud(hud)
     local textSize = getCorrectTextSize(hud.textSize)
     hud.headerOverlay = Overlay.new(AutoDrive.directory .. "textures/Header_message.dds", hud.posX, hud.posY + (textSize * 1.6), 0, hud.headerOverlayHeight)
     hud.headerOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_CENTER)
-    hud.backgroundOverlay = Overlay.new(AutoDrive.directory .. "textures/messageBackground.dds", hud.posX, hud.posY + (textSize / 2.5), 0, hud.backgroundOverlayHeight)
+    hud.backgroundOverlay = Overlay.new(AutoDrive.directory .. "textures/messageBackground.dds", hud.posX, hud.posY, 0, hud.backgroundOverlayHeight)
     hud.backgroundOverlay:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER)
-    hud.dismissOverlay = Overlay.new(AutoDrive.directory .. "textures/input_toggleHud_1.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
-    hud.dismissOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_RIGHT)
+    hud.dismissOverlay = Overlay.new(AutoDrive.directory .. "textures/input_toggleHud_1.dds", 0, hud.posY - (textSize), hud.headerOverlayHeight * 2 / g_screenAspectRatio, hud.headerOverlayHeight * 2)
+    hud.dismissOverlay:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER)
     if hud.goToOverlay ~= nil then
-        hud.goToOverlay = Overlay.new(AutoDrive.directory .. "textures/input_goTo_1.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
-        hud.goToOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_RIGHT)
+        hud.goToOverlay = Overlay.new(AutoDrive.directory .. "textures/input_goTo_1.dds", 0, hud.posY - (textSize), hud.headerOverlayHeight * 2 / g_screenAspectRatio, hud.headerOverlayHeight * 2)
+        hud.goToOverlay:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER)
     end
     hud.infoIconOverlay = Overlay.new(AutoDrive.directory .. "textures/info_icon.dds", 0, hud.posY + (textSize * 1.5), hud.headerOverlayHeight * 1.2 / g_screenAspectRatio, hud.headerOverlayHeight * 1.2)
     hud.infoIconOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
@@ -233,19 +233,19 @@ function ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
             local ov = self.huds.message.dismissOverlay
             local x, y = ov:getPosition()
 			y = y + self.huds.cpYOffset
-            if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
+            if posX >= x - ov.width / 2 and posY >= y - ov.height / 2 and posX <= x + ov.width / 2 and posY <= y + ov.height / 2 then
                 self:removeCurrentMessage()
             end
         end
         if self.currentNotification ~= nil then
             local ov = self.huds.notification.dismissOverlay
             local x, y = ov:getPosition()
-            if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
+            if posX >= x - ov.width / 2 and posY >= y - ov.height / 2 and posX <= x + ov.width / 2 and posY <= y + ov.height / 2 then
                 self:removeCurrentNotification()
             end
             ov = self.huds.notification.goToOverlay
             x, y = ov:getPosition()
-            if posX >= x - ov.width and posY >= y and posX <= x and posY <= y + ov.height then
+            if posX >= x - ov.width / 2 and posY >= y - ov.height / 2 and posX <= x + ov.width / 2 and posY <= y + ov.height / 2 then
                 self:goToVehicle()
                 self:removeCurrentNotification()
             end
@@ -303,9 +303,10 @@ function ADMessagesManager:updateHud(hud, text, mType)
     local textWidth = getTextWidth(getCorrectTextSize(hud.textSize), hud.text)
     hud.backgroundOverlay:setDimension(textWidth + 0.03, nil)
     hud.headerOverlay:setDimension(textWidth + 0.03, nil)
-    hud.dismissOverlay:setPosition(hud.posX + ((textWidth + 0.03) / 2), nil)
+    hud.dismissOverlay:setPosition(hud.posX, nil)
     if hud.goToOverlay ~= nil then
-        hud.goToOverlay:setPosition(hud.posX + ((textWidth + 0.01) / 2), nil)
+        hud.goToOverlay:setPosition(hud.posX - (hud.goToOverlay.width * 2), nil)
+        hud.dismissOverlay:setPosition(hud.posX + (hud.dismissOverlay.width * 2), nil)
     end
     hud.infoIconOverlay:setPosition(hud.posX - ((textWidth + 0.03) / 2), nil)
     hud.infoIconOverlay:setIsVisible(mType == self.messageTypes.INFO)

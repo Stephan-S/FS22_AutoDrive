@@ -15,7 +15,7 @@ ADInputManager.actionsToInputs = {
     {"ADSelectTargetUnload", "input_nextTarget_Unload", true, true},
     {"ADSelectPreviousTargetUnload", "input_previousTarget_Unload", true, true},
     {"ADActivateDebug", "input_debug", false, false},
-    {"ADDisplayMapPoints", "input_displayMapPoints", false, true},
+    {"ADDisplayMapPoints", "input_displayMapPoints", false, false},
     {"ADDebugSelectNeighbor", "input_showNeighbor", false, false},
     {"ADDebugCreateConnection", "input_toggleConnection", false, false},
     {"ADDebugToggleConnectionInverted", "input_toggleConnectionInverted", false, false},

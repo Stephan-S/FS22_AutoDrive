@@ -99,10 +99,6 @@ end
 
 function AutoDriveHud:createHudAt(hudX, hudY)
     local vehicle = AutoDrive.getADFocusVehicle()
-    if vehicle == nil then
-        -- no vehicle with AD in focus
-        return
-    end
 	local uiScale = g_gameSettings:getValue("uiScale")
 	if AutoDrive.getSetting("guiScale") ~= 0 then
 		uiScale = AutoDrive.getSetting("guiScale")
@@ -145,6 +141,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	self.listItemWidth, self.listItemHeight = getNormalizedScreenValues(uiScale * listItemSize, uiScale * listItemSize)
 	self.posX = math.clamp(0, hudX, 1 - self.width)
 	self.posY = math.clamp(2 * self.gapHeight, hudY, 1 - (self.height + 3 * self.gapHeight + self.headerHeight))
+
 
 	AutoDrive.HudX = self.posX
 	AutoDrive.HudY = self.posY
@@ -369,7 +366,7 @@ function AutoDriveHud:refreshHudElementsLayerSequence()
 end
 
 function AutoDriveHud:drawHud(vehicle)
-	if vehicle == g_currentMission.controlledVehicle or AutoDrive.aiFrameOpen then
+	if (vehicle ~= nil and vehicle == g_currentMission.controlledVehicle) or AutoDrive.aiFrameOpen then
 		local uiScale = g_gameSettings:getValue("uiScale")
 		if AutoDrive.getSetting("guiScale") ~= 0 then
 			uiScale = AutoDrive.getSetting("guiScale")

@@ -531,6 +531,17 @@ end
 
 function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
     -- The default maximum will place the front of the unloader at the back of the header
+    local vehicleX, vehicleY, vehicleZ = getWorldTranslation(self.vehicle.components[1].node)
+    local targetNode = self.targetTrailer.components[1].node
+    local _, _, diffZ = worldToLocal(targetNode, vehicleX, vehicleY, vehicleZ)
+    local dynamicAdditionsZ = diffZ
+    dynamicAdditionsZ = dynamicAdditionsZ + 1
+    local sideChaseTermZ = dynamicAdditionsZ
+    return sideChaseTermZ
+end
+
+function CombineUnloaderMode:getDynamicSideChaseOffsetZ_FS19()
+    -- The default maximum will place the front of the unloader at the back of the header
     local pipeZOffsetToCombine = 0
     if AutoDrive.isPipeOut(self.combine) then
         local nodeX, nodeY, nodeZ = getWorldTranslation(AutoDrive.getDischargeNode(self.combine))

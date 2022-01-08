@@ -378,8 +378,12 @@ function AutoDrive:onUpdate(dt)
         if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
             self.ad.taskModule:update(dt)
         else
-            self.ad.specialDrivingModule:stopVehicle()
-            self.ad.specialDrivingModule:update(dt)
+            if self.ad ~= nil and self.ad.specialDrivingModule ~= nil then
+                self.ad.specialDrivingModule.motorShouldNotBeStopped = true
+                self.ad.specialDrivingModule:stopVehicle()
+                self.ad.specialDrivingModule:update(dt)
+                self.ad.specialDrivingModule.motorShouldNotBeStopped = false
+            end
         end
         if self.lastMovedDistance > 0 then
             g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
@@ -952,7 +956,14 @@ function AutoDrive:startAutoDrive()
             AutoDriveStartStopEvent:sendStartEvent(self)
 
             if AutoDrive.experimentalFeatures.FoldImplements then
-                AutoDrive.foldAllImplements(self)
+                if not AutoDrive.getAllImplementsFolded(self) then
+                    if self.startMotor then
+                        if not self:getIsMotorStarted() then
+                            self:startMotor()
+                        end
+                    end
+                    AutoDrive.foldAllImplements(self)
+                end
             end
         end
     else
