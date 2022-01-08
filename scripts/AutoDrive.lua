@@ -9,7 +9,7 @@ g_autoDriveIconFilename = g_iconsUIFilename
 
 AutoDrive.experimentalFeatures = {}
 AutoDrive.experimentalFeatures.redLinePosition = false
-AutoDrive.experimentalFeatures.telemetryOutput = false
+-- AutoDrive.experimentalFeatures.telemetryOutput = false
 AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer = false
 AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
@@ -602,7 +602,7 @@ function AutoDrive:update(dt)
 	ADTriggerManager:update(dt)
 	ADRoutesManager:update(dt)
 
-	AutoDrive.handleTelemetry(dt)	
+	-- AutoDrive.handleTelemetry(dt)	
 end
 
 function AutoDrive:draw()
