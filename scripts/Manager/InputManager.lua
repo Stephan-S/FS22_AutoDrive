@@ -358,12 +358,8 @@ end
 function ADInputManager:input_nextTarget(vehicle)
     if ADGraphManager:getMapMarkerById(1) ~= nil and ADGraphManager:getWayPointById(1) ~= nil then
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
-        if currentTarget < #ADGraphManager:getMapMarkers() then
-            currentTarget = currentTarget + 1
-        else
-            currentTarget = 1
-        end
-        vehicle.ad.stateModule:setFirstMarker(currentTarget)
+        local nextTarget = ADGraphManager:getNextTargetAlphabetically(currentTarget)
+        vehicle.ad.stateModule:setFirstMarker(nextTarget)
         vehicle.ad.stateModule:removeCPCallback()
     end
 end
@@ -371,12 +367,8 @@ end
 function ADInputManager:input_previousTarget(vehicle)
     if ADGraphManager:getMapMarkerById(1) ~= nil and ADGraphManager:getWayPointById(1) ~= nil then
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
-        if currentTarget > 1 then
-            currentTarget = currentTarget - 1
-        else
-            currentTarget = #ADGraphManager:getMapMarkers()
-        end
-        vehicle.ad.stateModule:setFirstMarker(currentTarget)
+        local previousTarget = ADGraphManager:getPreviousTargetAlphabetically(currentTarget)
+        vehicle.ad.stateModule:setFirstMarker(previousTarget)
         vehicle.ad.stateModule:removeCPCallback()
     end
 end
@@ -384,24 +376,16 @@ end
 function ADInputManager:input_nextTarget_Unload(vehicle)
     if ADGraphManager:getMapMarkerById(1) ~= nil and ADGraphManager:getWayPointById(1) ~= nil then
         local currentTarget = vehicle.ad.stateModule:getSecondMarkerId()
-        if currentTarget < #ADGraphManager:getMapMarkers() then
-            currentTarget = currentTarget + 1
-        else
-            currentTarget = 1
-        end
-        vehicle.ad.stateModule:setSecondMarker(currentTarget)
+        local nextTarget = ADGraphManager:getNextTargetAlphabetically(currentTarget)
+        vehicle.ad.stateModule:setSecondMarker(nextTarget)
     end
 end
 
 function ADInputManager:input_previousTarget_Unload(vehicle)
     if ADGraphManager:getMapMarkerById(1) ~= nil and ADGraphManager:getWayPointById(1) ~= nil then
         local currentTarget = vehicle.ad.stateModule:getSecondMarkerId()
-        if currentTarget > 1 then
-            currentTarget = currentTarget - 1
-        else
-            currentTarget = #ADGraphManager:getMapMarkers()
-        end
-        vehicle.ad.stateModule:setSecondMarker(currentTarget)
+        local previousTarget = ADGraphManager:getPreviousTargetAlphabetically(currentTarget)
+        vehicle.ad.stateModule:setSecondMarker(previousTarget)
     end
 end
 

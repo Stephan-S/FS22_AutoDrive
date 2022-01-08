@@ -1460,3 +1460,112 @@ function ADGraphManager:createSplineConnection(start, waypoints, target, sendEve
 		self:toggleConnectionBetween(wp, self:getWayPointById(target), false, false)
 	end
 end
+
+function ADGraphManager:getNextTargetAlphabetically(markerId)
+	local sortedMarkers = self:getSortedMarkers()
+	for i, markerIdIter in ipairs(sortedMarkers) do
+		if markerIdIter == markerId then
+			if i < #sortedMarkers then
+				return sortedMarkers[i+1]
+			else
+				return sortedMarkers[1]
+			end
+		end
+	end
+	return markerId
+end
+
+function ADGraphManager:getPreviousTargetAlphabetically(markerId)
+	local sortedMarkers = self:getSortedMarkers()
+	for i, markerIdIter in ipairs(sortedMarkers) do
+		if markerIdIter == markerId then
+			if i > 1 then
+				return sortedMarkers[i-1]
+			else
+				return sortedMarkers[#sortedMarkers]
+			end
+		end
+	end
+	return markerId
+end
+
+function ADGraphManager:getSortedMarkers()
+	local useFolders = AutoDrive.getSetting("useFolders")
+
+    local groups = {}
+	local groupsToSortedIndex = {}
+    if useFolders then
+        groups, groupsToSortedIndex = self:sortGroups(groups)
+    end
+
+    if #groups == 0 then
+        groups[1] = {}
+		groupsToSortedIndex[1] = "All"
+    end
+
+    for markerID, marker in pairs(self:getMapMarkers()) do
+        if useFolders then
+            table.insert(groups[groupsToSortedIndex[marker.group]], {displayName = marker.name, returnValue = markerID})
+        else
+            table.insert(groups[1], {displayName = marker.name, returnValue = markerID})
+        end
+    end
+
+	local sort_func = function(a, b)
+        a = tostring(a.displayName):lower()
+        b = tostring(b.displayName):lower()
+        local patt = "^(.-)%s*(%d+)$"
+        local _, _, col1, num1 = a:find(patt)
+        local _, _, col2, num2 = b:find(patt)
+        if (col1 and col2) and col1 == col2 then
+            return tonumber(num1) < tonumber(num2)
+        end
+        return a < b
+    end
+
+	for groupId, _ in pairs(groups) do
+		table.sort(groups[groupId], sort_func)
+	end
+
+	local allInOneTable = {}
+	for groupId, entries in pairs(groups) do
+		for _, marker in pairs(entries) do
+			allInOneTable[#allInOneTable+1] = marker.returnValue
+		end
+	end
+
+
+	return allInOneTable
+end
+
+function ADGraphManager:sortGroups(groups)
+    groups = {}
+	groups[1] = {}
+
+    local sort_func = function(a, b)
+        a = tostring(a):lower()
+        b = tostring(b):lower()
+        local patt = "^(.-)%s*(%d+)$"
+        local _, _, col1, num1 = a:find(patt)
+        local _, _, col2, num2 = b:find(patt)
+        if (col1 and col2) and col1 == col2 then
+            return tonumber(num1) < tonumber(num2)
+        end
+        return a < b
+    end
+
+    local groupTable = {}
+    for groupName, groupID in pairs(ADGraphManager:getGroups()) do
+        table.insert(groupTable, groupName)
+    end
+
+    table.sort(groupTable, sort_func)
+	local groupsToSortedIndex = {}
+	groupsToSortedIndex[1] = "All"
+	for i=1,#groupTable do
+		groups[#groups + 1] = {}
+		groupsToSortedIndex[groupTable[i]] = i + 1
+	end
+
+	return groups, groupsToSortedIndex
+end
