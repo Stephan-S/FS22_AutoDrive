@@ -201,7 +201,6 @@
     <Profile name="autoDriveSettingsHeaderIcon" extends="baseReference">
         <Value name="debugEnabled" value="false"/>
         <Value name="imageFilename" value="g_iconsUIFilename"/>
-        <!-- <Value name="imageFilename" value="g_autoDriveDebugUIFilename_BC7"/> -->
         <Value name="imageSize" value="1024 1024"/>
         <Value name="size" value="64px 64px"/>
         <Value name="visible" value="false"/>
@@ -366,63 +365,5 @@
         <Value name="textBold" value="true" />
         <Value name="textOffset" value="46px 2px" />
         <Value name="textFocusedOffset" value="46px 2px" />
-    </Profile>
-
-<!-- used -->
-    <Profile name="autoDriveTipOfTheDayNavigationBox" extends="emptyPanel" with="lightFrame">
-        <Value name="size" value="720px 662px" />
-        <Value name="screenAlign" value="topCenter" />
-        <Value name="positionOrigin" value="topCenter" />
-    </Profile>
-
-<!-- used -->
-    <Profile name="autoDriveTipOfTheDayText" extends="textDefault">
-        <Value name="size" value="562px 600px" />
-        <Value name="textMaxWidth" value="456px" />
-        <Value name="textVerticalAlignment" value="top" />
-        <Value name="textSize" value="16px" />
-        <Value name="textBold" value="true" />
-        <Value name="textOffset" value="46px 2px" />
-        <Value name="textFocusedOffset" value="46px 2px" />
-        <Value name="textFocusedOffset" value="46px 2px" />
-        <Value name="textWrapWidth" value="456px" />
-        <Value name="positionOrigin" value="topLeft" />
-        <Value name="screenAlign" value="topLeft" />
-        <Value name="position" value="130px -10px" />
-    </Profile>
-
-
-<!-- used -->
-    <Profile name="autoDriveTipOfTheDayTitleText" extends="textDefault">
-        <Value name="size" value="720px 50px" />
-        <Value name="textMaxWidth" value="720px" />
-        <Value name="textVerticalAlignment" value="top" />
-        <Value name="textSize" value="20px" />
-        <Value name="textBold" value="true" />
-        <Value name="position" value="15px 25px" />
-        <Value name="screenAlign" value="topLeft" />
-        <Value name="positionOrigin" value="topLeft" />
-    </Profile>      
-
-<!-- used -->
-    <Profile name="autoDriveTipOfTheDayCheckbox" extends="baseReference" with="lightFrame">
-        <Value name="size" value="450px 48px" />
-        <Value name="frameThickness" value="1dp 1dp 1dp 1dp" />
-        <Value name="imageColor" value="$preset_colorGlassMedium" />
-        <Value name="imageDisabledColor" value="$preset_colorGlass" />
-        <Value name="margin" value="24px 12px 48px 32px" />
-        <Value name="screenAlign" value="bottomLeft" />
-        <Value name="positionOrigin" value="bottomLeft" />
-        <Value name="position" value="45px 15px" />
-    </Profile>
-
-<!-- used -->
-    <Profile name="autoDriveTipOfTheDayCheckboxToggle" extends="ingameMenuMPActionsListPermissionCheckbox" with="anchorMiddleLeft">
-        <Value name="frameThickness" value="0 0 1dp 0" />
-    </Profile>
-
-<!-- used -->
-    <Profile name="autoDriveTipOfTheDayCheckboxToggleText" extends="textDefault" with="anchorMiddleLeft">
-        <Value name="position" value="60px 0px" />
     </Profile>
 </GUIProfiles>

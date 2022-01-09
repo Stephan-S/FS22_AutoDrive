@@ -158,7 +158,7 @@ function ADPullDownList:onDraw(vehicle, uiScale)
             end
 
             if actualTarget == targetToCheck then
-                setTextColor(0, 1, 0, 1)
+                setTextColor(0, 0.9, 1, 1)
             end
         end
 
@@ -232,10 +232,10 @@ function ADPullDownList:onDraw(vehicle, uiScale)
 
                 if self.hovered == self.selected + (i - 1) and listEntry.isFolder == false then
                     setTextBold(false)
-                    setTextColor(0, 1, 0, 1)
+                    setTextColor(0, 0.871, 1, 1)
                 elseif self.hovered == self.selected + (i - 1) and listEntry.isFolder == true then  -- folders mouse over
                     setTextBold(true)
-                    setTextColor(0.5, 0.8, 0, 1)
+                    setTextColor(0.296, 0.823, 1, 1)
                 else
                     if listEntry.isFolder == false then
                         setTextBold(false)
@@ -483,8 +483,10 @@ end
 function ADPullDownList:createSelection_FillType()
     local supportedFillTypes = nil
     self.autoLoadFillTypes = nil
-    if g_currentMission.controlledVehicle ~= nil then
-        local trailers, _ = AutoDrive.getAllUnits(g_currentMission.controlledVehicle)
+	local vehicle = AutoDrive.getADFocusVehicle()
+
+    if vehicle ~= nil then
+        local trailers, _ = AutoDrive.getAllUnits(vehicle)
         for trailerIndex, trailer in ipairs(trailers) do
             supportedFillTypes = {}
             if AutoDrive:hasAL(trailer) then

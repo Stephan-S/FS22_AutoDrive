@@ -53,7 +53,6 @@
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Éviter les cultures" />
@@ -292,76 +291,6 @@
 		<text name="button_delete_all" 							text="Effacer tout" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
 		
-		<text name="ad_helpCategory_1"							text="AutoDrive" />
-		
-		<text name="ad_helpTitle_01"							text="AD - Introduction" />
-		<text name="ad_helpText_01_01"							text="AutoDrive est un outil polyvalent qui permet à vos tracteurs de naviguer de manière autonome dans le monde de Farming Simulator." />
-		<text name="ad_helpText_01_02"							text="La structure est un réseau interconnecté de points enregistrés et de destinations définies. Pour certaines cartes, un réseau initial est fourni avec le mod. Sur la plupart des cartes, vous devrez tout enregistrer vous-même ou importer un réseau d'un autre utilisateur (voir Import/Export ci-dessous)." />
-		<text name="ad_helpText_01_03"							text="Si toutes les destinations sont correctement connectées au réseau, AutoDrive navigue comme le système de navigation standard de votre voiture, en calculant l'itinéraire le plus court vers la destination. Il est donc important de vous assurer que tous les points sont connectés au réseau. Si AutoDrive détecte un point déconnecté, il sera marqué d’un ‘X’ et devra être supprimé ou connecté manuellement." />
-		
-		<text name="ad_helpTitle_02"							text="AD mode - Conduite uniquement" />
-		<text name="ad_helpText_02_01"							text="Dans ce mode, le véhicule actuel prend le point le mieux adapté (par sa direction et sa distance actuelles) ou simplement le point le plus proche, puis utilise le chemin le plus court de A jusqu'à la destination B et s’arrête là. C'est le mode le plus simple et le mieux adapté pour tester vos nouveaux itinéraires." />
-		
-		<text name="ad_helpTitle_03"							text="AD mode - Livraison" />
-		<text name="ad_helpText_03_01"							text="Dans ce mode, AutoDrive conduira le véhicule comme dans le mode ‘Conduite uniquement’, mais déchargera en outre la remorque actuelle à la destination, si un déclencheur de déchargement est détecté." />
-		<text name="ad_helpText_03_02"							text="Le point de destination doit être créé après le déclencheur de déchargement, de sorte que les véhicules avec de longues remorques atteignent le déclencheur de déchargement avant d'atteindre la destination." />
-		<text name="ad_helpText_03_03"							text="Le chauffeur s’arrêtera à la destination, qu’elle soit vide ou non. Si vous remarquez que votre point de destination n’est pas assez éloigné, vous pouvez facilement supprimer le nom de destination et le créer au point suivant sans avoir à supprimer le point lui-même (voir Boutons HUD)." />
-		
-		<text name="ad_helpTitle_04"							text="AD mode - Ramassage et livraison" />
-		<text name="ad_helpText_04_01"							text="Dans ce mode, vous pouvez sélectionner des destinations. Une pour le chargement (Ramassage), et la seconde pour le point de déchargement (livraison)." />
-		<text name="ad_helpText_04_02"							text="Si AutoDrive est activé, il examinera le niveau de remplissage actuel des remorques/outils connectés. Si cette valeur est supérieure au niveau défini ‘Appel anticipé pour décharger’ (voir les paramètres), le chauffeur se dirigera directement vers la destination de déchargement." />
-		<text name="ad_helpText_04_03"							text="Sinon, il se dirigera d'abord vers la destination du chargement. En fonction du paramètre sélectionné (‘Quand le silo est vide’), le chauffeur attendra que le niveau de chargement soit déchargé au-delà du niveau ‘Appel anticipé pour décharger’ ou continuera jusqu’à la destination de déchargement." />
-		<text name="ad_helpText_04_04"							text="Dans les deux cas, le chauffeur essaiera d’abord de charger le type de remplissage sélectionné sur n’importe quel déclencheur disponible dans la plage fournie ‘Zone maxi du silo’ (voir les paramètres) avant la destination du chargement." />
-		<text name="ad_helpText_04_05"							text="De plus, vous pouvez sélectionner un compteur de répétition avant de démarrer le chauffeur. Si vous définissez ce compteur sur 2, le chauffeur s’arrêtera 2 fois après avoir atteint la destination de déchargement. Si ce paramètre (voir HUD) est laissé par défaut, le chauffeur commencera toujours un nouveau cycle." />
-		
-		<text name="ad_helpTitle_05"							text="AD mode - Mode de chargement" />
-		<text name="ad_helpText_05_01"							text="Ce mode est très similaire au mode 'Ramassage et livraison' décrit précédemment, à une exception près. Il ne respectera pas le 'compteur de répétition'." />
-		<text name="ad_helpText_05_02"							text="Il existe uniquement une destination de chargement et une destination cible à laquelle le chauffeur s’arrête et désactive AutoDrive." />
-		<text name="ad_helpText_05_03"							text="Ce mode est destiné à être utilisé comme mode de remplissage pour les travaux sur le terrain. De cette façon, les semoirs ou les pulvérisateurs peuvent être démarrés sur le terrain et envoyés à un point de remplissage. Ils retournent ensuite à la destination définie sur le terrain." />
-		<text name="ad_helpText_05_04"							text="Ce mode peut également être utilisé conjointement avec le mod 'Courseplay'. Vous devrez sélectionner ‘Utiliser AutoDrive pour recharger/décharger’ dans le HUD de Courseplay (qui ne fait pas partie de cette documentation)." />
-		
-		<text name="ad_helpTitle_06"							text="AD mode - Déchargement de la moissonneuse" />
-		<text name="ad_helpText_06_01"							text="Dans ce mode, vous pouvez à nouveau définir deux destinations. La première devrait être un emplacement d'un champ à partir duquel une moissonneuse active peut être atteinte. La seconde est à nouveau une destination de déchargement." />
-		<text name="ad_helpText_06_02"							text="Il s'agit du premier mode dans lequel les chauffeurs AutoDrive sont capables de quitter les parcours réels enregistrés et à conduire sur des points virtualisés aux champs. Ce mode est assez compliqué et implique de nombreux paramètres à partir du menu des paramètres." />
-		<text name="ad_helpText_06_03"							text="Donc, cette documentation décrira d'abord le comportement de base, puis ajoutera comment les paramètres affectent le comportement." />
-		
-		<text name="ad_helpTitle_07"							text="AD mode - Déchargement de la moissonneuse - Basique - 1" />
-		<text name="ad_helpText_07_01"							text="Le chauffeur décidera au démarrage de se rendre sur le champ ou de décharger d’abord (voir Ramassage et livraison). S'il atteint l'emplacement sur le champ, il est enregistré en tant que chauffeur disponible. Si une moissonneuse a un niveau de remplissage de 100% et le tuyau de déchargement ouvert, elle appellera automatiquement les chauffeurs enregistrés et choisira celui qui est le plus proche d'elle. En fonction du paramètre 'Trouver un chauffeur', tous les chauffeurs dans une zone de 300 mètres sont acceptés (oui) ou seuls les chauffeurs ayant les mêmes destinations attribués que sur le Hud de la moissonneuse (non)." />
-		<text name="ad_helpText_07_02"							text="" />
-		<text name="ad_helpText_07_03"							text="Important: Il n'est pas nécessaire d'activer AutoDrive sur la moissonneuse. Seule la cible sélectionnée est requise." />
-		<text name="ad_helpText_07_04"							text="" />
-		<text name="ad_helpText_07_05"							text="Le joueur peut également appeler le chauffeur manuellement soit en attribuant le raccourci clavier 'Appeler un chauffeur' dans les options de jeu et aussi en l’utilisant assis dans la moissonneuse. Si la moissonneuse est contrôlée par Courseplay, AutoDrive appellera également un chauffeur s'il détecte que le chauffeur de Courseplay veut être déchargé." />
-		
-		<text name="ad_helpTitle_08"							text="AD mode - Déchargement de la moissonneuse - Basique - 2" />
-		<text name="ad_helpText_08_01"							text="Si un chauffeur est appelé à une moissonneuse, il commencera à planifier un itinéraire vers le tuyau de déchargement ouvert de la moissonneuse. La virtualisation d'itinéraire est une implémentation totalement unique et une explication peut être incluse en annexe de cette documentation ultérieurement. Les concepts de base sont une division du monde simulé en cellules de grille. Ces cellules de grille sont dimensionnées en fonction du rayon de braquage des véhicules et sont vérifiées sans cultures (voir réglages), sans collision, sur le terrain (voir réglages) et ont une pente maximale acceptable pour les chauffeurs en IA. Une fois qu'un itinéraire libre a été trouvé, un lissage est également appliqué pour éliminer les virages les plus serrés, puis le chauffeur est envoyé le long de cet itinéraire virtuel vers la moissonneuse." />
-		<text name="ad_helpText_08_02"							text="" />
-		<text name="ad_helpText_08_03"							text="Note: Dès que le chauffeur de déchargement reçoit la commande à conduire à la moissonneuse, le message d’état dans la barre d’informations du HUD passe de ‘Attente de moissonneuse’ à ‘Conduire à la moissonneuse’. Ce qui signifie que le planificateur d'itinéraire recherche maintenant activement un chemin. En fonction des performances de votre CPU et de vos réglages (‘Temps de recherche (max)’), cette procédure peut prendre un certain temps et, dans des cas extrêmes, réduire vos fps. C'est généralement le cas si le chauffeur ne parvient pas à trouver un itinéraire acceptable pour rejoindre la moissonneuse-batteuse. Assurez-vous toujours que l’espace devant le chauffeur est exempt d’obstacles (et de cultures) et que l'itinéraire menant à la moissonneuse est également exempt de collision (Par exemple, qu'aucune culture ne se trouve juste derrière la moissonneuse)." />
-		<text name="ad_helpText_08_04"							text="" />
-		<text name="ad_helpText_08_05"							text="Lorsqu'il atteindra la moissonneuse, il vérifiera si le processus de déchargement est terminé ou si la remorque actuelle est remplie. Dans le cas de plusieurs remorques, le chauffeur avance jusqu'à ce qu'un processus de remplissage de la prochaine remorque soit détecté. Après le déchargement, le chauffeur commencera à rouler en arrière sur quelques mètres afin de laisser à la moissonneuse suffisamment d’espace pour continuer son travail. Ensuite, le chauffeur attendra quelques secondes que la moissonneuse nettoie la zone et commence la planification d'itinéraire jusqu'au point de départ. Une fois le point de départ atteint, il s’enregistrera de nouveau en tant que chauffeur disponible et attendra d’être rappelé. Si la remorque est déjà pleine à ce stade, elle se dirigera directement vers la destination de déchargement avant de revenir à l'emplacement sur le terrain." />
-		
-		<text name="ad_helpTitle_09"							text="AD mode - Déchargement de la moissonneuse - Garer au champ" />
-		<text name="ad_helpText_09_01"							text="Si cette option est définie sur ‘oui’ dans les paramètres AutoDrive, le chauffeur vérifie si la cellule cible (position du tuyau) à détecter une culture (l'évitement des cultures doit être défini sur ‘oui’). Si aucune culture n’est détectée et que le chauffeur n’a pas encore atteint le niveau de ‘déchargement au remplissage’, il restera à l’emplacement actuel au champ." />
-		
-		<text name="ad_helpTitle_10"							text="AD mode - Déchargement de la moissonneuse - Recherche de parcours limité" />
-		<text name="ad_helpText_10_01"							text="Si cette option est définie sur ‘oui’, l'algorithme de recherche d'itinéraire n'acceptera que les cellules de la grille se trouvant sur le champ. Ce paramètre ne prend effet que si le véhicule est déjà sur le terrain (démarré sur le terrain ou garé sur le terrain). Cette option devrait aider à garder le chauffeur au champ, en particulier lors des manœuvres en virage." />
-		<text name="ad_helpText_10_02"							text="" />
-		<text name="ad_helpText_10_03"							text="Important: Si aucun itinéraire sans culture ne peut être calculé dans le temps imparti (voir les paramètres), le planificateur d'itinéraire passera en mode de secours qui ignore les bordures des cultures et des champs!" />
-		
-		<text name="ad_helpTitle_11"							text="AD mode - Déchargement de la moissonneuse - Éviter les cultures" />
-		<text name="ad_helpText_11_01"							text="Cette option permet de s’assurer que le planificateur d'itinéraire n’acceptera que les cellules de la grille qui ne contiennent aucune culture ou n’ont que peu de cultures. Important: si aucun itinéraire sans culture ne peut être calculé dans le temps imparti (voir les paramètres), le planificateur d'itinéraire passera en mode de secours qui ignore les bordures des cultures et des champs!" />
-		
-		<text name="ad_helpTitle_12"							text="AD mode - Déchargement de la moissonneuse - Suivre la moissonneuse" />
-		<text name="ad_helpText_12_01"							text="Appel anticipé pour charger/Suivre la moissonneuse" />
-		<text name="ad_helpText_12_02"							text="" />
-		<text name="ad_helpText_12_03"							text="Chacune de ces options peut être utilisée pour suivre simplement la moissonneuse avec une certaine distance (Appel anticipé pour charger ON/Suivre la moissonneuse OFF). Ou pour avoir un chauffeur actif qui décharge la moissonneuse pendant qu'elle continue toujours son travail. Lorsque la moissonneuse atteint le niveau de déchargement défini (Appel anticipé pour décharger), elle aura déjà appelé le chauffeur à son emplacement actuel. Une fois que le chauffeur a atteint ce point, il réévaluera. S'il est proche de la moissonneuse (moins de 60 mètres) et que le paramètre ‘Suivre la moissonneuse’ est sur ON, il va commencer à la suivre en ligne de mire. Sinon, il relancera un processus de recherche de chemin vers le nouveau lieu de récolte. Tout en poursuivant, il sentira si le tuyau est actuellement dans la culture ou non. Si ce dernier n'est pas dans la culture, il commencera à cibler l'emplacement du tuyau, sinon il suivra la moissonneuse avec une certaine distance. Lorsque le chauffeur atteint son niveau ‘Décharger le contenu’, il commence immédiatement à planifier un chemin vers la sortie de champ sélectionnée (voir les paramètres). Il est donc judicieux de régler le niveau à 100% dans ce mode. De cette façon, il n’essaiera pas accidentellement de passer devant la moissonneuse ou de partir avant d’être complètement rempli." />
-		<text name="ad_helpTitle_13"							text="AD mode - Vider silo (bunker)" />
-		<text name="ad_helpText_13_01"							text="Ce mode ne peut être utilisé qu'avec des véhicules équipés d'une pelle. L'idée de base est une solution en un clic pour vider les silos bunker à accès direct. Au démarrage, le véhicule vérifiera les conditions requises. Il faut un silo bunkers rempli à proximité (~ 100 m?) et une pelle attachée. Si les deux conditions sont remplies, le véhicule initialisera l’axe de son chargeur frontal pour obtenir les valeurs correctes pour les mouvements de montée/descente, de chargement/déchargement et d’extension/rétraction. Ensuite, il divisera la largeur du silo bunker en morceaux aussi larges que son addition pelle + pelle (voir les réglages) et commencera à la première ligne. Si la première ou la dernière ligne finit par heurter le mur du silo, vous devez augmenter la valeur de l'ajout de pelle dans les paramètres et redémarrer le chauffeur. Cela peut se produire si la largeur de ramassage de la pelle n’est pas adaptée aux dimensions physiques ou si la définition du silo se trouve à l’intérieur de mur, ce qui n’est pas inhabituel dans la mesure où il est plus facile de développer un beau silo. Une fois que la pelle est remplie et que le véhicule est sorti du bunker, il recherche un véhicule avec une remorque attachée (avec de l'espace disponible) et commence à s'y rendre." />
-		<text name="ad_helpText_13_02"							text="" />
-		<text name="ad_helpText_13_03"							text="Attention: aucune détection de collision n'est actuellement incluse dans ce mode!" />
-		<text name="ad_helpText_13_04"							text="" />
-		<text name="ad_helpText_13_05"							text="Étant donné que le véhicule essaie de trouver automatiquement la position de chargement idéale pour la pelle, il se peut qu’il soulève ses roues avant. Une détection est incluse pour ce scénario, qui vérifie si toutes les roues sont au sol et commence à soulever la pelle si cette vérification est fausse pendant quelques centaines de millisecondes." />
-
-		
 		<text name="AD_task_pathfinding"						text="Planifier le parcours" />
 		<text name="AD_task_catch_up_with_combine"				text="Rattraper le temps perdu avec la moissonneuse-batteuse" />
 		<text name="AD_task_clearcrop"							text="Culture de défrichement" />
@@ -397,46 +326,6 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
 
-		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
-		<text name="ad_next_tip" 								text="Next" />
-		<text name="ad_totd_01_title" 							text="Multiple functions" />
-		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
-		
-		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
-		<text name="ad_totd_02_title" 							text="Different types of roads" />
-		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
-
-		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
-		
-		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
-		
-		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
-		
-		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
-		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
-		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
-		
-		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
-		
-		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
-		<text name="ad_totd_04_title" 							text="Settings - 1" />
-		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
-
-		1. General settings - Applied for all vehicles.
-
-		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
-
-		3. Vehicle settings - Applied only for the current vehicle.
-
-		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
-
-		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
-		
-		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
-		
 		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>

@@ -141,7 +141,7 @@ function AutoDrive.outputTelemetry()
 
 	table.insert(outputTable, "lastReadChangeId:" .. AutoDrive.lastReadChangeID)
 	table.insert(outputTable, "MapName:" .. AutoDrive.loadedMap)
-	table.insert(outputTable, "HudShow:" .. AutoDrive.boolToString(AutoDrive.Hud.showHud))
+	table.insert(outputTable, "HudShow:" .. tostring(AutoDrive.Hud.showHud))
 
 	local vehiclesTable = {}
 	for vehicleID, vehicle in pairs(g_currentMission.vehicles) do
@@ -165,7 +165,7 @@ end
 
 function AutoDrive.CreateOutputForVehicle(vehicle, vehicleID, vehiclesTable)
 	local vehicleTable = {}
-	table.insert(vehicleTable, "adActive+" .. AutoDrive.boolToString(vehicle.ad.stateModule:isActive()))
+	table.insert(vehicleTable, "adActive+" .. tostring(vehicle.ad.stateModule:isActive()))
 	table.insert(vehicleTable, "firstMarker+" .. vehicle.ad.stateModule:getFirstMarkerId())
 	table.insert(vehicleTable, "secondMarker+" .. vehicle.ad.stateModule:getSecondMarkerId())
 	table.insert(vehicleTable, "mode+" .. vehicle.ad.stateModule:getMode())

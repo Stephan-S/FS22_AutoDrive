@@ -1,16 +1,15 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.2"
+AutoDrive.version = "2.0.0.3"
 
 AutoDrive.directory = g_currentModDirectory
 
 g_autoDriveUIFilename = AutoDrive.directory .. "textures/GUI_Icons.dds"
 g_autoDriveDebugUIFilename = AutoDrive.directory .. "textures/gui_debug_Icons.dds"
-g_autoDriveDebugUIFilename_BC7 = AutoDrive.directory .. "textures/gui_debug_Icons_BC7.dds"
 g_autoDriveIconFilename = g_iconsUIFilename
 
 AutoDrive.experimentalFeatures = {}
 AutoDrive.experimentalFeatures.redLinePosition = false
-AutoDrive.experimentalFeatures.telemetryOutput = false
+-- AutoDrive.experimentalFeatures.telemetryOutput = false
 AutoDrive.experimentalFeatures.enableRoutesManagerOnDediServer = false
 AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
@@ -235,8 +234,6 @@ function AutoDrive:loadMap(name)
 
 	LoadTrigger.onActivateObject = Utils.overwrittenFunction(LoadTrigger.onActivateObject, AutoDrive.onActivateObject)
 
-	--AIDriveStrategyCombine.getDriveData = Utils.overwrittenFunction(AIDriveStrategyCombine.getDriveData, AutoDrive.getDriveData)
-
 	LoadTrigger.getIsActivatable = Utils.overwrittenFunction(LoadTrigger.getIsActivatable, AutoDrive.getIsActivatable)
 
 	LoadTrigger.onFillTypeSelection = Utils.appendedFunction(LoadTrigger.onFillTypeSelection, AutoDrive.onFillTypeSelection)
@@ -244,24 +241,14 @@ function AutoDrive:loadMap(name)
 	VehicleCamera.zoomSmoothly = Utils.overwrittenFunction(VehicleCamera.zoomSmoothly, AutoDrive.zoomSmoothly)
 
 	LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
-    --LoadTrigger.load = Utils.appendedFunction(LoadTrigger.load, ADTriggerManager.loadTriggerLoad)
 
 	LoadTrigger.delete = Utils.overwrittenFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
-    -- LoadTrigger.delete = Utils.prependedFunction(LoadTrigger.delete, ADTriggerManager.loadTriggerDelete)
 
 	Placeable.onBuy = Utils.appendedFunction(Placeable.onBuy, ADTriggerManager.onPlaceableBuy)
 
 	MapHotspot.getIsVisible = Utils.overwrittenFunction(MapHotspot.getIsVisible, AutoDrive.MapHotspot_getIsVisible)
 
 	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
-
-	--FarmStats.saveToXMLFile = Utils.appendedFunction(FarmStats.saveToXMLFile, AutoDrive.FarmStats_saveToXMLFile)
-	--index = index + 1
-	--Logging.info("[AD] Index: %d",index)
-
-	--FarmStats.loadFromXMLFile = Utils.appendedFunction(FarmStats.loadFromXMLFile, AutoDrive.FarmStats_loadFromXMLFile)
-	--index = index + 1
-	--Logging.info("[AD] Index: %d",index)
 
 	FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
 
@@ -294,6 +281,7 @@ end
 function AutoDrive:onAIFrameOpen()
 	AutoDrive.aiFrameOpen = true
 	AutoDrive.aiFrame = self
+	AutoDrive.aiFrameVehicle = g_currentMission.controlledVehicle
 end
 
 function AutoDrive:onAIFrameClose()
@@ -303,11 +291,15 @@ function AutoDrive:onAIFrameClose()
 end
 
 function AutoDrive:refreshContextInputAIFrame()
-	if AutoDrive.aiFrameOpen then		
+	if AutoDrive.aiFrameOpen then
 		local hotspot = self.currentHotspot
 		if hotspot ~= nil then
 			local vehicle = InGameMenuMapUtil.getHotspotVehicle(hotspot)
-			AutoDrive.aiFrameVehicle = vehicle
+			local allowed = g_currentMission.accessHandler:canPlayerAccess(vehicle, g_currentMission.player)
+			if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and allowed then
+                AutoDrive.aiFrameVehicle = vehicle
+                AutoDrive.Hud.lastUIScale = 0
+            end
 		end
 	end
 end
@@ -317,15 +309,13 @@ function AutoDrive:drawBaseMission()
 		AutoDrive:drawRouteOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
 			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
-		elseif g_currentMission.controlledVehicle ~= nil then
-			AutoDrive.Hud:drawHud(g_currentMission.controlledVehicle)
 		end
 	end
 end
 
 function AutoDrive:PlaceableHotspotGetCategory()
 	if self.isADMarker then
-		return MapHotspot.CATEGORY_PLAYER
+		return MapHotspot.CATEGORY_STEERABLE--MapHotspot.CATEGORY_PLAYER
 	end
 	return PlaceableHotspot.CATEGORY_MAPPING[self.placeableType]
 end
@@ -333,8 +323,9 @@ end
 function AutoDrive:InGameMenuAIFrameSetMapSelectionItem(superFunc, hotspot)
 	if hotspot ~= nil and hotspot.isADMarker and AutoDrive.aiFrameOpen then
 		if AutoDrive.getSetting("showMarkersOnMap") and AutoDrive.getSetting("switchToMarkersOnMap") then
-			if AutoDrive.aiFrameVehicle ~= nil and AutoDrive.aiFrameVehicle.ad ~= nil then
-				AutoDriveHudInputEventEvent:sendFirstMarkerEvent(AutoDrive.aiFrameVehicle, hotspot.markerID)
+            local vehicle = AutoDrive.getADFocusVehicle()
+			if vehicle ~= nil then
+				AutoDriveHudInputEventEvent:sendFirstMarkerEvent(vehicle, hotspot.markerID)
 				return
 			end
 		end
@@ -353,12 +344,7 @@ function AutoDrive.drawRouteOnMap()
 	if AutoDrive.aiFrame == nil then
 		return
 	end
-	
-	local vehicle = g_currentMission.controlledVehicle
-	if AutoDrive.aiFrameVehicle ~= nil then
-		vehicle = AutoDrive.aiFrameVehicle
-	end
-
+	local vehicle = AutoDrive.getADFocusVehicle()
 	if vehicle == nil then
 		return
 	end
@@ -410,7 +396,6 @@ function AutoDrive.getScreenPosFromWorldPos(worldX, worldZ)
 	
 	return x, y
 end
-
 
 function AutoDrive:init()
 
@@ -516,7 +501,7 @@ function AutoDrive:keyEvent(unicode, sym, modifier, isDown)
 end
 
 function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
-	local vehicle = g_currentMission.controlledVehicle
+    local vehicle = AutoDrive.getADFocusVehicle()
 	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
 	
 	if not mouseActiveForAutoDrive then
@@ -535,12 +520,8 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 
 	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
-		if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then		
-			if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle then
-				AutoDrive.Hud:mouseEvent(AutoDrive.aiFrameVehicle, posX, posY, isDown, isUp, button)
-			else
-				AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
-			end
+        if vehicle ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then
+            AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 		end
 
 		ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
@@ -621,7 +602,7 @@ function AutoDrive:update(dt)
 	ADTriggerManager:update(dt)
 	ADRoutesManager:update(dt)
 
-	AutoDrive.handleTelemetry(dt)	
+	-- AutoDrive.handleTelemetry(dt)	
 end
 
 function AutoDrive:draw()

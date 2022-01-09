@@ -100,6 +100,9 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
 
     local fillType = xmlFile:getValue(key .. "#fillType")
     if fillType ~= nil then
+        if g_fillTypeManager:getFillTypeByIndex(fillType) == nil then
+            fillType = 1 -- use fillType 1 UNKNOWN as default 
+        end
         self.fillType = fillType
     end
 
@@ -763,27 +766,53 @@ function ADStateModule:getFillType()
 end
 
 function ADStateModule:setFillType(fillType)
+    if g_fillTypeManager:getFillTypeByIndex(fillType) == nil then
+        fillType = 1 -- fillType 1 is UNKNOWN
+    end
     self.fillType = fillType
     self:raiseDirtyFlag()
 end
 
 function ADStateModule:nextFillType()
-    self.fillType = self.fillType + 1
-    if g_fillTypeManager:getFillTypeByIndex(self.fillType) == nil then
-        self.fillType = 2
+    local supportedFillTypes = AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(self.vehicle)
+    if supportedFillTypes and #supportedFillTypes > 0 then
+        for index, fillType in ipairs(supportedFillTypes) do
+            if self.fillType == fillType then
+                if supportedFillTypes[index + 1] ~= nil and g_fillTypeManager:getFillTypeByIndex(supportedFillTypes[index + 1]) ~= nil then
+                    -- found valid next supported fillType
+                    self.fillType = supportedFillTypes[index + 1]
+                else
+                    if supportedFillTypes[1] ~= nil and g_fillTypeManager:getFillTypeByIndex(supportedFillTypes[1]) ~= nil then
+                        -- select the first supported fillType
+                        self.fillType = supportedFillTypes[1]
+                    end
+                end
+                break
+            end
+        end
+        self:raiseDirtyFlag()
     end
-    self:raiseDirtyFlag()
 end
 
 function ADStateModule:previousFillType()
-    self.fillType = self.fillType - 1
-    if self.fillType <= 1 then
-        while g_fillTypeManager:getFillTypeByIndex(self.fillType) ~= nil do
-            self.fillType = self.fillType + 1
+    local supportedFillTypes = AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(self.vehicle)
+    if supportedFillTypes and #supportedFillTypes > 0 then
+        for index, fillType in ipairs(supportedFillTypes) do
+            if self.fillType == fillType then
+                if index > 1 and supportedFillTypes[index - 1] ~= nil and g_fillTypeManager:getFillTypeByIndex(supportedFillTypes[index - 1]) ~= nil then
+                    -- found valid previous supported fillType
+                    self.fillType = supportedFillTypes[index - 1]
+                else
+                    if supportedFillTypes[#supportedFillTypes] ~= nil and g_fillTypeManager:getFillTypeByIndex(supportedFillTypes[#supportedFillTypes]) ~= nil then
+                        -- select the last supported fillType
+                        self.fillType = supportedFillTypes[#supportedFillTypes]
+                    end
+                end
+                break
+            end
         end
-        self.fillType = self.fillType - 1
+        self:raiseDirtyFlag()
     end
-    self:raiseDirtyFlag()
 end
 
 function ADStateModule:getSpeedLimit()

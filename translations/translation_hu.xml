@@ -53,7 +53,6 @@
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
 		<text name="input_AD_devAction"                         			text="AD: Developer Action" />
-		<text name="input_AD_open_tipOfTheDay" 					text="AD: Open Tip of the day" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="hud_avoidFruit"								text="AD: Termény kikerülése" />
@@ -284,62 +283,6 @@
 		<text name="button_delete_all" 							text="Összes törlése" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
 
-		<text name="ad_helpCategory_1"							text="AutoDrive" />
-		<text name="ad_helpTitle_01"							text="AD - Bevezetés" />
-		<text name="ad_helpText_01_01"							text="Az AutoDrive egy olyan vezetéssegítő program, amely lehetővé teszi a járművek számára, hogy önállóan mozogjanak a Farming Simulator világában." />
-		<text name="ad_helpText_01_02"							text="Az útvonalak a rögzített pontok és meghatározott úti célok összekapcsolt hálózata. Néhány térképhez biztosított az útvonal térkép.A legtöbb térképen mindent magának kell rögzítenie, vagy importálnia kell egy hálózatot egy másik felhasználótól (lásd alább az import / export)." />
-		<text name="ad_helpText_01_03"							text="Feltéve, hogy minden úticél megfelelően csatlakozik a hálózathoz, az AutoDrive navigál, hasonlóan az autóban használt tipikus navigációs rendszerhez, kiszámítva a célhoz vezető legrövidebb utat. Ezért fontos, hogy minden pont csatlakozzon a hálózathoz. Ha az AutoDrive szétkapcsolódott pontot észlel, akkor azt ´X´ jellel jelölik, és a felhasználónak el kell távolítania vagy csatlakoztatnia." />
-		<text name="ad_helpTitle_02"							text="AD modes - Csak vezetés" />
-		<text name="ad_helpText_02_01"							text="Ebben az üzemmódban az aktuális jármű a legmegfelelőbb pontot veszi (aktuális iránya és távolsága szerint), vagy egyszerűen a legközelebbi pontot, majd a legrövidebb utat használja onnan a célig, és ott megáll. Ez a legegyszerűbb mód, és a legalkalmasabb az új útvonalak tesztelésére." />
-		<text name="ad_helpTitle_03"							text="AD mód - Szállítás" />
-		<text name="ad_helpText_03_01"							text="Ebben az üzemmódban az AutoDrive ugyanúgy vezeti a járművet, mint a ´Csak vezetés´ módban, de emellett az aktuális pótkocsit is kirakja a rendeltetési helyen, ha a kirakodási lehetőséget észleli." />
-		<text name="ad_helpText_03_02"							text="A rendeltetési pontot (célt) a kirakodási küszöb mögött kell létrehozni, hogy a hosszú pótkocsival rendelkező járművek a cél elérése előtt elérjék a kirakodási pontot. " />
-		<text name="ad_helpText_03_03"							text="A sofőr megáll a célállomáson, függetlenül attól, hogy üres vagy sem. Ha észreveszi, hogy a célpont túl közel vagy messze van, könnyen eltávolíthatja a célállomást, és létrehozhatja a következő pontban anélkül, hogy el kellene távolítania a pontot. (Lásd HUD-gombok)." />
-		<text name="ad_helpTitle_04"							text="AD mód - Átvétel és Szállítás" />
-		<text name="ad_helpText_04_01"							text="Ebben a módban kiválaszthatja a célállomásokat. Az első pont az átvétel, a második a kirakodási pont." />
-		<text name="ad_helpText_04_02"							text="Ha az AutoDrive be van kapcsolva, akkor a csatlakoztatott pótkocsik / munkagépek aktuális töltöttségi szintjét nézi. Ha ez az érték magasabb, mint a beállított ´Kirakodás´ szint (lásd a beállításokat), a járművezető közvetlenül a kirakodási cél felé indul." />
-		<text name="ad_helpText_04_03"							text="Ellenkező esetben először a rakomány célpontja felé veszi az irányt. A kiválasztott beállítástól függően (´Üres silón´) a sofőr vagy a rakomány rendeltetési helyén várakozik a kitöltésre a ´Kirakodás itt´ mellett, vagy folytatja a kirakodást." />
-		<text name="ad_helpText_04_04"							text="Akárhogy is, az útvonaltervező először megpróbálja betölteni a kiválasztott kitöltési típust a rendelkezésre álló triggerek bármelyikére a megadott tartományban (lásd a beállításokat) a kivűlasztott cél előtt." />
-		<text name="ad_helpText_04_05"							text="Ezen kívül kiválaszthat egy ismétlésszámlálót az útvonal elindítása előtt. Ha ezt a számlálót 2-re állítja, a szállító leáll, miután kétszer elérte a kirakodási pontot. Ha ez a beállítás (lásd: HUD) alapértelmezett, akkor a szállító mindig elkezdi a következő ciklust." />
-		<text name="ad_helpTitle_05"							text="AD mód - Töltő mód" />
-		<text name="ad_helpText_05_01"							text="Ez a mód nagyon hasonlít a korábban leírt ´Átvétel és szállítás´ módhoz, csak néhány kisebb kivétellel. Nem veszi figyelembe az ´Ismétlésszámlálót´." />
-		<text name="ad_helpText_05_02"							text="Csak egy töltési és egy cél létezik, ahol a szállító leáll és letiltja az AutoDrive-t." />
-		<text name="ad_helpText_05_03"							text="Ezt az üzemmódot újratöltési módként lehet használni a művelési munkákhoz. Így a vetőgépeket vagy permetezőgépeket el lehet indítani a szántóföldi helyre, el lehet küldeni utántöltő helyre, és utána visszatérnek a beállított szántóföldhöz." />
-		<text name="ad_helpText_05_04"							text="Ez a mód a Courseplay-vel együtt is használható. A Courseplay HUD-ben ki kell választania az ´AutoDrive használata újratöltéshez / kirakodáshoz´ lehetőséget (nem része ennek a leírásnak)." />
-		<text name="ad_helpTitle_06"							text="AD mód - Kombájn kirakodás" />
-		<text name="ad_helpText_06_01"							text="Ebben a módban ismét két cél állítható be. Az elsőnek az ahol az aktív kombájn elérhető. A második a kirakodási pont." />
-		<text name="ad_helpText_06_02"							text="Ez olyan mód, amelyben a vezetők elhagyhatják a rögzített utat és a terepen vezethetnek. Ez a mód meglehetősen bonyolult és sok beállítást tartalmaz, mely a ´Beállítások´ menüben érhető el." />
-		<text name="ad_helpText_06_03"							text="Ez a dokumentáció elsősorban az alapokat tartalmazza, és megadja, hogy a beállítások hogyan befolyásolják az egyes módok működését." />
-		<text name="ad_helpTitle_07"							text="AD mód - Kombájn kirakodás - Alapok - 1" />
-		<text name="ad_helpText_07_01"							text="A vezetősegéd az indításkor eldönti, hogy a földre indul, vagy először kirak (lásd: ´Átvétel és szállítás´). Ha eléri a kiválasztott helyet (földet), jelentkezik elérhető szállítóként. Ha a kombájn 100% -os töltöttségi szintnél van, és ki van engedve a cső, akkor kiválasztja a hozzá legközelebb esőt szállítót. A ´Keresse meg a szállítót´ beállítástól függően vagy 300 méteres távolságon belül az összes járművezető elfogadható (igen), vagy csak a beállított járművezetőket fogadja el az AutoDrive Hud-ban (nem)." />
-		<text name="ad_helpText_07_02"							text="" />
-		<text name="ad_helpText_07_03"							text="Fontos: Betakarító gépnél nem kell aktiválnia az AutoDrive-t,csak a kiválasztott célra van szükség." />
-		<text name="ad_helpText_07_04"							text="" />
-		<text name="ad_helpText_07_05"							text="Alternatív megoldásként a játékos manuálisan is hívhatja a szállítót úgy, hogy a játékbeállításokhoz hozzárendeli a ´Szállító hívása´  vezérlő (Billenytyűzet, Gamepad) adott gombjához, és ezt használja a betakarítóban ülve. Ha a betakarítót a Courseplay vezérli, az AutoDrive egy kirakodót is hív, ha észleli, hogy a Courseplay akarja üríteni." />
-		<text name="ad_helpTitle_08"							text="AD mód - Kombájn kirakodás - Alapok - 2" />
-		<text name="ad_helpText_08_01"							text="Ha egy szállítót a betakarítóhoz hívnak, megkezdi az utat a betakarító csövéhez. Az útvonaltervező egy teljesen egyedi megoldás. Alapvetően a szimulált világ rácscellákra vannak osztva. Ezek a rácscellák a jármű fordulási sugarának megfelelően vannak méretezve, és ellenőrzik, hogy terménymentesek (lásd a beállításokat), ütközésmentesek, a pályán vannak (lásd a beállításokat) és megfelelő lejtéssel rendelkeznek az AI vezetők számára. Miután megtalálták a szabad utat, ha szükséges simítják az éles kanyarokat, majd a szállító ezen az úton megy a betakarítóhoz." />
-		<text name="ad_helpText_08_02"							text="" />
-		<text name="ad_helpText_08_03"							text="Megjegyzés: Amint a szállító megkapja a betakarítóhoz hajtás parancsát, az állapotüzenet a HUD információs sávjában a ´Várakozás a kombájnra´ -ról a ´Vezetés a kombájnhoz´ -ra változik. Ami azt jelenti, hogy az útvonaltervező aktívan keresi az utat. A CPU teljesítményétől és a beállításaitól (‘Ütvonalkeresés ideje (max)’) függően ez a folyamat eltarthat egy ideig, és szélsőséges esetekben lefogja az fps-t. Ez általában akkor fordul elő, ha a szállító nem képes elfogadható utat találni a kombájnhoz. Mindig győződjön meg arról, hogy a vezető előtti tér akadályoktól mentes (és terménymentes), és hogy a betakarító csövéhez vezető út szintén ütközésmentes (pl. A termény nincs közvetlenül a betakarító mögött." />
-		<text name="ad_helpText_08_04"							text="" />
-		<text name="ad_helpText_08_05"							text="Amikor eléri a betakarítót, ellenőrzi, hogy a kirakodás befejeződött-e, vagy hogy a jelenlegi pótkocsi megtelt-e. Több pótkocsi esetén a sofőr előre halad, amíg a következő pótkocsi töltés lehetőségét észleli. A kirakodás után a sofőr néhány métert hátrafelé halad, hogy elegendő helyet biztosítson a kombájnnak a munka folytatásához. Ezután a sofőr néhány másodpercet vár, amíg a kombájn előre halad, és megkezdi az útvonal tervezését a kiindulópontig. A kiindulási pont elérésekor ismét elérhető szállítóként jelentkezik,és várja  hogy újra felhívják. Ha a pótkocsi abban a pillanatban már tele van, akkor közvetlenül a kirakodási célhoz megy, mielőtt visszatérne a szántóföldre." />
-		<text name="ad_helpTitle_09"							text="AD mód - Kombájn kirakodás - Parkolás a földön" />
-		<text name="ad_helpText_09_01"							text="Ha ez az opció igazra van állítva az AutoDrive beállításaiban, a vezetősegéd ellenőrzi, hogy a kombájn csőve milyen helyzetben van (a termény elkerülését ´Igen´-re kell állítani). Ha kirakodást nem észlel,és a szállító még nem érte el a ´kirakodás´ töltési szintet, akkor a szántóföld jelenlegi helyén marad. " />
-		<text name="ad_helpTitle_10"							text="AD mós - Kombájn kirakodás - Mozgás csak a földön" />
-		<text name="ad_helpText_10_01"							text="Ha ez az opció igazra van állítva, akkor a vezetősegéd csak a mezőben lévő rácscellákat fogadja el. Ez a beállítás csak akkor lép életbe, ha a jármű már a szántóföldön van (a szántóföldön elindult vagy a szántóföldön parkolt). Ez az opció elősegíti a vezető terepen tartását, különösen fordulási manőverek közben." />
-		<text name="ad_helpText_10_02"							text="" />
-		<text name="ad_helpText_10_03"							text="Fontos: Ha a megadott idő alatt nem lehet a terménymentes utat kiszámítani (lásd a beállításokat), akkor az útkereső figyelmen kívül hagyja a termény és a szántóföld határát!" />
-		<text name="ad_helpTitle_11"							text="AD mód - Kombájn kirakodás - Termény elkerülés" />
-		<text name="ad_helpText_11_01"							text="Ez az opció biztosítja, hogy az útkereső csak olyan rácscellákat fogadjon el, amelyek nem tartalmaznak terményt, vagy csak minimális mennyiségben (pl. betakarításkor hátrahagyott). Fontos: Ha a megadott idő alatt nem lehet kiszámítani a termény nélküli utat (lásd a beállításokat), az útkereső figyelmen kívül hagyja a termény és a mező határát!" />
-		<text name="ad_helpTitle_12"							text="AD mód - Kombájn kirakodás - Kombájn követés" />
-		<text name="ad_helpText_12_01"							text="Szálító előre hívás / Kombájn követés" />
-		<text name="ad_helpText_12_02"							text="" />
-		<text name="ad_helpText_12_03"							text="Ezeket az opciókat arra használhatja, hogy egyszerűen kövesse a betakarító gépet bizonyos távolságokban (A szállító előre hívása be- / kombájn követés kikapcsolása). Vagy a kombájnt kiüríteni betakarítás közben. Amikor az aratógép eléri a beállított kitöltési szintet (Hívás előtti szint), akkor már az aktuális helyére hívja a szállítót. Amint a vezető eléri ezt a pontot, újratervez, ha közel van a kombájnhoz (kevesebb, mint 60 méter), és be van kapcsolva a ´kombájn követése´ beállítása, látószögből kezdi követni. Ellenkező esetben újrakezdi az útkeresési folyamatot. Követés közben érzékeli, hogy a kombájn jelenleg a terményben van-e vagy sem. Ha nincs benne a terményben, akkor a cső helyét kezdi megcélozni, különben bizonyos távolsággal követi a betakarítót. Amikor a járművezető eléri az ´Ürítés´ szintet, azonnal megkezdi az útvonal tervezését a szántóföld kijárathoz (lásd a beállításokat). Ezért van értelme ebben a módban a szintet 100% -ra állítani. Így véletlenül sem próbál meg a kombájn elé menni, vagy elmegy, mielőtt teljesen betöltené." />
-		<text name="ad_helpTitle_13"							text="AD mód - Bunkersilo kirakodás" />
-		<text name="ad_helpText_13_01"							text="Ez a mód csak olyan járműveknél használható, amelyekhez lapát van rögzítve. Egy kattintással megoldható az abunker silók ürítése. Indításkor a jármű ellenőrzi a szükséges feltételeket. Szüksége van egy megtöltött bunker silóra a közelben (~ 100 m), és egy felcsatolt kanálra. Ha mindkét feltétel teljesül, a jármű indítja a rakodó vezérlését, hogy megkapja a megfelelő értékeket a fel / le, a be- és kirakodáshoz, valamint a meghosszabbításhoz / visszahúzáshoz. Ezután a bunker silószélességét olyan széles darabokra osztja, mint a lapátja (lásd a beállításokat), és az első sornál kezdi. Ha az első vagy az utolsó sor a siló falához ér, akkor növelje a lapát hozzáadás értékét a beállításokban, és indítsa újra a vezetősegédet. Ez akkor fordulhat elő, ha vagy a lapát szélessége nincs megfelelően összehangolva a fizikai méretekkel, vagy pedig a bunker siló széle  falnál fal, ami nem szokatlan, mivel megkönnyíti a jó kinézetű bunker silót. A lapát megtöltése és a jármű megfordítása után a bunkerből egy utánfutóval felszerelt járművet keres (bal töltési hellyel) és elindul oda." />
-		<text name="ad_helpText_13_02"							text="" />
-		<text name="ad_helpText_13_03"							text="Vigyázat: Ebben a módban jelenleg nincs ütközésészlelés!" />
-		<text name="ad_helpText_13_04"							text="" />
-		<text name="ad_helpText_13_05"							text="Mivel a jármű automatikusan megpróbálja megtalálni az ideális rakodási helyzetet, előfordulhat, hogy az első kerekeket emeli fel. Ehhez tartozik egy észlelés, amely ellenőrzi, hogy minden kerék a földön van-e, és megkezdi a lapát felemelését a megfelelő pontig." />
 		<text name="AD_task_pathfinding"						text="Útvonal számítása" />
 		<text name="AD_task_catch_up_with_combine"				text="Kombájn indítása" />
 		<text name="AD_task_clearcrop"							text="Aratás" />
@@ -375,46 +318,6 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
 	
-		<text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
-		<text name="ad_next_tip" 								text="Next" />
-		<text name="ad_totd_01_title" 							text="Multiple functions" />
-		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
-		
-		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
-		<text name="ad_totd_02_title" 							text="Different types of roads" />
-		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
-
-		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
-		
-		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
-		
-		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
-		
-		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
-		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
-		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
-		
-		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
-		
-		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
-		<text name="ad_totd_04_title" 							text="Settings - 1" />
-		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
-
-		1. General settings - Applied for all vehicles.
-
-		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
-
-		3. Vehicle settings - Applied only for the current vehicle.
-
-		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
-
-		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
-		
-		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
-		
 		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>

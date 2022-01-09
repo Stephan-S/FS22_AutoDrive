@@ -16,8 +16,6 @@ source(Utils.getFilename("scripts/XML.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Settings.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud.lua", g_currentModDirectory))
-source(Utils.getFilename("scripts/DijkstraLive.lua", g_currentModDirectory))
-source(Utils.getFilename("scripts/DijkstraLiveBlue.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/ExternalInterface.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/PathCalculation.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/TelemetryExport.lua", g_currentModDirectory))
@@ -101,6 +99,7 @@ source(Utils.getFilename("scripts/Tasks/FollowVehicleTask.lua", g_currentModDire
 source(Utils.getFilename("scripts/Tasks/ReverseFromBadLocationTask.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/ParkTask.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/RepairTask.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/HandleHarvesterTurnTask.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Modules/DrivePathModule.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Modules/CollisionDetectionModule.lua", g_currentModDirectory))
@@ -137,6 +136,11 @@ source(Utils.getFilename("scripts/Gui/SettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/DebugSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/ExperimentalFeaturesSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/Settings.lua", g_currentModDirectory))
+
+source(Utils.getFilename("scripts/Tasks/Turns/AbstractTurn.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/Turns/ReverseOffsetTurn.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/Turns/OffsetTurn.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Tasks/Turns/ForwardOffsetTurn.lua", g_currentModDirectory))
 
 AutoDriveRegister = {}
 AutoDriveRegister.version = g_modManager:getModByName(g_currentModName).version

@@ -59,8 +59,8 @@ function CatchCombinePipeTask:update(dt)
                 --restart
                 self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:notifyAboutFailedPathfinder()
                 --AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.WARN, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_find_path; %s", 5000, self.vehicle.ad.stateModule:getName(), self.combine.ad.stateModule:getName())
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_PATHPLANNING restarting path finder - with delay 10000")
-                self.state = CatchCombinePipeTask.STATE_FINISHED
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_PATHPLANNING restarting path finder - with delay")
+                self.state = CatchCombinePipeTask.STATE_DELAY_PATHPLANNING
                 return
             else
                 self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
@@ -73,7 +73,7 @@ function CatchCombinePipeTask:update(dt)
             self.vehicle.ad.specialDrivingModule:update(dt)
         end
     elseif self.state == CatchCombinePipeTask.STATE_DELAY_PATHPLANNING then
-        if self.waitForCheckTimer:timer(true, 4000, dt) then
+        if self.waitForCheckTimer:timer(true, 1000, dt) then
             if self:startNewPathFinding() then
                 self.vehicle.ad.pathFinderModule:addDelayTimer(6000)
                 self.state = CatchCombinePipeTask.STATE_PATHPLANNING

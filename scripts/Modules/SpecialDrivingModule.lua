@@ -287,6 +287,11 @@ function ADSpecialDrivingModule:getBasicStates()
     --print("AngleToTrailer: " .. self.angleToTrailer .. " angleToPoint: " .. self.angleToPoint)
 end
 
+function ADSpecialDrivingModule:getAngleToTrailer()
+    self:getBasicStates()
+    return self.angleToTrailer
+end
+
 function ADSpecialDrivingModule:checkWayPointReached()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "ADSpecialDrivingModule:checkWayPointReached start self.currentWayPointIndex %s ", tostring(self.currentWayPointIndex))
     local distanceToTarget = MathUtil.vector2Length(self.reverseTarget.x - self.rNx, self.reverseTarget.z - self.rNz)
@@ -320,61 +325,66 @@ function ADSpecialDrivingModule:getReverseNode()
     end
     self.vehicle.trailer = nil
 
-    for _, implement in pairs(self.vehicle:getAttachedImplements()) do
-        if implement ~= nil and implement.object ~= nil then
-            -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode count %s ", tostring(count))
+    for _, implement in pairs(AutoDrive.getAllImplements(self.vehicle, true)) do
+        -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode count %s ", tostring(count))
+        
+        if (implement ~= self.vehicle or reverseNode == nil) and 
+            implement.spec_wheels ~= nil and
+            AutoDrive.isImplementAllowedForReverseDriving(self.vehicle, implement)                    -- whitelist of implements allowed as reverse node
+        then
+            local implementX, implementY, implementZ = getWorldTranslation(implement.components[1].node)
+            local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, implementX, implementY, implementZ)
+            -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode diffZ %s ", tostring(diffZ))
+            if diffZ < 0 then
+            -- if diffZ < 0 and math.abs(diffZ) >= (self.vehicle.size.length / 2) then
             
-            if (implement.object ~= self.vehicle or reverseNode == nil) and 
-                implement.object.spec_wheels ~= nil and
-                AutoDrive.isImplementAllowedForReverseDriving(self.vehicle,implement)                    -- whitelist of implements allowed as reverse node
-            then
-                local implementX, implementY, implementZ = getWorldTranslation(implement.object.components[1].node)
-                local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, implementX, implementY, implementZ)
-                -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode diffZ %s ", tostring(diffZ))
-                if diffZ < 0 then
-                -- if diffZ < 0 and math.abs(diffZ) >= (self.vehicle.size.length / 2) then
-                
-                    local hasSynchronizedWheels = false
-                    local centerX, centerZ = 0,0
-                    local wheelCount = 0
-                    for _, wheel in pairs(implement.object.spec_wheels.wheels) do
-                        hasSynchronizedWheels = hasSynchronizedWheels or wheel.isSynchronized
-                        if wheel.isSynchronized then
-                            wheelCount = wheelCount + 1
-                            local posX, _, posZ = localToLocal(wheel.node, implement.object.components[1].node, wheel.positionX, wheel.positionY, wheel.positionZ)
-                            centerX = centerX + posX
-                            centerZ = centerZ + posZ
-                        end
+                local hasSynchronizedWheels = false
+                local centerX, centerZ = 0,0
+                local wheelCount = 0
+                for _, wheel in pairs(implement.spec_wheels.wheels) do
+                    hasSynchronizedWheels = hasSynchronizedWheels or wheel.isSynchronized
+                    if wheel.isSynchronized then
+                        wheelCount = wheelCount + 1
+                        local posX, _, posZ = localToLocal(wheel.node, implement.components[1].node, wheel.positionX, wheel.positionY, wheel.positionZ)
+                        centerX = centerX + posX
+                        centerZ = centerZ + posZ
                     end
-                    -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode hasSynchronizedWheels %s ", tostring(hasSynchronizedWheels))
-                    if hasSynchronizedWheels then
-                        if implement.object.spec_wheels.steeringCenterNode == nil then
-                            centerX = centerX / wheelCount
-                            centerZ = centerZ / wheelCount
-
-                            implement.object.spec_wheels.steeringCenterNode = createTransformGroup("steeringCenterNode")
-
-                            link(implement.object.components[1].node, implement.object.spec_wheels.steeringCenterNode)
-
-                            if centerX ~= nil and centerZ ~= nil then
-                                setTranslation(implement.object.spec_wheels.steeringCenterNode, centerX, 0, centerZ)
-                            end
-                        end  
-                        reverseNode = implement.object.spec_wheels.steeringCenterNode
-                             
-                        self.reverseSolo = false
-                        self.vehicle.trailer = implement.object                 
-                    end
-                    break
                 end
+                -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode hasSynchronizedWheels %s ", tostring(hasSynchronizedWheels))
+                if hasSynchronizedWheels then
+                    if implement.spec_wheels.steeringCenterNode == nil then
+                        centerX = centerX / wheelCount
+                        centerZ = centerZ / wheelCount
+
+                        implement.spec_wheels.steeringCenterNode = createTransformGroup("steeringCenterNode")
+
+                        link(implement.components[1].node, implement.spec_wheels.steeringCenterNode)
+
+                        if centerX ~= nil and centerZ ~= nil then
+                            setTranslation(implement.spec_wheels.steeringCenterNode, centerX, 0, centerZ)
+                        end
+                    end  
+                    reverseNode = implement.spec_wheels.steeringCenterNode
+                            
+                    self.reverseSolo = false
+                    self.vehicle.trailer = implement                 
+                end
+                break
             end
         end
         count = count + 1
     end
     if reverseNode == nil then
-        reverseNode = self.vehicle.spec_wheels.steeringCenterNode
+        -- no implement with steeringCenterNode found
+        local steeringCenterX, steeringCenterY, steeringCenterZ = getWorldTranslation(self.vehicle.spec_wheels.steeringCenterNode)
+        local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, steeringCenterX, steeringCenterY, steeringCenterZ)
+        -- use the more back node
+        if diffZ < 0 then
+            reverseNode = self.vehicle.spec_wheels.steeringCenterNode
+        else
+            reverseNode = self.vehicle.components[1].node
+        end
         self.reverseSolo = true
-        -- Logging.info("[AD] ADSpecialDrivingModule:getReverseNode end reverseNode == nil ")
     end
     return reverseNode
 end

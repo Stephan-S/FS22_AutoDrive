@@ -619,22 +619,12 @@ function UnloadBGATask:getAngleBetweenTwoRadValues(valueOne, valueTwo)
     return abs
 end
 
-function UnloadBGATask:getVehicleShovel()
-    for _, implement in pairs(self.vehicle:getAttachedImplements()) do
-        if implement.object.spec_shovel ~= nil then
+function UnloadBGATask:getVehicleShovel()    
+    for _, implement in pairs(AutoDrive.getAllImplements(self.vehicle, true)) do
+        if implement.spec_shovel ~= nil then
             self.shovelAxisOne = self.vehicle.spec_cylindered.movingTools
-            self.shovelAxisTwo = implement.object.spec_cylindered.movingTools
-            self.shovel = implement.object
-        else
-            if implement.object.getAttachedImplements ~= nil then
-                for _, implementInner in pairs(implement.object:getAttachedImplements()) do
-                    if implementInner.object.spec_shovel ~= nil then
-                        self.shovelAxisOne = self.vehicle.spec_cylindered.movingTools
-                        self.shovelAxisTwo = implement.object.spec_cylindered.movingTools
-                        self.shovel = implementInner.object
-                    end
-                end
-            end
+            self.shovelAxisTwo = implement.spec_cylindered.movingTools
+            self.shovel = implement
         end
     end
 

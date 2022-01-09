@@ -87,7 +87,7 @@ function CombineUnloaderMode:monitorTasks(dt)
 end
 
 function CombineUnloaderMode:notifyAboutFailedPathfinder()
-    --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. AutoDrive.boolToString(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
+    --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. tostring(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
     if self.vehicle.ad.pathFinderModule.completelyBlocked and ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 then
         self.failedPathFinder = self.failedPathFinder + 1
     --print("Increased Failed pathfinder count to: " .. self.failedPathFinder)
@@ -250,7 +250,12 @@ function CombineUnloaderMode:getNextTask()
         self:setToWaitForCall()
     elseif self.state == self.STATE_ACTIVE_UNLOAD_COMBINE then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_ACTIVE_UNLOAD_COMBINE")
-        nextTask = self:getTaskAfterUnload(filledToUnload)
+        if filledToUnload then
+            nextTask = self:getTaskAfterUnload(filledToUnload)
+        else
+            nextTask = HandleHarvesterTurnTask:new(self.vehicle, self.combine)
+            self.state = self.STATE_DRIVE_TO_COMBINE
+        end
     elseif self.state == self.STATE_FOLLOW_CURRENT_UNLOADER then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_FOLLOW_CURRENT_UNLOADER")
         if self.targetUnloader ~= nil then
@@ -387,18 +392,6 @@ function CombineUnloaderMode:shouldUnloadAtTrigger()
     return self.state == self.STATE_DRIVE_TO_UNLOAD
 end
 
-function CombineUnloaderMode:getNodeName(node)
-    if node == 0 then
-        return "nil"
-    end
-
-    local name = getName(node)
-    if name == nil then
-        name = "nil"
-    end
-    return name
-end
-
 function CombineUnloaderMode:getUnloaderOnSide()
     local vehicleX, vehicleY, vehicleZ = getWorldTranslation(self.vehicle.components[1].node)
     -- local combineX, combineY, combineZ = getWorldTranslation(self.combine.components[1].node)
@@ -516,7 +509,7 @@ function CombineUnloaderMode:getSideChaseOffsetX()
     local unloaderWidest = math.max(self.vehicle.size.width, self.targetTrailer.size.width)
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
-    local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest + headerExtra
+    local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
     local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
     -- Some combines fold up their pipe so tight that targeting it could cause a collision.
     -- So, choose the max between the two to avoid a collison
@@ -537,6 +530,17 @@ function CombineUnloaderMode:getSideChaseOffsetX()
 end
 
 function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
+    -- The default maximum will place the front of the unloader at the back of the header
+    local vehicleX, vehicleY, vehicleZ = getWorldTranslation(self.vehicle.components[1].node)
+    local targetNode = self.targetTrailer.components[1].node
+    local _, _, diffZ = worldToLocal(targetNode, vehicleX, vehicleY, vehicleZ)
+    local dynamicAdditionsZ = diffZ
+    dynamicAdditionsZ = dynamicAdditionsZ + 1
+    local sideChaseTermZ = dynamicAdditionsZ
+    return sideChaseTermZ
+end
+
+function CombineUnloaderMode:getDynamicSideChaseOffsetZ_FS19()
     -- The default maximum will place the front of the unloader at the back of the header
     local pipeZOffsetToCombine = 0
     if AutoDrive.isPipeOut(self.combine) then

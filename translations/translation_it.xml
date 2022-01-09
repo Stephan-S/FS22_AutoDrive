@@ -53,7 +53,6 @@
         <text name="input_ADStartCP"                		text="AD: Passa a CP/ALIVE" />
         <text name="input_ADToggleCP_AIVE"          		text="AD: Attiva/Disattiva CP/AIVE" />
         <text name="input_AD_devAction"             		text="AD: Azione dello sviluppatore" />
-        <text name="input_AD_open_tipOfTheDay"          	text="AD: Suggerimento del giorno aperto" />
         <text name="input_ADToggleAutomaticPickupTarget"    	text="AD: Attiva/Disattiva il target di ritiro automatico" />
         <text name="input_ADToggleAutomaticUnloadTarget"    	text="AD: Attiva/Disattiva obiettivo di scaricamento automatico" />
         <text name="hud_avoidFruit"                 		text="AD: Evita raccolto" />
@@ -290,76 +289,6 @@
         <text name="button_delete_all"      text="Cancella Tutto" />
         <text name="button_reset_selected"  text="Ripristina selezionato" />
  
-        <text name="ad_helpCategory_1"      text="AutoDrive" />
-        
-        <text name="ad_helpTitle_01"        text="AD - Introduzione" />
-        <text name="ad_helpText_01_01"      text="AutoDrive è uno strumento multiuso che consente ai tuoi veicoli di muoversi autonomamente nel mappa di Farming Simulator." />
-        <text name="ad_helpText_01_02"      text="La spina dorsale è una rete interconnessa di punti registrati e destinazioni definite. Per alcune mappe, un percorso iniziale è fornito con la mod. Sulla maggior parte delle mappe dovrai registrare tutto da solo o importare una rete da un altro utente (vedi importazione / esportazione di seguito)." />
-        <text name="ad_helpText_01_03"      text="Se tutte le destinatazioni sono correttamente collegate alla rete, AutoDrive naviga in modo molto simile al tipico sistema di navigazione in auto, calcolando il percorso più breve verso la destinazione, quindi è importante assicurarsi che tutti i punti siano collegati alla rete. Se AutoDrive rileva un punto disconnesso, è contrassegnato da una ,X' e deve essere rimosso o collegato manualmente." />
-        
-        <text name="ad_helpTitle_02"        text="AD modalità - Solo guida" />
-        <text name="ad_helpText_02_01"      text="In questa modalità, il veicolo corrente prenderà il punto più adatto (in base alla direzione e alla distanza attuali) o semplicemente quello più vicino e quindi utilizzerà il percorso più breve da lì alla destinazione e si fermerà lì. È la modalità più semplice e più adatta per testare i tuoi nuovi percorsi." />
-        
-        <text name="ad_helpTitle_03"        text="AD modalità - Consegna" />
-        <text name="ad_helpText_03_01"      text="In questa modalità AutoDrive guiderà il veicolo proprio come nella modalità 'Solo guida', ma in aggiunta scaricherà il rimorchio corrente a destinazione, se viene rilevato un trigger di scarico." />
-        <text name="ad_helpText_03_02"      text="Il punto di destinazione deve essere creato dopo il punto di scarico, in modo che i veicoli con rimorchi lunghi raggiungano il punto di scarico prima di raggiungere la destinazione. " />
-        <text name="ad_helpText_03_03"      text="L'autista si fermerà a destinazione indipendentemente dal fatto che sia vuoto o meno. Se noti che il punto di destinazione non è abbastanza indietro, puoi facilmente rimuovere la destinazione e crearla nel punto seguente senza dover rimuovere il punto da solo (vedi Pulsanti HUD)." />
-        
-        <text name="ad_helpTitle_04"        text="AD modalità - Carico e Consegna" />
-        <text name="ad_helpText_04_01"      text="In questa modalità, è possibile selezionare i punti di destinazioni. Uno per il caricamento (il primo) e il secondo per il punto di scarico." />
-        <text name="ad_helpText_04_02"      text="Se AutoDrive è attivato, esaminerà l'attuale livello di riempimento dei rimorchi / attrezzi collegati. Se questo valore è superiore al dato impostato 'Scarica a livello' (vedi impostazioni), ed il conducente si dirigerà direttamente verso la destinazione di scarico." />
-        <text name="ad_helpText_04_03"      text="Altrimenti si dirigerà prima verso la destinazione di carico. A seconda dell'impostazione selezionata (In silos vuoto), il conducente attenderà che la destinazione del carico venga riempita oltre il livello 'Scarica a' o continuerà fino alla destinazione di scarico." />
-        <text name="ad_helpText_04_04"      text="In entrambi i casi, il conducente proverà innanzitutto a caricare il tipo di riempimento selezionato su qualsiasi trigger disponibile nell'intervallo fornito (vedere le impostazioni) prima della destinazione del caricamento." />
-        <text name="ad_helpText_04_05"      text="Inoltre è possibile selezionare un contatore ripetizioni prima di avviare il driver. Se si imposta questo contatore su 2, il conducente si fermerà dopo aver raggiunto la destinazione di scarico 2 volte. Se questa impostazione (vedi HUD) è lasciata di default, il conducente inizierà sempre il ciclo successivo." />
-        
-        <text name="ad_helpTitle_05"        text="AD modalità - Modalità di caricamento" />
-        <text name="ad_helpText_05_01"      text="Questa modalità è molto simile alla modalità 'Ritiro e consegna' precedentemente descritta, con solo poche eccezioni. Non userà il 'contatore delle ripetizioni'." />
-        <text name="ad_helpText_05_02"      text="Esiste solo una destinazione di carico e un punto di destinazione in cui il conducente si fermerà e disabiliterà AutoDrive." />
-        <text name="ad_helpText_05_03"      text="Questa modalità deve essere utilizzata come modalità di ricarica per il lavoro sul campo. In questo modo le seminatrici o le irroratrici possono essere avviate nella posizione del campo e inviate a un punto di riempimento e successivamente torneranno alla destinazione del campo impostata." />
-        <text name="ad_helpText_05_04"      text="Questa modalità può essere utilizzata anche in combinazione con Courseplay. Dovrai selezionare 'Usa AutoDrive per scarico/carico' in Courseplay HUD (non parte di questa documentazione)." />
-        
-        <text name="ad_helpTitle_06"        text="AD modalità - Scarico mietitrebbia" />
-        <text name="ad_helpText_06_01"      text="In questa modalità, è possibile impostare nuovamente due destinazioni. Il primo dovrebbe essere una posizione sul campo da cui è possibile raggiungere una mietitrice attiva. Il secondo è di nuovo una destinazione di scarico." />
-        <text name="ad_helpText_06_02"      text="Questa è la prima modalità in cui i driver AutoDrive possono lasciare il percorso registrato e guidare sul campo. Questa modalità è piuttosto complicata e comporta molte impostazioni dal menu delle impostazioni." />
-        <text name="ad_helpText_06_03"      text="Quindi questa documentazione descriverà prima il comportamento di base e quindi aggiungerà come le impostazioni influenzano il comportamento." />
-        
-        <text name="ad_helpTitle_07"        text="AD modalità - Scarico mietitrebbia - normale - 1" />
-        <text name="ad_helpText_07_01"      text="Il conducente deciderà all'avvio se andare sul campo o scaricare prima (vedi Ritiro e consegna). Se raggiunge la posizione sul campo, si registra come driver disponibile. Se una mietitrebbia è al livello di riempimento del 100% e ha un tubo esteso, passerà automaticamente attraverso gli scaricatori registrati e sceglierà quello più vicino a lui. A seconda dell'impostazione 'Trova scaricatore', vengono accettati tutti i conducenti in un raggio di 300 metri (sì) o solo conducenti con le stesse destinazioni target della mietitrice in AutoDrive Hud (no)." />
-        <text name="ad_helpText_07_02"      text="" />
-        <text name="ad_helpText_07_03"      text="Importante: non è necessario attivare AutoDrive sulla mietitrice. È richiesto solo il target selezionato." />
-        <text name="ad_helpText_07_04"      text="" />
-        <text name="ad_helpText_07_05"      text="In alternativa, il giocatore può anche chiamare manualmente lo scaricatore assegnando il tasto 'Chiama autista' nelle opzioni di gioco e utilizzandolo mentre è seduto nella mietitrice. Se la mietitrice è controllata da Courseplay, AutoDrive chiamerà anche un'autista se rileva che il veicolo Courseplay vuole essere scaricato." />
-        
-        <text name="ad_helpTitle_08"        text="AD modalità - Scarico mietitrebbia - normale - 2" />
-        <text name="ad_helpText_08_01"      text="Se uno scaricatore viene chiamato a una mietitrice, inizierà a pianificare un percorso per il tubo esteso della mietitrice. Il planner di percorso è un'implementazione completamente unica e una spiegazione potrebbe essere inclusa come appendice a questa documentazione in seguito. I concetti chiave sono una divisione del mondo simulato in celle a griglia. Queste celle della griglia sono dimensionate in base al raggio di sterzata dei veicoli e vengono controllate come libere da frutta (vedi impostazioni), libere da collisioni, sul campo (vedi impostazioni) e hanno una pendenza massima accettabile per i conducenti AI. Dopo che è stato trovato un percorso libero, viene applicato anche un po 'di livellamento per eliminare la maggior parte delle curve strette e quindi il conducente viene inviato lungo il percorso alla mietitrice." />
-        <text name="ad_helpText_08_02"      text="" />
-        <text name="ad_helpText_08_03"      text="Note: Non appena il driver di scarico riceve il comando di guidare verso la mietitrice, il messaggio di stato nella barra delle informazioni dell'HUD passa da 'In attesa della mietitrebbia' a 'Guida verso la mietitrebbia'. Ciò significa che il pianificatore di percorso è ora alla ricerca attiva di un percorso. A seconda delle prestazioni della CPU e delle impostazioni ('Tempo di ricerca percorso (massimo)'), questo processo potrebbe richiedere del tempo e, in casi estremi, ridurre i tuoi fps. Questo di solito è il caso se lo scaricatore non è in grado di trovare un percorso accettabile per la mietitrebbia. Accertarsi sempre che lo spazio davanti al conducente sia privo di ostacoli (e privo di raccolto) e che anche il percorso che conduce al tubo della mietitrice sia libero da collisioni (ad esempio nessun raccolto o alberi dietro la mietitrice)." />
-        <text name="ad_helpText_08_04"      text="" />
-        <text name="ad_helpText_08_05"      text="Quando raggiunge la mietitrice controllerà se il processo di scarico è terminato o se il rimorchio corrente è pieno. In caso di più rimorchi, il conducente procederà in avanti fino a quando non verrà rilevato un processo di riempimento sul rimorchio successivo. Dopo il processo di scarico, il conducente inizierà a guidare indietro per alcuni metri per fornire alla mietitrice spazio sufficiente per continuare il suo lavoro. Quindi il conducente attenderà alcuni secondi affinché la mietitrice sgombrerà l'area e ricomincerà la pianificazione del percorso fino al punto di partenza. Una volta raggiunto il punto di partenza, si registrerà nuovamente come scaricatore disponibile e attenderà di essere richiamato. Se il rimorchio è già pieno a quel punto, si dirigerà direttamente verso la destinazione di scarico prima di tornare alla posizione sul campo." />
-        
-        <text name="ad_helpTitle_09"        text="AD modalità - Scarico mietitrebbia - Pracheggio sul campo" />
-        <text name="ad_helpText_09_01"      text="Se questa opzione è impostata su SI nelle impostazioni AutoDrive, il conducente verificherà se la cella target (posizione del tubo) ha rilevato un frutto (Evita raccolto dev'essere impostato su SI). Se non viene rilevato alcun raccolto e il conducente non ha ancora raggiunto il livello di riempimento 'scarico', rimarrà nella posizione corrente del campo. " />
-        
-        <text name="ad_helpTitle_10"        text="AD modalità - Scarico mietitrebbia - Limita al campo" />
-        <text name="ad_helpText_10_01"      text="Se questa opzione è impostata su SI, l'algoritmo di ricerca percorso accetta solo celle della griglia presenti sul campo. Questa impostazione ha effetto solo se il veicolo è già sul campo (avviato sul campo o parcheggiato sul campo). Questa opzione dovrebbe aiutare a mantenere il guidatore sul campo, specialmente durante le manovre di svolta, ideale in campi stretti e circondati da recinti, muri o filari di alberi. " />
-        <text name="ad_helpText_10_02"      text="" />
-        <text name="ad_helpText_10_03"      text="Importante: Se non è possibile calcolare un percorso privo di frutti nel tempo previsto (vedere le impostazioni), il rilevatore di percorsi entrerà in una modalità di fallback che ignora il raccolto ed i limiti campo!" />
-        
-        <text name="ad_helpTitle_11"        text="AD modalità - Scarico mietitrebbia - Evita raccolto" />
-        <text name="ad_helpText_11_01"      text="Questa opzione garantisce che il calcolo percorso accetti solo celle della griglia che non contenga raccolto o che contenga solo una quantità marginale di raccolto. Importante: se non è possibile calcolare un percorso privo di raccolto nel tempo previsto (vedere le impostazioni), il rilevatore di percorsi entrerà in una modalità di fallback che ignora il raccolto ed i limiti campo!" />
-        
-        <text name="ad_helpTitle_12"        text="AD modalità - Scarico mietitrebbia - Segui mietitrebbia" />
-        <text name="ad_helpText_12_01"      text="Chiamta anticipata / Segui mietitrebbia" />
-        <text name="ad_helpText_12_02"      text="" />
-        <text name="ad_helpText_12_03"      text="Queste opzioni possono essere utilizzate per seguire semplicemente la mietitrice con una certa distanza (la pre-chiamata on / insegui mietitrebbia Off). Oppure fare scaricare attivamente lo scaricatore mentre la mietitrice sta ancora guidando. Quando la mietitrice raggiunge il livello di riempimento impostato (Livello pre-chiamata), chiamerà già il conducente nella posizione corrente. Quando l'autista raggiunge questo punto, rivaluterà, se è vicino alla mietitrice (meno di 60 metri) e l'impostazione 'insegui mietitrebbia' è attiva, inizierà a seguirlo per linea di vista. In caso contrario, riattiverà un processo di ricerca del percorso nella nuova posizione della mietitrice. Mentre insegue, controllerà se il tubo è attualmente nel frutto o no. Se non è nel frutto, inizierà a prendere di mira la posizione del tubo, altrimenti seguirà la mietitrice con una certa distanza. Quando il conducente raggiunge il livello 'Scarica a', inizierà immediatamente a pianificare un percorso per l'uscita dal campo selezionato (vedere le impostazioni). Quindi ha senso impostare il livello al 100% in questa modalità. In questo modo non proverà accidentalmente a tagliare davanti alla mietitrice o ad andarsene prima di essere completamente riempito." />
-        <text name="ad_helpTitle_13"        text="AD modalità - Scarico Bunker silos" />
-        <text name="ad_helpText_13_01"      text="Questa modalità può essere utilizzata solo con veicoli a cui è collegata una pala. L'idea di base è una soluzione con un clic per svuotare i silos bunker drive-through. All'avvio, il veicolo verificherà le condizioni richieste. Ha bisogno di un silo di bunker pieno nelle vicinanze (~ 100m?) E di una pala attaccata. Se entrambe le condizioni sono soddisfatte, il veicolo inizializzerà l'asse del caricatore frontale per acquisire i valori corretti per i movimenti su / giù, caricare / scaricare ed estendere / ritrarre i movimenti. Quindi dividerà la larghezza del silo del bunker in pezzi larghi quanto la sua pala + aggiunta di pala (vedi impostazioni) e inizierà dalla prima riga. Se la prima o l'ultima riga finisce per colpire la parete del silo, è necessario aumentare il valore di aggiunta della pala nelle impostazioni e riavviare il driver. Ciò può accadere se la larghezza del pickup della pala non è adattata correttamente alle dimensioni fisiche o se la definizione del silo del bunker si trova all'interno del muro, il che non è insolito poiché facilita lo sviluppo di un silos di bunker di bell'aspetto. Dopo che la pala è stata sgonfiata e il veicolo invertito dal bunker, cercherà un veicolo con un rimorchio attaccato (con spazio di riempimento a sinistra) e inizierà a dirigersi lì." />
-        <text name="ad_helpText_13_02"      text="" />
-        <text name="ad_helpText_13_03"      text="Attenzione: Al momento non è incluso il rilevamento delle collisioni in questa modalità!" />
-        <text name="ad_helpText_13_04"      text="" />
-        <text name="ad_helpText_13_05"      text="Poiché il veicolo cerca automaticamente di trovare la posizione di carico ideale per la pala, può capitare che sollevi le ruote anteriori. È incluso un rilevamento per questo scenario, che verifica se tutte le ruote sono a terra e inizia a sollevare la pala se questo controllo restituisce falso per alcune centinaia di millisecondi." />
-        
- 
         <text name="AD_task_pathfinding"        	text="Pianificazione" />
         <text name="AD_task_catch_up_with_combine"  	text="Intercettazione della mietitrebbia" />
         <text name="AD_task_clearcrop"          	text="Spostamento" />
@@ -395,36 +324,6 @@
         <text name="gui_ad_combineCPADHudMouse"         	text="Combinare i pulsanti CP/AD"/>
         <text name="gui_ad_combineCPADHudMouse_tooltip"     	text="Spento: standard / semplice: CP: sec azione del mouse > mouse on + off, AD: attiva/disattiva Hud > entrambi gli hud on + off / completo: come semplice ma gli hud si attivano in singoli passaggi / Richiesto: disabilita il tasto destro del mouse HUD nelle impostazioni CP"/>
     
-        <text name="gui_ad_showTipOfTheDay"        	text="Consiglio del giorno" />
-        <text name="gui_ad_showTipOfTheDay_tooltip"     text="Suggerimento del giorno visualizzato ad ogni inizio del gioco" />
-        <text name="gui_ad_tipOfTheDayTitle"        	text="Consiglio del giorno" />
-        <text name="gui_ad_tipOfTheDayActive"       	text="Mostra al prossimo avvio" />
-        <text name="ad_next_tip"            		text="Nuovo consiglio" />
-        <text name="ad_totd_01_title"           	text="Funzioni multiple" />
-        <text name="ad_totd_01_text"            	text="Molti pulsanti in AutoDrive hanno più funzioni. La funzione principale è sempre attivabile con il tasto sinistro del mouse. La funzione secondaria può essere attivata con il tasto centrale o con il tasto destro del mouse.
-        Diversi pulsanti hanno anche una terza e una quarta funzione che possono essere utilizzate scorrendo con la rotella del mouse sopra detti pulsanti. Per ora, quelli sono i limitatori di velocità e il pulsante di registrazione." />
-        
-        <text name="ad_totd_02_title"   text="Diversi tipi di strade" />
-        <text name="ad_totd_02_text"    text="Una rete AutoDrive può contenere 4 diversi tipi di strade.
-        1. Un segmento di strada standard (verde). I veicoli possono viaggiare lungo la direzione contrassegnata dalle frecce. Per iniziare a registrare una strada standard, è sufficiente fare clic con il pulsante sinistro del mouse sul pulsante di registrazione.
-        2. Strade a doppia direzione (blu). Qui, i veicoli possono viaggiare in entrambe le direzioni e bloccheranno il traffico in entrata nella direzione opposta. È possibile registrare percorsi a doppia direzione con la funzione secondaria sul pulsante di registrazione. Quindi usa il tasto centrale o il tasto destro del mouse.
-        3. Sezioni di retromarcia (azzurro) - I veicoli possono viaggiare solo in retromarcia lungo queste sezioni. Utile per parcheggiare e scaricare in spazi ristretti. Guida semplicemente all'indietro durante una sessione di registrazione standard.
-        4. Strada laterale - Questo tipo di segmento di strada viene solitamente evitato dalla pianificazione del percorso a meno che l'obiettivo non sia su questo segmento di strada. Per registrare una strada laterale, usa la rotellina del mouse verso l'alto mentre tieni premuto il pulsante di registrazione." />
-        
-        <text name="ad_totd_03_title"   text="Trebbiatura - 1" />
-        <text name="ad_totd_03_text"    text="Alcuni suggerimenti di base per l'utilizzo di AutoDrive per scaricare le mietitrebbie:
-        1. Per consentire a una mietitrice di chiamare automaticamente uno scaricatore, seleziona semplicemente la stessa destinazione nell'HUD AutoDrive della mietitrice che hai selezionato per lo scaricatore. Questo punto dovrebbe di solito essere un obiettivo vicino al campo in modo che lo scaricatore possa pianificare un percorso verso la mietitrice. In alternativa è anche possibile abilitare l'impostazione 'Trova conducente' che farà sì che la mietitrice cercherà qualsiasi scaricatore disponibile in un raggio di 300 m.
-        2. AutoDrive può scaricare sia mietitrebbie che trebbiatrici in movimento. Per abilitare questa funzione per le mietitrebbie, è sufficiente impostare l'impostazione 'Livello pre-chiamata' su 0%." />
-        <text name="ad_totd_04_title"   text="Impostazione - 1" />
- 
-        <text name="ad_totd_04_text"    text="Attualmente ci sono 6 diverse pagine di impostazione.
-        1. Impostazioni generali: valide per tutti i veicoli.
-        2. Impostazioni utente - Applicate al lettore corrente (anche in MP). Queste sono le impostazioni per controllare come viene visualizzato AutoDrive e non come funziona.
-        3. Impostazioni veicolo - Applicate solo per il veicolo corrente.
-        4. Impostazioni della mietitrice - Visibile solo all'interno di una mietitrice. Qui puoi controllare come questo harevster chiama scaricatori.
-        5. Impostazioni di debug: queste impostazioni abilitano alcuni feedback visivi di debug e, soprattutto, messaggi di registro aggiuntivi. Quindi abilitalo se riscontri problemi o bug e ti stai preparando a inviare un file di registro agli sviluppatori.
-        6. Funzionalità sperimentali - Queste impostazioni si riferiscono a funzionalità che stiamo attualmente testando/sviluppando ma che non sono ancora considerate stabili. Utilizzare a proprio rischio." />
- 
         <text name="gui_ad_editorTip_1"     text="Semplice clic con il tasto sinistro del mouse:"/>
         <text name="gui_ad_editorTip_2"     text="Solo mouse: seleziona 1. punto"/>
         <text name="gui_ad_editorTip_3"     text="LCTRL = Crea nodo"/>

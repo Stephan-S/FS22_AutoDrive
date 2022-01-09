@@ -272,21 +272,6 @@ function table:concatNil(sep, i, j)
 	return res
 end
 
---[[
-function string:split(sep)
-	sep = sep or ":"
-	local fields = {}
-	local pattern = string.format("([^%s]+)", sep)
-	self:gsub(
-		pattern,
-		function(c)
-			fields[#fields + 1] = c
-		end
-	)
-	return fields
-end
---]]
-
 function string.random(length)
 	if not length or length <= 0 then
 		return ""
@@ -300,19 +285,6 @@ function AutoDrive.localize(text)
 		text = text:gsub(m, g_i18n:getText(l10n))
 	end
 	return text
-end
-
-function AutoDrive.parsePath(path)
-	path = path:gsub("$adDir/", AutoDrive.directory)
-	path = path:gsub("$adDir", AutoDrive.directory)
-	return path
-end
-
-function AutoDrive.boolToString(value)
-	if value == true then
-		return "true"
-	end
-	return "false"
 end
 
 function AutoDrive.angleBetween(vec1, vec2)
@@ -336,18 +308,6 @@ function AutoDrive.normalizeAngle(inputAngle)
 	return inputAngle
 end
 
-function AutoDrive.normalizeAngle2(inputAngle)
-	if inputAngle > (2 * math.pi) then
-		inputAngle = inputAngle - (2 * math.pi)
-	else
-		if inputAngle < 0 then
-			inputAngle = inputAngle + (2 * math.pi)
-		end
-	end
-
-	return inputAngle
-end
-
 function AutoDrive.normalizeAngleToPlusMinusPI(inputAngle)
 	if inputAngle > (math.pi) then
 		inputAngle = inputAngle - (2 * math.pi)
@@ -358,11 +318,6 @@ function AutoDrive.normalizeAngleToPlusMinusPI(inputAngle)
 	end
 
 	return inputAngle
-end
-
-function AutoDrive.createVector(x, y, z)
-	local t = {x = x, y = y, z = z}
-	return t
 end
 
 function AutoDrive.round(num)
@@ -511,6 +466,14 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 		return
 	end
 
+	AutoDrive.splineInterpolation = { 
+		startNode = startNode,
+		endNode = endNode,
+		curvature = AutoDrive.splineInterpolationUserCurvature,
+		waypoints = { startNode },
+		valid = true 
+	}
+
 	if AutoDrive.splineInterpolationUserCurvature == nil then
 		AutoDrive.splineInterpolationUserCurvature = 0.49
 	end
@@ -520,33 +483,40 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 		return
 	end
 
-	self.splineInterpolation = {
-		MIN_CURVATURE = 0.5,
-		MAX_CURVATURE = 3.5,
-		startNode = startNode,
-		p0 = nil,
-		endNode = endNode,
-		p3 = nil,
-		curvature = AutoDrive.splineInterpolationUserCurvature,
-		waypoints = { startNode },
-		valid = true
-	}
-
 	-- TODO: if we have more then one inbound or outbound connections, get the avg. vector
-	if #startNode.incoming >= 1 and #endNode.out >= 1  and AutoDrive.splineInterpolationUserCurvature >= self.splineInterpolation.MIN_CURVATURE then
+	if #startNode.incoming >= 1 and #endNode.out >= 1  and AutoDrive.splineInterpolationUserCurvature >= 0.5 then
 		local p0 = nil
 		for _, px in pairs(startNode.incoming) do
 			p0 = ADGraphManager:getWayPointById(px)
-			self.splineInterpolation.p0 = p0
+			--self.splineInterpolation.p0 = p0
 			break
 		end
 		local p3 = nil
 		for _, px in pairs(endNode.out) do
 			p3 = ADGraphManager:getWayPointById(px)
-			self.splineInterpolation.p3 = p3
+			--self.splineInterpolation.p3 = p3
 			break
-		end
+		end	
+		return AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
+	else -- fallback to straight line connection behaviour
+		return
+	end
+end
 
+function AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
+	self.splineInterpolation = {
+		MIN_CURVATURE = 0.5,
+		MAX_CURVATURE = 3.5,
+		startNode = startNode,
+		p0 = p0,
+		endNode = endNode,
+		p3 = p3,
+		curvature = AutoDrive.splineInterpolationUserCurvature,
+		waypoints = { startNode },
+		valid = true
+	}
+
+	if AutoDrive.splineInterpolationUserCurvature >= self.splineInterpolation.MIN_CURVATURE then
 		if AutoDrive.splineInterpolationUserCurvature == 5 then
 			-- calculate the angle between start tangent and end tangent
 			local dAngle = math.abs(AutoDrive.angleBetween(
@@ -617,7 +587,8 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 			end
 		end
 		table.insert(self.splineInterpolation.waypoints, endNode)
-	else -- fallback to straight line connection behaviour
+		return self.splineInterpolation.waypoints
+	else
 		return
 	end
 end
@@ -976,9 +947,7 @@ end
 
 function AutoDrive:zoomSmoothly(superFunc, offset)
 	if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid then
-		--print("splineInterpolationUserCurvature before " .. AutoDrive.splineInterpolationUserCurvature)
 		AutoDrive.splineInterpolationUserCurvature = math.clamp(0.49, AutoDrive.splineInterpolationUserCurvature + offset/12  ,3.5)
-		--print("splineInterpolationUserCurvature after " .. AutoDrive.splineInterpolationUserCurvature)
 		return
 	end
 	if not AutoDrive.mouseWheelActive then -- don't zoom camera when mouse wheel is used to scroll targets (thanks to sperrgebiet)
@@ -1026,7 +995,7 @@ function AutoDrive:onFillTypeSelection(fillType)
             end
             local currentFillableObject = self.currentFillableObject
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection currentFillableObject %s", tostring(currentFillableObject))
-            if currentFillableObject ~= nil then --and validFillableObject:getRootVehicle() == g_currentMission.controlledVehicle
+            if currentFillableObject ~= nil then
                 local fillUnitIndex = self.currentFillableFillUnitIndex
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection setIsLoading")
                 self:setIsLoading(true, currentFillableObject, fillUnitIndex, fillType)
@@ -1036,283 +1005,12 @@ function AutoDrive:onFillTypeSelection(fillType)
     end
 end
 
-function AutoDrive:getDriveData(superFunc,dt, vX,vY,vZ)		--combine helper function, copied from GDN and modified to open combine pipe when an unloader is assigned to the combine
-    local isTurning = self.vehicle:getRootVehicle():getAIIsTurning()
-    local allowedToDrive = true
-    local waitForStraw = false
-    local maxSpeed = math.huge
-    for _, combine in pairs(self.combines) do
-        if not combine:getIsThreshingAllowed() then
-            self.vehicle:stopAIVehicle(AIVehicle.STOP_REASON_REGULAR)
-            self:debugPrint("Stopping AIVehicle - combine not allowed to thresh")
-            return nil, nil, nil, nil, nil
-        end
-        if combine.spec_pipe ~= nil then
-            local fillLevel = 0
-            local capacity = 0
-            local trailerInTrigger = false
-            local invalidTrailerInTrigger = false
-            local dischargeNode = combine:getCurrentDischargeNode()
-            if dischargeNode ~= nil then
-                fillLevel = combine:getFillUnitFillLevel(dischargeNode.fillUnitIndex)
-                capacity = combine:getFillUnitCapacity(dischargeNode.fillUnitIndex)
-            end
-            local trailer = NetworkUtil.getObject(combine.spec_pipe.nearestObjectInTriggers.objectId)
-            local trailerFillUnitIndex = combine.spec_pipe.nearestObjectInTriggers.fillUnitIndex
-            if trailer ~= nil then
-                trailerInTrigger = true
-            end
-            if combine.spec_pipe.nearestObjectInTriggerIgnoreFillLevel then
-                invalidTrailerInTrigger = true
-            end
-            local currentPipeTargetState = combine.spec_pipe.targetState
-            if capacity == math.huge then
-                -- forage harvesters
-                if currentPipeTargetState ~= 2 then
-                    combine:setPipeState(2)
-                end
-                if not isTurning then
-                    local targetObject, _ = combine:getDischargeTargetObject(dischargeNode)
-                    allowedToDrive = trailerInTrigger and targetObject ~= nil
-                    if VehicleDebug.state == VehicleDebug.DEBUG_AI then
-                        if not trailerInTrigger then
-                            self.vehicle:addAIDebugText("COMBINE -> Waiting for trailer enter the trigger")
-                        elseif trailerInTrigger and targetObject == nil then
-                            self.vehicle:addAIDebugText("COMBINE -> Waiting for pipe hitting the trailer")
-                        end
-                    end
-                end
-            else
-                -- combine harvesters
-				local pipeState = currentPipeTargetState
-				local _, pipePercent = ADHarvestManager.getOpenPipePercent(combine)
-                if fillLevel > (0.8*capacity) then
-                    if not self.beaconLightsActive then
-                        self.vehicle:setAIMapHotspotBlinking(true)
-                        self.vehicle:setBeaconLightsVisibility(true)
-                        self.beaconLightsActive = true
-                    end
-                    if not self.notificationGrainTankWarningShown then
-                        g_currentMission:addIngameNotification(FSBaseMission.INGAME_NOTIFICATION_CRITICAL, string.format(g_i18n:getText("ingameNotification_aiVehicleReasonGrainTankIsNearlyFull"), self.vehicle:getCurrentHelper().name) )
-                        self.notificationGrainTankWarningShown = true
-                    end
-                else
-                    if self.beaconLightsActive then
-                        self.vehicle:setAIMapHotspotBlinking(false)
-                        self.vehicle:setBeaconLightsVisibility(false)
-                        self.beaconLightsActive = false
-                    end
-                    self.notificationGrainTankWarningShown = false
-                end
-                if fillLevel == capacity then
-                    pipeState = 2
-                    self.wasCompletelyFull = true
-                    if self.notificationFullGrainTankShown ~= true then
-                        g_currentMission:addIngameNotification(FSBaseMission.INGAME_NOTIFICATION_CRITICAL, string.format(g_i18n:getText(AIVehicle.REASON_TEXT_MAPPING[AIVehicle.STOP_REASON_GRAINTANK_IS_FULL]), self.vehicle:getCurrentHelper().name) )
-                        self.notificationFullGrainTankShown = true
-                    end
-                else
-                    self.notificationFullGrainTankShown = false
-                end
-                if trailerInTrigger or fillLevel > (pipePercent * capacity) then
-                    pipeState = 2
-                end
-                if not trailerInTrigger then
-                    if fillLevel < capacity * 0.8 then
-                        self.wasCompletelyFull = false
-                        if not combine:getIsTurnedOn() and combine:getCanBeTurnedOn() then
-                            combine:setIsTurnedOn(true)
-                        end
-                    end
-                end
-                if (not trailerInTrigger and not invalidTrailerInTrigger) and fillLevel < (pipePercent * capacity) then
-                    pipeState = 1
-                end
-                if fillLevel < 0.1 then
-                    if not combine.spec_pipe.aiFoldedPipeUsesTrailerSpace then
-                        if not trailerInTrigger and not invalidTrailerInTrigger then
-                            pipeState = 1
-                        end
-                        if not combine:getIsTurnedOn() and combine:getCanBeTurnedOn() then
-                            combine:setIsTurnedOn(true)
-                        end
-                    end
-                    self.wasCompletelyFull = false
-                end
-                if currentPipeTargetState ~= pipeState then
-                    combine:setPipeState(pipeState)
-                end
-                allowedToDrive = fillLevel < capacity
-                if pipeState == 2 and self.wasCompletelyFull then
-                    allowedToDrive = false
-                    if VehicleDebug.state == VehicleDebug.DEBUG_AI then
-                        self.vehicle:addAIDebugText("COMBINE -> Waiting for trailer to unload")
-                    end
-                end
-                if isTurning and trailerInTrigger then
-                    if combine:getCanDischargeToObject(dischargeNode) then
-                        allowedToDrive = fillLevel == 0
-                        if VehicleDebug.state == VehicleDebug.DEBUG_AI then
-                            if not allowedToDrive then
-                                self.vehicle:addAIDebugText("COMBINE -> Unload to trailer on headland")
-                            end
-                        end
-                    end
-                end
-                local freeFillLevel = capacity - fillLevel
-                if freeFillLevel < self.slowDownFillLevel then
-                    -- we want to drive at least 2 km/h to avoid combine stops too early
-                    maxSpeed = 2 + (freeFillLevel / self.slowDownFillLevel) * self.slowDownStartSpeed
-                    if VehicleDebug.state == VehicleDebug.DEBUG_AI then
-                        self.vehicle:addAIDebugText(string.format("COMBINE -> Slow down because nearly full: %.2f", maxSpeed))
-                    end
-                end
-            end
-            if not trailerInTrigger then
-                if combine.spec_combine.isSwathActive then
-                    if combine.spec_combine.strawPSenabled then
-                        waitForStraw = true
-                    end
-                end
-            end
-        end
-    end
-    if isTurning and waitForStraw then
-        if VehicleDebug.state == VehicleDebug.DEBUG_AI then
-            self.vehicle:addAIDebugText("COMBINE -> Waiting for straw to drop")
-        end
-        local h = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, self.vehicle.aiDriveTarget[1],0,self.vehicle.aiDriveTarget[2])
-        local x,_,z = worldToLocal(self.vehicle:getAIDirectionNode(), self.vehicle.aiDriveTarget[1],h,self.vehicle.aiDriveTarget[2])
-        local dist = MathUtil.vector2Length(vX-x, vZ-z)
-        return x, z, false, 10, dist
-    else
-        if not allowedToDrive then
-            return 0, 1, true, 0, math.huge
-        else
-            return nil, nil, nil, maxSpeed, nil
-        end
-    end
-end
-
 function AutoDrive.driveInDirection(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
+	-- Having to set this so that the bug in driveInDirection doesn't occur
 	self.motor = self:getMotor()
 	self.cruiseControl = {}
 	self.cruiseControl.state = self:getCruiseControlState()
 	AIVehicleUtil.driveInDirection(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
-end
-
---[[
-AIVehicleUtil.driveInDirection = function(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
-	if self.getMotorStartTime ~= nil then
-		allowedToDrive = allowedToDrive and (self:getMotorStartTime() <= g_currentMission.time)
-	end
-
-	if not self.firstTimeRun and not self.ad.firstTimeRun then
-		self.firstTimeRun = true
-		self.ad.firstTimeRun = true
-	end
-
-	if self.ad ~= nil and AutoDrive.smootherDriving then
-		if self.ad.stateModule:isActive() and allowedToDrive then
-			--slowAngleLimit = 90 -- Set it to high value since we don't need the slow down
-
-			local accFactor = 2 / 1000 -- km h / s converted to km h / ms
-			accFactor = accFactor + math.abs((maxSpeed - self.lastSpeedReal * 3600) / 2000) -- Changing accFactor based on missing speed to reach target (useful for sudden braking)
-			if self.ad.smootherDriving.lastMaxSpeed < maxSpeed then
-				self.ad.smootherDriving.lastMaxSpeed = math.min(self.ad.smootherDriving.lastMaxSpeed + accFactor / 2 * dt, maxSpeed)
-			else
-				self.ad.smootherDriving.lastMaxSpeed = math.max(self.ad.smootherDriving.lastMaxSpeed - accFactor * dt, maxSpeed)
-			end
-
-			if maxSpeed < 1 then
-				-- Hard braking, is needed to prevent combine's pipe overstep and crash
-				self.ad.smootherDriving.lastMaxSpeed = maxSpeed
-			end
-			--AutoDrive.renderTable(0.1, 0.9, 0.012, {maxSpeed = maxSpeed, lastMaxSpeed = self.ad.smootherDriving.lastMaxSpeed})
-			maxSpeed = self.ad.smootherDriving.lastMaxSpeed
-		else
-			self.ad.smootherDriving.lastMaxSpeed = 0
-		end
-	end
-
-	local angle = 0
-	if lx ~= nil and lz ~= nil then
-		local dot = lz
-		angle = math.deg(math.acos(dot))
-		if angle < 0 then
-			angle = angle + 180
-		end
-		local turnLeft = lx > 0.00001
-		if not moveForwards then
-			turnLeft = not turnLeft
-		end
-		local targetRotTime = 0
-		if turnLeft then
-			--rotate to the left
-			targetRotTime = self.maxRotTime * math.min(angle / steeringAngleLimit, 1)
-		else
-			--rotate to the right
-			targetRotTime = self.minRotTime * math.min(angle / steeringAngleLimit, 1)
-		end
-		if targetRotTime > self.rotatedTime then
-			self.rotatedTime = math.min(self.rotatedTime + dt * self:getAISteeringSpeed(), targetRotTime)
-		else
-			self.rotatedTime = math.max(self.rotatedTime - dt * self:getAISteeringSpeed(), targetRotTime)
-		end
-	end
-	if self.firstTimeRun then
-		local acc = acceleration
-		if maxSpeed ~= nil and maxSpeed ~= 0 then
-			if math.abs(angle) >= slowAngleLimit then
-				maxSpeed = maxSpeed * slowDownFactor
-			end
-			self.spec_motorized.motor:setSpeedLimit(maxSpeed)
-			if self.spec_drivable.cruiseControl.state ~= Drivable.CRUISECONTROL_STATE_ACTIVE then
-				print("AutoDrive.driveInDirection - setCruiseControl")
-				self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_ACTIVE)
-			end
-		else
-			if math.abs(angle) >= slowAngleLimit then
-				acc = slowAcceleration
-			end
-		end
-		if not allowedToDrive then
-			acc = 0
-		end
-		if not moveForwards then
-			acc = -acc
-		end
-		--FS 17 Version WheelsUtil.updateWheelsPhysics(self, dt, self.lastSpeedReal, acc, not allowedToDrive, self.requiredDriveMode);
-		WheelsUtil.updateWheelsPhysics(self, dt, self.lastSpeedReal * self.movingDirection, acc, not allowedToDrive, true)
-	end
-end
---]]
-
-function AIVehicle:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
-	local spec = self.spec_aiVehicle
-
-	if self.isClient then
-		local actionEvent = spec.actionEvents[InputAction.TOGGLE_AI]
-		if actionEvent ~= nil then
-			local showAction = false
-
-			if self:getIsActiveForInput(true, true) then
-				-- If ai is active we always display the dismiss helper action
-				-- But only if the AutoDrive is not active :)
-				showAction = self:getCanStartAIVehicle() or (self:getIsAIActive() and (self.ad == nil or not self.ad.stateModule:isActive()))
-
-				if showAction then
-					if self:getIsAIActive() then
-						g_inputBinding:setActionEventText(actionEvent.actionEventId, g_i18n:getText("action_dismissEmployee"))
-					else
-						g_inputBinding:setActionEventText(actionEvent.actionEventId, g_i18n:getText("action_hireEmployee"))
-					end
-				end
-			end
-
-			g_inputBinding:setActionEventActive(actionEvent.actionEventId, showAction)
-		end
-	end
 end
 
 function AutoDrive.sign(x)

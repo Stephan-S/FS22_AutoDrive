@@ -52,8 +52,7 @@
         <text name="input_ADSwapTargets"                                                                    text="AD: Hedefleri değiştir"  />
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
-		<text name="input_AD_devAction"                         			                                      text="AD: Developer Action" />		
-		<text name="input_AD_open_tipOfTheDay" 					                                                    text="AD: Open Tip of the day" />
+		<text name="input_AD_devAction"                         			                                      text="AD: Developer Action" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
         <text name="hud_avoidFruit"                                                                         text="AD: Meyvelerden kaçının"  />
@@ -286,77 +285,7 @@
 		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
 
         <text name="button_delete_all"                                                                      text="Hepsini sil"  />
-		<text name="button_reset_selected" 					    text="Reset selected" />
-                                                                                                        
-        <text name="ad_helpCategory_1"                                                                      text="AutoDrive"  />
-                                                                                                            
-        <text name="ad_helpTitle_01"                                                                        text="AD - Giriş/Tanıtım"  />
-        <text name="ad_helpText_01_01"                                                                      text="AutoDrive, traktörlerinizin Farming Simulator dünyasında özerk bir şekilde gezinmesine izin veren çok amaçlı bir araçtır."  />
-        <text name="ad_helpText_01_02"                                                                      text="Omurga, kayıtlı noktalar ve tanımlanmış hedeflerden oluşan birbirine bağlı bir ağdır. Bazı haritalar için, modla birlikte bir başlangıç ağı sağlanır. Çoğu haritada, her şeyi kendiniz kaydetmeniz veya başka bir kullanıcıdan bir ağı içe aktarmanız gerekir (aşağıdaki içe / dışa aktarma bölümüne bakın)."  />
-        <text name="ad_helpText_01_03"                                                                      text="Tüm hedeflerin ağa uygun şekilde bağlanması koşuluyla, AutoDrive, hedefe giden en kısa rotayı hesaplayarak arabanızdaki tipik navigasyon sisteminize çok benzer şekilde gezinir. Bu nedenle, tüm noktaların ağa bağlı olduğundan emin olmak önemlidir. AutoDrive bağlantısı kesilmiş bir nokta tespit ederse, 'X' ile işaretlenir ve oynatıcı tarafından kaldırılmalı veya bağlanmalıdır."  />
-                                                                                                            
-        <text name="ad_helpTitle_02"                                                                        text="AD modları - Yalnızca Sürüş"  />
-        <text name="ad_helpText_02_01"                                                                      text="Bu modda, mevcut araç en uygun noktayı (mevcut yönüne ve mesafesine göre) veya sadece en yakın noktayı alacak ve ardından oradan varış noktasına en kısa yolu kullanacak ve orada duracaktır. En basit moddur ve yeni rotalarınızı test etmek için en uygun olanıdır."  />
-                                                                                                            
-        <text name="ad_helpTitle_03"                                                                        text="AD modları - Teslim Et"  />
-        <text name="ad_helpText_03_01"                                                                      text="Bu modda AutoDrive, aracı 'Only Drive' modunda olduğu gibi sürecek, ancak bir boşaltma tetiği algılanırsa, mevcut römorku varış noktasında ek olarak boşaltacaktır."  />
-        <text name="ad_helpText_03_02"                                                                      text="Uzun römorklu araçların hedefe ulaşmadan önce boşaltma tetiğine ulaşması için varış noktasında, boşaltma tetiğinin arkasında oluşturulmalıdır."  />
-        <text name="ad_helpText_03_03"                                                                      text="Sürücü, boş olsun ya da olmasın hedefte duracaktır. Hedef noktanızın yeterince geride olmadığını fark ederseniz, hedefi kendiliğinden kaldırmak zorunda kalmadan hedefi kolayca kaldırabilir ve aşağıdaki noktada oluşturabilirsiniz. (Bkz. HUD-Butonları)."  />
-                                                                                                            
-        <text name="ad_helpTitle_04"                                                                        text="AD modları - Toplama ve Teslim Etme"  />
-        <text name="ad_helpText_04_01"                                                                      text="Bu modda, hedefleri hedeflemeyi seçebilirsiniz. Biri yükleme (birincisi) ve ikincisi boşaltma noktası için."  />
-        <text name="ad_helpText_04_02"                                                                      text="AutoDrive etkinleştirilirse, bağlı römorkların / ekipmanların mevcut dolum seviyesine bakacaktır. Bu değer, ayarlanan 'Boşalt' seviyesinden yüksekse (ayarlara bakın), sürücü doğrudan boşaltma hedefine yönelecektir."  />
-        <text name="ad_helpText_04_03"                                                                      text="Aksi takdirde önce yükleme hedefine yönelecektir. Seçilen ayara bağlı olarak ('Boş siloda'), sürücü ya yükleme hedefinde 'Boşaltma' seviyesinde doldurulmasını bekleyecek veya boşaltma hedefine devam edecektir."  />
-        <text name="ad_helpText_04_04"                                                                      text="Her iki durumda da, sürücü ilk olarak seçilen doldurma türünü, yükleme hedefinden önce sağlanan aralıktaki (ayarlara bakın) herhangi bir kullanılabilir tetikleyiciye yüklemeye çalışacaktır."  />
-        <text name="ad_helpText_04_05"                                                                      text="Ek olarak, sürücüyü başlatmadan önce bir tekrar sayacı seçebilirsiniz. Bu sayacı 2'ye ayarlarsanız, sürücü boşaltma hedefine 2 kez ulaştıktan sonra duracaktır. Bu ayar (bkz. HUD) varsayılan olarak bırakılırsa, sürücü her zaman bir sonraki döngüye başlar."  />
-                                                                                                            
-        <text name="ad_helpTitle_05"                                                                        text="AD modları - Yükleme modu"  />
-        <text name="ad_helpText_05_01"                                                                      text="Bu mod, yalnızca birkaç küçük istisna dışında, daha önce açıklanan 'Toplama ve Teslim Etme' moduna çok benzer. 'Tekrar sayacı' na saygı göstermeyecektir."  />
-        <text name="ad_helpText_05_02"                                                                      text="Yalnızca sürücünün AutoDrive'ı durdurup devre dışı bırakacağı bir yükleme hedefi ve bir boşaltma hedefi vardır."  />
-        <text name="ad_helpText_05_03"                                                                      text="Bu mod, saha çalışması için yeniden doldurma modu olarak kullanılmak üzere tasarlanmıştır. Bu şekilde, ekiciler veya püskürtücüler tarla konumunda çalıştırılabilir ve bir doldurma noktasına gönderilebilir ve daha sonra belirlenen tarla hedefine geri döner."  />
-        <text name="ad_helpText_05_04"                                                                      text="Bu mod, Courseplay ile birlikte de kullanılabilir. Courseplay HUD'da 'Yeniden doldurmak / boşaltmak için AutoDrive kullan' ı seçmeniz gerekecektir (bu belgenin bir parçası değildir)."  />
-                                                                                                            
-        <text name="ad_helpTitle_06"                                                                        text="AD modları - Biçerdöveri boşalt"  />
-        <text name="ad_helpText_06_01"                                                                      text="Bu modda tekrar iki hedef belirleyebilirsiniz. İlki, aktif bir hasat makinesine ulaşılabilen bir tarla konumu olmalıdır. İkincisi yine bir boşaltma hedefidir."  />
-        <text name="ad_helpText_06_02"                                                                      text="Bu, AutoDrive sürücülerinin kaydedilen yolu terk etmesine ve sahada sürmesine izin verilen ilk moddur. Bu mod oldukça karmaşıktır ve ayarlar menüsünden birçok ayarı içerir."  />
-        <text name="ad_helpText_06_03"                                                                      text="Dolayısıyla bu dokümantasyon önce temel davranışı tanımlayacak ve ardından ayarların davranışı nasıl etkilediğini ekleyecektir."  />
-                                                                                                            
-        <text name="ad_helpTitle_07"                                                                        text="AD modları - Biçerdöveri boşalt - Temel - 1"  />
-        <text name="ad_helpText_07_01"                                                                      text="Sürücü, başlangıçta sahaya gitme veya önce boşaltma konusunda karar verecektir (bkz. 'Toplama ve Teslim Alma). Saha konumuna ulaşırsa, kendisini kullanılabilir sürücü olarak kaydeder. Bir biçerdöver% 100 doluluk seviyesindeyse ve uzatılmış bir borusu varsa, otomatik olarak kayıtlı boşaltıcılardan geçecek ve ona en yakın olanı seçecektir. 'Boşaltıcı bul' ayarına bağlı olarak, 300 metrelik bir aralıktaki tüm sürücüler kabul edilir (evet) veya yalnızca AutoDrive Hud'daki biçerdöverle aynı hedef noktalara sahip sürücüler (hayır) kabul edilir."  />
-        <text name="ad_helpText_07_02"                                                                      text=""  />
-        <text name="ad_helpText_07_03"                                                                      text="Önemli: Biçerdöver üzerinde AutoDrive'ı etkinleştirmeniz gerekmez. Yalnızca seçilen hedef gereklidir."  />
-        <text name="ad_helpText_07_04"                                                                      text=""  />
-        <text name="ad_helpText_07_05"                                                                      text="Alternatif olarak oyuncu, oyun seçeneklerinde tuş atama 'Çağrı Boşaltıcı' atayarak ve bunu hasat makinesinde otururken kullanarak boşaltıcıyı manuel olarak da çağırabilir. Biçerdöver Courseplay tarafından kontrol ediliyorsa, AutoDrive ayrıca Courseplay sürücüsünün boşaltılmak istediğini tespit ederse bir boşaltıcı çağıracaktır."  />
-                                                                                                            
-        <text name="ad_helpTitle_08"                                                                        text="AD modları - Biçerdöveri boşalt - Temel - 2"  />
-        <text name="ad_helpText_08_01"                                                                      text="Eğer biçerdöver bir boşaltıcı çağrılırsa, biçerdöverin uzatılmış borusuna giden bir yol planlamaya başlayacaktır. Yol planlayıcı tamamen benzersiz bir uygulamadır ve daha sonra bu dokümantasyona ek olarak bir açıklama eklenebilir. Temel kavramlar, simüle edilmiş dünyanın ızgara hücrelerine bölünmesidir. Bu ızgara hücreleri, araçların dönüş yarıçapına göre boyutlandırılır ve meyvesiz (ayarlara bakın), çarpışmasız, sahada (ayarlara bakın) ve AI sürücüleri tarafından kabul edilebilir maksimum eğime sahip oldukları kontrol edilir. Serbest bir yol bulunduktan sonra, en keskin dönüşlerden kurtulmak için bir miktar düzeltme de uygulanır ve ardından sürücü bu yol boyunca biçerdöver'e gönderilir."  />
-        <text name="ad_helpText_08_02"                                                                      text=""  />
-        <text name="ad_helpText_08_03"                                                                      text="Not: Boşaltma sürücüsü, hasat makinesine gitme komutunu alır almaz, HUD'nin bilgi çubuğundaki durum mesajı 'Biçerdöver bekleniyor' dan 'Biçerdöver için sür' olarak değişir. Bu, yol planlayıcının artık aktif olarak bir yol aradığı anlamına gelir. CPU performansınıza ve ayarlarınıza ('Yol bulucu süresi (maks.)') Bağlı olarak, bu işlem biraz zaman alabilir ve aşırı durumlarda fps değerinizi düşürebilir. Bu genellikle, boşaltıcının biçerdöver için kabul edilebilir bir yol bulamaması durumunda söz konusudur. Sürücünün önündeki boşluğun engelsiz (ve meyvesiz) olduğundan ve hasat makinesinin borusuna giden yolun da çarpışmasız olduğundan (örneğin, hasat makinesinin hemen arkasında ağaç meyve olmaması) her zaman emin olun."  />
-        <text name="ad_helpText_08_04"                                                                      text=""  />
-        <text name="ad_helpText_08_05"                                                                      text="Hasat makinesine ulaştığında, boşaltma işleminin bitip bitmediğini veya mevcut römorkun dolu olup olmadığını kontrol edecektir. Birden fazla römork olması durumunda, sürücü bir sonraki römorkta bir doldurma işlemi algılanana kadar ileri doğru gidecektir. Boşaltma işleminden sonra sürücü, biçerdöverin işine devam etmesi için yeterli alan sağlamak üzere birkaç metre geriye doğru gitmeye başlayacaktır. Daha sonra sürücü, biçerdöverin alanı boşaltması ve başlangıç ​​noktasına kadar yol planlamasına başlaması için birkaç saniye bekleyecektir. Başlangıç ​​noktasına ulaşıldığında, kendisini yeniden kullanılabilir boşaltıcı olarak kaydedecek ve yeniden çağrılmayı bekleyecektir. Treyler o noktada zaten doluysa, tarla konumuna geri dönmeden önce doğrudan boşaltma hedefine yönelecektir."  />
-                                                                                                            
-        <text name="ad_helpTitle_09"                                                                        text="AD modları - Biçerdöveri Boşaltma - Sahada park edin"  />
-        <text name="ad_helpText_09_01"                                                                      text="Bu seçenek AutoDrive ayarlarında doğru olarak ayarlanırsa, sürücü hedef hücrenin (boru konumu) meyve algılayıp algılamadığını kontrol eder (Meyveden Kaçınma doğru olarak ayarlanmalıdır). Hiçbir meyve algılanmazsa ve sürücü henüz 'boşaltma' dolum seviyesine ulaşmadıysa, mevcut tarla konumunda kalacaktır."  />
-                                                                                                            
-        <text name="ad_helpTitle_10"                                                                        text="AD modları - Biçerdöveri Boşaltma - Tarlayla kısıtla"  />
-        <text name="ad_helpText_10_01"                                                                      text="Bu seçenek evet olarak ayarlanırsa, yol bulma algoritması yalnızca alandaki ızgara hücrelerini kabul eder. Bu ayar, yalnızca araç zaten tarladaysa (tarlada başlatılmış veya tarlada park edilmişse) etkili olur. Bu seçenek, özellikle dönüş manevraları sırasında sürücüyü sahada tutmaya yardımcı olmalıdır."  />
-        <text name="ad_helpText_10_02"                                                                      text=""  />
-        <text name="ad_helpText_10_03"                                                                      text="Önemli: Belirtilen sürede meyvesiz yol hesaplanamazsa (ayarlara bakın), yol bulucu meyve ve tarla sınırlarını yok sayan bir geri dönüş moduna girecektir!"  />
-                                                                                                            
-        <text name="ad_helpTitle_11"                                                                        text="AD modları -Biçerdöveri Boşaltma - Meyvelerden kaçınma"  />
-        <text name="ad_helpText_11_01"                                                                      text="Bu seçenekler, yol bulucunun yalnızca meyve içermeyen veya marjinal miktarda meyve içeren ızgara hücrelerini kabul etmesini sağlar. Önemli: Belirtilen sürede meyvesiz yol hesaplanamazsa (ayarlara bakın), yol bulucu meyve ve tarla sınırlarını yok sayan bir geri dönüş moduna girecektir!"  />
-                                                                                                            
-        <text name="ad_helpTitle_12"                                                                        text="AD modları - Biçerdöveri Boşaltma - Biçerdöveri takip etme"  />
-        <text name="ad_helpText_12_01"                                                                      text="Ön çağrı sürücüsü / Biçerdöveri takip etme"  />
-        <text name="ad_helpText_12_02"                                                                      text=""  />
-        <text name="ad_helpText_12_03"                                                                      text="Bu seçenekler, hasat makinesini biraz mesafe ile takip etmek için kullanılabilir (Ön çağrı sürücüsü açık / takip kombinasyonu kapalı). Veya biçerdöver hareket halindeyken boşaltıcının aktif olarak boşaltılmasını sağlamak. Biçerdöver, ayarlanan doldurma seviyesine (Çağrı öncesi seviye) ulaştığında, sürücüyü halihazırda bulunduğu konuma çağıracaktır. Sürücü bu noktaya ulaştığında yeniden değerlendirecektir. Hasat makinesine yakınsa (60 metreden az) ve 'birleştirme kovalayıcı' ayarı açıksa, onu görüş açısıyla takip etmeye başlayacaktır. Aksi takdirde, yeni biçerdöver konumuna giden bir yol bulma sürecini yeniden tetikleyecektir. Kovalarken, borunun şu anda meyvede olup olmadığını hissedecektir. Meyvede değilse, boru yerini hedeflemeye başlayacak, aksi takdirde hasat makinesini biraz mesafe ile takip edecektir. Sürücü, 'Yük boşaltma' seviyesine ulaştığında, seçilen alandan çıkışa giden bir yol planlamaya hemen başlayacaktır (ayarlara bakın). Bu nedenle, bu modda seviyeyi% 100'e ayarlamak mantıklıdır. Bu şekilde, kazara biçerdöverin önünü kesmeye çalışmayacak veya tamamen doldurulmadan ayrılmayacaktır."  />
-        <text name="ad_helpTitle_13"                                                                        text="AD modları - Bunker silosunu boşaltın"  />
-        <text name="ad_helpText_13_01"                                                                      text="Bu mod yalnızca kepçe takılı araçlarla kullanılabilir. Temel fikir, geçişli bunker silolarını boşaltmak için tek tıklamalı bir çözümdür. Araç çalıştırıldığında gerekli koşulları kontrol edecektir. Yakınında (~ 100m?) Dolu bir bunker silosuna ve ekli bir kepçeye ihtiyacı var. Her iki koşul da karşılanırsa, araç yukarı / aşağı, yükleme / boşaltma ve uzatma / geri çekme hareketleri için doğru değerleri elde etmek üzere ön yükleyici eksenini başlatacaktır. Daha sonra bunker silosu genişliğini kürek + kürek ilavesi kadar geniş parçalara böler (ayarlara bakın) ve ilk satırdan başlar. İlk veya son halat silo duvarına çarptıysa ayarlardan kürek ekleme değerini artırıp sürücüyü yeniden başlatmalısınız. Bu durum, kepçe toplama genişliği fiziksel boyutlara uygun değilse veya bunker silosu tanımı duvarın içinde yer alıyorsa meydana gelebilir; bu, iyi görünümlü bir bunker silosu geliştirmeyi kolaylaştırdığı için alışılmadık bir durum değildir. Kürek doldurulduktan ve araç bunkerden geri döndürüldükten sonra, bağlı bir römorku olan (sol doldurma alanı olan) bir aracı tarayacak ve oraya gitmeye başlayacaktır."  />
-        <text name="ad_helpText_13_02"                                                                      text=""  />
-        <text name="ad_helpText_13_03"                                                                      text="Dikkat: Şu anda bu modda herhangi bir çarpışma tespiti bulunmamaktadır!"  />
-        <text name="ad_helpText_13_04"                                                                      text=""  />
-        <text name="ad_helpText_13_05"                                                                      text="Araç, kepçe için ideal yükleme konumunu otomatik olarak bulmaya çalıştığı için, ön tekerlekleri yukarı kaldırabilir. Bu senaryo için, tüm tekerleklerin yerde olup olmadığını kontrol eden ve bu kontrol birkaç yüz milisaniye boyunca yanlış dönerse kepçeyi kaldırmaya başlayan bir algılama vardır."  />
-                                                                                                            
+		<text name="button_reset_selected" 					    text="Reset selected" />                                                                                          
                                                                                                             
         <text name="AD_task_pathfinding"                                                                    text="Yol palanlanıyor"  />
         <text name="AD_task_catch_up_with_combine"                                                          text="Biçerdöveri takip etme"  />
@@ -393,46 +322,6 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "combine CP/AD Buttons"/>
         <text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: default / simple: CP: sec mouse action > mouse on + off, AD: Toggle Hud > both huds on + off / full: as simple but huds toggle in single steps / Required: Disable right click HUD at CP settings"/>
 
-        <text name="gui_ad_showTipOfTheDay"						text="Tip of the day" />
-		<text name="gui_ad_showTipOfTheDay_tooltip"				text="Tip of the day displayed on each start of the game" />
-		<text name="gui_ad_tipOfTheDayTitle" 					text="Tip of the day" />
-		<text name="gui_ad_tipOfTheDayActive" 					text="Show on next start" />
-		<text name="ad_next_tip" 								text="Next" />
-		<text name="ad_totd_01_title" 							text="Multiple functions" />
-		<text name="ad_totd_01_text" 							text="Many buttons in AutoDrive have multiple functions. The main function can always be activated with the left mouse. The secondary function can be activated with either the middle or the right mouse button. 
-		
-		Several buttons even have a third and fourth function which can be used by holding down the left shift key while clicking on the button. Currently this only applies for the record button." />
-		<text name="ad_totd_02_title" 							text="Different types of roads" />
-		<text name="ad_totd_02_text" 							text="An AutoDrive network can contain of 4 different types of roads.
-
-		1. A standard road segment (green). Vehicles can travel along the direction marked with the arrows. To start recording a standard road, simply left click the record button.
-		
-		2. Dual direction roads (blue). Here, vehicles may travel in both directions and will block incoming traffic in the opposite direction. You can record dual direction routes with the secondary function on the record button. So use either the middle or the right mouse button.
-		
-		3. Reverse sections (light blue) - Vehicles can only travel in reverse gear along these sections. Useful for parking and unloading in tight spots. Simply drive backwards during a standard recording session.
-		
-		4. Side road - This type of road segment is usually avoided by the path planning unless the target is on this road segment. To record a side road, use the third and fourth function of the record button." />
-		<text name="ad_totd_03_title" 							text="Combine harvesting - 1" />
-		<text name="ad_totd_03_text" 							text="A few basic tips for using AutoDrive to unload combine harvesters:
-		
-		1. To allow a harvester to automatically call an unloader, simply select the same destination in the AutoDrive HUD of the harvester as you have selected for the unloader. This point should usually be a target close to the field so the unloader can then plan a route towards the harvester. Alternatively you can also enable the setting 'Find driver' which will cause the harvester to search for any available unloader in a range of 300m.
-		
-		2. AutoDrive can unload both combine harvesters and threshers on-the-go. To enable this feature for combine harvesters, simple set the setting 'Pre call level' to 0%." />
-		<text name="ad_totd_04_title" 							text="Settings - 1" />
-		<text name="ad_totd_04_text" 							text="There are currently 6 different setting pages.
-
-		1. General settings - Applied for all vehicles.
-
-		2. User settings - Applied to the current player (also in MP). These are settings to control how AutoDrive is displayed and not how it works.
-
-		3. Vehicle settings - Applied only for the current vehicle.
-
-		4. Harvester settings - Only visible when inside a harvester. Here you can control how this harvester calls it's unloaders.
-
-		5. Debug settings - These settings enable some visual debug feedback and more importantly additional log messages. So enable this if you run into problems or bugs and are preparing to send a log file to the developers.
-		
-		6. Experimental features - These settings relate to features we are currently testing/developing but which are not yet considered stable. Use at your own risk." />
-    
 		<text name = "gui_ad_editorTip_1"								text = "Simple left mouse click:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Mouse only: Select 1. point"/>
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>

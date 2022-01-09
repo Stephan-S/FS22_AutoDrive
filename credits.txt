@@ -1,12 +1,13 @@
-Main developer:
+Main developers:
 Stephan-S
+Axel32019
 TyKonKet
 
 GUI Textures and Design:
 OlfDE
 
-Tips & Tricks for Lua/FS: 
-DeckerMMIV
+Logo Design:
+FinalsFarming 
 
 Others:
 Anonymous-any
@@ -27,7 +28,7 @@ Datalund
 Bobster82
 criss20ster
 Gariot
-Axel32019
 andrefelipeschulle
 
-Many code examples reused from Courseplay!
+Tips & Tricks for Lua/FS: 
+DeckerMMIV

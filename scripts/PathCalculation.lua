@@ -27,8 +27,11 @@ function ADPathCalculator:GetPath(startID, targetID, preferredStartIds)
 
     local foundTarget = false
     local sqrt = math.sqrt
-    local distanceFunc = function(a, b)
-        return sqrt(a * a + b * b)
+    local distanceFunc = function(a, b, c)
+        return sqrt((a.x - b.x)* (a.x - b.x) + (a.z - b.z) * (a.z - b.z))
+    end
+    local distanceFunc2 = function(a, b, c)
+        return ADGraphManager:getDriveTimeBetweenNodes(a.id, b.id, c, 30, true)
     end
 
     local isSubPrio = function(pointToTest) 
@@ -100,7 +103,9 @@ function ADPathCalculator:GetPath(startID, targetID, preferredStartIds)
                                     preventTurnaroundWeight = 5000000
                                 end
                             end
-                            candidates:enqueue({p=outPoint, distance=(distance + (distanceFunc(outPoint.x - point.x, outPoint.z - point.z) + (addedWeights[outPoint.id] or 0)) * factor + preventTurnaroundWeight), pre=point.id})
+                            --candidates:enqueue({p=outPoint, distance=(distance + (distanceFunc(outPoint.x - point.x, outPoint.z - point.z) + (addedWeights[outPoint.id] or 0)) * factor + preventTurnaroundWeight), pre=point.id})
+                            --candidates:enqueue({p=outPoint, distance=(distance + (distanceFunc(point, outPoint, previousPoint) + (addedWeights[outPoint.id] or 0)) * factor + preventTurnaroundWeight), pre=point.id})
+                            candidates:enqueue({p=outPoint, distance=(distance + (distanceFunc2(point, outPoint, previousPoint) + (addedWeights[outPoint.id] or 0)) * factor + preventTurnaroundWeight), pre=point.id})
                         end
                     end
                     point = nil
@@ -115,14 +120,17 @@ function ADPathCalculator:GetPath(startID, targetID, preferredStartIds)
                                 results[point.id][outPoint.id] = {distance=distance, pre=previousPoint}
                             end
                         end
-                        previousPoint = point.id
 
                         local factor = 1
                         if isSubPrio(outPoint) then
                             factor = 20
                         end
 
-                        distance = distance + (distanceFunc(outPoint.x - point.x, outPoint.z - point.z) + (addedWeights[outPoint.id] or 0)) * factor
+                        --distance = distance + (distanceFunc(outPoint.x - point.x, outPoint.z - point.z) + (addedWeights[outPoint.id] or 0)) * factor
+                        --distance = distance + (distanceFunc(point, outPoint, previousPoint) + (addedWeights[outPoint.id] or 0)) * factor
+                        distance = distance + (distanceFunc2(point, outPoint, previousPoint) + (addedWeights[outPoint.id] or 0)) * factor
+                        
+                        previousPoint = point.id
                         point = outPoint
                     else
                         point = nil

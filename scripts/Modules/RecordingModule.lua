@@ -28,10 +28,10 @@ function ADRecordingModule:start(dual, subPrio)
         self.flags = self.flags + AutoDrive.FLAG_SUBPRIO
     end
 
-    local rearOffset = 0
+    local rearOffset = -2
     _, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
-    if self.trailerCount > 0 then
-        rearOffset = -6
+    if self.trailerCount > 1 then
+        -- rearOffset = -6
     end
 
     self.drivingReverse = (self.vehicle.lastSpeedReal * self.vehicle.movingDirection) < 0
@@ -83,9 +83,9 @@ function ADRecordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgno
         return
     end
 
-    local rearOffset = 0
-    if self.trailerCount > 0 then
-        rearOffset = -6
+    local rearOffset = -2
+    if self.trailerCount > 1 then
+        -- rearOffset = -6
     end
 
     local vehicleX, _, vehicleZ = getWorldTranslation(self.vehicle.components[1].node)

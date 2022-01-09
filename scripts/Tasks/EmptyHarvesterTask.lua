@@ -30,7 +30,7 @@ function EmptyHarvesterTask:setUp()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "Setting up EmptyHarvesterTask")
     self.vehicle.ad.pathFinderModule:startPathPlanningToPipe(self.combine, false)
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
-    self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, true)
+    self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, true)
 end
 

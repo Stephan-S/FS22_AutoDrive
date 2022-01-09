@@ -126,7 +126,7 @@ function ADGraphManager:setMapMarker(mapMarker)
 	self.mapMarkers[mapMarker.markerIndex] = mapMarker
 end
 
-function ADGraphManager:getPathTo(vehicle, waypointId)
+function ADGraphManager:getPathTo(vehicle, waypointId, startPoint)
 	local wp = {}
 
 	local x, _, z = getWorldTranslation(vehicle.components[1].node)
@@ -141,6 +141,12 @@ function ADGraphManager:getPathTo(vehicle, waypointId)
 	end
 
 	local closestWaypoint = self:findMatchingWayPointForVehicle(vehicle)
+	if startPoint ~= nil then
+		local distanceToStartPoint = MathUtil.vector2Length(x - startPoint.x, z - startPoint.z)
+		if distanceToStartPoint < 5 then
+			closestWaypoint = startPoint.id
+		end
+	end
 	if closestWaypoint ~= nil then
 		local outCandidates = self:getBestOutPoints(vehicle, closestWaypoint)
 		wp = self:pathFromTo(closestWaypoint, waypointId, outCandidates)
@@ -159,7 +165,6 @@ function ADGraphManager:pathFromTo(startWaypointId, targetWaypointId, preferredN
 				preferredNeighbors = {}
 			end
 			wp = ADPathCalculator:GetPath(startWaypointId, targetWaypointId, preferredNeighbors)
-			--wp = AutoDrive:dijkstraLiveShortestPath(startWaypointId, targetWaypointId)
 		end
 	end
 	return wp
@@ -174,7 +179,6 @@ function ADGraphManager:pathFromToMarker(startWaypointId, markerId)
 			return wp
 		else
 			wp = ADPathCalculator:GetPath(startWaypointId, targetId, {})
-			--wp = AutoDrive:dijkstraLiveShortestPath(startWaypointId, targetId)
 		end
 	end
 	return wp
@@ -206,7 +210,6 @@ function ADGraphManager:FastShortestPath(start, markerName, markerId)
 	end
 
 	wp = ADPathCalculator:GetPath(start_id, target_id, {})
-	--wp = AutoDrive:dijkstraLiveShortestPath(start_id, target_id)
 	return wp
 end
 
@@ -304,7 +307,7 @@ function ADGraphManager:removeWayPoint(wayPointId, sendEvent)
 end
 
 function ADGraphManager:renameMapMarker(newName, markerId, sendEvent)
-	if newName:len() > 1 and markerId >= 0 then
+	if newName:len() >= 1 and markerId >= 0 then
         local mapMarker = self:getMapMarkerById(markerId)
         if mapMarker == nil or mapMarker.isADDebug == true then
             -- do not allow rename debug marker
@@ -341,7 +344,7 @@ function ADGraphManager:createMapMarkerOnClosest(vehicle, markerName, sendEvent)
 end
 
 function ADGraphManager:createMapMarker(markerId, markerName, sendEvent)
-	if markerId ~= nil and markerId >= 0 and markerName:len() > 1 then
+	if markerId ~= nil and markerId >= 0 and markerName:len() >= 1 then
 		if sendEvent == nil or sendEvent == true then
 			-- Propagating marker creation all over the network
 			AutoDriveCreateMapMarkerEvent.sendEvent(markerId, markerName)
@@ -420,7 +423,7 @@ function ADGraphManager:removeGroup(groupName, sendEvent)
 end
 
 function ADGraphManager:changeMapMarkerGroup(groupName, markerId, sendEvent)
-	if groupName:len() > 1 and self.groups[groupName] ~= nil and markerId >= 0 and groupName ~= ADGraphManager.debugGroupName then
+	if groupName:len() >= 1 and self.groups[groupName] ~= nil and markerId >= 0 and groupName ~= ADGraphManager.debugGroupName then
 		if sendEvent == nil or sendEvent == true then
 			-- Propagating marker group change all over the network
 			AutoDriveChangeMapMarkerGroupEvent.sendEvent(groupName, markerId)
@@ -1462,4 +1465,113 @@ function ADGraphManager:createSplineConnection(start, waypoints, target, sendEve
 		local wp = self:getWayPointById(lastId)
 		self:toggleConnectionBetween(wp, self:getWayPointById(target), false, false)
 	end
+end
+
+function ADGraphManager:getNextTargetAlphabetically(markerId)
+	local sortedMarkers = self:getSortedMarkers()
+	for i, markerIdIter in ipairs(sortedMarkers) do
+		if markerIdIter == markerId then
+			if i < #sortedMarkers then
+				return sortedMarkers[i+1]
+			else
+				return sortedMarkers[1]
+			end
+		end
+	end
+	return markerId
+end
+
+function ADGraphManager:getPreviousTargetAlphabetically(markerId)
+	local sortedMarkers = self:getSortedMarkers()
+	for i, markerIdIter in ipairs(sortedMarkers) do
+		if markerIdIter == markerId then
+			if i > 1 then
+				return sortedMarkers[i-1]
+			else
+				return sortedMarkers[#sortedMarkers]
+			end
+		end
+	end
+	return markerId
+end
+
+function ADGraphManager:getSortedMarkers()
+	local useFolders = AutoDrive.getSetting("useFolders")
+
+    local groups = {}
+	local groupsToSortedIndex = {}
+    if useFolders then
+        groups, groupsToSortedIndex = self:sortGroups(groups)
+    end
+
+    if #groups == 0 then
+        groups[1] = {}
+		groupsToSortedIndex[1] = "All"
+    end
+
+    for markerID, marker in pairs(self:getMapMarkers()) do
+        if useFolders then
+            table.insert(groups[groupsToSortedIndex[marker.group]], {displayName = marker.name, returnValue = markerID})
+        else
+            table.insert(groups[1], {displayName = marker.name, returnValue = markerID})
+        end
+    end
+
+	local sort_func = function(a, b)
+        a = tostring(a.displayName):lower()
+        b = tostring(b.displayName):lower()
+        local patt = "^(.-)%s*(%d+)$"
+        local _, _, col1, num1 = a:find(patt)
+        local _, _, col2, num2 = b:find(patt)
+        if (col1 and col2) and col1 == col2 then
+            return tonumber(num1) < tonumber(num2)
+        end
+        return a < b
+    end
+
+	for groupId, _ in pairs(groups) do
+		table.sort(groups[groupId], sort_func)
+	end
+
+	local allInOneTable = {}
+	for groupId, entries in pairs(groups) do
+		for _, marker in pairs(entries) do
+			allInOneTable[#allInOneTable+1] = marker.returnValue
+		end
+	end
+
+
+	return allInOneTable
+end
+
+function ADGraphManager:sortGroups(groups)
+    groups = {}
+	groups[1] = {}
+
+    local sort_func = function(a, b)
+        a = tostring(a):lower()
+        b = tostring(b):lower()
+        local patt = "^(.-)%s*(%d+)$"
+        local _, _, col1, num1 = a:find(patt)
+        local _, _, col2, num2 = b:find(patt)
+        if (col1 and col2) and col1 == col2 then
+            return tonumber(num1) < tonumber(num2)
+        end
+        return a < b
+    end
+
+    local groupTable = {}
+    for groupName, groupID in pairs(ADGraphManager:getGroups()) do
+        table.insert(groupTable, groupName)
+    end
+
+    table.sort(groupTable, sort_func)
+	local groupsToSortedIndex = {}
+	groupsToSortedIndex[1] = "All"
+	for i=1,#groupTable do
+		groups[#groups + 1] = {}
+		groupsToSortedIndex[groupTable[i]] = i + 1
+	end
+
+	return groups, groupsToSortedIndex
 end

@@ -17,6 +17,7 @@ function ADDrivePathModule:new(vehicle)
     o.waitTimer = AutoDriveTON:new()
     o.blinkTimer = AutoDriveTON:new()
     o.brakeHysteresisActive = false
+    o.lastUsedWayPoint = nil
     ADDrivePathModule.reset(o)
     return o
 end
@@ -38,10 +39,11 @@ function ADDrivePathModule:reset()
     self.vehicle:setTurnLightState(Lights.TURNLIGHT_OFF)
     self.distanceToTarget = math.huge
     self.speedLimit = 0
+    self.lastUsedWayPoint = nil
 end
 
 function ADDrivePathModule:setPathTo(waypointId)
-    self.wayPoints = ADGraphManager:getPathTo(self.vehicle, waypointId)
+    self.wayPoints = ADGraphManager:getPathTo(self.vehicle, waypointId, self.lastUsedWayPoint)
     local destination = ADGraphManager:getMapMarkerByWayPointId(self:getLastWayPointId())
     self.vehicle.ad.stateModule:setCurrentDestination(destination)
     self:setDirtyFlag()
@@ -145,7 +147,6 @@ function ADDrivePathModule:update(dt)
             if self:isCloseToWaypoint() then
                 local reverseStart, _ = self:checkForReverseSection()
                 if reverseStart then
-                    --print("Toggled driving direction to reverse")
                     self.isReversing = not self.isReversing
                     self.vehicle.ad.specialDrivingModule:reset()
                     self.vehicle.ad.specialDrivingModule.currentWayPointIndex = self:getCurrentWayPointIndex() + 1
@@ -296,7 +297,8 @@ function ADDrivePathModule:followWaypoints(dt)
     end
 end
 
-function ADDrivePathModule:handleReachedWayPoint()
+function ADDrivePathModule:handleReachedWayPoint()    
+    self.lastUsedWayPoint = self:getCurrentWayPoint()
     if self:getNextWayPoint() ~= nil then
         self:switchToNextWayPoint()
     else
@@ -553,7 +555,11 @@ function ADDrivePathModule:getCurrentWayPointIndex()
 end
 
 function ADDrivePathModule:getCurrentWayPoint()
-    return self.wayPoints[self:getCurrentWayPointIndex()]
+    if self.wayPoints ~= nil then
+        return self.wayPoints[self:getCurrentWayPointIndex()]
+    end
+
+    return nil
 end
 
 function ADDrivePathModule:getCurrentWayPointId()
@@ -573,9 +579,8 @@ function ADDrivePathModule:switchToNextWayPoint()
     self.minDistanceToNextWp = math.huge
 
     local _, reverseEnd = self:checkForReverseSection()
-    if reverseEnd then
-        --print("Toggled driving direction to forwards")
-        self.isReversing = not self.isReversing
+    if reverseEnd and self.isReversing then
+        self.isReversing = false --not self.isReversing
         self.vehicle.ad.specialDrivingModule:reset()
         self.vehicle.ad.specialDrivingModule.currentWayPointIndex = self:getCurrentWayPointIndex()
     end
@@ -709,16 +714,16 @@ function ADDrivePathModule:checkForReverseSection()
         local wp_ahead = self.wayPoints[self:getCurrentWayPointIndex() + 1]
         local wp_current = self.wayPoints[self:getCurrentWayPointIndex() - 0]
         local wp_ref = self.wayPoints[self:getCurrentWayPointIndex() - 1]
-        local isReverseStart = wp_ahead.incoming ~= nil and (not table.contains(wp_ahead.incoming, wp_current.id))
+        local isReverseStart = (wp_ahead.incoming ~= nil and (not table.contains(wp_ahead.incoming, wp_current.id))) or (wp_ahead.isReverse ~= nil and wp_ahead.isReverse == true)
         local isReverseEnd = wp_ahead.incoming ~= nil and wp_current.incoming ~= nil and table.contains(wp_ahead.incoming, wp_current.id) and not table.contains(wp_current.incoming, wp_ref.id)
 
         local angle = AutoDrive.angleBetween({x = wp_ahead.x - wp_current.x, z = wp_ahead.z - wp_current.z}, {x = wp_current.x - wp_ref.x, z = wp_current.z - wp_ref.z})
 
         angle = math.abs(angle)
-        if angle > 100 and isReverseStart then
+        if (angle > 100 and isReverseStart) or (wp_ahead.isReverse ~= nil and wp_ahead.isReverse == true) then
             reverseStart = true
         end
-        if angle > 100 and isReverseEnd then
+        if (angle > 100 and isReverseEnd) or (wp_ahead.isForward ~= nil and wp_ahead.isForward == true) then
             reverseEnd = true
         end
     end
