@@ -467,3 +467,56 @@ function AutoDrive.getADFocusVehicle(debug)
     end
     return vehicle
 end
+
+function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
+    local supportedFillTypes = {}
+    local autoLoadFillTypes = nil -- AutoLoad - TODO: return the correct fillTypes
+
+    if vehicle ~= nil then
+        local trailers, _ = AutoDrive.getAllUnits(vehicle)
+        for trailerIndex, trailer in ipairs(trailers) do
+            if AutoDrive:hasAL(trailer) then
+                -- AutoLoad - TODO: return the correct fillTypes
+                autoLoadFillTypes = AutoDrive:getALFillTypes(trailer)
+            else
+                if trailer.getFillUnits ~= nil then
+                    for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
+                        if trailer.getFillUnitSupportedFillTypes ~= nil then
+                            for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
+                                
+                                if trailerIndex == 1 then -- hide fuel types for 1st vehicle
+                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
+                                    if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
+                                        supported = false
+                                    end
+                                end
+                                if supported then
+                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
+                                    table.insert(supportedFillTypes, fillType)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+	local sort_func = function(a, b)
+        a = tostring(g_fillTypeManager:getFillTypeByIndex(a).title):lower()
+        b = tostring(g_fillTypeManager:getFillTypeByIndex(b).title):lower()
+        local patt = "^(.-)%s*(%d+)$"
+        local _, _, col1, num1 = a:find(patt)
+        local _, _, col2, num2 = b:find(patt)
+        if (col1 and col2) and col1 == col2 then
+            return tonumber(num1) < tonumber(num2)
+        end
+        return a < b
+    end
+
+    if supportedFillTypes and #supportedFillTypes > 0 then
+        table.sort(supportedFillTypes, sort_func)
+    end
+
+    return supportedFillTypes
+end
