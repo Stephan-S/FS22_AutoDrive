@@ -154,7 +154,7 @@ function HandleHarvesterTurnTask:continueWith(points)
 end
 
 function HandleHarvesterTurnTask:tryNextTurn()
-    self.nextTurnToTry = (self.nextTurnToTry + 1) % 2
+    self.nextTurnToTry = (self.nextTurnToTry + 1) % 3
     if self.nextTurnToTry == 0 then
         self.currentTurn = OffsetTurn:new(self.turnParameters)
         if not AutoDrive.combineIsTurning(self.combine) then
@@ -167,6 +167,8 @@ function HandleHarvesterTurnTask:tryNextTurn()
         end
     elseif self.nextTurnToTry == 1 then
         self.currentTurn = ReverseOffsetTurn:new(self.turnParameters)
+    elseif self.nextTurnToTry == 2 then
+        self.currentTurn = ForwardOffsetTurn:new(self.turnParameters)
     end
 
     if not self.currentTurn.checkValidity(self.turnParameters) then
@@ -192,15 +194,9 @@ function HandleHarvesterTurnTask:cleanPoints(points)
     end
 end
 
-function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, left)
+function HandleHarvesterTurnTask:getUturnOffsetValues(left)
     local radius = AutoDrive.getDriverRadius(self.vehicle)
-    local vehX, vehY, vehZ = getWorldTranslation(self.vehicle.components[1].node)
-    local resolution = 20
-
     local offsetTurn = (radius*2) > (AutoDrive.getFrontToolWidth(self.combine) + 2)
-
-    local points = {}
-
     if offsetTurn then
         local offset = (radius*2) - AutoDrive.getFrontToolWidth(self.combine)
         
@@ -209,7 +205,24 @@ function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, l
         if left then
             offsetX = -offsetX
         end
+        return offsetX, offsetZ
+    end
 
+    return 0, 0
+end
+
+function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, left, offsetValues)
+    local radius = AutoDrive.getDriverRadius(self.vehicle)
+    local vehX, vehY, vehZ = getWorldTranslation(self.vehicle.components[1].node)
+    local resolution = 20
+    
+    local offsetX, offsetZ = self:getUturnOffsetValues(left)
+    if offsetValues ~= nil then
+        offsetX, offsetZ = offsetValues[1], offsetValues[2]
+    end
+    local points = {}
+
+    if math.abs(offsetX) > 0 then
         local endPoint = { x = startPos.x + offsetX * startDirX.x + offsetZ * startDirZ.x, y=vehY, z = startPos.z + offsetX * startDirX.z + offsetZ * startDirZ.z}
 
         offsetZ = offsetZ + 2
