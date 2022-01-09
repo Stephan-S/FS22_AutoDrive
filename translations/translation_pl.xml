@@ -8,27 +8,28 @@
 		<text name="input_ADToggleMouse"						text="AD: Pokaż/ukryj kursor" />
 		<text name="input_ADEnDisable"							text="AD: wł./wył." />
 		<text name="input_ADSilomode"							text="AD: Zmień tryb" />
-		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
+		<text name="input_ADPreviousMode"						text="AD: Poprzedni tryb" />
 		<text name="input_ADRecord"								text="AD: Nagrywanie" />
-		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
-		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
-		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
+		<text name="input_ADRecord_Dual"						text="AD: Nagraj trasę dwukierunkową" />
+		<text name="input_ADRecord_SubPrio"						text="AD: Nagraj boczną trasę" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Nagraj boczną trasę dwukierunkową" />
 		<text name="input_ADSelectTarget"						text="AD: Wybierz następny cel" />
 		<text name="input_ADSelectPreviousTarget"				text="AD: Wybierz poprzedni cel" />
 		<text name="input_AD_Speed_up"							text="AD: Zwiększ prędkość" />
 		<text name="input_AD_Speed_down"						text="AD: Zmniejsz prędkość" />
 		<text name="input_AD_routes_manager" 					text="AD: Otwórz manager tras" />
 		<text name="input_AD_open_notification_history" 		text="AD: Otwórz historię powiadomień" />
+		<text name="input_AD_open_colorSettings" 		        text="AD: Przypisywanie kolorów" />
 		<text name="input_AD_continue"							text="AD: Kontynuuj" />
 		<text name="input_ADSelectTargetUnload"					text="AD: Następny punkt rozładunku" />
 		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Poprzedni punkt rozładunku" />
 		<text name="input_ADActivateDebug"						text="AD: Tryb edycji" />
-		<text name="input_ADDisplayMapPoints"					text="AD: Show waypoints" />
+		<text name="input_ADDisplayMapPoints"					text="AD: Pokaż punkty trasy" />
 		<text name="input_ADDebugSelectNeighbor"				text="AD: Wybierz sąsiadujący punkt" />
 		<text name="input_ADDebugChangeNeighbor"				text="AD: Wybierz następny sąsiadujący punkt" />
-		<text name="input_ADDebugPreviousNeighbor"				text="AD: Select previous Neighbour Point" />
-		<text name="input_ADDebugCreateConnection"				text="AD: Połączenie punktów wł./wył." />
-		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Toggle connection between inverted" />
+		<text name="input_ADDebugPreviousNeighbor"				text="AD: Wybierz poprzedni sąsiadujący punkt" />
+		<text name="input_ADDebugCreateConnection"				text="AD: Utwórz połączenie" />
+		<text name="input_ADDebugToggleConnectionInverted"		text="AD: Utwórz odwrócone połączenie" />
 		<text name="input_ADDebugCreateMapMarker"				text="AD: Utwórz/edytuj cel" />
 		<text name="input_ADRenameMapMarker"					text="AD: Edytuj wybrany cel" />
 		<text name="input_ADDebugDeleteWayPoint"				text="AD: Usuń punkt trasy" />
@@ -39,25 +40,26 @@
 		<text name="input_ADCallDriver"							text="AD: Przywołaj kierowcę" />
 		<text name="input_ADGoToVehicle"						text="AD: Zmień na podstawiony pojazd" />
 		<text name="input_ADNameDriver"							text="AD: Przypisz nazwę kierowcy" />
-		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
-		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
-		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
+		<text name="input_ADSetDestinationFilter"				text="AD: Filtr celów" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: Zwiększ prędkość na polu" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: Zmniejsz prędkość na polu" />
 		<text name="input_ADIncLoopCounter"						text="AD: Zwiększ liczbę powtórzeń" />
-		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
+		<text name="input_ADDecLoopCounter"						text="AD: Zmniejsz liczbę powtórzeń" />
 		<text name="input_ADbunkerUnloadType"					text="AD: Wyładuj na przyczepę lub do silosu" />
 		<text name="input_ADParkVehicle"						text="AD: Zaparkuj pojazd" />
-		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
-		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
-		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
+		<text name="input_ADSetParkDestination"					text="AD: Przypisz pierwszy cel do parkowania" />
+		<text name="input_ADRefuelVehicle"						text="AD: Zatankuj pojazd" />
+		<text name="input_ADRepairVehicle"						text="AD: Napraw pojazd" />	
 		<text name="input_ADSwapTargets"						text="AD: Zamień cele" />
-		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
-		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
+		<text name="input_ADStartCP"							text="AD: Przekaż do CP/AIVE" />
+		<text name="input_ADToggleCP_AIVE"						text="AD: Przełącz CP/AIVE" />
 		<text name="input_AD_devAction"                         text="AD: Akcja deweloperska" />
-		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
-		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
+		<text name="input_AD_open_tipOfTheDay" 					text="AD: Otwórz podpowiedź dnia" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Wybierz automatycznie cel ładowania" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Wybierz automatycznie cel rozładowania" />
 		<text name="hud_avoidFruit"								text="AD: Unikaj upraw" />
 		<text name="hud_startCp"								text="AD: Uruchom CP / AIVE po dotarciu do celu" />
-		<text name="AD_parkVehicle_noPosSet"					text="Nie przydzielono parkingu. Przypisz wybrany cel trasy za pomocą prawego kliku." />
+		<text name="AD_parkVehicle_noPosSet"					text="Nie przydzielono parkingu." />
 		<text name="AD_parkVehicle_selected"					text="Obecnie wybrany parking: " />
 		<text name="AD_parkVehicle_deleted"					    text="miejsce parkowania skasowane!" />
 		<text name="AD_Driver_of"								text="Kierowca" />
@@ -66,11 +68,11 @@
 		<text name="AD_cannot_reach"							text="nie może dotrzeć do" />
 		<text name="AD_cannot_find_path"						text="nie może określić trasy" />
 		<text name="AD_new_marker"								text="Nowy cel:" />
-		<text name="AD_No_Trailer"								text="nie mogłem znaleźć przyczepy" />
-		<text name="AD_No_Bunker"								text="nie mogłem znaleźć silosu" />
-		<text name="AD_No_Shovel"								text="nie mogłem znaleźć łychy" />
-		<text name="AD_No_Refuel_Station"						text="nie mogłem znaleźć miejsca napełniania:" />
-		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
+		<text name="AD_No_Trailer"								text="nie znaleziono przyczepy" />
+		<text name="AD_No_Bunker"								text="nie znaleziono silosu" />
+		<text name="AD_No_Shovel"								text="nie znaleziono łychy" />
+		<text name="AD_No_Refuel_Station"						text="nie znaleziono miejsca napełniania:" />
+		<text name="AD_No_Repair_Station"						text="nie znaleziono warsztatu dla:" />
 		<text name="AD_MODE_DRIVETO"							text="Jazda" />
 		<text name="AD_MODE_DELIVERTO"							text="Rozładunek" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Odbiór i rozładunek" />
@@ -162,8 +164,8 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Odległość do celów, przy której są wykrywane i aktywowane triggery." />
 		<text name="gui_ad_useBeaconLights"						text="Światła ostrzegawcze" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Używaj świateł ostrzegawczych na drodze." />
-		<text name="gui_ad_activeUnloading"						text="Active unloading" />
-		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
+		<text name="gui_ad_activeUnloading"						text="Aktywne rozładowywanie" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="Rozładowywanie kombajnów w czasie jazdy." />
 		<text name="gui_ad_restrictToField"						text="Ogranicz odnajdywanie trasy do obszaru pola" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Jeżeli pojazd rozładowujący jest zaparkowany na polu, będzie szukał trasy tylko do granic pola." />
 		<text name="gui_ad_showTooltips"						text="Pokaż podpowiedzi" />
@@ -178,8 +180,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Podaj nazwę folderu:" />
 		<text name="gui_ad_autoRefuel"							text="Automatyczne tankowanie" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Jedź do miejsca tankowania (blisko triggera z paliwem), kiedy poziom paliwa jest niski." />
-		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
-		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
+		<text name="gui_ad_autoRepair"							text="Automatyczne naprawianie" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Jedź do warsztatu (w pobliże triggera naprawy), gdy poziom zużycia jest zbyt wysoki." />
 		<text name="gui_ad_filter"								text="Filtr" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Zmień tekst filtrowania celów" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Podaj tekst filtrowania:" />
@@ -203,8 +205,8 @@
 		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="Drugi tryb edycji pozwala zmieniać trasy bez przytrzymywania wciśniętego LCTRL" />
 		<text name="gui_ad_wideHUD"								text="Szeroki interfejs" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Użyj trybu szerokiego interfejsu, który pozwala umieścić kilka dodatkowych przycisków ustawień na interfejsie" />
-		<text name="gui_ad_playSounds"							text="Sound" />
-		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
+		<text name="gui_ad_playSounds"							text="Dźwięki" />
+		<text name="gui_ad_playSounds_tooltip"					text="Włącza efekty dźwiękowe dla kliknięć myszką i powiadomień." />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizuj wiele celów" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Różni kierowcy wykorzystujący ten sam folder do różnych celów zsynchronizują następny cel" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkuj po zakończeniu pracy" />
@@ -215,19 +217,19 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Tak - AutoDrive zdejmuje i zakłada plandekę w razie potrzeby / Nie - plandeka nie będzie zdejmowana lub zakładana przez AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manewr wyprzedzający" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Tak - rozładowujący spróbują zaplanować ścieżkę i dostosować jazdę do kombajnu skręcającego o 90°. / Nie - Rozładowujący będą cofać przed skrętem" />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
-		<text name="gui_ad_AL_off"                              text="Unload Off" />
-		<text name="gui_ad_AL_center"                           text="Unload center" />
-		<text name="gui_ad_AL_left"                             text="Unload left" />
-		<text name="gui_ad_AL_behind"                           text="Unload behind" />
-		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
-		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_ALUnload"                            text="Łatwe Auto Ładowanie (ŁAŁ): Pozycja rozładowywania" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Włącz/wyłącz automatyczne rozładowywanie, rozładowywanie na środku platformy, z lewej / z tyłu / z prawej strony pozycji rozładowczej pojazdu (pozycja zależy od konfiguracji pojazdu nie od AD!)" />
+		<text name="gui_ad_AL_off"                              text="Rozładowywanie wyłączone" />
+		<text name="gui_ad_AL_center"                           text="Rozładuj na środku" />
+		<text name="gui_ad_AL_left"                             text="Rozładuj z lewej" />
+		<text name="gui_ad_AL_behind"                           text="Rozładuj z tyłu" />
+		<text name="gui_ad_AL_right"                            text="Rozładuje z prawej" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="ŁAŁ: czas oczekiwania po rozładunku" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Czas oczekiwanie po rozładowaniu, przed rozpoczęciem dalszej jazdy - przydatne do rozładowywania na środku: 0-bez oczekiwania, oczekiwanie o wybrany czas." />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Tworzenie sieci tras" />
 		<text name="gui_ad_scanConfirmationText"                text="Czy AutoDrive powinien generować sieć tras na podstawie danych o ruchu drogowym i pomocnikach na mapie?" />
-		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
-		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
+		<text name="gui_ad_noHarvesterAvailable"				text="Nie znaleziono kombajnu dla tego samego celu" />
+		<text name="gui_ad_noUnloaderAvailable"					text="Brak kierowcy dla tego samego celu" />
 
 		<text name="gui_ad_settingsPage_title"					text="Ustawienia - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Ustawienia użytkownika - AutoDrive" />
@@ -235,11 +237,11 @@
 		<text name="gui_ad_combineUnloadSettingsPage_title"		text="Ustawienia rozładowywania kombajnu - AutoDrive" />
 		<text name="gui_ad_debugSettingsPage_title" 			text="Ustawienia debugowania - AutoDrive" />
 		<text name="gui_ad_eFeaturesSettingsPage_title" 		text="Ustawienia funkcji eksperymentalnych - AutoDrive" />
-		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		text="Ustawienia niefunkcjonalne - AutoDrive" />
 		<text name="gui_ad_restoreButtonText" 					text="Przywrócenie" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Wszystkie zmiany zostaną utracone" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Czy na pewno chcesz zamknąć ustawienia bez zapisywania?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Ustaw jako domyślne" />
 		
 		<text name="gui_ad_routesManagerTitle" 					text="Manager tras" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Podaj nazwę trasy:" />
@@ -269,7 +271,7 @@
 		<text name="gui_ad_notificationHistoryTitle" 			text="Powiadomienia" />
 
 		<text name="gui_ad_colorSettingsTitle" 			        text="Przypisywanie kolorów" />
-            <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
+        <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
 		<text name="ad_color_singleConnection" 			        text="01 linia drogi jednokierunkowej" />
 		<text name="ad_color_dualConnection" 			        text="02 linia drogi dwukierunkowej" />
 		<text name="ad_color_reverseConnection" 			    text="03 linia drogi cofania" />
@@ -315,13 +317,12 @@
 		<text name="AD_task_exiting_field"						text="Wyjazd z pola" />
 		<text name="AD_task_reversing_from_collision"			text="Poszukiwanie wolnej przestrzeni" />
         <text name="AD_task_drive_to_park"				        text="Jazda do miejsca parkowania" />
-		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
+		<text name="AD_task_unload_area_in_fruit"			    text="Strefa wyładowywania zablokowana" />
 
 		<text name = "gui_CPAD_off"								text = "wyłączone"/>
 		<text name = "gui_CPAD_simple"							text = "proste"/>
 		<text name = "gui_CPAD_full"							text = "pełne"/>		
-		<text name = "gui_ad_combineCPADHudMouse"				text = "połącz przyciski CP/AD"/>
-    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "wyłączone: domyślnie / proste: CP: druga akcja myszą  > mysz wł. + wył., AD: Pokaż interfejs > oba interfejsy wł. + wył. / pełne: tak jak proste, ale pokaż interfejsy w prostych krokach / Wymagane: Wyłączenie w ustawieniach CP pokazywania interfejsu za pomocą prawego kliku"/>
+		<text name = "gui_ad_combineCPADHudMouse"				text = "połącz przyciski CP/AD"/>    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "wyłączone: domyślnie / proste: CP: druga akcja myszą  > mysz wł. + wył., AD: Pokaż interfejs > oba interfejsy wł. + wył. / pełne: tak jak proste, ale pokaż interfejsy w prostych krokach / Wymagane: Wyłączenie w ustawieniach CP pokazywania interfejsu za pomocą prawego kliku"/>
 		
 		<text name = "gui_ad_editorTip_1"								text = "Prosty klik lewym przyciskiem:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Tylko mysz: Zaznacz pierwszy punkt"/>
