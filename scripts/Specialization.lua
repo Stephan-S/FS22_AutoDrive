@@ -539,6 +539,9 @@ function AutoDrive:onDraw()
             end
         end
     end
+    if AutoDrive.devOnDraw ~= nil then
+        AutoDrive.devOnDraw(self)
+    end
 end
 
 function AutoDrive:onDrawPreviews()    
