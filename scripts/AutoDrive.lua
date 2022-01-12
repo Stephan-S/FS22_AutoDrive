@@ -307,6 +307,7 @@ end
 function AutoDrive:drawBaseMission()
 	if AutoDrive.aiFrameOpen then		
 		AutoDrive:drawRouteOnMap()
+		AutoDrive.drawNetworkOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
 			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
 		end
@@ -385,6 +386,70 @@ function AutoDrive.drawRouteOnMap()
 				lastWp = wp
 			end
 			skips = (skips + 1) % 1
+		end
+	end
+end
+
+function AutoDrive.drawNetworkOnMap()
+	if AutoDrive.aiFrame == nil then
+		return
+	end
+
+	if not AutoDrive.isEditorModeEnabled() then
+		return
+	end
+
+	if AutoDrive.courseOverlayId == nil then
+		AutoDrive.courseOverlayId = createImageOverlay('data/shared/default_normal.dds')
+	end
+
+	local dx, dz, dx2D, dy2D, width, rotation, r, g, b
+
+	local isSubPrio = function(pointToTest) 
+        return bitAND(pointToTest.flags, AutoDrive.FLAG_SUBPRIO) > 0
+    end
+
+	local network = ADGraphManager:getWayPoints()
+	if network ~= nil then
+		for index, node in pairs(network) do
+			if node.out ~= nil then
+				for _, outNodeId in pairs(node.out) do
+					local outNode = network[outNodeId]
+					local startX, startY, _, _ = AutoDrive.getScreenPosFromWorldPos(node.x, node.z)
+					local endX, endY, _, _ = AutoDrive.getScreenPosFromWorldPos(outNode.x, outNode.z)
+								
+					if startX and startY and endX and endY then
+						dx2D = endX - startX;
+						dy2D = ( endY - startY ) / g_screenAspectRatio;
+						width = MathUtil.vector2Length(dx2D, dy2D);
+			
+						dx = outNode.x - node.x;
+						dz = outNode.z - node.z;
+						rotation = MathUtil.getYRotationFromDirection(dx, dz) - math.pi * 0.5;
+			
+						local lineThickness = 2 / g_screenHeight
+						local r, g, b, a = unpack(AutoDrive.currentColors.ad_color_singleConnection)
+						
+						if isSubPrio(outNode) then
+							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection)
+						end
+						
+						if ADGraphManager:isDualRoad(node, outNode) then
+							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_dualConnection)
+							if isSubPrio(outNode) then
+								r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioDualConnection)
+							end							
+						elseif ADGraphManager:isReverseRoad(start, target) then							
+							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_reverseConnection)
+						end
+						setOverlayColor( AutoDrive.courseOverlayId,  r, g, b, a)
+						setOverlayRotation( AutoDrive.courseOverlayId, rotation, 0, 0)
+					
+						renderOverlay( AutoDrive.courseOverlayId, startX, startY, width, lineThickness )
+					end
+					setOverlayRotation( AutoDrive.courseOverlayId, 0, 0, 0 ) -- reset overlay rotation
+				end
+			end
 		end
 	end
 end
