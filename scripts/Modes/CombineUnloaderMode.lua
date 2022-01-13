@@ -529,9 +529,36 @@ function CombineUnloaderMode:getSideChaseOffsetX()
     return sideChaseTermX + pipeOffset
 end
 
-function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
-    -- The default maximum will place the front of the unloader at the back of the header
+function CombineUnloaderMode:getSideChaseOffsetX_new()
+    -- NB: We cannot apply slope correction until after we have chosen which side
+    -- we are chasing on! This function only finds the base X offset "to the left".
+    -- Slope and side correction MUST be applied in CombineUnloaderMode:getPipeChasePosition
+    -- AFTER determining the chase side. Or this function needs to be rewritten.
+    local pipeOffset = AutoDrive.getSetting("pipeOffset", self.vehicle)
+    local unloaderWidest = math.max(self.vehicle.size.width, self.targetTrailer.size.width)
+    local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
+    local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
+    local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
+    -- Some combines fold up their pipe so tight that targeting it could cause a collision.
+    -- So, choose the max between the two to avoid a collison
+    local sideChaseTermX = math.max(sideChaseTermPipeIn, sideChaseTermPipeOut)
+
+    local spec = self.combine.spec_pipe
+    if AutoDrive.isSugarcaneHarvester(self.combine) then
+        -- check for SugarcaneHarvester has to be first, as it also is IsBufferCombine!
+        sideChaseTermX = AutoDrive.getPipeLength(self.combine)
+    elseif AutoDrive.getIsBufferCombine(self.combine) then
+        sideChaseTermX = sideChaseTermPipeIn + CombineUnloaderMode.STATIC_X_OFFSET_FROM_HEADER
+    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and (spec.currentState == 2 or self.combine.typeName == "combineCutterFruitPreparer")) then
+        -- If the pipe is extended, though, target it regardless
+        sideChaseTermX = 0
+    end
+
+    return sideChaseTermX + pipeOffset
+end
+
+function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
     local nodeX, nodeY, nodeZ = getWorldTranslation(AutoDrive.getDischargeNode(self.combine))
     local _, _, pipeZOffsetToCombine = worldToLocal(self.combine.components[1].node, nodeX, nodeY, nodeZ)
 
@@ -541,6 +568,13 @@ function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
     local sideChaseTermZ = pipeZOffsetToCombine - vehicleZOffsetToTarget
 
     return sideChaseTermZ
+end
+
+function CombineUnloaderMode:getDynamicSideChaseOffsetZ_fromDischargeNode()
+    local targetX, targetY, targetZ = getWorldTranslation(self.targetTrailer.components[1].node)
+    local _, _, vehicleZOffsetToTarget = worldToLocal(self.vehicle.components[1].node, targetX, targetY, targetZ)
+
+    return -vehicleZOffsetToTarget + (self.vehicle.size.length/2)
 end
 
 function CombineUnloaderMode:getDynamicSideChaseOffsetZ_FS19()
@@ -695,6 +729,15 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
         local rearChasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, rearChaseTermX, rearChaseTermZ)
         local angleToSideChaseSide = self:getAngleToChasePos(sideChasePos)
         local angleToRearChaseSide = self:getAngleToChasePos(rearChasePos)
+
+        AutoDrive.useNewPipeOffsets = true
+
+        if AutoDrive.useNewPipeOffsets then
+            local sideOffsetZ = self:getDynamicSideChaseOffsetZ_fromDischargeNode()
+            local sideOffsetX = self.pipeSide * self:getSideChaseOffsetX_new()
+            sideChasePos = AutoDrive.createWayPointRelativeToDischargeNode(self.combine, sideOffsetX, sideOffsetZ)
+            angleToSideChaseSide = self:getAngleToChasePos(sideChasePos)
+        end
 
         if
             (

@@ -542,6 +542,29 @@ function AutoDrive:onDraw()
     if AutoDrive.devOnDraw ~= nil then
         AutoDrive.devOnDraw(self)
     end
+
+    --[[
+    if self.ad.isCombine then
+        AutoDrive.drawTripod(AutoDrive.getDischargeNode(self))
+        AutoDrive.drawTripod(self.components[1].node, {x=0,y=3,z=0})
+        if self.components[2] ~= nil then
+            AutoDrive.drawTripod(self.components[2].node, {x=0,y=3,z=0})
+        end
+    end
+    --]]
+end
+
+function AutoDrive.drawTripod(node, offset)
+    if offset == nil then
+        offset = {x=0,y=0,z=0}
+    end
+    local nodeX, nodeY, nodeZ = getWorldTranslation(node)
+    local targetX, targetY, targetZ = localToWorld(node, 2, 0, 0)
+    ADDrawingManager:addLineTask(nodeX + offset.x, nodeY + offset.y, nodeZ + offset.z, targetX + offset.x, targetY + offset.y, targetZ + offset.z, 1, 0, 0)
+    targetX, targetY, targetZ = localToWorld(node, 0, 2, 0)
+    ADDrawingManager:addLineTask(nodeX + offset.x, nodeY + offset.y, nodeZ + offset.z, targetX + offset.x, targetY + offset.y, targetZ + offset.z, 0, 1, 0)
+    targetX, targetY, targetZ = localToWorld(node, 0, 0, 2)
+    ADDrawingManager:addLineTask(nodeX + offset.x, nodeY + offset.y, nodeZ + offset.z, targetX + offset.x, targetY + offset.y, targetZ + offset.z, 0, 0, 1)
 end
 
 function AutoDrive:onDrawPreviews()    

@@ -6,6 +6,22 @@ function AutoDrive.createWayPointRelativeToVehicle(vehicle, offsetX, offsetZ)
     return wayPoint
 end
 
+function AutoDrive.createWayPointRelativeToDischargeNode(vehicle, offsetX, offsetZ)
+    if not vehicle.ad.isCombine or AutoDrive.getDischargeNode(vehicle) == nil then
+        return AutoDrive.createWayPointRelativeToVehicle(vehicle, offsetX, offsetZ)
+    end
+    local wayPoint = {}
+    local referenceAxis = vehicle.components[1].node
+    if vehicle.components[2] ~= nil and vehicle.components[2].node ~= nil then
+        referenceAxis = vehicle.components[2].node
+    end
+    local node = AutoDrive.getDischargeNode(vehicle)
+    local worldOffsetX, worldOffsetY, worldOffsetZ = localDirectionToWorld(referenceAxis, offsetX, 0, offsetZ)
+    local x, y, z = getWorldTranslation(node)
+    wayPoint.x, wayPoint.y, wayPoint.z = x + worldOffsetX, y + worldOffsetY, z + worldOffsetZ
+    return wayPoint
+end
+
 function AutoDrive.isTrailerInCrop(vehicle, enlargeDetectionArea)
     local widthFactor = 1
     if enlargeDetectionArea then
