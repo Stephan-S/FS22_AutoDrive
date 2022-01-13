@@ -542,7 +542,7 @@ function CombineUnloaderMode:getSideChaseOffsetX_new()
     local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
     -- Some combines fold up their pipe so tight that targeting it could cause a collision.
     -- So, choose the max between the two to avoid a collison
-    local sideChaseTermX = math.max(sideChaseTermPipeIn, sideChaseTermPipeOut)
+    local sideChaseTermX = 0
 
     local spec = self.combine.spec_pipe
     if AutoDrive.isSugarcaneHarvester(self.combine) then
@@ -570,11 +570,14 @@ function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
     return sideChaseTermZ
 end
 
-function CombineUnloaderMode:getDynamicSideChaseOffsetZ_fromDischargeNode()
+function CombineUnloaderMode:getDynamicSideChaseOffsetZ_fromDischargeNode(planningPhase)
     local targetX, targetY, targetZ = getWorldTranslation(self.targetTrailer.components[1].node)
     local _, _, vehicleZOffsetToTarget = worldToLocal(self.vehicle.components[1].node, targetX, targetY, targetZ)
-
-    return -vehicleZOffsetToTarget + (self.vehicle.size.length/2)
+    local offset = -vehicleZOffsetToTarget
+    if planningPhase then
+        offset = offset + (self.vehicle.size.length/2)
+    end
+    return offset
 end
 
 function CombineUnloaderMode:getDynamicSideChaseOffsetZ_FS19()
@@ -732,8 +735,8 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
 
         AutoDrive.useNewPipeOffsets = true
 
-        if AutoDrive.useNewPipeOffsets then
-            local sideOffsetZ = self:getDynamicSideChaseOffsetZ_fromDischargeNode()
+        if AutoDrive.useNewPipeOffsets and AutoDrive.isPipeOut(self.combine) then
+            local sideOffsetZ = self:getDynamicSideChaseOffsetZ_fromDischargeNode(planningPhase)
             local sideOffsetX = self.pipeSide * self:getSideChaseOffsetX_new()
             sideChasePos = AutoDrive.createWayPointRelativeToDischargeNode(self.combine, sideOffsetX, sideOffsetZ)
             angleToSideChaseSide = self:getAngleToChasePos(sideChasePos)
