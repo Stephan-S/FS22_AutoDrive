@@ -260,34 +260,141 @@ function AutoDrive:HoldDriving(vehicle)
     end
 end
 
-function AutoDrive:holdCPCombine(combine)
-    -- Stopping CP drivers for now
-    if combine ~= nil then
-        if combine.trailingVehicle ~= nil then
-            -- harvester is trailed - CP use the trailing vehicle
-            if combine.trailingVehicle.cp and combine.trailingVehicle.cp.driver and combine.trailingVehicle.cp.driver.holdForUnloadOrRefill then
-                combine.trailingVehicle.cp.driver:holdForUnloadOrRefill()
+function AutoDrive:logCPStatus(vehicle, functionName)
+    if vehicle == nil then
+        return false
+    end
+    if (g_updateLoopIndex % 60) == 0 then
+        local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+        if vehicleToCheck then
+            if vehicleToCheck.getIsCpHarvesterWaitingForUnload then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterWaitingForUnload %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterWaitingForUnload()))
             end
-        else
-            if combine.cp and combine.cp.driver and combine.cp.driver.holdForUnloadOrRefill then
-                combine.cp.driver:holdForUnloadOrRefill()
+            if  vehicleToCheck.getIsCpHarvesterWaitingForUnloadInPocket then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterWaitingForUnloadInPocket %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterWaitingForUnloadInPocket()))
+            end
+            if vehicleToCheck.getIsCpHarvesterWaitingForUnloadAfterPulledBack then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterWaitingForUnloadAfterPulledBack %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterWaitingForUnloadAfterPulledBack()))
+            end
+            if  vehicleToCheck.getIsCpHarvesterManeuvering then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterManeuvering %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterManeuvering()))
             end
         end
     end
 end
 
 function AutoDrive:getIsCPActive(vehicle)
-    return vehicle ~= nil and g_courseplay ~= nil and vehicle.cp ~= nil and vehicle.getIsCourseplayDriving ~= nil and vehicle:getIsCourseplayDriving()
+    if vehicle == nil then
+        return false
+    end
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    -- AutoDrive:logCPStatus(vehicleToCheck, "holdCPCombine") -- enable only if required
+
+    if vehicleToCheck and vehicleToCheck.getIsCpActive and vehicleToCheck:getIsCpActive() then
+        return true
+    else
+        return false
+    end
+
 end
 
-function AutoDrive:getIsCPCombineInPocket(combine)
-    local ret = true -- assume combine make a pocket or drive to fruit-free room to unload
-    if combine ~= nil and g_courseplay ~= nil and combine.cp and combine.cp.driver and combine.cp.driver.isWaitingForUnload and combine.cp.driver.isWaitingInPocket and combine.cp.driver.isWaitingForUnloadAfterPulledBack then
-        if combine.cp.driver:isWaitingForUnload() and (not combine.cp.driver:isWaitingInPocket() and not combine.cp.driver:isWaitingForUnloadAfterPulledBack()) then
-            ret = false
-        end
+function AutoDrive:holdCPCombine(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:holdCPCombine start ERROR: vehicle == nil")
+        return false
     end
-    return ret
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "holdCPCombine")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck) 
+        and
+        (
+            (vehicleToCheck.holdCpHarvesterTemporarily)
+        )
+    then
+        if (g_updateLoopIndex % 60) == 0 then
+            AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:holdCPCombine ")
+        end
+        vehicleToCheck:holdCpHarvesterTemporarily(200) -- hold 200 ms
+    end
+end
+
+function AutoDrive:getIsCPCombineInPocket(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPCombineInPocket start ERROR: vehicle == nil")
+        return false
+    end
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "getIsCPCombineInPocket")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck) 
+        and
+        (
+            (vehicleToCheck.getIsCpHarvesterWaitingForUnloadInPocket and vehicleToCheck:getIsCpHarvesterWaitingForUnloadInPocket())
+            or 
+            (vehicleToCheck.getIsCpHarvesterWaitingForUnloadAfterPulledBack and vehicleToCheck:getIsCpHarvesterWaitingForUnloadAfterPulledBack())
+        )
+    then
+        AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPCombineInPocket AutoDrive:getIsCPCombineInPocket return true")
+        return true
+    else
+        return false
+    end
+
+end
+
+function AutoDrive:getIsCPWaitingForUnload(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPWaitingForUnload start ERROR: vehicle == nil")
+        return false
+    end
+
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "getIsCPWaitingForUnload")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck)
+        and
+        (
+            (vehicleToCheck.getIsCpHarvesterWaitingForUnload and vehicleToCheck:getIsCpHarvesterWaitingForUnload())
+        )
+    then
+        if (g_updateLoopIndex % 60) == 0 then
+            AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPWaitingForUnload return true")
+        end
+        return true
+    else
+        return false
+    end
+
+end
+
+function AutoDrive:getIsCPTurning(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPTurning start ERROR: vehicle == nil")
+        return false
+    end
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "getIsCPTurning")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck) 
+        and 
+        (
+            (vehicleToCheck.getIsCpHarvesterManeuvering and vehicleToCheck:getIsCpHarvesterManeuvering())
+        )
+    then
+        if (g_updateLoopIndex % 60) == 0 then
+            AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPTurning return true")
+        end
+        return true
+    else
+        return false
+    end
+
 end
 
 -- Autoloader

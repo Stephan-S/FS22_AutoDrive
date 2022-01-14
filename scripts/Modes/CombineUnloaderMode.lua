@@ -300,10 +300,7 @@ function CombineUnloaderMode:assignToHarvester(harvester)
             local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectNonFuelFillLevels(self.combine)
             local cFillRatio = cfillLevel / cfillCapacity
             
-            local cpIsCalling = false
-            if harvester.cp and harvester.cp.driver and harvester.cp.driver.isWaitingForUnload then
-                cpIsCalling = harvester.cp.driver:isWaitingForUnload()
-            end
+            local cpIsCalling = AutoDrive:getIsCPWaitingForUnload(harvester)
 
             if (self.combine.spec_combine == nil or not AutoDrive.getIsBufferCombine(self.combine)) and (self.combine.ad.noMovementTimer.elapsedTime > 500 or cleftCapacity < 1.0 or cpIsCalling or cFillRatio > 0.945) then
                 -- default unloading - no movement
