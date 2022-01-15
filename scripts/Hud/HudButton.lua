@@ -161,7 +161,7 @@ function ADHudButton:getNewState(vehicle)
     end
 
     if self.primaryAction == "input_startCp" then
-        if (g_courseplay ~= nil or vehicle.acParameters ~= nil) then
+        if (vehicle.cpStartStopDriver ~= nil or vehicle.acParameters ~= nil) then
             if vehicle.ad.stateModule:getStartCP_AIVE() then
                 if vehicle.ad.stateModule:getUseCP_AIVE() then
                     newState = 2

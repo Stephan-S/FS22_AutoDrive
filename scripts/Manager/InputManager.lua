@@ -434,13 +434,13 @@ function ADInputManager:input_swapTargets(vehicle)
 end
 
 function ADInputManager:input_startCp(vehicle) -- enable / disable CP or AIVE
-    if g_courseplay ~= nil or vehicle.acParameters ~= nil then
+    if vehicle.cpStartStopDriver ~= nil or vehicle.acParameters ~= nil then
         vehicle.ad.stateModule:toggleStartCP_AIVE()
     end
 end
 
 function ADInputManager:input_toggleCP_AIVE(vehicle) -- select CP or AIVE
-    if g_courseplay ~= nil and vehicle.acParameters ~= nil then
+    if vehicle.cpStartStopDriver ~= nil and vehicle.acParameters ~= nil then
         vehicle.ad.stateModule:toggleUseCP_AIVE()
         vehicle.ad.stateModule:setStartCP_AIVE(false) -- disable if changed between CP and AIVE
     end

@@ -223,12 +223,10 @@ function AutoDrive:StartCP(vehicle)
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP...")
-    if vehicle.startCpDriver then
-        -- newer CP versions use this function to start the CP driver
-        vehicle:startCpDriver()
+    if vehicle.cpStartStopDriver ~= nil then
+        vehicle:cpStartStopDriver()
     else
-        -- for backward compatibility for older CP versions
-        g_courseplay.courseplay:start(vehicle)
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
     end
 end
 

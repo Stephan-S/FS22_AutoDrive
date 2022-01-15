@@ -53,7 +53,7 @@ function ADStateModule:reset()
 
     self.startCP_AIVE = false
 
-    self.useCP = (g_courseplay ~= nil)
+    self.useCP = (self.vehicle.cpStartStopDriver ~= nil)
 
     self.driverName = g_i18n:getText("UNKNOWN")
     if self.vehicle.getName ~= nil then

@@ -46,8 +46,6 @@ ADMessagesManager.huds.message.infoIconOverlay = 0
 ADMessagesManager.huds.message.errorIconOverlay = 0
 ADMessagesManager.huds.message.warnIconOverlay = 0
 
-ADMessagesManager.huds.cpYOffset = 0			-- pay special attention when to use the offset for CP HUD or not !
-
 function ADMessagesManager:load()
     self.messages = Queue:new()
     self.notifications = Queue:new()
@@ -165,13 +163,6 @@ function ADMessagesManager:getHistory()
 end
 
 function ADMessagesManager:update(dt)
-    -- update cp offset
-    if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.cp ~= nil and g_currentMission.controlledVehicle.cp.hud ~= nil and g_currentMission.controlledVehicle.cp.hud.show then
-        self.huds.cpYOffset = g_courseplay.courseplay.hud.baseHeight * 0.9
-    else
-        self.huds.cpYOffset = 0
-    end
-
     -- messages handling
     if self.currentMessage == nil then
         self.currentMessage = self.messages:Dequeue()
@@ -232,7 +223,6 @@ function ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
         if self.currentMessage ~= nil then
             local ov = self.huds.message.dismissOverlay
             local x, y = ov:getPosition()
-			y = y + self.huds.cpYOffset
             if posX >= x - ov.width / 2 and posY >= y - ov.height / 2 and posX <= x + ov.width / 2 and posY <= y + ov.height / 2 then
                 self:removeCurrentMessage()
             end
@@ -264,37 +254,19 @@ function ADMessagesManager:draw()
 end
 
 function ADMessagesManager:drawHud(hud)
-	local cpYOffset = 0
-    if self.currentMessage ~= nil then
-		cpYOffset = self.huds.cpYOffset
-    end
     setTextAlignment(RenderText.ALIGN_CENTER)
     setTextBold(false)
     setTextColor(1, 1, 1, 1)
-    renderText(hud.posX, hud.posY + cpYOffset, getCorrectTextSize(hud.textSize), hud.text)
-    hud.backgroundOverlay.y = hud.backgroundOverlay.y + cpYOffset
+    renderText(hud.posX, hud.posY, getCorrectTextSize(hud.textSize), hud.text)
     hud.backgroundOverlay:render()
-    hud.backgroundOverlay.y = hud.backgroundOverlay.y - cpYOffset
-    hud.headerOverlay.y = hud.headerOverlay.y + cpYOffset
     hud.headerOverlay:render()
-    hud.headerOverlay.y = hud.headerOverlay.y - cpYOffset
-    hud.dismissOverlay.y = hud.dismissOverlay.y + cpYOffset
     hud.dismissOverlay:render()
-    hud.dismissOverlay.y = hud.dismissOverlay.y - cpYOffset
     if hud.goToOverlay ~= nil then
-        hud.goToOverlay.y = hud.goToOverlay.y + cpYOffset
         hud.goToOverlay:render()
-        hud.goToOverlay.y = hud.goToOverlay.y - cpYOffset
     end
-    hud.infoIconOverlay.y = hud.infoIconOverlay.y + cpYOffset
     hud.infoIconOverlay:render()
-    hud.infoIconOverlay.y = hud.infoIconOverlay.y - cpYOffset
-    hud.warnIconOverlay.y = hud.warnIconOverlay.y + cpYOffset
     hud.warnIconOverlay:render()
-    hud.warnIconOverlay.y = hud.warnIconOverlay.y - cpYOffset
-    hud.errorIconOverlay.y = hud.errorIconOverlay.y + cpYOffset
     hud.errorIconOverlay:render()
-    hud.errorIconOverlay.y = hud.errorIconOverlay.y - cpYOffset
 end
 
 function ADMessagesManager:updateHud(hud, text, mType)
