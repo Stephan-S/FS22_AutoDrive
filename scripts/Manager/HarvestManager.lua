@@ -207,10 +207,7 @@ function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
     local ret = false
     local _, maxCapacity, _, leftCapacity = AutoDrive.getObjectNonFuelFillLevels(harvester)
 
-    local cpIsCalling = false
-    if harvester.cp and harvester.cp.driver and harvester.cp.driver.isWaitingForUnload then
-        cpIsCalling = harvester.cp.driver:isWaitingForUnload()
-    end
+    local cpIsCalling = AutoDrive:getIsCPWaitingForUnload(harvester)
 
     local pipeOut = AutoDrive.isPipeOut(harvester)
     ret = (

@@ -139,8 +139,7 @@ function AutoDrive.getRequiredRefuels(vehicle, ignoreFillLevel)
 end
 
 function AutoDrive.combineIsTurning(combine)
-    local cpIsTurning = combine.cp ~= nil and (combine.cp.isTurning or (combine.cp.turnStage ~= nil and combine.cp.turnStage > 0))
-    local cpIsTurningTwo = combine.cp ~= nil and combine.cp.driver and (combine.cp.driver.turnIsDriving or (combine.cp.driver.fieldworkState ~= nil and combine.cp.driver.fieldworkState == combine.cp.driver.states.TURNING))
+    local cpIsTurning = AutoDrive:getIsCPTurning(combine)
     local aiIsTurning = false
     local rootVehicle = nil
     if combine.getRootVehicle ~= nil then
@@ -149,8 +148,7 @@ function AutoDrive.combineIsTurning(combine)
             aiIsTurning = rootVehicle.getAIFieldWorkerIsTurning ~= nil and rootVehicle:getAIFieldWorkerIsTurning()
         end
     end
-    --local combineSteering = combine.rotatedTime ~= nil and (math.deg(combine.rotatedTime) > 30)
-    local combineIsTurning = cpIsTurning or cpIsTurningTwo or aiIsTurning --or combineSteering
+    local combineIsTurning = cpIsTurning or aiIsTurning
 
     --Check if we are close to the field borders and about to turn
     local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, true, 50, 5)
