@@ -1,15 +1,16 @@
 ADInputManager = {}
 
 -- same order as in modDesc.xml
--- {ActionName, InputName, allowedInHelperScreen, executedOnServer}
+-- {ActionName, InputName, allowedInHelperScreen, executedOnServer, ActionEventTextVisibility, ActionEventTextPriority}
 ADInputManager.actionsToInputs = {
+    {"ADToggleMouse", "input_toggleMouse", true, false, true, 1},
     {"ADSilomode", "input_silomode", true, true},
     {"ADPreviousMode", "input_previousMode", true, true},
     {"ADRecord", "input_record", false, true},
     {"ADRecord_Dual", "input_record_dual", false, true},
     {"ADRecord_SubPrio", "input_record_subPrio", false, true},
     {"ADRecord_SubPrioDual", "input_record_subPrioDual", false, true},
-    {"ADEnDisable", "input_start_stop", true, true},
+    {"ADEnDisable", "input_start_stop", true, true, true, 1},
     {"ADSelectTarget", "input_nextTarget", true, true},
     {"ADSelectPreviousTarget", "input_previousTarget", true, true},
     {"ADSelectTargetUnload", "input_nextTarget_Unload", true, true},
@@ -30,14 +31,13 @@ ADInputManager.actionsToInputs = {
     {"AD_Speed_down", "input_decreaseSpeed", true, true},
     {"AD_FieldSpeed_up", "input_increaseFieldSpeed", true, true},
     {"AD_FieldSpeed_down", "input_decreaseFieldSpeed", true, true},
-    {"ADToggleHud", "input_toggleHud", false, false},
-    {"ADToggleMouse", "input_toggleMouse", true, false},
-    {"COURSEPLAY_MOUSEACTION_SECONDARY", "input_toggleMouse", false, false},
+    {"ADToggleHud", "input_toggleHud", false, false, true, 1},
+    -- {"COURSEPLAY_MOUSEACTION_SECONDARY", "input_toggleMouse", false, false},
     {"ADDebugDeleteWayPoint", "input_removeWaypoint", false, false},
     {"AD_routes_manager", "input_routesManager", false, false},
     {"ADSelectNextFillType", "input_nextFillType", true, true},
     {"ADSelectPreviousFillType", "input_previousFillType", true, true},
-    {"ADOpenGUI", "input_openGUI", true, false},
+    {"ADOpenGUI", "input_openGUI", true, false, true, 2},
     {"ADCallDriver", "input_callDriver", false, true},
     {"ADGoToVehicle", "input_goToVehicle", false, false},
     {"ADIncLoopCounter", "input_incLoopCounter", true, true},
@@ -52,7 +52,7 @@ ADInputManager.actionsToInputs = {
     {"ADSetParkDestination", "input_setParkDestination", false, false},
     {"AD_devAction", "input_devAction", false, false},
     {"ADRefuelVehicle", "input_refuelVehicle", false, true},
-    {"ADToggleHudExtension", "input_toggleHudExtension", true, false},
+    {"ADToggleHudExtension", "input_toggleHudExtension", true, false, true, 1},
     {"ADToggleAutomaticUnloadTarget", "input_toggleAutomaticUnloadTarget", true, true},
     {"ADToggleAutomaticPickupTarget", "input_toggleAutomaticPickupTarget", true, true},
     {"ADRepairVehicle", "input_repairVehicle", false, true}
@@ -301,6 +301,9 @@ end
 
 function ADInputManager:input_record(vehicle)
     if not vehicle.ad.stateModule:isInCreationMode() and not vehicle.ad.stateModule:isInDualCreationMode() and not vehicle.ad.stateModule:isInSubPrioCreationMode() and not vehicle.ad.stateModule:isInSubPrioDualCreationMode() then
+        if not AutoDrive.isInExtendedEditorMode() then
+            AutoDrive.setEditorMode(AutoDrive.EDITOR_EXTENDED)
+        end
         vehicle.ad.stateModule:startNormalCreationMode()
     else
         vehicle.ad.stateModule:disableCreationMode()
@@ -309,6 +312,9 @@ end
 
 function ADInputManager:input_record_dual(vehicle)
     if not vehicle.ad.stateModule:isInCreationMode() and not vehicle.ad.stateModule:isInDualCreationMode() and not vehicle.ad.stateModule:isInSubPrioCreationMode() and not vehicle.ad.stateModule:isInSubPrioDualCreationMode() then
+        if not AutoDrive.isInExtendedEditorMode() then
+            AutoDrive.setEditorMode(AutoDrive.EDITOR_EXTENDED)
+        end
         vehicle.ad.stateModule:startDualCreationMode()
     else
         vehicle.ad.stateModule:disableCreationMode()
@@ -317,6 +323,9 @@ end
 
 function ADInputManager:input_record_subPrio(vehicle)
     if not vehicle.ad.stateModule:isInCreationMode() and not vehicle.ad.stateModule:isInDualCreationMode() and not vehicle.ad.stateModule:isInSubPrioCreationMode() and not vehicle.ad.stateModule:isInSubPrioDualCreationMode() then
+        if not AutoDrive.isInExtendedEditorMode() then
+            AutoDrive.setEditorMode(AutoDrive.EDITOR_EXTENDED)
+        end
         vehicle.ad.stateModule:startSubPrioCreationMode()
     else
         vehicle.ad.stateModule:disableCreationMode()
@@ -325,6 +334,9 @@ end
 
 function ADInputManager:input_record_subPrioDual(vehicle)
     if not vehicle.ad.stateModule:isInCreationMode() and not vehicle.ad.stateModule:isInDualCreationMode() and not vehicle.ad.stateModule:isInSubPrioCreationMode() and not vehicle.ad.stateModule:isInSubPrioDualCreationMode() then
+        if not AutoDrive.isInExtendedEditorMode() then
+            AutoDrive.setEditorMode(AutoDrive.EDITOR_EXTENDED)
+        end
         vehicle.ad.stateModule:startSubPrioDualCreationMode()
     else
         vehicle.ad.stateModule:disableCreationMode()

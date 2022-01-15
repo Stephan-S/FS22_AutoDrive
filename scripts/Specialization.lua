@@ -76,11 +76,16 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
         local _, eventName
         local toggleButton = false
         local showF1Help = AutoDrive.getSetting("showHelp")
-        for _, action in pairs(AutoDrive.actions) do
+        for _, action in pairs(ADInputManager.actionsToInputs) do
             _, eventName = InputBinding.registerActionEvent(g_inputBinding, action[1], self, ADInputManager.onActionCall, toggleButton, true, false, true)
-            g_inputBinding:setActionEventTextVisibility(eventName, action[2] and showF1Help)
-            if showF1Help then
-                g_inputBinding:setActionEventTextPriority(eventName, action[3])
+            if action[5] then
+                g_inputBinding:setActionEventTextVisibility(eventName, action[5] and showF1Help)
+                if showF1Help then
+                    -- g_inputBinding:setActionEventTextPriority(eventName, action[3])
+                    if action[6] then
+                        g_inputBinding:setActionEventTextPriority(eventName, action[6])
+                    end
+                end
             end
         end
     end

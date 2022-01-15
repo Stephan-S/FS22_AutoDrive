@@ -86,42 +86,6 @@ AutoDrive.FLAG_SUBPRIO = 1
 AutoDrive.FLAG_TRAFFIC_SYSTEM = 2
 AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 
-AutoDrive.actions = {
-	{"ADToggleMouse", true, 1},
-	{"ADToggleHud", true, 1},
-	{"ADEnDisable", true, 1},
-	{"ADSelectTarget", false, 0},
-	{"ADSelectPreviousTarget", false, 0},
-	{"ADSelectTargetUnload", false, 0},
-	{"ADSelectPreviousTargetUnload", false, 0},
-	{"ADActivateDebug", false, 0},
-	{"ADDebugSelectNeighbor", false, 0},
-	{"ADDebugChangeNeighbor", false, 0},
-	{"ADDebugCreateConnection", false, 0},
-	{"ADDebugCreateMapMarker", false, 0},
-	{"ADDebugDeleteWayPoint", false, 0},
-	{"ADDebugDeleteDestination", false, 3},
-	{"ADSilomode", false, 0},
-	{"ADOpenGUI", true, 2},
-	{"ADCallDriver", false, 3},
-	{"ADSelectNextFillType", false, 0},
-	{"ADSelectPreviousFillType", false, 0},
-	{"ADRecord", false, 0},
-	{"AD_routes_manager", false, 0},
-	{"ADGoToVehicle", false, 3},
-	{"ADNameDriver", false, 0},
-	{"ADRenameMapMarker", false, 0},
-	{"ADSwapTargets", false, 0},
-	{"AD_open_notification_history", false, 0},
-	-- {"AD_open_colorSettings", false, 0},
-	{"AD_continue", false, 3},
-	{"ADParkVehicle", false, 0},
-	{"AD_devAction", false, 0},
-	{"ADRefuelVehicle", false, 0},
-	{"ADToggleHudExtension", true, 1},
-	{"ADRepairVehicle", false, 0}
-}
-
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
 	ad_color_dualConnection = {0, 0, 1, 1},
