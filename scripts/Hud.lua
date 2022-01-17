@@ -421,7 +421,9 @@ function AutoDriveHud:toggleHud(vehicle)
 			-- close both
 			self.showHud = false
 			vehicle.ad.showingHud = false
-			g_inputBinding:setShowMouseCursor(false)
+            if g_gui.currentGui == nil then
+                g_inputBinding:setShowMouseCursor(false)
+            end
 			self.stateHud = 0
 		end
 	else
@@ -431,7 +433,9 @@ function AutoDriveHud:toggleHud(vehicle)
 		else
 			self.showHud = false
 			vehicle.ad.showingHud = false
-			g_inputBinding:setShowMouseCursor(false)
+            if g_gui.currentGui == nil then
+                g_inputBinding:setShowMouseCursor(false)
+            end
 		end
 	end
 

@@ -274,7 +274,16 @@ function AutoDrive:drawBaseMission()
 		AutoDrive:drawRouteOnMap()
 		AutoDrive.drawNetworkOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
-			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
+            if AutoDrive.aiFrameVehicle.ad and AutoDrive.aiFrameVehicle.ad.stateModule then
+                if AutoDrive.aiFrameVehicle.ad.showingHud ~= AutoDrive.Hud.showHud then
+                    AutoDrive.Hud:toggleHud(AutoDrive.aiFrameVehicle)
+                end
+                if AutoDrive.Hud ~= nil then
+                    if AutoDrive.Hud.showHud == true then
+                        AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
+                    end
+                end
+            end
 		end
 	end
 end
