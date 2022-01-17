@@ -143,6 +143,32 @@ function FollowCombineTask:update(dt)
                 -- harvester
                 -- if combine drive reverse to turn -> reverse to keep distance
                 self:reverse(dt)
+            elseif AutoDrive.experimentalFeatures.HandleCPChopper == true and AutoDrive.getIsBufferCombine(self.combine) and AutoDrive:getIsCPActive(self.combine) then
+                -- CP chopper turn
+                -- local isdrivingReverse = ((self.combine.lastSpeedReal * self.combine.movingDirection) <= -0.00005) 
+                local isdrivingReverse = ((self.combine.lastSpeedReal * self.combine.movingDirection) <= -0.001) 
+
+                if isdrivingReverse then
+                    local x, y, z = getWorldTranslation(self.combine.components[1].node) -- keep distance to combine
+                    self.reverseStartLocation = {x = x, y = y, z = z}
+                    self.state = FollowCombineTask.STATE_REVERSING_FROM_CHOPPER
+                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "FollowCombineTask:update -> FollowCombineTask.STATE_REVERSING_FROM_CHOPPER self:getAngleToCobine %.1f", self:getAngleToCobine())
+                    return
+                else
+                    self.stuckTimer:timer(self.vehicle.lastSpeedReal <= 0.0002, 3000, dt)
+                    if self.stuckTimer:done() then
+                        -- if stuck with harvester - try reverse
+                        self.stuckTimer:timer(false)
+                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "got stuck - reversing now")
+                        local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+                        self.reverseStartLocation = {x = x, y = y, z = z}
+                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "FollowCombineTask:update stuck -> STATE_REVERSING_FROM_CHOPPER ")
+                        self.state = FollowCombineTask.STATE_REVERSING_FROM_CHOPPER -- reverse to get room from harvester
+                        return
+                    end
+
+                    self:followChasePoint(dt)
+                end
             else
                 -- stop while combine is turning
                 self.vehicle.ad.specialDrivingModule:stopVehicle()
@@ -211,6 +237,23 @@ function FollowCombineTask:update(dt)
             self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
             return
         else
+            self:reverse(dt)
+        end
+    elseif AutoDrive.experimentalFeatures.HandleCPChopper == true and self.state == FollowCombineTask.STATE_REVERSING_FROM_CHOPPER then
+        local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+        local distanceToReverseStart = MathUtil.vector2Length(x - self.reverseStartLocation.x, z - self.reverseStartLocation.z)
+        self.reverseTimer:timer(true, self.MAX_REVERSE_TIME, dt)
+        local doneReversing = distanceToReverseStart > self.MAX_REVERSE_DISTANCE
+        if doneReversing or self.reverseTimer:done() then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "done reversing - set finished")
+            self.reverseTimer:timer(false)
+            -- self.state = FollowCombineTask.STATE_WAIT_FOR_TURN
+            self.state = FollowCombineTask.STATE_CHASING
+            return
+        else
+            if self:getAngleToCobine() > 30 then
+                AutoDrive:holdCPCombine(self.combine)
+            end
             self:reverse(dt)
         end
     elseif self.state == FollowCombineTask.STATE_WAIT_BEFORE_FINISH then
@@ -370,6 +413,19 @@ function FollowCombineTask:getAngleToChasePos()
     local worldX, _, worldZ = getWorldTranslation(self.vehicle.components[1].node)
     local rx, _, rz = localDirectionToWorld(self.vehicle.components[1].node, 0, 0, 1)
     local angle = math.abs(AutoDrive.angleBetween({x = rx, z = rz}, {x = self.chasePos.x - worldX, z = self.chasePos.z - worldZ}))
+    return angle
+end
+
+function FollowCombineTask:getAngleToCobine()
+    local worldX, _, worldZ = getWorldTranslation(self.vehicle.components[1].node)
+    local rx, _, rz = localDirectionToWorld(self.vehicle.components[1].node, 0, 0, 1)
+    local referenceAxis = self.combine.components[1].node
+    if self.combine.components[2] ~= nil and self.combine.components[2].node ~= nil then
+        referenceAxis = self.combine.components[2].node
+    end
+
+    local combineX, _, combineZ = getWorldTranslation(referenceAxis)
+    local angle = math.abs(AutoDrive.angleBetween({x = rx, z = rz}, {x = combineX - worldX, z = combineZ - worldZ}))
     return angle
 end
 

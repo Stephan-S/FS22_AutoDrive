@@ -145,6 +145,10 @@ source(Utils.getFilename("scripts/Tasks/Turns/ForwardOffsetTurn.lua", g_currentM
 AutoDriveRegister = {}
 AutoDriveRegister.version = g_modManager:getModByName(g_currentModName).version
 
+if AutoDrive.currentModName == nil then
+    AutoDrive.currentModName = g_currentModName
+end
+
 if AutoDrive.ADSpecName == nil then
     AutoDrive.ADSpecName = g_currentModName .. ".AutoDrive"
 end

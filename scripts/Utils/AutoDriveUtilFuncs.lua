@@ -140,6 +140,10 @@ end
 
 function AutoDrive.combineIsTurning(combine)
     local cpIsTurning = AutoDrive:getIsCPTurning(combine)
+    if cpIsTurning then
+        -- CP turn maneuver might get noMovementTimer expired, so return here already
+        return true
+    end
     local aiIsTurning = false
     local rootVehicle = nil
     if combine.getRootVehicle ~= nil then
