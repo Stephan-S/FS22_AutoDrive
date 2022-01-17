@@ -31,7 +31,7 @@ ADInputManager.actionsToInputs = {
     {"AD_Speed_down", "input_decreaseSpeed", true, true},
     {"AD_FieldSpeed_up", "input_increaseFieldSpeed", true, true},
     {"AD_FieldSpeed_down", "input_decreaseFieldSpeed", true, true},
-    {"ADToggleHud", "input_toggleHud", false, false, true, 1},
+    {"ADToggleHud", "input_toggleHud", false, true, true, 1},
     -- {"COURSEPLAY_MOUSEACTION_SECONDARY", "input_toggleMouse", false, false},
     {"ADDebugDeleteWayPoint", "input_removeWaypoint", false, false},
     {"AD_routes_manager", "input_routesManager", false, false},
