@@ -143,7 +143,7 @@ function FollowCombineTask:update(dt)
                 -- harvester
                 -- if combine drive reverse to turn -> reverse to keep distance
                 self:reverse(dt)
-            elseif AutoDrive.experimentalFeatures.HandleCPChopper == true and AutoDrive.getIsBufferCombine(self.combine) and AutoDrive:getIsCPActive(self.combine) then
+            elseif AutoDrive.experimentalFeatures.HandleChopper == true and AutoDrive.getIsBufferCombine(self.combine) and AutoDrive:getIsCPActive(self.combine) then
                 -- CP chopper turn
                 -- local isdrivingReverse = ((self.combine.lastSpeedReal * self.combine.movingDirection) <= -0.00005) 
                 local isdrivingReverse = ((self.combine.lastSpeedReal * self.combine.movingDirection) <= -0.001) 
@@ -239,7 +239,7 @@ function FollowCombineTask:update(dt)
         else
             self:reverse(dt)
         end
-    elseif AutoDrive.experimentalFeatures.HandleCPChopper == true and self.state == FollowCombineTask.STATE_REVERSING_FROM_CHOPPER then
+    elseif AutoDrive.experimentalFeatures.HandleChopper == true and self.state == FollowCombineTask.STATE_REVERSING_FROM_CHOPPER then
         local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
         local distanceToReverseStart = MathUtil.vector2Length(x - self.reverseStartLocation.x, z - self.reverseStartLocation.z)
         self.reverseTimer:timer(true, self.MAX_REVERSE_TIME, dt)
