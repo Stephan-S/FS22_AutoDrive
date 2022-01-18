@@ -35,7 +35,7 @@
 		<text name="input_ADDebugDeleteWayPoint"				text="AD: Effacer point de passage" />
 		<text name="input_ADDebugDeleteDestination"				text="AD: Éffacer point destination" />
 		<text name="input_ADSelectNextFillType"					text="AD: Remplissage suivant" />
-		<text name="input_ADSelectPreviousFillType"				text="AD: Remplissage précédent"" />
+		<text name="input_ADSelectPreviousFillType"				text="AD: Remplissage précédent"/>
 		<text name="input_ADOpenGUI"							text="AD: Ouvrir l'interface Graphique Utilisateur/GUI" />
 		<text name="input_ADCallDriver"							text="AD: Appeler un chauffeur" />
 		<text name="input_ADGoToVehicle"						text="AD: Entrer dans le vehicule arrivé" />
@@ -155,7 +155,7 @@
 		<text name="gui_ad_preCallLevel_tooltip"				text="Défini le niveau de remplissage d'appel du chauffeur pour le déchargement." />
 		<text name="gui_ad_none"					            text="Aucun" />
 		<text name="gui_ad_onlyPickup"					        text="Collecte uniquement" />
-		<text name="gui_ad_onlyDeliver"					        text="Livraison uniquement " />
+		<text name="gui_ad_onlyDeliver"					        text="Livraison uniquement" />
 		<text name="gui_ad_PickupandDeliver"					text="Collecte et livraison" />
 		<text name="gui_ad_rotateTargets"					    text="Cycle de collecte et livraison" />
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: Aucune destination / uniquement les points de collecte / uniquement les points de livraison / les points de collecte et livraison sont choisis alternativement depuis un dossier (désactivé dans le dossier par défaut, possible uniquement si gestion par dossier activée)" />
@@ -215,10 +215,10 @@
 		<text name="gui_ad_autoTrailerCover"                    text="Bâches remorques automatique" />
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Oui - AutoDrive ouvre et ferme les bâches des remorques au besoin / Non - les bâches remorque ne seront pas ouvertes ou fermées par AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manoeuvres anticipées" />
-		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Oui - Les chauffeurs tenteront d'établir une trajectoir pour s'adapter aux virages à 90° de la moissonneuse. / Non - Les chauffeurs feront une marche arrière avant le virage." />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Oui - Les chauffeurs tenteront d'établir une trajectoire pour s'adapter aux virages à 90° de la moissonneuse. / Non - Les chauffeurs feront une marche arrière avant le virage." />
 		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Position de déchargement" />
 		<text name="gui_ad_ALUnload_tooltip"                    text="Off-pas de déchargement automatique / déchargement au centre de la plateforme, gauche, derrière, droite du véhicule.La position dépend de la configuration du véhicule et non de l'AD." />
-		<text name="gui_ad_AL_off"                              text="Déchargement Off" />
+		<text name="gui_ad_AL_off"                              text="Déchargement désactivé" />
 		<text name="gui_ad_AL_center"                           text="Déchargement centre" />
 		<text name="gui_ad_AL_left"                             text="Déchargement gauche" />
 		<text name="gui_ad_AL_behind"                           text="Déchargement derrière" />
