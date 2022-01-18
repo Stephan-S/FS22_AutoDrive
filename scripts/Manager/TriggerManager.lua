@@ -90,6 +90,7 @@ function ADTriggerManager.loadAllTriggers()
     ADTriggerManager.searchedForTriggers = true
     ADTriggerManager.tipTriggers = {}
     ADTriggerManager.siloTriggers = {}
+    ADTriggerManager.repairTriggers = {}
     for _, ownedItem in pairs(g_currentMission.ownedItems) do
         if ownedItem.storeItem ~= nil then
             if ownedItem.storeItem.categoryName == "SILOS" then
@@ -600,7 +601,7 @@ function AutoDrive:getClosestRepairTrigger(vehicle)
     local repairMarkers = {}
     local ownedRepairMarkers = {}
     for _, repairTrigger in pairs(ADTriggerManager.getRepairTriggers()) do
-        triggerX, _, triggerZ = getWorldTranslation(repairTrigger.node)
+        local triggerX, _, triggerZ = getWorldTranslation(repairTrigger.node)
 
         --First look for suitable marker
         for mapMarkerID, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
