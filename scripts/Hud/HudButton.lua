@@ -186,7 +186,7 @@ function ADHudButton:getNewState(vehicle)
             newState = 2
         end
     end
-    
+
     if self.primaryAction == "input_toggleAutomaticUnloadTarget" then
         self.isVisible = (vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD)
 
@@ -208,7 +208,10 @@ function ADHudButton:getNewState(vehicle)
     end
 
     if self.primaryAction == "input_toggleAutomaticPickupTarget" then
-        if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD then            
+        if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD
+            or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_UNLOAD
+            or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_DRIVETO
+            then
             newState = 1
         elseif vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
             if vehicle.ad.stateModule:getAutomaticPickupTarget() then
