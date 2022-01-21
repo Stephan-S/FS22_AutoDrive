@@ -372,7 +372,7 @@ function ADInputManager:input_nextTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local nextTarget = ADGraphManager:getNextTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(nextTarget)
-        vehicle.ad.stateModule:removeCPCallback()
+        AutoDrive:StopCP(vehicle)
     end
 end
 
@@ -381,7 +381,7 @@ function ADInputManager:input_previousTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local previousTarget = ADGraphManager:getPreviousTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(previousTarget)
-        vehicle.ad.stateModule:removeCPCallback()
+        AutoDrive:StopCP(vehicle)
     end
 end
 
@@ -425,7 +425,7 @@ function ADInputManager:input_parkVehicle(vehicle)
     local actualParkDestination = vehicle.ad.stateModule:getParkDestinationAtJobFinished()
     if actualParkDestination >= 1 then
         vehicle.ad.stateModule:setFirstMarker(actualParkDestination)
-        vehicle.ad.stateModule:removeCPCallback()
+        AutoDrive:StopCP(vehicle)
         if vehicle.ad.stateModule:isActive() then
             self:input_start_stop(vehicle) --disable if already active
         end
@@ -442,7 +442,7 @@ function ADInputManager:input_swapTargets(vehicle)
     local currentFirstMarker = vehicle.ad.stateModule:getFirstMarkerId()
     vehicle.ad.stateModule:setFirstMarker(vehicle.ad.stateModule:getSecondMarkerId())
     vehicle.ad.stateModule:setSecondMarker(currentFirstMarker)
-    vehicle.ad.stateModule:removeCPCallback()
+    AutoDrive:StopCP(vehicle)
 end
 
 function ADInputManager:input_startCp(vehicle) -- enable / disable CP or AIVE
@@ -481,7 +481,7 @@ function ADInputManager:input_refuelVehicle(vehicle)
     local refuelDestination = ADTriggerManager.getClosestRefuelDestination(vehicle, true)
     if refuelDestination ~= nil and refuelDestination >= 1 then
         -- vehicle.ad.stateModule:setFirstMarker(refuelDestination)
-        vehicle.ad.stateModule:removeCPCallback()
+        AutoDrive:StopCP(vehicle)
         if vehicle.ad.stateModule:isActive() then
             self:input_start_stop(vehicle) --disable if already active
         end

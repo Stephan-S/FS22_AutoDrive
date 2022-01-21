@@ -960,15 +960,6 @@ function ADStateModule:setNextTargetInFolder()
     end
 end
 
-function ADStateModule:removeCPCallback()
-    if self.vehicle.ad.callBackFunction ~= nil then			-- if CP callback is set, CP has to be stopped
-        AutoDrive:StopCP(self.vehicle)
-    end
-    self.vehicle.ad.callBackFunction = nil
-    self.vehicle.ad.callBackObject = nil
-    self.vehicle.ad.callBackArg = nil
-end
-
 function ADStateModule:resetMarkersOnReload()
     local newFirstMarker = nil
     if self.firstMarker ~= nil and self.firstMarker.id ~= nil then

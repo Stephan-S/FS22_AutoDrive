@@ -24,7 +24,11 @@ function AutoDrive.registerEventListeners(vehicleType)
             "onPostAttachImplement",
             "onPreDetachImplement",
             "onEnterVehicle",
-            "onLeaveVehicle"
+            "onLeaveVehicle",
+            -- CP events
+            "onCpFinished",
+            "onCpEmpty",
+            "onCpFull"
         }
     ) do
         SpecializationUtil.registerEventListener(vehicleType, n, AutoDrive)
@@ -706,6 +710,48 @@ function AutoDrive:onLeaveVehicle()
     end
 end
 
+-- CP event handler
+function AutoDrive:onCpFinished()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished start...")
+    if self.isServer then
+        if self.ad and self.ad.stateModule then
+            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished - event handler not implemented")
+        end
+    else
+        Logging.devError("AutoDrive:onCpFinished() must be called only on the server.")
+    end
+end
+
+function AutoDrive:handleCPFieldWorker(vehicle)
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start...")
+    if vehicle.isServer then
+        if vehicle.ad and vehicle.ad.stateModule and vehicle.startAutoDrive then
+            -- restart CP
+            vehicle.ad.restartCP = true
+            if not vehicle.ad.stateModule:isActive() then
+                if vehicle.ad.stateModule:getStartCP_AIVE() and vehicle.ad.stateModule:getUseCP_AIVE() then
+                    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start AD")
+                    vehicle.ad.stateModule:getCurrentMode():start()
+                end
+            else
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker - AD already active, should not happen")
+            end
+        end
+    else
+        Logging.devError("AutoDrive:handleCPFieldWorker() must be called only on the server.")
+    end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker end")
+end
+
+function AutoDrive:onCpEmpty()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpEmpty start...")
+    AutoDrive:handleCPFieldWorker(self)
+end
+
+function AutoDrive:onCpFull()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
+    AutoDrive:handleCPFieldWorker(self)
+end
 
 function AutoDrive:onDelete()
     AutoDriveHud:deleteMapHotspot(self)
@@ -1036,16 +1082,8 @@ function AutoDrive:stopAutoDrive()
             if self.setTurnLightState ~= nil then
                 self:setTurnLightState(Lights.TURNLIGHT_OFF)
             end
-            --cpStartFieldworker
-            --cpStartStopDriver
 
-            local hasCallbacks = self.ad.callBackFunction ~= nil and self.ad.isStoppingWithError == false
-            --hasCallbacks = self.cpStartFieldworker ~= nil
-            --print("HasCallbacks: " .. tostring(hasCallbacks))
-            if hasCallbacks then
-                --print("calling cp now")
-                --self:cpStartStopDriver()
-            else
+
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
 
@@ -1072,25 +1110,45 @@ function AutoDrive:stopAutoDrive()
                 if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
                     self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
                 end
-            end
 
             self.ad.stateModule:setActive(false)
 
             self.ad.taskModule:abortAllTasks()
             self.ad.taskModule:reset()
 
+            self.ad.trailerModule:handleTrailerReversing(false)
+            if self.ad.isStoppingWithError == true then
+                self.ad.onRouteToRefuel = false
+                self.ad.onRouteToRepair = false
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
+            end
+
             local isStartingAIVE = (not self.ad.isStoppingWithError and self.ad.stateModule:getStartCP_AIVE() and not self.ad.stateModule:getUseCP_AIVE())
-            local isPassingToCP = hasCallbacks or (not self.ad.isStoppingWithError and self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE())
+            local isPassingToCP = not self.ad.isStoppingWithError and (self.ad.restartCP == true or (self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()))
             AutoDriveStartStopEvent:sendStopEvent(self, isPassingToCP, isStartingAIVE)
 
-            if not hasCallbacks and not self.ad.isStoppingWithError and distanceToStart < 30 then
+            if not self.ad.isStoppingWithError and distanceToStart < 30 then
+                AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass to other mod...")
                 if self.ad.stateModule:getStartCP_AIVE() then
-                    self.ad.stateModule:setStartCP_AIVE(false)
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive CP / AIVE button enabled")
+                    -- CP / AIVE button enabled
                     if self.cpStartStopDriver ~= nil and self.ad.stateModule:getUseCP_AIVE() then
-                        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with start")
-                        AutoDrive:StartCP(self)
+                        -- CP button active
+                        if self.ad.restartCP == true then
+                            -- restart CP to continue
+                            self.ad.restartCP = true
+                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with restart")
+                            AutoDrive:RestartCP(self)
+                        else
+                            -- start CP from beginning
+                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with start")
+                            AutoDrive:StartCP(self)
+                        end
                     else
+                        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive AIVE button active")
+                        -- AIVE button active
                         if self.acParameters ~= nil then
+                            self.ad.stateModule:setStartCP_AIVE(false)  -- disable CP / AIVE button
                             self.acParameters.enabled = true
                             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to AIVE with startAIVehicle")
                             self:toggleAIVehicle()
@@ -1099,12 +1157,6 @@ function AutoDrive:stopAutoDrive()
                 end
             end
             
-            self.ad.trailerModule:handleTrailerReversing(false)
-            if self.ad.isStoppingWithError == true then
-                self.ad.onRouteToRefuel = false
-                self.ad.onRouteToRepair = false
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
-            end
         end
     else
         Logging.devError("AutoDrive:stopAutoDrive() must be called only on the server.")
@@ -1185,8 +1237,8 @@ function AutoDrive.AddHelper()
     table.insert(g_helperManager.availableHelpers, helper)
 end
 
-function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
-    if not hasCallbacks then
+function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
+    if not isPassingToCP then
         --if self.raiseAIEvent ~= nil and not isStartingAIVE then
             --self:raiseAIEvent("onAIFieldWorkerEnd", "onAIImplementEnd")
         --end

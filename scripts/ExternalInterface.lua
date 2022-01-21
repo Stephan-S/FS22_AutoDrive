@@ -217,16 +217,31 @@ function AutoDrive:getCombineOpenPipePercent(combine)	--for AIVE
 	return pipePercent
 end
 
--- start CP
+-- start CP at first wayPoint
 function AutoDrive:StartCP(vehicle)
     if vehicle == nil then 
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP...")
-    if vehicle.cpStartStopDriver ~= nil then
-        vehicle:cpStartStopDriver()
+    if vehicle.startCpAtFirstWp ~= nil then
+        vehicle:startCpAtFirstWp()
     else
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
+    end
+end
+
+-- restart CP to continue
+function AutoDrive:RestartCP(vehicle)
+    if vehicle == nil then 
+        return 
+    end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:RestartCP...")
+    if vehicle.startCpAtLastWp ~= nil then
+        vehicle:startCpAtLastWp()
+    elseif vehicle.startCpALastWp ~= nil then
+        vehicle:startCpALastWp()
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:RestartCP - Not possible. CP interface not found")
     end
 end
 
@@ -236,18 +251,16 @@ function AutoDrive:StopCP(vehicle)
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP...")
-    if g_courseplay ~= nil and vehicle.cp ~= nil and vehicle.getIsCourseplayDriving ~= nil and vehicle:getIsCourseplayDriving() then
+    vehicle.ad.restartCP = false -- do not continue CP course
+    if vehicle.startStopDriver ~= nil then
         if vehicle.ad.stateModule:getStartCP_AIVE() then
             vehicle.ad.stateModule:toggleStartCP_AIVE()
         end
-        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP call CP stop")
-        if vehicle.stopCpDriver then
-            -- newer CP versions use this function to stop the CP driver
-            vehicle:stopCpDriver()
-        else
-            -- for backward compatibility for older CP versions
-            g_courseplay.courseplay:stop(vehicle)
+        if vehicle:getIsCpActive() then
+            vehicle:startStopDriver()
         end
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - Not possible. CP interface not found")
     end
 end
 
