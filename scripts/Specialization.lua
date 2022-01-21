@@ -1227,6 +1227,7 @@ function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
     self:requestActionEventUpdate()
 
     AutoDriveHud:deleteMapHotspot(self)
+    self.ad.wasStartedByCp = false
 end
 
 function AutoDrive:updateWayPointsDistance()
