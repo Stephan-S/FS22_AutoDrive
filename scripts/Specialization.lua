@@ -29,6 +29,11 @@ function AutoDrive.registerEventListeners(vehicleType)
     ) do
         SpecializationUtil.registerEventListener(vehicleType, n, AutoDrive)
     end
+    if Courseplay ~=nil then 
+        SpecializationUtil.registerEventListener(vehicleType, "onCpFull", AutoDrive)
+        SpecializationUtil.registerEventListener(vehicleType, "onCpEmpty", AutoDrive)
+        SpecializationUtil.registerEventListener(vehicleType, "onCpFinished", AutoDrive)
+    end
 end
 
 function AutoDrive.registerOverwrittenFunctions(vehicleType)
@@ -1593,4 +1598,28 @@ function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
             self.ad.uTurn.doneChecking = true
         end
     end
+end
+
+----------------------------------------------------------------
+------ Courseplay interface functions
+----------------------------------------------------------------
+
+--- TODO: Add checks if the user configurations are setup correctly.
+
+--- The cp helper is empty, so trying to drive to a refill point.
+function AutoDrive:onCpEmpty()
+    self.ad.wasStartedByCp = true 
+    self.ad.stateModule:getCurrentMode():start()
+end
+
+--- The cp helper is full, so trying to drive to a unloading point.
+function AutoDrive:onCpFull()
+    self.ad.wasStartedByCp = true 
+    self.ad.stateModule:getCurrentMode():start()
+end
+
+--- The cp helper is finished, so trying to drive to a possible parking position.
+function AutoDrive:onCpFinished()
+    self.ad.wasStartedByCp = true 
+ --   self.ad.stateModule:getCurrentMode():start()
 end
