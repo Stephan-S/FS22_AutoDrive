@@ -1136,7 +1136,6 @@ function AutoDrive:stopAutoDrive()
                         -- CP button active
                         if self.ad.restartCP == true then
                             -- restart CP to continue
-                            self.ad.restartCP = true
                             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with restart")
                             AutoDrive:RestartCP(self)
                         else

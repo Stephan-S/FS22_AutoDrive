@@ -251,17 +251,23 @@ function AutoDrive:StopCP(vehicle)
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP...")
-    vehicle.ad.restartCP = false -- do not continue CP course
-    if vehicle.startStopDriver ~= nil then
-        if vehicle.ad.stateModule:getStartCP_AIVE() then
-            vehicle.ad.stateModule:toggleStartCP_AIVE()
-        end
+    if vehicle.cpStartStopDriver ~= nil then
         if vehicle:getIsCpActive() then
-            vehicle:startStopDriver()
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - cpStartStopDriver")
+            vehicle:cpStartStopDriver()
+        end
+        if vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and vehicle.ad.stateModule:getUseCP_AIVE() and  vehicle.ad.stateModule:getStartCP_AIVE() then
+            -- CP button active
+            if vehicle.ad.restartCP == true then
+                -- deactivate CP button
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - deactivate CP button")
+                vehicle.ad.stateModule:setStartCP_AIVE(false)
+            end
         end
     else
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - Not possible. CP interface not found")
     end
+    vehicle.ad.restartCP = false -- do not continue CP course
 end
 
 function AutoDrive:HoldDriving(vehicle)

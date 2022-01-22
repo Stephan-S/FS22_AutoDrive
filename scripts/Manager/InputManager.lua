@@ -502,6 +502,7 @@ function ADInputManager:input_repairVehicle(vehicle)
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADInputManager:input_repairVehicle ")
     local repairDestinationMarkerNodeID = AutoDrive:getClosestRepairTrigger(vehicle)
     if repairDestinationMarkerNodeID ~= nil then
+        AutoDrive:StopCP(vehicle)
         if vehicle.ad.stateModule:isActive() then
             self:input_start_stop(vehicle) --disable if already active
         end
