@@ -258,11 +258,9 @@ function AutoDrive:StopCP(vehicle)
         end
         if vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and vehicle.ad.stateModule:getUseCP_AIVE() and  vehicle.ad.stateModule:getStartCP_AIVE() then
             -- CP button active
-            if vehicle.ad.restartCP == true then
-                -- deactivate CP button
-                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - deactivate CP button")
-                vehicle.ad.stateModule:setStartCP_AIVE(false)
-            end
+            -- deactivate CP button
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - deactivate CP button")
+            vehicle.ad.stateModule:setStartCP_AIVE(false)
         end
     else
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - Not possible. CP interface not found")
