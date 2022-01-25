@@ -395,7 +395,7 @@ function AutoDrive:onUpdate(dt)
             end
         end
         if self.lastMovedDistance > 0 then
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
+            -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
         end
     end
 
@@ -1028,7 +1028,7 @@ function AutoDrive:startAutoDrive()
             end
 
             
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
+            -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
 
             AutoDriveStartStopEvent:sendStartEvent(self)
 
@@ -1067,7 +1067,7 @@ function AutoDrive:stopAutoDrive()
         ADScheduler:removePathfinderVehicle(self)
 
         if self.ad.stateModule:isActive() then
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", -1)
+            -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", -1)
             self.ad.drivePathModule:reset()
             self.ad.specialDrivingModule:reset()
             self.ad.trailerModule:reset()

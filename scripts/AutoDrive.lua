@@ -26,10 +26,10 @@ AutoDrive.mapHotspotsBuffer = {}
 AutoDrive.drawHeight = 0.3
 AutoDrive.drawDistance = getViewDistanceCoeff() * 50
 
-AutoDrive.STAT_NAMES = {"driversTraveledDistance", "driversHired"}
-for _, statName in pairs(AutoDrive.STAT_NAMES) do
-	table.insert(FarmStats.STAT_NAMES, statName)
-end
+-- AutoDrive.STAT_NAMES = {"driversTraveledDistance", "driversHired"}
+-- for _, statName in pairs(AutoDrive.STAT_NAMES) do
+	-- table.insert(FarmStats.STAT_NAMES, statName)
+-- end
 
 AutoDrive.MODE_DRIVETO = 1
 AutoDrive.MODE_PICKUPANDDELIVER = 2
@@ -215,7 +215,7 @@ function AutoDrive:loadMap(name)
 
 	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
 
-	FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
+	-- FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
 
 	FSBaseMission.removeVehicle = Utils.prependedFunction(FSBaseMission.removeVehicle, AutoDrive.preRemoveVehicle)
 
@@ -677,7 +677,7 @@ function AutoDrive:FarmStats_loadFromXMLFile(xmlFileName, key)
 	key = key .. ".statistics"
 	-- self.statistics["driversTraveledDistance"].total = Utils.getNoNil(getXMLFloat(xmlFile, key .. ".driversTraveledDistance"), 0)
     
-	self.statistics["driversTraveledDistance"].total = xmlFile:getFloat(key .. ".driversTraveledDistance", 0)
+	-- self.statistics["driversTraveledDistance"].total = xmlFile:getFloat(key .. ".driversTraveledDistance", 0)
 end
 
 function AutoDrive:FarmStats_getStatisticData(superFunc)
