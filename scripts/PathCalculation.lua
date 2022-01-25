@@ -46,7 +46,7 @@ function ADPathCalculator:GetPath(startID, targetID, preferredStartIds)
         countIterations = countIterations + 1
         local next = candidates:dequeue()
         local point, distance, previousPoint = next.p, next.distance, next.pre
-        while point ~= nil and and (countIterations < ADPathCalculator.MAX_ITERATIONS) do
+        while point ~= nil and (countIterations < ADPathCalculator.MAX_ITERATIONS) do
             countIterations = countIterations + 1
             if results[point.id] == nil then
                 results[point.id] = {}
