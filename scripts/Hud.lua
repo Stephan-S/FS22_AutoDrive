@@ -239,7 +239,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 			self:AddSettingsButton("avoidFruit", "gui_ad_avoidFruit", 1, true)
 		else
 			self:AddEditModeButtons()
-			if vehicle.cpStartStopDriver ~= nil then
+			if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 				self.buttonCounter = self.buttonCounter - 1
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 			elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
@@ -259,7 +259,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 		if AutoDrive.getSetting("addSettingsToHUD") then
 			self.buttonCounter = self.buttonCounter - 5
 
-			if vehicle.cpStartStopDriver ~= nil then
+			if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 			elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 3, true)
@@ -272,7 +272,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 			self:AddSettingsButton("restrictToField", "gui_ad_restrictToField", 1, true)
 			self:AddSettingsButton("avoidFruit", "gui_ad_avoidFruit", 1, true)
 		else
-			if vehicle.cpStartStopDriver ~= nil then
+			if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 				self.buttonCounter = self.buttonCounter - 1
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 			elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
@@ -294,7 +294,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	if AutoDrive.getSetting("wideHUD") and AutoDrive.getSetting("addSettingsToHUD") then
 		self:AddEditModeButtons()
 
-		if vehicle.cpStartStopDriver ~= nil then
+		if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 			self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 		elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
 			self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 3, true)
