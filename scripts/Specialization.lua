@@ -253,7 +253,7 @@ function AutoDrive:onPostLoad(savegame)
     self.ad.frontNode = createTransformGroup(self:getName() .. "_frontNode")
     link(self.components[1].node, self.ad.frontNode)
     setTranslation(self.ad.frontNode, 0, 0, self.size.length / 2 + self.size.lengthOffset + 0.75)
-    self.ad.frontNodeGizmo = DebugGizmo:new()
+    self.ad.frontNodeGizmo = DebugGizmo.new()
     self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
     self.ad.lastDrawPosition = {x = x, z = z}
