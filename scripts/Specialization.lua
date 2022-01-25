@@ -415,7 +415,7 @@ function AutoDrive:onUpdate(dt)
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
-    if self.ad == nil then
+    if self.ad == nil or self.ad.stateModule == nil then
         return
     end
     local adKey = string.gsub(key, "FS22_AutoDrive.AutoDrive", "AutoDrive")
@@ -424,7 +424,7 @@ function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
         --xmlFile:setValue(adKey, {})
         --return
     --end
-    
+
     self.ad.stateModule:saveToXMLFile(xmlFile, adKey)
 
     for settingName, setting in pairs(AutoDrive.settings) do
