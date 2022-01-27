@@ -15,7 +15,6 @@ AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
 AutoDrive.experimentalFeatures.UTurn = true
 AutoDrive.experimentalFeatures.FoldImplements = false
-AutoDrive.experimentalFeatures.HandleChopper = false
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true
