@@ -87,6 +87,7 @@ function CombineUnloaderMode:monitorTasks(dt)
 end
 
 function CombineUnloaderMode:notifyAboutFailedPathfinder()
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:notifyAboutFailedPathfinder self.failedPathFinder %s ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 %s", tostring(self.failedPathFinder), tostring(ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20))
     --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. tostring(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
     if self.vehicle.ad.pathFinderModule.completelyBlocked and ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 then
         self.failedPathFinder = self.failedPathFinder + 1
@@ -158,15 +159,15 @@ function CombineUnloaderMode:continue()
     end
 
     if self.state == self.STATE_DRIVE_TO_UNLOAD then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:continue self.STATE_DRIVE_TO_UNLOAD")
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue self.STATE_DRIVE_TO_UNLOAD")
         self.activeTask:continue()
     else
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:continue self.state" .. tostring(self.state))
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue self.state" .. tostring(self.state))
         self.vehicle.ad.taskModule:abortCurrentTask()
 
         if AutoDrive.checkIsOnField(x, y, z) and distanceToStart > 30 then
             -- is activated on a field - use ExitFieldTask to leave field according to setting
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:continue ExitFieldTask...")
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue ExitFieldTask...")
             self.activeTask = ExitFieldTask:new(self.vehicle)
             self.state = self.STATE_EXIT_FIELD
         else
@@ -176,7 +177,7 @@ function CombineUnloaderMode:continue()
                     self.vehicle.ad.stateModule:setSecondMarker(nextTarget)
                 end
             end
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:continue UnloadAtDestinationTask...")
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue UnloadAtDestinationTask...")
             self.activeTask = UnloadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
             self.state = self.STATE_DRIVE_TO_UNLOAD
         end
@@ -274,7 +275,7 @@ function CombineUnloaderMode:getNextTask()
         self.state = self.STATE_DRIVE_TO_UNLOAD
     end
 
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getNextTask end self.state %s", tostring(self.state))
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask end self.state %s", tostring(self.state))
     return nextTask
 end
 
@@ -330,7 +331,7 @@ end
 
 function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
     local nextTask
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getTaskAfterUnload start filledToUnload %s", tostring(filledToUnload))
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload start filledToUnload %s", tostring(filledToUnload))
 
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
     local point = nil
@@ -352,11 +353,11 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
         --self.combine = nil
         if AutoDrive.checkIsOnField(x, y, z) and distanceToStart > 30 then
             -- is activated on a field - use ExitFieldTask to leave field according to setting
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getTaskAfterUnload ExitFieldTask...")
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload ExitFieldTask...")
             nextTask = ExitFieldTask:new(self.vehicle)
             self.state = self.STATE_EXIT_FIELD
         else
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getTaskAfterUnload UnloadAtDestinationTask...")
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload UnloadAtDestinationTask...")
             nextTask = UnloadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
             self.state = self.STATE_DRIVE_TO_UNLOAD
         end
@@ -365,10 +366,11 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
         if AutoDrive.getIsBufferCombine(self.combine) or (AutoDrive.getSetting("parkInField", self.vehicle) or (self.lastTask ~= nil and self.lastTask.stayOnField)) then
             -- If we are in fruit, we should clear it
             if AutoDrive.isVehicleOrTrailerInCrop(self.vehicle, true) then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getTaskAfterUnload ClearCropTask...")
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload ClearCropTask...")
                 nextTask = ClearCropTask:new(self.vehicle)
                 self.state = self.STATE_LEAVE_CROP
             else
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload setToWaitForCall")
                 self:setToWaitForCall()
             end
         else
@@ -377,7 +379,7 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
             self.state = self.STATE_DRIVE_TO_START
         end
     end
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "CombineUnloaderMode:getTaskAfterUnload end")
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload end")
     return nextTask
 end
 
