@@ -228,6 +228,13 @@ function AutoDrive:onPostLoad(savegame)
     end
 
     if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
+        if self.typeName == "combineCutterFruitPreparer" then
+            local vehicleFillLevel, vehicleFillCapacity, filledToUnload, vehicleFillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(self)
+            self.ad.isSugarcaneHarvester = vehicleFillCapacity == math.huge
+        end
+    end
+
+    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         ADHarvestManager:registerHarvester(self)
     end
 

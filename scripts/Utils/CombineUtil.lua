@@ -124,6 +124,11 @@ function AutoDrive.isPipeOut(combine)
 end
 
 function AutoDrive.isSugarcaneHarvester(combine)
+    -- see Specialisation
+    return combine and combine.ad and combine.ad.isSugarcaneHarvester
+end
+
+function AutoDrive.isSugarcaneHarvester_old(combine)
     local isSugarCaneHarvester = combine.typeName == "combineCutterFruitPreparer"
     for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
         if implement ~= combine then
