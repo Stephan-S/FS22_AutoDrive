@@ -73,19 +73,19 @@ function ADMessagesManager:loadHud(hud)
     hud.warnIconOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
 end
 
-function ADMessagesManager:addInfoMessage(text, duration)
-    self:addMessage(self.messageTypes.INFO, text, duration)
+function ADMessagesManager:addInfoMessage(vehicle, text, duration) -- not used
+    self:addMessage(vehicle, self.messageTypes.INFO, text, duration)
 end
 
-function ADMessagesManager:addWarnMessage(text, duration)
-    self:addMessage(self.messageTypes.WARN, text, duration)
+function ADMessagesManager:addWarnMessage(vehicle, text, duration) -- not used
+    self:addMessage(vehicle, self.messageTypes.WARN, text, duration)
 end
 
-function ADMessagesManager:addErrorMessage(text, duration)
-    self:addMessage(self.messageTypes.ERROR, text, duration)
+function ADMessagesManager:addErrorMessage(vehicle, text, duration) -- not used
+    self:addMessage(vehicle, self.messageTypes.ERROR, text, duration)
 end
 
-function ADMessagesManager:addMessage(messageType, text, duration)
+function ADMessagesManager:addMessage(vehicle, messageType, text, duration)
     local exists = false
     if self.currentMessage ~= nil and self.currentMessage.messageType == messageType and self.currentMessage.text == text then
         exists = true
@@ -105,7 +105,7 @@ end
 
 function ADMessagesManager:addNotification(vehicle, messageType, text, duration)
     if g_currentMission.controlledVehicle == vehicle then
-        self:addMessage(messageType, text, duration)
+        self:addMessage(vehicle, messageType, text, duration)
     else
         local exists = false
         if self.currentNotification ~= nil and self.currentNotification.messageType == messageType and self.currentNotification.text == text and self.currentNotification.vehicle == vehicle then
@@ -220,14 +220,8 @@ end
 
 function ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
     if isUp and button == 1 then
-        if self.currentMessage ~= nil then
-            local ov = self.huds.message.dismissOverlay
-            local x, y = ov:getPosition()
-            if posX >= x - ov.width / 2 and posY >= y - ov.height / 2 and posX <= x + ov.width / 2 and posY <= y + ov.height / 2 then
-                self:removeCurrentMessage()
-            end
-        end
         if self.currentNotification ~= nil then
+            -- notification prefered as it allow to change to vehicle
             local ov = self.huds.notification.dismissOverlay
             local x, y = ov:getPosition()
             if posX >= x - ov.width / 2 and posY >= y - ov.height / 2 and posX <= x + ov.width / 2 and posY <= y + ov.height / 2 then
@@ -239,17 +233,22 @@ function ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
                 self:goToVehicle()
                 self:removeCurrentNotification()
             end
+        elseif self.currentMessage ~= nil then
+            local ov = self.huds.message.dismissOverlay
+            local x, y = ov:getPosition()
+            if posX >= x - ov.width / 2 and posY >= y - ov.height / 2 and posX <= x + ov.width / 2 and posY <= y + ov.height / 2 then
+                self:removeCurrentMessage()
+            end
         end
     end
 end
 
 function ADMessagesManager:draw()
-    if self.currentMessage ~= nil then
-        self:drawHud(self.huds.message)
-    end
-
     if self.currentNotification ~= nil then
+        -- notification prefered as it allow to change to vehicle
         self:drawHud(self.huds.notification)
+    elseif self.currentMessage ~= nil then
+        self:drawHud(self.huds.message)
     end
 end
 

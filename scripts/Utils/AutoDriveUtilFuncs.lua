@@ -384,7 +384,7 @@ function AutoDrive.setActualParkDestination(vehicle)
                         messageText = AutoDrive.localize(messageText)
                         -- formatting
                         messageText = string.format(messageText, messageArg)
-                        ADMessagesManager:addMessage(ADMessagesManager.messageTypes.INFO, messageText, 5000)
+                        ADMessagesManager:addMessage(vehicle, ADMessagesManager.messageTypes.INFO, messageText, 5000)
                         
                     elseif AutoDrive.isInExtendedEditorMode() and not AutoDrive.leftCTRLmodifierKeyPressed and AutoDrive.leftALTmodifierKeyPressed then
                         -- delete park destination
@@ -399,7 +399,7 @@ function AutoDrive.setActualParkDestination(vehicle)
                         messageText = AutoDrive.localize(messageText)
                         -- formatting
                         messageText = string.format(messageText, messageArg)
-                        ADMessagesManager:addMessage(ADMessagesManager.messageTypes.INFO, messageText, 5000)
+                        ADMessagesManager:addMessage(vehicle, ADMessagesManager.messageTypes.INFO, messageText, 5000)
                     end
                 end
             end
