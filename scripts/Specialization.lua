@@ -1091,6 +1091,7 @@ function AutoDrive:stopAutoDrive()
             end
 
 
+                self.ad.trailerModule:handleTrailerReversing(false)
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
 
@@ -1123,7 +1124,6 @@ function AutoDrive:stopAutoDrive()
             self.ad.taskModule:abortAllTasks()
             self.ad.taskModule:reset()
 
-            self.ad.trailerModule:handleTrailerReversing(false)
             if self.ad.isStoppingWithError == true then
                 self.ad.onRouteToRefuel = false
                 self.ad.onRouteToRepair = false

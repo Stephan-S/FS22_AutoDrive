@@ -156,7 +156,6 @@ function ADDrivePathModule:update(dt)
         else
             self:followWaypoints(dt)
             self:checkIfStuck(dt)
-            self.vehicle.ad.trailerModule:handleTrailerReversing(false)
 
             if self:isCloseToWaypoint() then
                 local reverseStart, _ = self:checkForReverseSection()
@@ -307,6 +306,7 @@ function ADDrivePathModule:followWaypoints(dt)
                 self.vehicle:startMotor()
             end
         end
+        self.vehicle.ad.trailerModule:handleTrailerReversing(false)
         AutoDrive.driveInDirection(self.vehicle, dt, maxAngle, self.acceleration, 0.8, maxAngle, true, true, lx, lz, self.speedLimit, 1)
     end
 end
