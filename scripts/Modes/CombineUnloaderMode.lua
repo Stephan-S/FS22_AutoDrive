@@ -296,7 +296,7 @@ function CombineUnloaderMode:assignToHarvester(harvester)
         self.combine = harvester
         -- if combine has extended pipe, aim for that. Otherwise DriveToVehicle and choose from there
         local spec = self.combine.spec_pipe
-        if spec.currentState == spec.targetState and (spec.currentState == 2 or self.combine.typeName == "combineCutterFruitPreparer") then
+        if spec.currentState == spec.targetState and spec.currentState == 2 then
 
             local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectNonFuelFillLevels(self.combine)
             local cFillRatio = cfillLevel / cfillCapacity
@@ -520,7 +520,7 @@ function CombineUnloaderMode:getSideChaseOffsetX()
         sideChaseTermX = AutoDrive.getPipeLength(self.combine)
     elseif AutoDrive.getIsBufferCombine(self.combine) then
         sideChaseTermX = sideChaseTermPipeIn + CombineUnloaderMode.STATIC_X_OFFSET_FROM_HEADER
-    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and (spec.currentState == 2 or self.combine.typeName == "combineCutterFruitPreparer")) then
+    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and spec.currentState == 2) then
         -- If the pipe is extended, though, target it regardless
         sideChaseTermX = sideChaseTermPipeOut
     end
@@ -549,7 +549,7 @@ function CombineUnloaderMode:getSideChaseOffsetX_new()
         sideChaseTermX = AutoDrive.getPipeLength(self.combine)
     elseif AutoDrive.getIsBufferCombine(self.combine) then
         sideChaseTermX = sideChaseTermPipeIn + CombineUnloaderMode.STATIC_X_OFFSET_FROM_HEADER
-    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and (spec.currentState == 2 or self.combine.typeName == "combineCutterFruitPreparer")) then
+    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and spec.currentState == 2) then
         -- If the pipe is extended, though, target it regardless
         sideChaseTermX = 0
     end

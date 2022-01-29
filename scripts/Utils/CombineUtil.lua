@@ -94,10 +94,8 @@ function AutoDrive.getPipeLength(combine)
         length = math.abs(diffX) - combine.size.width /2
 
         -- Store pipe length for 'normal' harvesters
-        if not (combine.typeName == "combineCutterFruitPreparer") then
-            if combine.ad ~= nil then
-                combine.ad.storedPipeLength = length
-            end
+        if combine.ad ~= nil then
+            combine.ad.storedPipeLength = length
         end
     end
 
@@ -108,13 +106,13 @@ function AutoDrive.isPipeOut(combine)
     local spec = combine.spec_pipe
 
     if (spec ~= nil and combine.spec_combine ~= nil) then
-        if spec.currentState == spec.targetState and (spec.currentState == 2 or combine.typeName == "combineCutterFruitPreparer") then
+        if spec.currentState == spec.targetState and (spec.currentState == 2) then
             return true
         end
     else        
         for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
             if (implement.spec_pipe ~= nil and implement.spec_combine ~= nil) then
-                if implement.spec_pipe.currentState == implement.spec_pipe.targetState and (implement.spec_pipe.currentState == 2 or implement.typeName == "combineCutterFruitPreparer") then
+                if implement.spec_pipe.currentState == implement.spec_pipe.targetState and (implement.spec_pipe.currentState == 2) then
                     return true
                 end
             end
