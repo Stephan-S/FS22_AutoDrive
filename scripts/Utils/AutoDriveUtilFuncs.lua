@@ -6,6 +6,22 @@ function AutoDrive.createWayPointRelativeToVehicle(vehicle, offsetX, offsetZ)
     return wayPoint
 end
 
+function AutoDrive.createWayPointRelativeToDischargeNode(vehicle, offsetX, offsetZ)
+    if not vehicle.ad.isCombine or AutoDrive.getDischargeNode(vehicle) == nil then
+        return AutoDrive.createWayPointRelativeToVehicle(vehicle, offsetX, offsetZ)
+    end
+    local wayPoint = {}
+    local referenceAxis = vehicle.components[1].node
+    if vehicle.components[2] ~= nil and vehicle.components[2].node ~= nil then
+        referenceAxis = vehicle.components[2].node
+    end
+    local node = AutoDrive.getDischargeNode(vehicle)
+    local worldOffsetX, worldOffsetY, worldOffsetZ = localDirectionToWorld(referenceAxis, offsetX, 0, offsetZ)
+    local x, y, z = getWorldTranslation(node)
+    wayPoint.x, wayPoint.y, wayPoint.z = x + worldOffsetX, y + worldOffsetY, z + worldOffsetZ
+    return wayPoint
+end
+
 function AutoDrive.isTrailerInCrop(vehicle, enlargeDetectionArea)
     local widthFactor = 1
     if enlargeDetectionArea then
@@ -123,8 +139,11 @@ function AutoDrive.getRequiredRefuels(vehicle, ignoreFillLevel)
 end
 
 function AutoDrive.combineIsTurning(combine)
-    local cpIsTurning = combine.cp ~= nil and (combine.cp.isTurning or (combine.cp.turnStage ~= nil and combine.cp.turnStage > 0))
-    local cpIsTurningTwo = combine.cp ~= nil and combine.cp.driver and (combine.cp.driver.turnIsDriving or (combine.cp.driver.fieldworkState ~= nil and combine.cp.driver.fieldworkState == combine.cp.driver.states.TURNING))
+    local cpIsTurning = AutoDrive:getIsCPTurning(combine)
+    if cpIsTurning then
+        -- CP turn maneuver might get noMovementTimer expired, so return here already
+        return true
+    end
     local aiIsTurning = false
     local rootVehicle = nil
     if combine.getRootVehicle ~= nil then
@@ -133,8 +152,7 @@ function AutoDrive.combineIsTurning(combine)
             aiIsTurning = rootVehicle.getAIFieldWorkerIsTurning ~= nil and rootVehicle:getAIFieldWorkerIsTurning()
         end
     end
-    --local combineSteering = combine.rotatedTime ~= nil and (math.deg(combine.rotatedTime) > 30)
-    local combineIsTurning = cpIsTurning or cpIsTurningTwo or aiIsTurning --or combineSteering
+    local combineIsTurning = cpIsTurning or aiIsTurning
 
     --Check if we are close to the field borders and about to turn
     local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, true, 50, 5)
@@ -366,7 +384,7 @@ function AutoDrive.setActualParkDestination(vehicle)
                         messageText = AutoDrive.localize(messageText)
                         -- formatting
                         messageText = string.format(messageText, messageArg)
-                        ADMessagesManager:addMessage(ADMessagesManager.messageTypes.INFO, messageText, 5000)
+                        ADMessagesManager:addMessage(vehicle, ADMessagesManager.messageTypes.INFO, messageText, 5000)
                         
                     elseif AutoDrive.isInExtendedEditorMode() and not AutoDrive.leftCTRLmodifierKeyPressed and AutoDrive.leftALTmodifierKeyPressed then
                         -- delete park destination
@@ -381,7 +399,7 @@ function AutoDrive.setActualParkDestination(vehicle)
                         messageText = AutoDrive.localize(messageText)
                         -- formatting
                         messageText = string.format(messageText, messageArg)
-                        ADMessagesManager:addMessage(ADMessagesManager.messageTypes.INFO, messageText, 5000)
+                        ADMessagesManager:addMessage(vehicle, ADMessagesManager.messageTypes.INFO, messageText, 5000)
                     end
                 end
             end

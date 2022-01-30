@@ -1,7 +1,10 @@
 ADPathCalculator = {}
 
+ADPathCalculator.MAX_ITERATIONS = 10000000
+
 function ADPathCalculator:GetPath(startID, targetID, preferredStartIds)
 	local count = 0
+	local countIterations = 0
 
     if not ADGraphManager:areWayPointsPrepared() then
 		AutoDrive.checkWaypointsLinkedtothemselve(true)		-- find WP linked to themselve, with parameter true issues will be fixed
@@ -39,10 +42,12 @@ function ADPathCalculator:GetPath(startID, targetID, preferredStartIds)
     end
 
     local lastPredecessor = nil
-    while not candidates:empty() and not foundTarget do
+    while not candidates:empty() and not foundTarget and (countIterations < ADPathCalculator.MAX_ITERATIONS) do
+        countIterations = countIterations + 1
         local next = candidates:dequeue()
         local point, distance, previousPoint = next.p, next.distance, next.pre
-        while point ~= nil do
+        while point ~= nil and (countIterations < ADPathCalculator.MAX_ITERATIONS) do
+            countIterations = countIterations + 1
             if results[point.id] == nil then
                 results[point.id] = {}
             end
@@ -65,6 +70,11 @@ function ADPathCalculator:GetPath(startID, targetID, preferredStartIds)
                     end
 
                     for _, outId in pairs(outMap) do
+                        countIterations = countIterations + 1
+                        if (countIterations > ADPathCalculator.MAX_ITERATIONS) then
+                            -- emergency exit
+                            return {}
+                        end
                         local outPoint = network[outId]
                         
                         -- Add this out point into our results table with the current distance

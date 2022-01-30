@@ -116,11 +116,11 @@ function EmptyHarvesterTask:update(dt)
             end
         end
     elseif self.state == EmptyHarvesterTask.STATE_UNLOADING_FINISHED then
-        if AutoDrive:getIsCPActive(self.combine) and AutoDrive:getIsCPCombineInPocket(self.combine) then
-            -- reverse if CP unload in a pocket
+        if AutoDrive:getIsCPCombineInPocket(self.combine) then
+            -- reverse if CP unload in a pocket or pullback position
             self.state = EmptyHarvesterTask.STATE_REVERSING
         else
-            self.state = EmptyHarvesterTask.STATE_WAITING 
+            self.state = EmptyHarvesterTask.STATE_WAITING
         end
     elseif self.state == EmptyHarvesterTask.STATE_REVERSING then
         self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = false
@@ -134,7 +134,7 @@ function EmptyHarvesterTask:update(dt)
         end
         if AutoDrive:getIsCPActive(self.combine) then
             -- if CP harvester
-            overallLength = overallLength + AutoDrive.getFrontToolWidth(self.combine) + 10
+            overallLength = overallLength + AutoDrive.getFrontToolWidth(self.combine)
         end
         if self.combine.trailingVehicle ~= nil then
             -- if the harvester is trailed reverse 5m more

@@ -38,7 +38,7 @@ function AutoDriveHudInputEventEvent:run(connection)
         if self.eventType == self.TYPE_FIRST_MARKER then
 			local currentFirstMarker = self.vehicle.ad.stateModule:getFirstMarkerId()
 			if currentFirstMarker > 0 and currentFirstMarker ~= self.value then
-				self.vehicle.ad.stateModule:removeCPCallback()
+				AutoDrive:StopCP(self.vehicle)
 			end
             self.vehicle.ad.stateModule:setFirstMarker(self.value)
         end

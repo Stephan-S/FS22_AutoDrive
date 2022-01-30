@@ -32,7 +32,7 @@ Différents modes d'utilisation ont été ajoutés depuis les premières version
 			<![CDATA[Этот мод может быть использован для создания сети маршрутов для транспортных средств для автономного вождения. После настройки вы можете указать трактору, стоящему где-угодно рядом с сетью, проехать в любую точку, например, в магазин, поле №1 или в точку продажи.]]>
 		</ru>
 	</description>
-	<version>2.0.0.3</version>
+	<version>2.0.0.4</version>
 	<multiplayer supported="true" />
 	<iconFilename>icon.dds</iconFilename>
 	<extraSourceFiles>
@@ -109,7 +109,6 @@ Différents modes d'utilisation ont été ajoutés depuis les premières version
 			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_19" axisComponent="+" neutralInput="0" index="1" />
 		</actionBinding>
 		<actionBinding action="ADEnDisable">
-			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_up" axisComponent="+" inputComponent="+" index="1" />
 			<binding device="0_XINPUT_GAMEPAD" input="BUTTON_5 BUTTON_6 BUTTON_17" axisComponent="+" neutralInput="0" index="1" />
 		</actionBinding>
 		<actionBinding action="ADSelectTarget">

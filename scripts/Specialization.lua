@@ -24,7 +24,11 @@ function AutoDrive.registerEventListeners(vehicleType)
             "onPostAttachImplement",
             "onPreDetachImplement",
             "onEnterVehicle",
-            "onLeaveVehicle"
+            "onLeaveVehicle",
+            -- CP events
+            "onCpFinished",
+            "onCpEmpty",
+            "onCpFull"
         }
     ) do
         SpecializationUtil.registerEventListener(vehicleType, n, AutoDrive)
@@ -76,11 +80,16 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
         local _, eventName
         local toggleButton = false
         local showF1Help = AutoDrive.getSetting("showHelp")
-        for _, action in pairs(AutoDrive.actions) do
+        for _, action in pairs(ADInputManager.actionsToInputs) do
             _, eventName = InputBinding.registerActionEvent(g_inputBinding, action[1], self, ADInputManager.onActionCall, toggleButton, true, false, true)
-            g_inputBinding:setActionEventTextVisibility(eventName, action[2] and showF1Help)
-            if showF1Help then
-                g_inputBinding:setActionEventTextPriority(eventName, action[3])
+            if action[5] then
+                g_inputBinding:setActionEventTextVisibility(eventName, action[5] and showF1Help)
+                if showF1Help then
+                    -- g_inputBinding:setActionEventTextPriority(eventName, action[3])
+                    if action[6] then
+                        g_inputBinding:setActionEventTextPriority(eventName, action[6])
+                    end
+                end
             end
         end
     end
@@ -219,6 +228,13 @@ function AutoDrive:onPostLoad(savegame)
     end
 
     if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
+        if self.typeName == "combineCutterFruitPreparer" then
+            local vehicleFillLevel, vehicleFillCapacity, filledToUnload, vehicleFillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(self)
+            self.ad.isSugarcaneHarvester = vehicleFillCapacity == math.huge
+        end
+    end
+
+    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         ADHarvestManager:registerHarvester(self)
     end
 
@@ -244,7 +260,7 @@ function AutoDrive:onPostLoad(savegame)
     self.ad.frontNode = createTransformGroup(self:getName() .. "_frontNode")
     link(self.components[1].node, self.ad.frontNode)
     setTranslation(self.ad.frontNode, 0, 0, self.size.length / 2 + self.size.lengthOffset + 0.75)
-    self.ad.frontNodeGizmo = DebugGizmo:new()
+    self.ad.frontNodeGizmo = DebugGizmo.new()
     self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
     self.ad.lastDrawPosition = {x = x, z = z}
@@ -386,7 +402,7 @@ function AutoDrive:onUpdate(dt)
             end
         end
         if self.lastMovedDistance > 0 then
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
+            -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
         end
     end
 
@@ -406,7 +422,7 @@ function AutoDrive:onUpdate(dt)
 end
 
 function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
-    if self.ad == nil then
+    if self.ad == nil or self.ad.stateModule == nil then
         return
     end
     local adKey = string.gsub(key, "FS22_AutoDrive.AutoDrive", "AutoDrive")
@@ -415,7 +431,7 @@ function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
         --xmlFile:setValue(adKey, {})
         --return
     --end
-    
+
     self.ad.stateModule:saveToXMLFile(xmlFile, adKey)
 
     for settingName, setting in pairs(AutoDrive.settings) do
@@ -539,6 +555,32 @@ function AutoDrive:onDraw()
             end
         end
     end
+    if AutoDrive.devOnDraw ~= nil then
+        AutoDrive.devOnDraw(self)
+    end
+
+    --[[
+    if self.ad.isCombine then
+        AutoDrive.drawTripod(AutoDrive.getDischargeNode(self))
+        AutoDrive.drawTripod(self.components[1].node, {x=0,y=3,z=0})
+        if self.components[2] ~= nil then
+            AutoDrive.drawTripod(self.components[2].node, {x=0,y=3,z=0})
+        end
+    end
+    --]]
+end
+
+function AutoDrive.drawTripod(node, offset)
+    if offset == nil then
+        offset = {x=0,y=0,z=0}
+    end
+    local nodeX, nodeY, nodeZ = getWorldTranslation(node)
+    local targetX, targetY, targetZ = localToWorld(node, 2, 0, 0)
+    ADDrawingManager:addLineTask(nodeX + offset.x, nodeY + offset.y, nodeZ + offset.z, targetX + offset.x, targetY + offset.y, targetZ + offset.z, 1, 0, 0)
+    targetX, targetY, targetZ = localToWorld(node, 0, 2, 0)
+    ADDrawingManager:addLineTask(nodeX + offset.x, nodeY + offset.y, nodeZ + offset.z, targetX + offset.x, targetY + offset.y, targetZ + offset.z, 0, 1, 0)
+    targetX, targetY, targetZ = localToWorld(node, 0, 0, 2)
+    ADDrawingManager:addLineTask(nodeX + offset.x, nodeY + offset.y, nodeZ + offset.z, targetX + offset.x, targetY + offset.y, targetZ + offset.z, 0, 0, 1)
 end
 
 function AutoDrive:onDrawPreviews()    
@@ -675,6 +717,48 @@ function AutoDrive:onLeaveVehicle()
     end
 end
 
+-- CP event handler
+function AutoDrive:onCpFinished()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished start...")
+    if self.isServer then
+        if self.ad and self.ad.stateModule then
+            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished - event handler not implemented")
+        end
+    else
+        Logging.devError("AutoDrive:onCpFinished() must be called only on the server.")
+    end
+end
+
+function AutoDrive:handleCPFieldWorker(vehicle)
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start...")
+    if vehicle.isServer then
+        if vehicle.ad and vehicle.ad.stateModule and vehicle.startAutoDrive then
+            -- restart CP
+            vehicle.ad.restartCP = true
+            if not vehicle.ad.stateModule:isActive() then
+                if vehicle.ad.stateModule:getStartCP_AIVE() and vehicle.ad.stateModule:getUseCP_AIVE() then
+                    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start AD")
+                    vehicle.ad.stateModule:getCurrentMode():start()
+                end
+            else
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker - AD already active, should not happen")
+            end
+        end
+    else
+        Logging.devError("AutoDrive:handleCPFieldWorker() must be called only on the server.")
+    end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker end")
+end
+
+function AutoDrive:onCpEmpty()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpEmpty start...")
+    AutoDrive:handleCPFieldWorker(self)
+end
+
+function AutoDrive:onCpFull()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
+    AutoDrive:handleCPFieldWorker(self)
+end
 
 function AutoDrive:onDelete()
     AutoDriveHud:deleteMapHotspot(self)
@@ -951,7 +1035,7 @@ function AutoDrive:startAutoDrive()
             end
 
             
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
+            -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
 
             AutoDriveStartStopEvent:sendStartEvent(self)
 
@@ -990,7 +1074,7 @@ function AutoDrive:stopAutoDrive()
         ADScheduler:removePathfinderVehicle(self)
 
         if self.ad.stateModule:isActive() then
-            g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", -1)
+            -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", -1)
             self.ad.drivePathModule:reset()
             self.ad.specialDrivingModule:reset()
             self.ad.trailerModule:reset()
@@ -1006,45 +1090,8 @@ function AutoDrive:stopAutoDrive()
                 self:setTurnLightState(Lights.TURNLIGHT_OFF)
             end
 
-            local hasCallbacks = self.ad.callBackFunction ~= nil and self.ad.isStoppingWithError == false
 
-            if hasCallbacks then
-                --work with copys, so we can remove the callBackObjects before calling the function
-                local callBackFunction = self.ad.callBackFunction
-                local callBackObject = self.ad.callBackObject
-                local callBackArg = self.ad.callBackArg
-                if distanceToStart < 30 then -- pass control to external mod only when near to field point
-                    if callBackObject ~= nil then
-                        if callBackArg ~= nil then
-                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to external mod callBackObject %s callBackArg %s", tostring(callBackObject), tostring(callBackArg))
-                            self.ad.callBackFunction = nil
-                            self.ad.callBackObject = nil
-                            self.ad.callBackArg = nil
-                            callBackFunction(callBackObject, callBackArg)
-                        else
-                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to external mod callBackObject %s", tostring(callBackObject))
-                            self.ad.callBackFunction = nil
-                            self.ad.callBackObject = nil
-                            self.ad.callBackArg = nil
-                            callBackFunction(callBackObject)
-                        end
-                    else
-                        if callBackArg ~= nil then
-                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to external mod callBackArg %s", tostring(callBackArg))
-                            self.ad.callBackFunction = nil
-                            self.ad.callBackObject = nil
-                            self.ad.callBackArg = nil
-                            callBackFunction(callBackArg)
-                        else
-                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to external mod, no callBackArg no callBackArg")
-                            self.ad.callBackFunction = nil
-                            self.ad.callBackObject = nil
-                            self.ad.callBackArg = nil
-                            callBackFunction()
-                        end
-                    end
-                end
-            else
+                self.ad.trailerModule:handleTrailerReversing(false)
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
 
@@ -1071,25 +1118,43 @@ function AutoDrive:stopAutoDrive()
                 if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
                     self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
                 end
-            end
 
             self.ad.stateModule:setActive(false)
 
             self.ad.taskModule:abortAllTasks()
             self.ad.taskModule:reset()
 
+            if self.ad.isStoppingWithError == true then
+                self.ad.onRouteToRefuel = false
+                self.ad.onRouteToRepair = false
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
+            end
+
             local isStartingAIVE = (not self.ad.isStoppingWithError and self.ad.stateModule:getStartCP_AIVE() and not self.ad.stateModule:getUseCP_AIVE())
-            local isPassingToCP = hasCallbacks or (not self.ad.isStoppingWithError and self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE())
+            local isPassingToCP = not self.ad.isStoppingWithError and (self.ad.restartCP == true or (self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()))
             AutoDriveStartStopEvent:sendStopEvent(self, isPassingToCP, isStartingAIVE)
 
-            if not hasCallbacks and not self.ad.isStoppingWithError and distanceToStart < 30 then
+            if not self.ad.isStoppingWithError and distanceToStart < 30 then
+                AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass to other mod...")
                 if self.ad.stateModule:getStartCP_AIVE() then
-                    self.ad.stateModule:setStartCP_AIVE(false)
-                    if g_courseplay ~= nil and self.ad.stateModule:getUseCP_AIVE() then
-                        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with start")
-                        AutoDrive:StartCP(self)
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive CP / AIVE button enabled")
+                    -- CP / AIVE button enabled
+                    if self.cpStartStopDriver ~= nil and self.ad.stateModule:getUseCP_AIVE() then
+                        -- CP button active
+                        if self.ad.restartCP == true then
+                            -- restart CP to continue
+                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with restart")
+                            AutoDrive:RestartCP(self)
+                        else
+                            -- start CP from beginning
+                            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with start")
+                            AutoDrive:StartCP(self)
+                        end
                     else
+                        AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive AIVE button active")
+                        -- AIVE button active
                         if self.acParameters ~= nil then
+                            self.ad.stateModule:setStartCP_AIVE(false)  -- disable CP / AIVE button
                             self.acParameters.enabled = true
                             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to AIVE with startAIVehicle")
                             self:toggleAIVehicle()
@@ -1098,12 +1163,6 @@ function AutoDrive:stopAutoDrive()
                 end
             end
             
-            self.ad.trailerModule:handleTrailerReversing(false)
-            if self.ad.isStoppingWithError == true then
-                self.ad.onRouteToRefuel = false
-                self.ad.onRouteToRepair = false
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
-            end
         end
     else
         Logging.devError("AutoDrive:stopAutoDrive() must be called only on the server.")
@@ -1184,8 +1243,8 @@ function AutoDrive.AddHelper()
     table.insert(g_helperManager.availableHelpers, helper)
 end
 
-function AutoDrive:onStopAutoDrive(hasCallbacks, isStartingAIVE)
-    if not hasCallbacks then
+function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
+    if not isPassingToCP then
         --if self.raiseAIEvent ~= nil and not isStartingAIVE then
             --self:raiseAIEvent("onAIFieldWorkerEnd", "onAIImplementEnd")
         --end

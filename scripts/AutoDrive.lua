@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.3"
+AutoDrive.version = "2.0.0.4"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -25,10 +25,10 @@ AutoDrive.mapHotspotsBuffer = {}
 AutoDrive.drawHeight = 0.3
 AutoDrive.drawDistance = getViewDistanceCoeff() * 50
 
-AutoDrive.STAT_NAMES = {"driversTraveledDistance", "driversHired"}
-for _, statName in pairs(AutoDrive.STAT_NAMES) do
-	table.insert(FarmStats.STAT_NAMES, statName)
-end
+-- AutoDrive.STAT_NAMES = {"driversTraveledDistance", "driversHired"}
+-- for _, statName in pairs(AutoDrive.STAT_NAMES) do
+	-- table.insert(FarmStats.STAT_NAMES, statName)
+-- end
 
 AutoDrive.MODE_DRIVETO = 1
 AutoDrive.MODE_PICKUPANDDELIVER = 2
@@ -85,42 +85,6 @@ AutoDrive.FLAG_NONE = 0
 AutoDrive.FLAG_SUBPRIO = 1
 AutoDrive.FLAG_TRAFFIC_SYSTEM = 2
 AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
-
-AutoDrive.actions = {
-	{"ADToggleMouse", true, 1},
-	{"ADToggleHud", true, 1},
-	{"ADEnDisable", true, 1},
-	{"ADSelectTarget", false, 0},
-	{"ADSelectPreviousTarget", false, 0},
-	{"ADSelectTargetUnload", false, 0},
-	{"ADSelectPreviousTargetUnload", false, 0},
-	{"ADActivateDebug", false, 0},
-	{"ADDebugSelectNeighbor", false, 0},
-	{"ADDebugChangeNeighbor", false, 0},
-	{"ADDebugCreateConnection", false, 0},
-	{"ADDebugCreateMapMarker", false, 0},
-	{"ADDebugDeleteWayPoint", false, 0},
-	{"ADDebugDeleteDestination", false, 3},
-	{"ADSilomode", false, 0},
-	{"ADOpenGUI", true, 2},
-	{"ADCallDriver", false, 3},
-	{"ADSelectNextFillType", false, 0},
-	{"ADSelectPreviousFillType", false, 0},
-	{"ADRecord", false, 0},
-	{"AD_routes_manager", false, 0},
-	{"ADGoToVehicle", false, 3},
-	{"ADNameDriver", false, 0},
-	{"ADRenameMapMarker", false, 0},
-	{"ADSwapTargets", false, 0},
-	{"AD_open_notification_history", false, 0},
-	-- {"AD_open_colorSettings", false, 0},
-	{"AD_continue", false, 3},
-	{"ADParkVehicle", false, 0},
-	{"AD_devAction", false, 0},
-	{"ADRefuelVehicle", false, 0},
-	{"ADToggleHudExtension", true, 1},
-	{"ADRepairVehicle", false, 0}
-}
 
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
@@ -250,7 +214,7 @@ function AutoDrive:loadMap(name)
 
 	IngameMapElement.mouseEvent = Utils.overwrittenFunction(IngameMapElement.mouseEvent, AutoDrive.ingameMapElementMouseEvent)
 
-	FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
+	-- FarmStats.getStatisticData = Utils.overwrittenFunction(FarmStats.getStatisticData, AutoDrive.FarmStats_getStatisticData)
 
 	FSBaseMission.removeVehicle = Utils.prependedFunction(FSBaseMission.removeVehicle, AutoDrive.preRemoveVehicle)
 
@@ -307,8 +271,18 @@ end
 function AutoDrive:drawBaseMission()
 	if AutoDrive.aiFrameOpen then		
 		AutoDrive:drawRouteOnMap()
+		AutoDrive.drawNetworkOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
-			AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
+            if AutoDrive.aiFrameVehicle.ad and AutoDrive.aiFrameVehicle.ad.stateModule then
+                if AutoDrive.aiFrameVehicle.ad.showingHud ~= AutoDrive.Hud.showHud then
+                    AutoDrive.Hud:toggleHud(AutoDrive.aiFrameVehicle)
+                end
+                if AutoDrive.Hud ~= nil then
+                    if AutoDrive.Hud.showHud == true then
+                        AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
+                    end
+                end
+            end
 		end
 	end
 end
@@ -385,6 +359,70 @@ function AutoDrive.drawRouteOnMap()
 				lastWp = wp
 			end
 			skips = (skips + 1) % 1
+		end
+	end
+end
+
+function AutoDrive.drawNetworkOnMap()
+	if AutoDrive.aiFrame == nil then
+		return
+	end
+
+	if not AutoDrive.isEditorModeEnabled() then
+		return
+	end
+
+	if AutoDrive.courseOverlayId == nil then
+		AutoDrive.courseOverlayId = createImageOverlay('data/shared/default_normal.dds')
+	end
+
+	local dx, dz, dx2D, dy2D, width, rotation, r, g, b
+
+	local isSubPrio = function(pointToTest) 
+        return bitAND(pointToTest.flags, AutoDrive.FLAG_SUBPRIO) > 0
+    end
+
+	local network = ADGraphManager:getWayPoints()
+	if network ~= nil then
+		for index, node in pairs(network) do
+			if node.out ~= nil then
+				for _, outNodeId in pairs(node.out) do
+					local outNode = network[outNodeId]
+					local startX, startY, _, _ = AutoDrive.getScreenPosFromWorldPos(node.x, node.z)
+					local endX, endY, _, _ = AutoDrive.getScreenPosFromWorldPos(outNode.x, outNode.z)
+								
+					if startX and startY and endX and endY then
+						dx2D = endX - startX;
+						dy2D = ( endY - startY ) / g_screenAspectRatio;
+						width = MathUtil.vector2Length(dx2D, dy2D);
+			
+						dx = outNode.x - node.x;
+						dz = outNode.z - node.z;
+						rotation = MathUtil.getYRotationFromDirection(dx, dz) - math.pi * 0.5;
+			
+						local lineThickness = 2 / g_screenHeight
+						local r, g, b, a = unpack(AutoDrive.currentColors.ad_color_singleConnection)
+						
+						if isSubPrio(outNode) then
+							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection)
+						end
+						
+						if ADGraphManager:isDualRoad(node, outNode) then
+							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_dualConnection)
+							if isSubPrio(outNode) then
+								r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioDualConnection)
+							end							
+						elseif ADGraphManager:isReverseRoad(start, target) then							
+							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_reverseConnection)
+						end
+						setOverlayColor( AutoDrive.courseOverlayId,  r, g, b, a)
+						setOverlayRotation( AutoDrive.courseOverlayId, rotation, 0, 0)
+					
+						renderOverlay( AutoDrive.courseOverlayId, startX, startY, width, lineThickness )
+					end
+					setOverlayRotation( AutoDrive.courseOverlayId, 0, 0, 0 ) -- reset overlay rotation
+				end
+			end
 		end
 	end
 end
@@ -638,7 +676,7 @@ function AutoDrive:FarmStats_loadFromXMLFile(xmlFileName, key)
 	key = key .. ".statistics"
 	-- self.statistics["driversTraveledDistance"].total = Utils.getNoNil(getXMLFloat(xmlFile, key .. ".driversTraveledDistance"), 0)
     
-	self.statistics["driversTraveledDistance"].total = xmlFile:getFloat(key .. ".driversTraveledDistance", 0)
+	-- self.statistics["driversTraveledDistance"].total = xmlFile:getFloat(key .. ".driversTraveledDistance", 0)
 end
 
 function AutoDrive:FarmStats_getStatisticData(superFunc)

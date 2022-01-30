@@ -141,7 +141,8 @@ function ADGraphManager:getPathTo(vehicle, waypointId, startPoint)
 	end
 
 	local closestWaypoint = self:findMatchingWayPointForVehicle(vehicle)
-	if startPoint ~= nil then
+	if startPoint ~= nil and startPoint.id ~= nil then
+        -- consider id to avoid using Pathfinder wayPoints
 		local distanceToStartPoint = MathUtil.vector2Length(x - startPoint.x, z - startPoint.z)
 		if distanceToStartPoint < 5 then
 			closestWaypoint = startPoint.id
@@ -521,13 +522,15 @@ function ADGraphManager:removeMapMarkerByWayPoint(wayPointId, sendEvent)
 	if wayPointId ~= nil and wayPointId >= 0 then
 		-- Finding the map waypoint where the marker should be
 		local wayPoint = self.wayPoints[wayPointId]
-		for markerId, marker in pairs(self.mapMarkers) do
-			-- Checking if the waypoint id matches the marker id
-			if marker.id == wayPoint.id then
-				self:removeMapMarker(markerId, sendEvent)
-				break
-			end
-		end
+        if wayPoint ~= nil then
+            for markerId, marker in pairs(self.mapMarkers) do
+                -- Checking if the waypoint id matches the marker id
+                if marker.id == wayPoint.id then
+                    self:removeMapMarker(markerId, sendEvent)
+                    break
+                end
+            end
+        end
 	end
 end
 

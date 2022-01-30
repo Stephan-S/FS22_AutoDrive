@@ -91,7 +91,7 @@ function ADSpecialDrivingModule:stopAndHoldVehicle(dt)
             self.vehicle:stopMotor()
         end
     end
-
+    self.vehicle.ad.trailerModule:handleTrailerReversing(false)
     AutoDrive.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, allowedToDrive, true, lx, lz, finalSpeed, 1)
 end
 
@@ -116,6 +116,7 @@ function ADSpecialDrivingModule:driveForward(dt)
             self.vehicle:startMotor()
         end
     end
+    self.vehicle.ad.trailerModule:handleTrailerReversing(false)
     AutoDrive.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, true, true, lx, lz, speed, 1)
 end
 
@@ -138,6 +139,8 @@ function ADSpecialDrivingModule:driveReverse(dt, maxSpeed, maxAcceleration, guid
                     self.vehicle:startMotor()
                 end
             end
+            -- Update trailers in case we need to lock the front axle
+            self.vehicle.ad.trailerModule:handleTrailerReversing(true)
             local storedSmootherDriving = AutoDrive.smootherDriving
             AutoDrive.smootherDriving = false
             AutoDrive.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, true, false, -lx, -lz, speed, 1)
@@ -151,8 +154,6 @@ function ADSpecialDrivingModule:driveReverse(dt, maxSpeed, maxAcceleration, guid
         end
     end
     
-    -- Update trailers in case we need to lock the front axle
-    self.vehicle.ad.trailerModule:handleTrailerReversing(true)
 end
 
 function ADSpecialDrivingModule:driveToPoint(dt, point, maxFollowSpeed, checkDynamicCollision, maxAcc, maxSpeed)
@@ -192,7 +193,7 @@ function ADSpecialDrivingModule:driveToPoint(dt, point, maxFollowSpeed, checkDyn
                 self.vehicle:startMotor()
             end
         end
-
+        self.vehicle.ad.trailerModule:handleTrailerReversing(false)
         local storedSmootherDriving = AutoDrive.smootherDriving
         AutoDrive.smootherDriving = false
         AutoDrive.driveInDirection(self.vehicle, dt, 30, acc, 0.2, 20, true, true, lx, lz, speed, 0.3)
@@ -206,7 +207,7 @@ function ADSpecialDrivingModule:handleReverseDriving(dt)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "ADSpecialDrivingModule:handleReverseDriving start self.currentWayPointIndex %s ", tostring(self.currentWayPointIndex))
     
     -- Update trailers in case we need to lock the front axle
-    self.vehicle.ad.trailerModule:handleTrailerReversing(true)
+    self.vehicle.ad.trailerModule:handleTrailerReversing(false)
 
     if self.vehicle.ad.trailerModule:isUnloadingToBunkerSilo() then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "ADSpecialDrivingModule:handleReverseDriving isUnloadingToBunkerSilo self.currentWayPointIndex %s ", tostring(self.currentWayPointIndex))
@@ -469,6 +470,8 @@ function ADSpecialDrivingModule:reverseToPoint(dt, maxSpeed)
             self.vehicle:startMotor()
         end
     end
+
+    self.vehicle.ad.trailerModule:handleTrailerReversing(true)
 
     local storedSmootherDriving = AutoDrive.smootherDriving
     AutoDrive.smootherDriving = false

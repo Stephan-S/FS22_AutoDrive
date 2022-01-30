@@ -37,7 +37,10 @@ end
 
 function ADTaskModule:setCurrentTaskFinished(stoppedFlag)
     if stoppedFlag == nil or stoppedFlag ~= ADTaskModule.DONT_PROPAGATE then
-        self.vehicle.ad.stateModule:getCurrentMode():handleFinishedTask()
+        if self.currentMode and self.currentMode.handleFinishedTask then
+            -- call handleFinishedTask for the mode it was initiated
+            self.currentMode:handleFinishedTask()
+        end
     end
 
     self.activeTask = nil
@@ -52,6 +55,7 @@ function ADTaskModule:setCurrentTaskFinished(stoppedFlag)
     if self.activeTask ~= nil then
         self:onTaskChange()
         self.activeTask:setUp()
+        self.currentMode = self.vehicle.ad.stateModule:getCurrentMode()
     end
 end
 
@@ -96,6 +100,7 @@ function ADTaskModule:update(dt)
         
         if self.activeTask ~= nil then
             self.activeTask:setUp()
+            self.currentMode = self.vehicle.ad.stateModule:getCurrentMode()
         end
         self:onTaskChange()
     end

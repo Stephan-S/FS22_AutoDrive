@@ -200,6 +200,9 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
     )
     local _, worldY, _ = getWorldTranslation(combine.components[1].node)
     local rx, _, rz = localDirectionToWorld(combine.components[1].node, 0, 0, 1)
+    if combine.components[2] ~= nil and combine.components[2].node ~= nil then 
+        rx, _, rz = localDirectionToWorld(combine.components[2].node, 0, 0, 1)
+    end
     local combineVector = {x = rx, z = rz}
 
     local pipeChasePos, pipeChaseSide = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeChasePosition(true)

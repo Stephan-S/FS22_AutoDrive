@@ -53,7 +53,7 @@ function ADStateModule:reset()
 
     self.startCP_AIVE = false
 
-    self.useCP = (g_courseplay ~= nil)
+    self.useCP = (self.vehicle.cpStartStopDriver ~= nil)
 
     self.driverName = g_i18n:getText("UNKNOWN")
     if self.vehicle.getName ~= nil then
@@ -958,15 +958,6 @@ function ADStateModule:setNextTargetInFolder()
         self:setSecondMarker(markerToSet)
         AutoDrive.Hud.lastUIScale = 0
     end
-end
-
-function ADStateModule:removeCPCallback()
-    if self.vehicle.ad.callBackFunction ~= nil then			-- if CP callback is set, CP has to be stopped
-        AutoDrive:StopCP(self.vehicle)
-    end
-    self.vehicle.ad.callBackFunction = nil
-    self.vehicle.ad.callBackObject = nil
-    self.vehicle.ad.callBackArg = nil
 end
 
 function ADStateModule:resetMarkersOnReload()

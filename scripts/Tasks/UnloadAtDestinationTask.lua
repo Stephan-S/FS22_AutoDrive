@@ -18,7 +18,7 @@ end
 function UnloadAtDestinationTask:setUp()
     if ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = UnloadAtDestinationTask.STATE_PATHPLANNING
-        if self.vehicle.ad.callBackFunction ~= nil then
+        if self.vehicle.ad.restartCP == true then
             if self.vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
                 self.vehicle.ad.pathFinderModule:startPathPlanningToWayPoint(self.vehicle.ad.stateModule:getFirstWayPoint(), self.destinationID)
             else

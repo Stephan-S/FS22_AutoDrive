@@ -30,6 +30,7 @@ function ADUserDataManager:load()
 end
 
 function ADUserDataManager:loadFromXml()
+    local userCount = 0
     local file = tostring(g_currentMission.missionInfo.savegameDirectory) .. "/AutoDriveUsersData.xml"
     if fileExists(file) then
         local xmlFile = loadXMLFile("AutoDriveUsersData_XML_temp", file)
@@ -49,9 +50,11 @@ function ADUserDataManager:loadFromXml()
                     for _, sn in pairs(self.userSettingNames) do
                         self.users[uniqueId].settings[sn] = Utils.getNoNil(getXMLInt(xmlFile, uKey .. "#" .. sn), AutoDrive.getSettingState(sn))
                     end
+                    userCount = userCount + 1
                 end
                 uIndex = uIndex + 1
             end
+            Logging.info("[AD] ADUserDataManager: loaded data for %d users", userCount)
         end
         delete(xmlFile)
     end
@@ -67,6 +70,7 @@ function ADUserDataManager:userConnected(connection)
         for _, sn in pairs(self.userSettingNames) do
             self.users[userId].settings[sn] = AutoDrive.getSettingState(sn)
         end
+        Logging.info("[AD] ADUserDataManager: user ID %s connected", tostring(userId))
     end
 end
 
@@ -85,6 +89,7 @@ function ADUserDataManager:saveToXml()
         end
         uIndex = uIndex + 1
     end
+    Logging.info("[AD] ADUserDataManager: saved data for %d users", uIndex)
     saveXMLFile(xmlFile)
     delete(xmlFile)
 end
@@ -104,17 +109,20 @@ function ADUserDataManager:updateUserSettings(connection, hudX, hudY, settings)
         self.users[userId].hudX = hudX
         self.users[userId].hudY = hudY
         self.users[userId].settings = settings
+        Logging.info("[AD] ADUserDataManager: update user settings ID %s", tostring(userId))
     end
 end
 
 function ADUserDataManager:sendToClient(connection)
     local userId = self:getUserIdByConnection(connection)
     if userId ~= nil then
+        Logging.info("[AD] ADUserDataManager: send user settings ID %s to client", tostring(userId))
         AutoDriveUserDataEvent.sendToClient(connection, self.users[userId].hudX, self.users[userId].hudY, self.users[userId].settings)
     end
 end
 
 function ADUserDataManager:applyUserSettings(hudX, hudY, settings)
+    Logging.info("[AD] ADUserDataManager: apply user settings")
     AutoDrive.Hud:createHudAt(hudX, hudY)
     for sn, sv in pairs(settings) do
         AutoDrive.setSettingState(sn, sv)

@@ -41,11 +41,9 @@ function DriveToMode:handleFinishedTask()
         self.driveToDestinationTask = nil
         self.vehicle.ad.taskModule:addTask(StopAndDisableADTask:new(self.vehicle), ADTaskModule.DONT_PROPAGATE)
         local target = self.vehicle.ad.stateModule:getFirstMarker().name
-        for _, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
-            if self.destinationID == mapMarker.id then
-                target = mapMarker.name
-                break
-            end
+        local mapMarker = ADGraphManager:getMapMarkerByWayPointId(self.destinationID)
+        if mapMarker ~= nil and mapMarker.name ~= nil then
+            target = mapMarker.name
         end
         if self.vehicle.ad.isStoppingWithError == false then
             AutoDriveMessageEvent.sendNotification(self.vehicle, ADMessagesManager.messageTypes.INFO, "$l10n_AD_Driver_of; %s $l10n_AD_has_reached; %s", 5000, self.vehicle.ad.stateModule:getName(), target)

@@ -155,13 +155,6 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	self.stateHud = 0
 	self.statesHud = 0
 
-	if AutoDrive.getSetting("combineCPADHudMouse") > 1.0 and g_courseplay ~= nil then
-		if AutoDrive.getSetting("combineCPADHudMouse") == 2.0 then
-			self.statesHud = 1
-		elseif AutoDrive.getSetting("combineCPADHudMouse") == 3.0 then
-			self.statesHud = 2
-		end
-	end
 	-- TODO: deactivated until PR #1862 solved with issue #1886
 	self.statesHud = 0
 
@@ -246,7 +239,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 			self:AddSettingsButton("avoidFruit", "gui_ad_avoidFruit", 1, true)
 		else
 			self:AddEditModeButtons()
-			if g_courseplay ~= nil then
+			if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 				self.buttonCounter = self.buttonCounter - 1
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 			elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
@@ -266,7 +259,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 		if AutoDrive.getSetting("addSettingsToHUD") then
 			self.buttonCounter = self.buttonCounter - 5
 
-			if g_courseplay ~= nil then
+			if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 			elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 3, true)
@@ -279,7 +272,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 			self:AddSettingsButton("restrictToField", "gui_ad_restrictToField", 1, true)
 			self:AddSettingsButton("avoidFruit", "gui_ad_avoidFruit", 1, true)
 		else
-			if g_courseplay ~= nil then
+			if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 				self.buttonCounter = self.buttonCounter - 1
 				self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 			elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
@@ -301,7 +294,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	if AutoDrive.getSetting("wideHUD") and AutoDrive.getSetting("addSettingsToHUD") then
 		self:AddEditModeButtons()
 
-		if g_courseplay ~= nil then
+		if vehicle ~= nil and vehicle.cpStartStopDriver ~= nil then
 			self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 1, true)
 		elseif (vehicle ~= nil and vehicle.acParameters ~= nil) then
 			self:AddButton("input_startCp", "input_toggleCP_AIVE", nil, nil, "hud_startCp", 3, true)
@@ -408,7 +401,6 @@ function AutoDriveHud:toggleHud(vehicle)
 			-- show both
 			self.showHud = true
 			vehicle.ad.showingHud = true
-			g_courseplay.courseplay:openCloseHud(vehicle, true)
 			if self.statesHud == 2 then
 				self.stateHud = 1
 			else
@@ -418,21 +410,20 @@ function AutoDriveHud:toggleHud(vehicle)
 			-- show AD hud
 			self.showHud = true
 			vehicle.ad.showingHud = true
-			g_courseplay.courseplay:openCloseHud(vehicle, false)
 			g_inputBinding:setShowMouseCursor(true)
 			self.stateHud = 2
 		elseif self.stateHud == 2 then
 			-- show CP hud
 			self.showHud = false
 			vehicle.ad.showingHud = false
-			g_courseplay.courseplay:openCloseHud(vehicle, true)
 			self.stateHud = 3
 		elseif self.stateHud == 3 then
 			-- close both
 			self.showHud = false
 			vehicle.ad.showingHud = false
-			g_inputBinding:setShowMouseCursor(false)
-			g_courseplay.courseplay:openCloseHud(vehicle, false)
+            if g_gui.currentGui == nil then
+                g_inputBinding:setShowMouseCursor(false)
+            end
 			self.stateHud = 0
 		end
 	else
@@ -442,7 +433,9 @@ function AutoDriveHud:toggleHud(vehicle)
 		else
 			self.showHud = false
 			vehicle.ad.showingHud = false
-			g_inputBinding:setShowMouseCursor(false)
+            if g_gui.currentGui == nil then
+                g_inputBinding:setShowMouseCursor(false)
+            end
 		end
 	end
 

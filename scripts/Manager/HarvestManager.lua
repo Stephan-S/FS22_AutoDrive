@@ -122,7 +122,7 @@ function ADHarvestManager:update(dt)
         if harvester ~= nil and g_currentMission.nodeToObject[harvester.components[1].node] ~= nil and entityExists(harvester.components[1].node) then
             --if self.assignmentDelayTimer:done() then
                 if not self:alreadyAssignedUnloader(harvester) then
-                    if ADHarvestManager.doesHarvesterNeedUnloading(harvester) or ((not AutoDrive.combineIsTurning(harvester)) and ADHarvestManager.isHarvesterActive(harvester)) then
+                    if ADHarvestManager.doesHarvesterNeedUnloading(harvester) or (ADHarvestManager.isHarvesterActive(harvester)) then
                         self:assignUnloaderToHarvester(harvester)
                     end
                 else
@@ -207,10 +207,7 @@ function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
     local ret = false
     local _, maxCapacity, _, leftCapacity = AutoDrive.getObjectNonFuelFillLevels(harvester)
 
-    local cpIsCalling = false
-    if harvester.cp and harvester.cp.driver and harvester.cp.driver.isWaitingForUnload then
-        cpIsCalling = harvester.cp.driver:isWaitingForUnload()
-    end
+    local cpIsCalling = AutoDrive:getIsCPWaitingForUnload(harvester)
 
     local pipeOut = AutoDrive.isPipeOut(harvester)
     ret = (

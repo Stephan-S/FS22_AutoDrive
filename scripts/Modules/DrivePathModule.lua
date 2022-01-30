@@ -42,17 +42,24 @@ function ADDrivePathModule:reset()
     self.lastUsedWayPoint = nil
 end
 
-function ADDrivePathModule:setPathTo(waypointId)
-    self.wayPoints = ADGraphManager:getPathTo(self.vehicle, waypointId, self.lastUsedWayPoint)
+function ADDrivePathModule:setPathTo(wayPointId)
+    self.wayPoints = ADGraphManager:getPathTo(self.vehicle, wayPointId, self.lastUsedWayPoint)
     local destination = ADGraphManager:getMapMarkerByWayPointId(self:getLastWayPointId())
     self.vehicle.ad.stateModule:setCurrentDestination(destination)
     self:setDirtyFlag()
     self.minDistanceToNextWp = math.huge
 
-    if self.wayPoints == nil or (self.wayPoints[2] == nil and (self.wayPoints[1] == nil or (self.wayPoints[1] ~= nil and self.wayPoints[1].id ~= waypointId))) then
+    if self.wayPoints == nil or (self.wayPoints[2] == nil and (self.wayPoints[1] == nil or (self.wayPoints[1] ~= nil and self.wayPoints[1].id ~= wayPointId))) then
         self.vehicle.ad.isStoppingWithError = true
         Logging.devError("[AutoDrive] Encountered a problem during initialization 'setPathTo'")
-        AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_reach; %s", 5000, self.vehicle.ad.stateModule:getName(), self.vehicle.ad.stateModule:getFirstMarker().name)
+
+        local target = self.vehicle.ad.stateModule:getFirstMarker().name
+        local mapMarker = ADGraphManager:getMapMarkerByWayPointId(wayPointId)
+        if mapMarker ~= nil and mapMarker.name ~= nil then
+            target = mapMarker.name
+        end
+
+        AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_reach; %s", 5000, self.vehicle.ad.stateModule:getName(), target)
         self.vehicle.ad.taskModule:abortAllTasks()
         self.vehicle.ad.taskModule:addTask(StopAndDisableADTask:new(self.vehicle))
     else
@@ -78,7 +85,14 @@ function ADDrivePathModule:appendPathTo(startWayPointId, wayPointId)
     if appendWayPoints == nil or (appendWayPoints[2] == nil and (appendWayPoints[1] == nil or (appendWayPoints[1] ~= nil and appendWayPoints[1].id ~= wayPointId))) then
         self.vehicle.ad.isStoppingWithError = true
         Logging.devError("[AutoDrive] Encountered a problem during initialization 'appendPathTo'")
-        AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_reach; %s", 5000, self.vehicle.ad.stateModule:getName(), self.vehicle.ad.stateModule:getFirstMarker().name)
+
+        local target = self.vehicle.ad.stateModule:getFirstMarker().name
+        local mapMarker = ADGraphManager:getMapMarkerByWayPointId(wayPointId)
+        if mapMarker ~= nil and mapMarker.name ~= nil then
+            target = mapMarker.name
+        end
+
+        AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_reach; %s", 5000, self.vehicle.ad.stateModule:getName(), target)
         self.vehicle.ad.taskModule:abortAllTasks()
         self.vehicle.ad.taskModule:addTask(StopAndDisableADTask:new(self.vehicle))
     else
@@ -142,7 +156,6 @@ function ADDrivePathModule:update(dt)
         else
             self:followWaypoints(dt)
             self:checkIfStuck(dt)
-            self.vehicle.ad.trailerModule:handleTrailerReversing(false)
 
             if self:isCloseToWaypoint() then
                 local reverseStart, _ = self:checkForReverseSection()
@@ -293,6 +306,7 @@ function ADDrivePathModule:followWaypoints(dt)
                 self.vehicle:startMotor()
             end
         end
+        self.vehicle.ad.trailerModule:handleTrailerReversing(false)
         AutoDrive.driveInDirection(self.vehicle, dt, maxAngle, self.acceleration, 0.8, maxAngle, true, true, lx, lz, self.speedLimit, 1)
     end
 end

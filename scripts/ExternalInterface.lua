@@ -145,6 +145,7 @@ function AutoDrive:StartDriving(vehicle, destinationID, unloadDestinationID, cal
                 else
                     AutoDriveMessageEvent.sendMessage(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
                     -- stop vehicle movement
+                    vehicle.ad.trailerModule:handleTrailerReversing(false)
                     AutoDrive.driveInDirection(vehicle, 16, 30, 0, 0.2, 20, false, false, 0, 0, 0, 1)
                     vehicle:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
                     if vehicle.stopMotor ~= nil then
@@ -217,18 +218,31 @@ function AutoDrive:getCombineOpenPipePercent(combine)	--for AIVE
 	return pipePercent
 end
 
--- start CP
+-- start CP at first wayPoint
 function AutoDrive:StartCP(vehicle)
     if vehicle == nil then 
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP...")
-    if vehicle.startCpDriver then
-        -- newer CP versions use this function to start the CP driver
-        vehicle:startCpDriver()
+    if vehicle.startCpAtFirstWp ~= nil then
+        vehicle:startCpAtFirstWp()
     else
-        -- for backward compatibility for older CP versions
-        g_courseplay.courseplay:start(vehicle)
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
+    end
+end
+
+-- restart CP to continue
+function AutoDrive:RestartCP(vehicle)
+    if vehicle == nil then 
+        return 
+    end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:RestartCP...")
+    if vehicle.startCpAtLastWp ~= nil then
+        vehicle:startCpAtLastWp()
+    elseif vehicle.startCpALastWp ~= nil then
+        vehicle:startCpALastWp()
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:RestartCP - Not possible. CP interface not found")
     end
 end
 
@@ -238,19 +252,21 @@ function AutoDrive:StopCP(vehicle)
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP...")
-    if g_courseplay ~= nil and vehicle.cp ~= nil and vehicle.getIsCourseplayDriving ~= nil and vehicle:getIsCourseplayDriving() then
-        if vehicle.ad.stateModule:getStartCP_AIVE() then
-            vehicle.ad.stateModule:toggleStartCP_AIVE()
+    if vehicle.cpStartStopDriver ~= nil then
+        if vehicle:getIsCpActive() then
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - cpStartStopDriver")
+            vehicle:cpStartStopDriver()
         end
-        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP call CP stop")
-        if vehicle.stopCpDriver then
-            -- newer CP versions use this function to stop the CP driver
-            vehicle:stopCpDriver()
-        else
-            -- for backward compatibility for older CP versions
-            g_courseplay.courseplay:stop(vehicle)
+        if vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and vehicle.ad.stateModule:getUseCP_AIVE() and  vehicle.ad.stateModule:getStartCP_AIVE() then
+            -- CP button active
+            -- deactivate CP button
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - deactivate CP button")
+            vehicle.ad.stateModule:setStartCP_AIVE(false)
         end
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StopCP - Not possible. CP interface not found")
     end
+    vehicle.ad.restartCP = false -- do not continue CP course
 end
 
 function AutoDrive:HoldDriving(vehicle)
@@ -260,34 +276,141 @@ function AutoDrive:HoldDriving(vehicle)
     end
 end
 
-function AutoDrive:holdCPCombine(combine)
-    -- Stopping CP drivers for now
-    if combine ~= nil then
-        if combine.trailingVehicle ~= nil then
-            -- harvester is trailed - CP use the trailing vehicle
-            if combine.trailingVehicle.cp and combine.trailingVehicle.cp.driver and combine.trailingVehicle.cp.driver.holdForUnloadOrRefill then
-                combine.trailingVehicle.cp.driver:holdForUnloadOrRefill()
+function AutoDrive:logCPStatus(vehicle, functionName)
+    if vehicle == nil then
+        return false
+    end
+    if (g_updateLoopIndex % 60) == 0 then
+        local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+        if vehicleToCheck then
+            if vehicleToCheck.getIsCpHarvesterWaitingForUnload then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterWaitingForUnload %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterWaitingForUnload()))
             end
-        else
-            if combine.cp and combine.cp.driver and combine.cp.driver.holdForUnloadOrRefill then
-                combine.cp.driver:holdForUnloadOrRefill()
+            if  vehicleToCheck.getIsCpHarvesterWaitingForUnloadInPocket then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterWaitingForUnloadInPocket %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterWaitingForUnloadInPocket()))
+            end
+            if vehicleToCheck.getIsCpHarvesterWaitingForUnloadAfterPulledBack then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterWaitingForUnloadAfterPulledBack %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterWaitingForUnloadAfterPulledBack()))
+            end
+            if  vehicleToCheck.getIsCpHarvesterManeuvering then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterManeuvering %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterManeuvering()))
             end
         end
     end
 end
 
 function AutoDrive:getIsCPActive(vehicle)
-    return vehicle ~= nil and g_courseplay ~= nil and vehicle.cp ~= nil and vehicle.getIsCourseplayDriving ~= nil and vehicle:getIsCourseplayDriving()
+    if vehicle == nil then
+        return false
+    end
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    -- AutoDrive:logCPStatus(vehicleToCheck, "holdCPCombine") -- enable only if required
+
+    if vehicleToCheck and vehicleToCheck.getIsCpActive and vehicleToCheck:getIsCpActive() then
+        return true
+    else
+        return false
+    end
+
 end
 
-function AutoDrive:getIsCPCombineInPocket(combine)
-    local ret = true -- assume combine make a pocket or drive to fruit-free room to unload
-    if combine ~= nil and g_courseplay ~= nil and combine.cp and combine.cp.driver and combine.cp.driver.isWaitingForUnload and combine.cp.driver.isWaitingInPocket and combine.cp.driver.isWaitingForUnloadAfterPulledBack then
-        if combine.cp.driver:isWaitingForUnload() and (not combine.cp.driver:isWaitingInPocket() and not combine.cp.driver:isWaitingForUnloadAfterPulledBack()) then
-            ret = false
-        end
+function AutoDrive:holdCPCombine(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:holdCPCombine start ERROR: vehicle == nil")
+        return false
     end
-    return ret
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "holdCPCombine")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck) 
+        and
+        (
+            (vehicleToCheck.holdCpHarvesterTemporarily)
+        )
+    then
+        if (g_updateLoopIndex % 60) == 0 then
+            AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:holdCPCombine ")
+        end
+        vehicleToCheck:holdCpHarvesterTemporarily(200) -- hold 200 ms
+    end
+end
+
+function AutoDrive:getIsCPCombineInPocket(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPCombineInPocket start ERROR: vehicle == nil")
+        return false
+    end
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "getIsCPCombineInPocket")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck) 
+        and
+        (
+            (vehicleToCheck.getIsCpHarvesterWaitingForUnloadInPocket and vehicleToCheck:getIsCpHarvesterWaitingForUnloadInPocket())
+            or 
+            (vehicleToCheck.getIsCpHarvesterWaitingForUnloadAfterPulledBack and vehicleToCheck:getIsCpHarvesterWaitingForUnloadAfterPulledBack())
+        )
+    then
+        AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPCombineInPocket AutoDrive:getIsCPCombineInPocket return true")
+        return true
+    else
+        return false
+    end
+
+end
+
+function AutoDrive:getIsCPWaitingForUnload(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPWaitingForUnload start ERROR: vehicle == nil")
+        return false
+    end
+
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "getIsCPWaitingForUnload")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck)
+        and
+        (
+            (vehicleToCheck.getIsCpHarvesterWaitingForUnload and vehicleToCheck:getIsCpHarvesterWaitingForUnload())
+        )
+    then
+        if (g_updateLoopIndex % 60) == 0 then
+            AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPWaitingForUnload return true")
+        end
+        return true
+    else
+        return false
+    end
+
+end
+
+function AutoDrive:getIsCPTurning(vehicle)
+    if vehicle == nil then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPTurning start ERROR: vehicle == nil")
+        return false
+    end
+    local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
+
+    AutoDrive:logCPStatus(vehicleToCheck, "getIsCPTurning")
+
+    if vehicleToCheck and AutoDrive:getIsCPActive(vehicleToCheck) 
+        and 
+        (
+            (vehicleToCheck.getIsCpHarvesterManeuvering and vehicleToCheck:getIsCpHarvesterManeuvering())
+        )
+    then
+        if (g_updateLoopIndex % 60) == 0 then
+            AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getIsCPTurning return true")
+        end
+        return true
+    else
+        return false
+    end
+
 end
 
 -- Autoloader
