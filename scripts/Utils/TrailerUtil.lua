@@ -352,6 +352,72 @@ function AutoDrive.getTrailersOfImplement(vehicle, attachedImplement, onlyDischa
     end
 end
 
+-- new, return list of all fillUnits of vehicle and trailers for nonFuel or nil
+function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
+    local nonFuelFillUnits = nil
+    if vehicle == nil or vehicle.ad == nil then
+        return nonFuelFillUnits
+    end
+    if vehicle.ad.nonFuelFillUnits == nil or initialize then
+
+        local trailers = AutoDrive.getAllUnits(vehicle)
+        for trailerIndex, trailer in ipairs(trailers) do
+            for fillUnitIndex, fillUnit in pairs(trailer:getFillUnits()) do
+                for fillType, _ in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
+
+                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
+                    if not table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
+
+                        if fillUnit.exactFillRootNode then
+                            if nonFuelFillUnits == nil then
+                                nonFuelFillUnits = {}
+                            end
+                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode})
+                        elseif fillUnit.fillRootNode then
+                            if nonFuelFillUnits == nil then
+                                nonFuelFillUnits = {}
+                            end
+                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode})
+                        end
+                        break
+                    end
+                end
+            end
+        end
+        vehicle.ad.nonFuelFillUnits = nonFuelFillUnits
+    end
+    return vehicle.ad.nonFuelFillUnits
+end
+
+-- new, return next fillUnit with room to fill or RootVehicle as default
+function AutoDrive.getNextFreeNonFuelFillUnit(vehicle)
+    local nextFreeNonFuelFillUnit = nil
+    local rootVehicle = vehicle.getRootVehicle and vehicle:getRootVehicle() -- default in case no free fill unit will be found
+    local nextFreeNonFuelFillNode = rootVehicle and rootVehicle.components[1].node
+    
+    if vehicle == nil then
+        return nextFreeNonFuelFillUnit, nextFreeNonFuelFillNode
+    end
+    local allNonFuelFillUnits = AutoDrive.getAllNonFuelFillUnits(vehicle)
+    if allNonFuelFillUnits == nil then
+        allNonFuelFillUnits = AutoDrive.getAllNonFuelFillUnits(vehicle, true)
+    end
+
+    if allNonFuelFillUnits ~= nil then
+        for index, item in ipairs(allNonFuelFillUnits) do
+            if item.fillUnit and item.fillUnit.capacity and item.fillUnit.fillLevel then
+                local freeCapacity = item.fillUnit.capacity - item.fillUnit.fillLevel
+                if freeCapacity > 1 then
+                    nextFreeNonFuelFillUnit = item.fillUnit
+                    nextFreeNonFuelFillNode = item.node
+                    break
+                end
+            end
+        end
+    end
+    return nextFreeNonFuelFillUnit, nextFreeNonFuelFillNode
+end
+
 -- ###################################################################################################
 
 function AutoDrive.getBackImplementsOf(vehicle, onlyDischargeable)

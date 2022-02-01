@@ -38,6 +38,7 @@ function CombineUnloaderMode:reset()
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
     self.vehicle.ad.trailerModule:reset()
+    self.fillUnits = AutoDrive.getAllNonFuelFillUnits(self.vehicle, true) -- force initialisation
 end
 
 function CombineUnloaderMode:start()
@@ -479,33 +480,13 @@ function CombineUnloaderMode:getPipeSlopeCorrection()
     return self:getPipeSlopeCorrection2()
 end
 
-function CombineUnloaderMode:getTargetTrailer()
-    local currentTrailer = 1
-    local targetTrailer = self.trailers[1]
-    local fillRatio = 0
-    local trailerFillLevel = 0
-    local trailerLeftCapacity = 0
-    -- Get the next trailer that hasn't reached fill level yet
-    for trailerIndex, trailer in ipairs(self.trailers) do
-        local fillLevel, fillCapacity, filledToUnload, fillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(targetTrailer)
-        trailerLeftCapacity = fillFreeCapacity
-        if (trailerLeftCapacity < 1) and currentTrailer < self.trailerCount then
-            currentTrailer = trailerIndex
-            targetTrailer = trailer
-        end
-    end
-    --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTargetTrailer - " ..
-    --currentTrailer .. "/" .. self.trailerCount .. ":" .. trailerFillLevel .. "/" .. trailerLeftCapacity)
-    return targetTrailer, fillRatio
-end
-
 function CombineUnloaderMode:getSideChaseOffsetX()
     -- NB: We cannot apply slope correction until after we have chosen which side
     -- we are chasing on! This function only finds the base X offset "to the left".
     -- Slope and side correction MUST be applied in CombineUnloaderMode:getPipeChasePosition
     -- AFTER determining the chase side. Or this function needs to be rewritten.
     local pipeOffset = AutoDrive.getSetting("pipeOffset", self.vehicle)
-    local unloaderWidest = math.max(self.vehicle.size.width, self.targetTrailer.size.width)
+    local unloaderWidest = self.vehicle.size.width
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
     local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
@@ -534,7 +515,7 @@ function CombineUnloaderMode:getSideChaseOffsetX_new()
     -- Slope and side correction MUST be applied in CombineUnloaderMode:getPipeChasePosition
     -- AFTER determining the chase side. Or this function needs to be rewritten.
     local pipeOffset = AutoDrive.getSetting("pipeOffset", self.vehicle)
-    local unloaderWidest = math.max(self.vehicle.size.width, self.targetTrailer.size.width)
+    local unloaderWidest = self.vehicle.size.width
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
     local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
@@ -561,7 +542,8 @@ function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
     local nodeX, nodeY, nodeZ = getWorldTranslation(AutoDrive.getDischargeNode(self.combine))
     local _, _, pipeZOffsetToCombine = worldToLocal(self.combine.components[1].node, nodeX, nodeY, nodeZ)
 
-    local targetX, targetY, targetZ = getWorldTranslation(self.targetTrailer.components[1].node)
+    local targetX, targetY, targetZ = getWorldTranslation(self.targetFillNode)
+
     local _, _, vehicleZOffsetToTarget = worldToLocal(self.vehicle.components[1].node, targetX, targetY, targetZ)
 
     local sideChaseTermZ = pipeZOffsetToCombine - vehicleZOffsetToTarget
@@ -570,7 +552,8 @@ function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
 end
 
 function CombineUnloaderMode:getDynamicSideChaseOffsetZ_fromDischargeNode(planningPhase)
-    local targetX, targetY, targetZ = getWorldTranslation(self.targetTrailer.components[1].node)
+    local targetX, targetY, targetZ = getWorldTranslation(self.targetFillNode)
+    
     local _, _, vehicleZOffsetToTarget = worldToLocal(self.vehicle.components[1].node, targetX, targetY, targetZ)
     local offset = -vehicleZOffsetToTarget
     if planningPhase then
@@ -625,7 +608,7 @@ function CombineUnloaderMode:getSideChaseOffsetZ(dynamic)
 end
 
 function CombineUnloaderMode:getRearChaseOffsetX(leftBlocked, rightBlocked)
-    local rearChaseOffset = (self.combine.size.width / 2 + math.max(self.vehicle.size.width, self.targetTrailer.size.width) / 2) + 1
+    local rearChaseOffset = (self.combine.size.width / 2 + self.vehicle.size.width / 2) + 1
 
     if AutoDrive.getIsBufferCombine(self.combine) and not AutoDrive.isSugarcaneHarvester(self.combine) then
         return 0
@@ -689,7 +672,8 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
     end
 
     self.pipeSide = AutoDrive.getPipeSide(self.combine)
-    self.targetTrailer, self.targetTrailerFillRatio = self:getTargetTrailer()
+    self.targetFillUnit, self.targetFillNode = AutoDrive.getNextFreeNonFuelFillUnit(self.vehicle)
+
     local sideChaseTermX = self:getSideChaseOffsetX()
     local sideChaseTermZ = self:getSideChaseOffsetZ(AutoDrive.dynamicChaseDistance or not AutoDrive.getIsBufferCombine(self.combine))
     local rearChaseTermZ = self:getRearChaseOffsetZ()
