@@ -372,12 +372,12 @@ function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
                             if nonFuelFillUnits == nil then
                                 nonFuelFillUnits = {}
                             end
-                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode})
+                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
                         elseif fillUnit.fillRootNode then
                             if nonFuelFillUnits == nil then
                                 nonFuelFillUnits = {}
                             end
-                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode})
+                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
                         end
                         break
                     end
@@ -405,8 +405,8 @@ function AutoDrive.getNextFreeNonFuelFillUnit(vehicle)
 
     if allNonFuelFillUnits ~= nil then
         for index, item in ipairs(allNonFuelFillUnits) do
-            if item.fillUnit and item.fillUnit.capacity and item.fillUnit.fillLevel then
-                local freeCapacity = item.fillUnit.capacity - item.fillUnit.fillLevel
+            if item.fillUnit and item.node and item.object and item.object.getFillUnitFreeCapacity and item.fillUnitIndex then
+                local freeCapacity = item.object:getFillUnitFreeCapacity(item.fillUnitIndex) -- needed to consider mass feature
                 if freeCapacity > 1 then
                     nextFreeNonFuelFillUnit = item.fillUnit
                     nextFreeNonFuelFillNode = item.node
