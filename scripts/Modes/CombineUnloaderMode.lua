@@ -296,8 +296,7 @@ function CombineUnloaderMode:assignToHarvester(harvester)
         self.vehicle.ad.taskModule:abortCurrentTask()
         self.combine = harvester
         -- if combine has extended pipe, aim for that. Otherwise DriveToVehicle and choose from there
-        local spec = self.combine.spec_pipe
-        if spec.currentState == spec.targetState and spec.currentState == 2 then
+        if AutoDrive.isPipeOut(self.combine) then
 
             local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectNonFuelFillLevels(self.combine)
             local cFillRatio = cfillLevel / cfillCapacity
@@ -495,13 +494,12 @@ function CombineUnloaderMode:getSideChaseOffsetX()
     -- So, choose the max between the two to avoid a collison
     local sideChaseTermX = math.max(sideChaseTermPipeIn, sideChaseTermPipeOut)
 
-    local spec = self.combine.spec_pipe
     if AutoDrive.isSugarcaneHarvester(self.combine) then
         -- check for SugarcaneHarvester has to be first, as it also is IsBufferCombine!
         sideChaseTermX = AutoDrive.getPipeLength(self.combine)
     elseif AutoDrive.getIsBufferCombine(self.combine) then
         sideChaseTermX = sideChaseTermPipeIn + CombineUnloaderMode.STATIC_X_OFFSET_FROM_HEADER
-    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and spec.currentState == 2) then
+    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or AutoDrive.isPipeOut(self.combine) then
         -- If the pipe is extended, though, target it regardless
         sideChaseTermX = sideChaseTermPipeOut
     end
@@ -524,13 +522,12 @@ function CombineUnloaderMode:getSideChaseOffsetX_new()
     -- So, choose the max between the two to avoid a collison
     local sideChaseTermX = 0
 
-    local spec = self.combine.spec_pipe
     if AutoDrive.isSugarcaneHarvester(self.combine) then
         -- check for SugarcaneHarvester has to be first, as it also is IsBufferCombine!
         sideChaseTermX = AutoDrive.getPipeLength(self.combine)
     elseif AutoDrive.getIsBufferCombine(self.combine) then
         sideChaseTermX = sideChaseTermPipeIn + CombineUnloaderMode.STATIC_X_OFFSET_FROM_HEADER
-    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and spec.currentState == 2) then
+    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or AutoDrive.isPipeOut(self.combine) then
         -- If the pipe is extended, though, target it regardless
         sideChaseTermX = 0
     end

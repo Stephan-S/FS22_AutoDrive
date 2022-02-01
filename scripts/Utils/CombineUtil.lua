@@ -106,13 +106,15 @@ function AutoDrive.isPipeOut(combine)
     local spec = combine.spec_pipe
 
     if (spec ~= nil and combine.spec_combine ~= nil) then
-        if spec.currentState == spec.targetState and (spec.currentState == 2) then
+        -- if spec.currentState == spec.targetState and (spec.currentState == 2) then
+        if combine.getIsDischargeNodeActive ~= nil and combine.getDischargeNodeByIndex ~= nil and combine:getIsDischargeNodeActive(combine:getDischargeNodeByIndex(1)) then
             return true
         end
     else        
         for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
             if (implement.spec_pipe ~= nil and implement.spec_combine ~= nil) then
-                if implement.spec_pipe.currentState == implement.spec_pipe.targetState and (implement.spec_pipe.currentState == 2) then
+                -- if implement.spec_pipe.currentState == implement.spec_pipe.targetState and (implement.spec_pipe.currentState == 2) then
+                if implement.getIsDischargeNodeActive ~= nil and implement.getDischargeNodeByIndex ~= nil and implement:getIsDischargeNodeActive(implement:getDischargeNodeByIndex(1)) then
                     return true
                 end
             end
