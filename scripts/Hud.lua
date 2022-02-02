@@ -480,10 +480,15 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 			mouseEventHandled = true
 		end
 
+        if g_gui.currentGui ~= nil then
+            -- do not allow waypoint manipulation if any GUI is open
+            AutoDrive.resetMouseSelections(vehicle)
+        end
+
 		vehicle.ad.hoveredNodeId = nil
         vehicle.ad.sectionWayPoints = {}
 		local adjustedPaths = false
-		if (not mouseEventHandled) and AutoDrive.isInExtendedEditorMode() then
+		if (not mouseEventHandled) and AutoDrive.isInExtendedEditorMode() and g_gui.currentGui == nil then
             if
                 not AutoDrive.leftLSHIFTmodifierKeyPressed
                 and not AutoDrive.leftCTRLmodifierKeyPressed
