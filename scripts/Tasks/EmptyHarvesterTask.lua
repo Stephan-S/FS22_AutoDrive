@@ -116,8 +116,10 @@ function EmptyHarvesterTask:update(dt)
             end
         end
     elseif self.state == EmptyHarvesterTask.STATE_UNLOADING_FINISHED then
-        if AutoDrive:getIsCPCombineInPocket(self.combine) then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "EmptyHarvesterTask:update - STATE_UNLOADING_FINISHED getIsCPCombineInPocket %s", tostring(AutoDrive:getIsCPCombineInPocket(self.combine)))
+        if AutoDrive:getIsCPCombineInPocket(self.combine) or AutoDrive.combineIsTurning(self.combine) then
             -- reverse if CP unload in a pocket or pullback position
+            -- reverse if combine is turning
             self.state = EmptyHarvesterTask.STATE_REVERSING
         else
             self.state = EmptyHarvesterTask.STATE_WAITING
