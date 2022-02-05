@@ -377,12 +377,16 @@ function ADSpecialDrivingModule:getReverseNode()
     end
     if reverseNode == nil then
         -- no implement with steeringCenterNode found
-        local steeringCenterX, steeringCenterY, steeringCenterZ = getWorldTranslation(self.vehicle.spec_wheels.steeringCenterNode)
-        local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, steeringCenterX, steeringCenterY, steeringCenterZ)
-        -- use the more back node
-        if diffZ < 0 then
-            reverseNode = self.vehicle.spec_wheels.steeringCenterNode
-        else
+        if self.vehicle.spec_wheels and self.vehicle.spec_wheels.steeringCenterNode then
+            local steeringCenterX, steeringCenterY, steeringCenterZ = getWorldTranslation(self.vehicle.spec_wheels.steeringCenterNode)
+            local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, steeringCenterX, steeringCenterY, steeringCenterZ)
+            -- use the more back node
+            if diffZ < 0 then
+                reverseNode = self.vehicle.spec_wheels.steeringCenterNode
+            end
+        end
+        if reverseNode == nil then
+            -- if no steeringCenterNode available use the vehicle itself
             reverseNode = self.vehicle.components[1].node
         end
         self.reverseSolo = true
