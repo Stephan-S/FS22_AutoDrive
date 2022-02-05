@@ -528,6 +528,60 @@ function AutoDrive.setAugerPipeOpen(trailers, open)
     end
 end
 
+function AutoDrive.findGrainBackDoorTipSideIndex(vehicle, trailer)
+    local grainDoorSideIndex = 0
+    local backDoorSideIndex = 0
+    if vehicle == nil or trailer == nil then
+        return grainDoorSideIndex, backDoorSideIndex
+    end
+    if trailer.ad ~= nil and trailer.ad.grainDoorSideIndex ~= nil then
+        return trailer.ad.grainDoorSideIndex, trailer.ad.backDoorSideIndex
+    end
+    local spec = trailer.spec_trailer
+    if spec == nil then
+        return grainDoorSideIndex, backDoorSideIndex
+    end
+    if trailer.ad == nil then
+        trailer.ad = {}
+    end
+    local tipSideIndex1 = 0
+    local tipSideIndex2 = 0
+    local dischargeSpeed1 = math.huge
+    local dischargeSpeed2 = math.huge
+    local backDistance1 = math.huge
+    local backDistance2 = math.huge
+
+    for i = 1, spec.tipSideCount, 1 do
+        local tipSide = spec.tipSides[i]
+        trailer:setCurrentDischargeNodeIndex(tipSide.dischargeNodeIndex)
+        local currentDischargeNode = trailer:getCurrentDischargeNode()
+        local tx, ty, tz = getWorldTranslation(currentDischargeNode.node)
+        local _, _, diffZ = worldToLocal(trailer.components[1].node, tx, ty, tz + 50)
+        -- get the 2 most back doors
+        if diffZ < backDistance1 then
+            backDistance1 = diffZ
+            dischargeSpeed1 = currentDischargeNode.emptySpeed
+            tipSideIndex1 = i
+        elseif diffZ < backDistance2 then
+            backDistance2 = diffZ
+            dischargeSpeed2 = currentDischargeNode.emptySpeed
+            tipSideIndex2 = i
+        end
+    end
+    local foundTwoBackDoors = math.abs(backDistance2 - backDistance1) < 1
+    if foundTwoBackDoors then
+        grainDoorSideIndex = tipSideIndex1
+        backDoorSideIndex = tipSideIndex2
+        if dischargeSpeed2 < dischargeSpeed1 then
+            grainDoorSideIndex = tipSideIndex2
+            backDoorSideIndex = tipSideIndex1
+        end
+    end
+    trailer.ad.grainDoorSideIndex = grainDoorSideIndex
+    trailer.ad.backDoorSideIndex = backDoorSideIndex
+    return trailer.ad.grainDoorSideIndex, trailer.ad.backDoorSideIndex
+end
+
 function AutoDrive.findAndSetBestTipPoint(vehicle, trailer)
     local dischargeCondition = true
     if trailer.getCanDischargeToObject ~= nil and trailer.getCurrentDischargeNode ~= nil then
@@ -539,16 +593,27 @@ function AutoDrive.findAndSetBestTipPoint(vehicle, trailer)
             return
         end
         local currentDischargeNodeIndex = trailer:getCurrentDischargeNode().index
+        local grainDoorSideIndex, backDoorSideIndex = AutoDrive.findGrainBackDoorTipSideIndex(vehicle, trailer)
+        if grainDoorSideIndex > 0 then
+            -- grain door avaialable - select back door
+            if trailer:getCanTogglePreferdTipSide() then
+                trailer:setPreferedTipSide(backDoorSideIndex)
+                trailer:updateRaycast(trailer:getCurrentDischargeNode())
+            end
+        end
         for i = 1, spec.tipSideCount, 1 do
-            local tipSide = spec.tipSides[i]
-            trailer:setCurrentDischargeNodeIndex(tipSide.dischargeNodeIndex)
-            trailer:updateRaycast(trailer:getCurrentDischargeNode())
-            if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then
-                if trailer:getCanTogglePreferdTipSide() then
-                    trailer:setPreferedTipSide(i)
-                    trailer:updateRaycast(trailer:getCurrentDischargeNode())
-                    AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "Changed tip side to %s", i)
-                    return
+            if grainDoorSideIndex ~= i then
+                -- avoid grain door if back door available
+                local tipSide = spec.tipSides[i]
+                trailer:setCurrentDischargeNodeIndex(tipSide.dischargeNodeIndex)
+                trailer:updateRaycast(trailer:getCurrentDischargeNode())
+                if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then
+                    if trailer:getCanTogglePreferdTipSide() then
+                        trailer:setPreferedTipSide(i)
+                        trailer:updateRaycast(trailer:getCurrentDischargeNode())
+                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "Changed tip side to %s", i)
+                        return
+                    end
                 end
             end
         end
