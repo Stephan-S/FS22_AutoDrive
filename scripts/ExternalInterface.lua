@@ -226,6 +226,10 @@ function AutoDrive:StartCP(vehicle)
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP...")
     if vehicle.startCpAtFirstWp ~= nil then
         vehicle:startCpAtFirstWp()
+    -- if vehicle.startCpAtLastWp ~= nil then
+        -- vehicle:startCpAtLastWp()
+    -- elseif vehicle.startCpALastWp ~= nil then
+        -- vehicle:startCpALastWp()
     else
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
     end
@@ -283,6 +287,9 @@ function AutoDrive:logCPStatus(vehicle, functionName)
     if (g_updateLoopIndex % 60) == 0 then
         local vehicleToCheck = vehicle.getRootVehicle and vehicle:getRootVehicle()
         if vehicleToCheck then
+            if vehicleToCheck.getIsCpActive then
+                AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpActive %s", functionName, tostring(vehicleToCheck:getIsCpActive()))
+            end
             if vehicleToCheck.getIsCpHarvesterWaitingForUnload then
                 AutoDrive.debugPrint(vehicleToCheck, AutoDrive.DC_EXTERNALINTERFACEINFO, "%s getIsCpHarvesterWaitingForUnload %s", functionName, tostring(vehicleToCheck:getIsCpHarvesterWaitingForUnload()))
             end
