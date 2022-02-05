@@ -67,6 +67,8 @@ source(Utils.getFilename("scripts/Utils/AutoDriveUtilFuncs.lua", g_currentModDir
 source(Utils.getFilename("scripts/Utils/SortedQueue.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Utils/DevFuncs.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Utils/TrafficSplineUtils.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Utils/DrawUtils.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Utils/WaypointUtils.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Manager/RoutesManager.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Manager/DrawingManager.lua", g_currentModDirectory))
@@ -136,6 +138,19 @@ source(Utils.getFilename("scripts/Gui/SettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/DebugSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/ExperimentalFeaturesSettingsPage.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Gui/Settings.lua", g_currentModDirectory))
+
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/BaseBrush.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Waypoints/ConnectWaypoints.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Waypoints/CreateWaypoint.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Waypoints/DeleteWaypoint.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Waypoints/MoveWaypoint.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Waypoints/StraightLineWaypoints.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Waypoints/CurveLineWaypoints.lua", g_currentModDirectory))
+
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Destinations/CreateDestination.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Destinations/RenameDestination.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/Brushes/Destinations/DeleteDestination.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Gui/Editor/EditorGUI.lua",g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Tasks/Turns/AbstractTurn.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/Turns/ReverseOffsetTurn.lua", g_currentModDirectory))

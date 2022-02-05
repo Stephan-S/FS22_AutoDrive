@@ -607,17 +607,17 @@ end
 
 function ADGraphManager:createWayPoint(x, y, z, sendEvent)
 	if sendEvent == nil or sendEvent == true then
-		-- Propagating waypoint creation all over the network
+		--- Send event for synchronizing.
 		AutoDriveCreateWayPointEvent.sendEvent(x, y, z)
-	else
-		local prevId = self:getWayPointsCount()
-		local newId = prevId + 1
-		local newWp = self:createNode(newId, x, y, z, {}, {}, 0)
-		self:setWayPoint(newWp)
-		self:markChanges()
-
-		return newWp
 	end
+	local prevId = self:getWayPointsCount()
+	local newId = prevId + 1
+	local newWp = self:createNode(newId, x, y, z, {}, {}, 0)
+	self:setWayPoint(newWp)
+	self:markChanges()
+
+	return newWp
+	
 end
 
 function ADGraphManager:createWayPointColored(x, y, z, colors)
@@ -1277,7 +1277,6 @@ function ADGraphManager:checkForMissingDualConnection(wp_current)
     return ret
 end
 
-
 function ADGraphManager:checkForOtherErrors(wp)
     local ret = false
 
@@ -1294,7 +1293,7 @@ function ADGraphManager:checkForOtherErrors(wp)
     return ret
 end
 
-function ADGraphManager:toggleWayPointAsSubPrio(wayPointId)
+function ADGraphManager:toggleWayPointAsSubPrio(wayPointId, sendEvent)
 	local wayPoint = self:getWayPointById(wayPointId)
 	if wayPoint ~= nil then
 		if self:getIsPointSubPrio(wayPointId) then
@@ -1304,9 +1303,17 @@ function ADGraphManager:toggleWayPointAsSubPrio(wayPointId)
 		end
 	end
 
-	self:moveWayPoint(wayPointId, wayPoint.x, wayPoint.y, wayPoint.z, wayPoint.flags)
+	self:moveWayPoint(wayPointId, wayPoint.x, wayPoint.y, wayPoint.z, wayPoint.flags, sendEvent)
 
 	self:markChanges()
+end
+
+function ADGraphManager:setSubPrio(wayPointId, subPrio, sendEvent)
+	if subPrio and not self:getIsPointSubPrio(wayPointId) then
+		self:toggleWayPointAsSubPrio(wayPointId, sendEvent)
+	elseif not subPrio and self:getIsPointSubPrio(wayPointId) then
+		self:toggleWayPointAsSubPrio(wayPointId, sendEvent)
+	end
 end
 
 function ADGraphManager:getIsPointSubPrio(wayPointId)

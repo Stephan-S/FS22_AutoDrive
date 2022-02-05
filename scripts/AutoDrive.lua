@@ -254,6 +254,8 @@ function AutoDrive:loadMap(name)
 	PlaceableHotspot.getCategory = Utils.overwrittenFunction(PlaceableHotspot.getCategory, AutoDrive.PlaceableHotspotGetCategory)
 	InGameMenuAIFrame.setMapSelectionItem = Utils.overwrittenFunction(InGameMenuAIFrame.setMapSelectionItem, AutoDrive.InGameMenuAIFrameSetMapSelectionItem)
 	MapHotspot.getRenderLast = Utils.overwrittenFunction(MapHotspot.getRenderLast, AutoDrive.MapHotspotGetRenderLast)
+
+	AutoDrive.courseEditor = ADEditorGUI.new()
 end
 
 function AutoDrive:onAIFrameOpen()
