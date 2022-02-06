@@ -534,7 +534,7 @@ function AutoDrive.findGrainBackDoorTipSideIndex(vehicle, trailer)
     if vehicle == nil or trailer == nil then
         return grainDoorSideIndex, backDoorSideIndex
     end
-    if trailer.ad ~= nil and trailer.ad.grainDoorSideIndex ~= nil then
+    if trailer.ad ~= nil and trailer.ad.grainDoorSideIndex ~= nil and trailer.ad.backDoorSideIndex ~= nil then
         return trailer.ad.grainDoorSideIndex, trailer.ad.backDoorSideIndex
     end
     local spec = trailer.spec_trailer
@@ -596,9 +596,11 @@ function AutoDrive.findAndSetBestTipPoint(vehicle, trailer)
         local grainDoorSideIndex, backDoorSideIndex = AutoDrive.findGrainBackDoorTipSideIndex(vehicle, trailer)
         if grainDoorSideIndex > 0 then
             -- grain door avaialable - select back door
-            if trailer:getCanTogglePreferdTipSide() then
-                trailer:setPreferedTipSide(backDoorSideIndex)
-                trailer:updateRaycast(trailer:getCurrentDischargeNode())
+            if spec.preferedTipSideIndex ~= backDoorSideIndex then
+                if trailer:getCanTogglePreferdTipSide() then
+                    trailer:setPreferedTipSide(backDoorSideIndex)
+                    trailer:updateRaycast(trailer:getCurrentDischargeNode())
+                end
             end
         end
         for i = 1, spec.tipSideCount, 1 do
