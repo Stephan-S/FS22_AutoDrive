@@ -18,6 +18,7 @@ end
 function ADTrailerModule:reset()
     self.isLoading = false
     self.isUnloading = false
+    self.currentBaleLoader = nil
     self.isUnloadingWithTrailer = nil
     self.isUnloadingWithFillUnit = nil
     self.bunkerStartFillLevel = nil
@@ -72,7 +73,7 @@ end
 
 function ADTrailerModule:isActiveAtTrigger()
     --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:isActiveAtTrigger self.isLoading %s self.isUnloading %s", tostring(self.isLoading), tostring(self.isUnloading))
-    return self.isLoading or self.isUnloading
+    return self.isLoading or self.isUnloading or self.currentBaleLoader and AutoDrive.isBaleUnloading(self.currentBaleLoader)
 end
 
 function ADTrailerModule:isUnloadingToBunkerSilo()
@@ -203,11 +204,35 @@ function ADTrailerModule:updateStates()
             tipState = trailer:getTipState()
             self.blocked = self.blocked and (not (tipState == Trailer.TIPSTATE_OPENING or tipState == Trailer.TIPSTATE_CLOSING))
         end
+
+        --- Searches for bale loaders.
+        if trailer.spec_baleLoader then
+            local fillLevelPercentage = trailer:getFillUnitFillLevelPercentage(trailer.spec_baleLoader.fillUnitIndex)
+            if not self.currentBaleLoader and fillLevelPercentage > 0.01 then 
+                self.currentBaleLoader = trailer
+            end
+        end
     end
+
+    --- If a bale loader was found and the it is not unloading. Search for unloading triggers.
+    --- Also reset the found bale loader, once it is unloaded.
+    if self.currentBaleLoader then 
+        AutoDrive.baleLoaderRaycast("handleBaleLoaderRaycastCallback", self, self.currentBaleLoader)
+        local fillLevelPercentage = self.currentBaleLoader:getFillUnitFillLevelPercentage(self.currentBaleLoader.spec_baleLoader.fillUnitIndex)
+        if fillLevelPercentage <= 0.01 and not AutoDrive.isBaleUnloading(self.currentBaleLoader) then 
+            self.currentBaleLoader = nil
+        end
+    end
+
     if self.isUnloading then
         self.startedUnloadingAtTrigger = true
     end
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateStates end self.isLoading %s self.isUnloading %s self.fillUnits %s self.blocked %s", tostring(self.isLoading), tostring(self.isUnloading), tostring(self.fillUnits), tostring(self.blocked))
+end
+
+--- Handles a found unloading trigger for the bale loader.
+function ADTrailerModule:handleBaleLoaderRaycastCallback(...)
+    AutoDrive.handleBaleLoaderRaycastCallback(self.currentBaleLoader, ...)
 end
 
 function ADTrailerModule:canBeHandledInReverse()
@@ -421,6 +446,7 @@ end
 
 function ADTrailerModule:stopUnloading()
     self.isUnloading = false
+    self.currentBaleLoader = nil
     self.unloadingToBunkerSilo = false
     for _, trailer in pairs(self.trailers) do
         if trailer.setDischargeState ~= nil then
@@ -434,10 +460,10 @@ function ADTrailerModule:stopUnloading()
     self.startedUnloadingAtTrigger = false
 end
 
-function ADTrailerModule:updateUnload(dt)
+function ADTrailerModule:updateUnload(dt)    
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload ")
     AutoDrive.setAugerPipeOpen(self.trailers,  AutoDrive.getDistanceToUnloadPosition(self.vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
-    if not self.isUnloading then
+    if not self.isUnloading then        
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload not self.isUnloading")
         -- Check if we can unload at some trigger
         -- if not self.startedUnloadingAtTrigger or self.fillUnits > 1 then

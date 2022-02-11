@@ -693,3 +693,69 @@ function AutoDrive.isInRangeToLoadUnloadTarget(vehicle)
             )
     return ret
 end
+
+function AutoDrive.isBaleUnloading(trailer)
+    local spec = trailer.spec_baleLoader
+    if spec then 
+        if spec.emptyState ~= BaleLoader.EMPTY_NONE then
+           return true
+        end
+    end
+end
+
+--- Creates a raycast to search for unloading to unload the bale loader.
+---@param callback string Callback func
+---@param class table Callback class
+---@param baleLoader BaleLoader bale loader to unload
+function AutoDrive.baleLoaderRaycast(callback, class, baleLoader)
+    local spec = baleLoader.spec_baleLoader
+    if spec == nil then 
+        return
+    end
+	if not spec.defaultBalePlace or next(spec.defaultBalePlace.balePlaces) == nil  then 
+        return
+    end
+    --- Applies a small back offset to make sure the bales are unloaded in the trigger.
+	local x, y, z = localToWorld(spec.defaultBalePlace.balePlaces[1].node, 0, 0, -3)
+	local dx = 0
+	local dy = -1
+	local dz = 0
+
+	raycastAll(x, y, z, dx, dy, dz, callback, 10, class, nil, false)
+end
+
+--- Callback that checks if the found object is a valid unloading trigger
+--- and the bale unloading can begin.
+---@param baleLoader BaleLoader bale loader to unload
+---@param hitActorId number trigger id found
+function AutoDrive.handleBaleLoaderRaycastCallback(baleLoader, hitActorId, x, y, z, distance, nx, ny, nz, subShapeIndex, hitShapeId)
+    local spec = baleLoader.spec_baleLoader
+    if spec == nil then 
+        return
+    end
+    local object = g_currentMission:getNodeObject(hitActorId)
+    if object ~= nil then 
+        if object:isa(UnloadTrigger) then
+            if object:getIsToolTypeAllowed(ToolType.BALE) then
+                --- Unloading trigger allows bale input.
+                local bales = baleLoader:getLoadedBales()
+				local unloadingAllowed = false
+				for i, bale in ipairs(bales) do
+					local fillType = bale:getFillType()
+					if object:getIsFillTypeAllowed(fillType) and object:getIsFillTypeSupported(fillType) then
+                        --- Bales can be unloaded here.
+						unloadingAllowed = true
+						break
+					end
+				end
+                if unloadingAllowed then
+                    local distanceToTarget = AutoDrive.getDistanceToUnloadPosition(baleLoader.rootVehicle)
+                    if distanceToTarget ~= nil and distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") then
+                        --- Automatically starts unloading of the bale loader.
+                        baleLoader:startAutomaticBaleUnloading()
+                    end
+                end
+            end
+        end
+    end
+end
