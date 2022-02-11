@@ -322,25 +322,46 @@ end
 function AutoDrive.foldAllImplements(vehicle)
     local implements = AutoDrive.getAllImplements(vehicle, true)
     for _, implement in pairs(implements) do
+        -- close pipes first if present
+        if implement.spec_pipe and implement.spec_pipe.currentState ~= 1 then
+            AutoDrive.setAugerPipeOpen(implements, false) -- close all pipes first
+            break
+        end
+    end
+    for _, implement in pairs(implements) do
         local spec = implement.spec_foldable
-        if implement.spec_foldable ~= nil then
+        if spec ~= nil then
             local allowed = implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection
             if allowed then
-                Foldable.actionControllerFoldEvent(implement, -1)
+                -- local ret = Foldable.actionControllerFoldEvent(implement, -1)
+                if spec.setFoldState then
+                    spec:setFoldState(implement:getToggledFoldDirection())
+                end
             end
         end
     end
 end
 
 function AutoDrive.getAllImplementsFolded(vehicle)
+    local ret = true
     local implements = AutoDrive.getAllImplements(vehicle, true)
     for _, implement in pairs(implements) do
-        if not AutoDrive.isVehicleFolded(implement) then
-            return false
+        -- is any pipe out
+        if implement.spec_pipe and implement.spec_pipe.currentState ~= 1 then
+            -- one pipe is out
+            ret = false
+            break
         end
     end
-
-    return true
+    if ret then
+        for _, implement in pairs(implements) do
+            local spec = implement.spec_foldable
+            if spec ~= nil then
+                ret = ret and AutoDrive.isVehicleFolded(implement)
+            end
+        end
+    end
+    return ret
 end
 
 function AutoDrive.isVehicleFolded(vehicle)
