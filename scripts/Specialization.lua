@@ -41,6 +41,12 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
+    
+    --- Disables click to switch, if the user clicks on the hud or the editor mode is active.
+    if vehicleType.functions["enterVehicleRaycastClickToSwitch"] ~= nil then 
+        SpecializationUtil.registerOverwrittenFunction(vehicleType, "enterVehicleRaycastClickToSwitch", AutoDrive.enterVehicleRaycastClickToSwitch)
+    end
+  
 end
 
 function AutoDrive.registerFunctions(vehicleType)
@@ -1651,4 +1657,19 @@ function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
             self.ad.uTurn.doneChecking = true
         end
     end
+end
+
+--- Disables click to switch, if the user clicks on the hud or the editor mode is active.
+function AutoDrive:enterVehicleRaycastClickToSwitch(superFunc, x, y)
+
+    if AutoDrive.isEditorModeEnabled() then 
+        return
+    end
+
+    --- Checks if the mouse is over a hud element.
+    if AutoDriveHud:isMouseOverHud(x, y) then 
+        return
+    end
+    
+    superFunc(self, x, y)
 end
