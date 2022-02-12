@@ -57,6 +57,20 @@ function RepairTask:update(dt)
                         implement:repairVehicle()
                         --g_server:broadcastEvent(self)
                         --g_messageCenter:publish(MessageType.VEHICLE_REPAIRED, self.vehicle, self.atSellingPoint)
+                        -- repair also transported implements, vehicles
+                        local implementFarmId = implement.getOwnerFarmId and implement:getOwnerFarmId()
+                        if  implementFarmId ~= nil and implementFarmId ~= 0 then
+                            for _, otherVehicle in pairs(g_currentMission.vehicles) do
+                                local otherVehicleFarmId = otherVehicle.getOwnerFarmId and otherVehicle:getOwnerFarmId()
+                                if otherVehicleFarmId ~= nil and otherVehicleFarmId == implementFarmId then
+                                    local posX, posY, posZ = getWorldTranslation(implement.components[1].node)
+                                    local diffX, _, diffZ = worldToLocal(otherVehicle.components[1].node, posX, posY, posZ)
+                                    if  math.abs(diffX) < 2 and math.abs(diffZ) < 2 and otherVehicle.repairVehicle then
+                                        otherVehicle:repairVehicle()
+                                    end
+                                end
+                            end
+                        end
                     end
                 end
             end
