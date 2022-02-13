@@ -826,3 +826,12 @@ function AutoDrive.isInRangeToLoadUnloadTarget(vehicle)
             )
     return ret
 end
+
+function AutoDrive.isBaleUnloading(trailer)
+    local spec = trailer.spec_baleLoader
+    if spec then 
+        if spec.emptyState ~= BaleLoader.EMPTY_NONE then
+           return true
+        end
+    end
+end
