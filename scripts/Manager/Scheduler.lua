@@ -107,7 +107,7 @@ function ADScheduler:addPathfinderVehicle(vehicle)
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_PATHINFO, "Scheduler addPathfinderVehicle ")
         table.insert(self.pathFinderVehicles, vehicle)
         -- set new vehicle a delay
-        if table.getn(self.pathFinderVehicles) > 1 then
+        if table.count(self.pathFinderVehicles) > 1 then
             AutoDrive.debugPrint(vehicle, AutoDrive.DC_PATHINFO, "Scheduler addPathfinderVehicle addDelayTimer 10000")
             -- if already vehicle in table, pause this new one
             vehicle.ad.pathFinderModule:addDelayTimer(10000)
