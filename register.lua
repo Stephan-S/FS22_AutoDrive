@@ -39,6 +39,7 @@ source(Utils.getFilename("scripts/Events/InputEvent.lua", g_currentModDirectory)
 source(Utils.getFilename("scripts/Events/HudInputEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/DebugSettingsEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/StartStopEvent.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Events/AutoDriveAutomaticBaleUnloadingEvent.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Events/Graph/CreateMapMarkerEvent.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Events/Graph/DeleteMapMarkerEvent.lua", g_currentModDirectory))

@@ -752,7 +752,7 @@ function AutoDrive.handleBaleLoaderRaycastCallback(baleLoader, hitActorId, x, y,
                     local distanceToTarget = AutoDrive.getDistanceToUnloadPosition(baleLoader.rootVehicle)
                     if distanceToTarget ~= nil and distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") then
                         --- Automatically starts unloading of the bale loader.
-                        baleLoader:startAutomaticBaleUnloading()
+                        AutoDriveAutomaticBaleUnloadingEvent.sendEvent(baleLoader)
                     end
                 end
             end
