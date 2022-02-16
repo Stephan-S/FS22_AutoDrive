@@ -48,8 +48,6 @@ function RepairTask:update(dt)
     else
         if self.vehicle.ad.drivePathModule:isTargetReached() then
             -- Do the actual repair here
-            -- Todo, for all attached objects
-            local event = WearableRepairEvent.new(self.vehicle, true)
             if g_server ~= nil then
                 local implements = AutoDrive.getAllImplements(self.vehicle, true)
                 for _, implement in pairs(implements) do
@@ -60,12 +58,13 @@ function RepairTask:update(dt)
                         -- repair also transported implements, vehicles
                         local implementFarmId = implement.getOwnerFarmId and implement:getOwnerFarmId()
                         if  implementFarmId ~= nil and implementFarmId ~= 0 then
+                            local implementPosX, implementPosY, implementPosZ = getWorldTranslation(implement.components[1].node)
                             for _, otherVehicle in pairs(g_currentMission.vehicles) do
                                 local otherVehicleFarmId = otherVehicle.getOwnerFarmId and otherVehicle:getOwnerFarmId()
                                 if otherVehicleFarmId ~= nil and otherVehicleFarmId == implementFarmId then
-                                    local posX, posY, posZ = getWorldTranslation(implement.components[1].node)
-                                    local diffX, _, diffZ = worldToLocal(otherVehicle.components[1].node, posX, posY, posZ)
-                                    if  math.abs(diffX) < 2 and math.abs(diffZ) < 2 and otherVehicle.repairVehicle then
+                                    local otherPosX, otherPosY, otherPosZ = getWorldTranslation(otherVehicle.components[1].node)
+                                    local distance = MathUtil.vector2Length(otherPosX - implementPosX, otherPosZ - implementPosZ)
+                                    if  distance < 5 and otherVehicle.repairVehicle then
                                         otherVehicle:repairVehicle()
                                     end
                                 end
