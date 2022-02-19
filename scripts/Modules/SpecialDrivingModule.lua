@@ -158,7 +158,7 @@ end
 
 function ADSpecialDrivingModule:driveToPoint(dt, point, maxFollowSpeed, checkDynamicCollision, maxAcc, maxSpeed)
     local speed = math.min(self.vehicle.ad.stateModule:getFieldSpeedLimit(), maxSpeed)
-    local acc = math.min(0.75, maxAcc)
+    local acc = math.max(0.75, maxAcc)
 
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
     self.distanceToChasePos = MathUtil.vector2Length(x - point.x, z - point.z)
