@@ -351,7 +351,7 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
         self.ad.recordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
 
         local spec = self.spec_aiVehicle
-        if self:getIsAIActive() and spec.startedFarmId ~= nil and spec.startedFarmId > 0 and self.ad.stateModule:isActive() then
+        if spec.startedFarmId ~= nil and spec.startedFarmId > 0 and self.ad.stateModule:isActive() then
             local driverWages = AutoDrive.getSetting("driverWages")
             local difficultyMultiplier = g_currentMission.missionInfo.buyPriceMultiplier
             local price = -dt * difficultyMultiplier * (driverWages) * 0.001 --spec.pricePerMS
@@ -1173,38 +1173,38 @@ function AutoDrive:onStartAutoDrive()
     self.forceIsActive = true
     self.spec_motorized.stopMotorOnLeave = false
     self.spec_enterable.disableCharacterOnLeave = false
-    self.spec_aiVehicle.isActive = true
 
-    if self.spec_aiVehicle.currentHelper == nil then
-        self.spec_aiVehicle.currentHelper = g_helperManager:getRandomHelper()
+    if self.ad.currentHelper == nil then
+        self.ad.currentHelper = g_helperManager:getRandomHelper()
 
-        if self.spec_aiVehicle.currentHelper == nil then
+        if self.ad.currentHelper == nil then
             g_currentMission.maxNumHirables = g_currentMission.maxNumHirables + 1;
             --g_helperManager:addHelper("AD_" .. math.AD_random(100, 1000), "dataS2/character/helper/helper02.xml")
             AutoDrive.AddHelper()
-            self.spec_aiVehicle.currentHelper = g_helperManager:getRandomHelper()
+            self.ad.currentHelper = g_helperManager:getRandomHelper()
         end
 
-        if self.spec_aiVehicle.currentHelper ~= nil then
-            g_helperManager:useHelper(self.spec_aiVehicle.currentHelper)
+        if self.ad.currentHelper ~= nil then
+            g_helperManager:useHelper(self.ad.currentHelper)
         end
         if self.setRandomVehicleCharacter ~= nil then
             self:setRandomVehicleCharacter()
-            self.ad.vehicleCharacter = self.spec_enterable.vehicleCharacter
         end
-        if self.spec_aiJobVehicle ~= nil then
-            self.spec_aiJobVehicle.currentHelper = self.spec_aiVehicle.currentHelper
+
+        if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper == nil then
+            -- we hire a helper for spec_aiJobVehicle, but do not fire him!
+            self.spec_aiJobVehicle.currentHelper = self.ad.currentHelper
         end
         if self.spec_enterable.controllerFarmId ~= nil and self.spec_enterable.controllerFarmId ~= 0 then
-            self.spec_aiVehicle.startedFarmId = self.spec_enterable.controllerFarmId
+            self.ad.controllerFarmId = self.spec_enterable.controllerFarmId
         else
             if g_currentMission ~= nil and g_currentMission.player ~= nil and g_currentMission.player.farmId ~= nil and g_currentMission.player.farmId ~= 0 then
-                self.spec_aiVehicle.startedFarmId = g_currentMission.player.farmId
+                self.ad.controllerFarmId = g_currentMission.player.farmId
             elseif self.spec_aiVehicle.startedFarmId == nil or self.spec_aiVehicle.startedFarmId == 0 then
                 if self.getOwnerFarmId ~= nil and self:getOwnerFarmId() ~= nil and self:getOwnerFarmId() ~= 0 then
-                    self.spec_aiVehicle.startedFarmId = self:getOwnerFarmId()
+                    self.ad.controllerFarmId = self:getOwnerFarmId()
                 else
-                    self.spec_aiVehicle.startedFarmId = 1
+                    self.ad.controllerFarmId = 1
                 end
             end
         end
@@ -1249,17 +1249,17 @@ function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
             --self:raiseAIEvent("onAIFieldWorkerEnd", "onAIImplementEnd")
         --end
 
-        self.spec_aiVehicle.isActive = false
         self.forceIsActive = false
         self.spec_motorized.stopMotorOnLeave = true
         self.spec_enterable.disableCharacterOnLeave = true
-        if self.spec_aiVehicle.currentHelper ~= nil then
-            g_helperManager:releaseHelper(self.spec_aiVehicle.currentHelper)
+        if self.ad.currentHelper ~= nil then
+            g_helperManager:releaseHelper(self.ad.currentHelper)
         end
-        self.spec_aiVehicle.currentHelper = nil
-        if self.spec_aiJobVehicle ~= nil then
-            self.spec_aiJobVehicle.currentHelper = nil
+        if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper ~= nil and self.spec_aiJobVehicle.currentHelper == self.ad.currentHelper then
+            -- we hire a helper for spec_aiJobVehicle, but do not fire him!
+            -- self.spec_aiJobVehicle.currentHelper = nil
         end
+        self.ad.currentHelper = nil
 
         if self.restoreVehicleCharacter ~= nil then
             self:restoreVehicleCharacter()
