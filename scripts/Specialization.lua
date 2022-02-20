@@ -350,13 +350,16 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
     if self.isServer then
         self.ad.recordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
 
-        local spec = self.spec_aiVehicle
-        if spec.startedFarmId ~= nil and spec.startedFarmId > 0 and self.ad.stateModule:isActive() then
+        local farmID = 0
+        if self.getOwnerFarmId then
+            farmID = self:getOwnerFarmId()
+        end
+        if farmID > 0 and self.ad.stateModule:isActive() then
             local driverWages = AutoDrive.getSetting("driverWages")
             local difficultyMultiplier = g_currentMission.missionInfo.buyPriceMultiplier
             local price = -dt * difficultyMultiplier * (driverWages) * 0.001 --spec.pricePerMS
             --price = price + (dt * difficultyMultiplier * 0.001)   -- add the price which AI internal already substracted - no longer required for FS22
-            g_currentMission:addMoney(price, spec.startedFarmId, MoneyType.AI, true)
+            g_currentMission:addMoney(price, farmID, MoneyType.AI, true)
         end
     end
 
@@ -399,6 +402,20 @@ function AutoDrive:onUpdate(dt)
                 self.ad.specialDrivingModule:stopVehicle()
                 self.ad.specialDrivingModule:update(dt)
                 self.ad.specialDrivingModule.motorShouldNotBeStopped = false
+            end
+        end
+
+        if AutoDrive.experimentalFeatures.FoldImplements then
+            if (g_updateLoopIndex % (AutoDrive.PERF_FRAMES * 3) == 0) then
+                -- fold animations take some time, so no need to check and initiate each frame
+                if not AutoDrive.getAllImplementsFolded(self) then
+                    if self.startMotor then
+                        if not self:getIsMotorStarted() then
+                            self:startMotor()
+                        end
+                    end
+                    AutoDrive.foldAllImplements(self)
+                end
             end
         end
         if self.lastMovedDistance > 0 then
@@ -1039,16 +1056,6 @@ function AutoDrive:startAutoDrive()
 
             AutoDriveStartStopEvent:sendStartEvent(self)
 
-            if AutoDrive.experimentalFeatures.FoldImplements then
-                if not AutoDrive.getAllImplementsFolded(self) then
-                    if self.startMotor then
-                        if not self:getIsMotorStarted() then
-                            self:startMotor()
-                        end
-                    end
-                    AutoDrive.foldAllImplements(self)
-                end
-            end
         end
     else
         Logging.devError("AutoDrive:startAutoDrive() must be called only on the server.")
