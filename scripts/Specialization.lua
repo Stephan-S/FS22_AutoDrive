@@ -1141,6 +1141,9 @@ function AutoDrive:stopAutoDrive()
             local isPassingToCP = not self.ad.isStoppingWithError and (self.ad.restartCP == true or (self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()))
             AutoDriveStartStopEvent:sendStopEvent(self, isPassingToCP, isStartingAIVE)
 
+            -- TODO: check if this dirty hack works in future!
+            local isControlled = self:getIsControlled()
+
             if not self.ad.isStoppingWithError and distanceToStart < 30 then
                 AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass to other mod...")
                 if self.ad.stateModule:getStartCP_AIVE() then
@@ -1148,6 +1151,7 @@ function AutoDrive:stopAutoDrive()
                     -- CP / AIVE button enabled
                     if self.cpStartStopDriver ~= nil and self.ad.stateModule:getUseCP_AIVE() then
                         -- CP button active
+                        self.spec_enterable.isControlled = false
                         if self.ad.restartCP == true then
                             -- restart CP to continue
                             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with restart")
@@ -1157,6 +1161,7 @@ function AutoDrive:stopAutoDrive()
                             AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive pass control to CP with start")
                             AutoDrive:StartCP(self)
                         end
+                        self.spec_enterable.isControlled = isControlled
                     else
                         AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:stopAutoDrive AIVE button active")
                         -- AIVE button active
@@ -1199,7 +1204,7 @@ function AutoDrive:onStartAutoDrive()
         end
 
         if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper == nil then
-            -- we hire a helper for spec_aiJobVehicle, but do not fire him!
+            -- we assign a helper for spec_aiJobVehicle, but do not remove it!
             self.spec_aiJobVehicle.currentHelper = self.ad.currentHelper
         end
         if self.spec_enterable.controllerFarmId ~= nil and self.spec_enterable.controllerFarmId ~= 0 then
@@ -1263,7 +1268,7 @@ function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
             g_helperManager:releaseHelper(self.ad.currentHelper)
         end
         if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper ~= nil and self.spec_aiJobVehicle.currentHelper == self.ad.currentHelper then
-            -- we hire a helper for spec_aiJobVehicle, but do not fire him!
+            -- we assign a helper for spec_aiJobVehicle, but do not remove it!
             -- self.spec_aiJobVehicle.currentHelper = nil
         end
         self.ad.currentHelper = nil
