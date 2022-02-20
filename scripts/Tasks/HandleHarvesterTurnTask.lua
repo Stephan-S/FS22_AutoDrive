@@ -85,7 +85,7 @@ end
 function HandleHarvesterTurnTask:update(dt)
     if self.aborting then        
         self:finished(ADTaskModule.DONT_PROPAGATE)
-        self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:setToWaitForCall()
+        self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:setToWaitForCall(true)
         return
     end
     if self.combine ~= nil and g_currentMission.nodeToObject[self.combine.components[1].node] == nil then

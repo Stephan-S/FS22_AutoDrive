@@ -63,6 +63,7 @@ end
 function CombineUnloaderMode:monitorTasks(dt)
     if self.combine ~= nil and (self.state == self.STATE_DRIVE_TO_START or self.state == self.STATE_DRIVE_TO_UNLOAD or self.state == self.STATE_EXIT_FIELD) then
         if AutoDrive.getDistanceBetween(self.vehicle, self.combine) > 25 then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:monitorTasks -> unregisterAsUnloader")
             ADHarvestManager:unregisterAsUnloader(self.vehicle)
             self.followingUnloader = nil
             self.combine = nil
@@ -132,13 +133,14 @@ function CombineUnloaderMode:promoteFollowingUnloader(combine)
 end
 
 function CombineUnloaderMode:handleFinishedTask()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask")
+    -- AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask")
     self.vehicle.ad.trailerModule:reset()
     self.lastTask = self.activeTask
     self.activeTask = self:getNextTask()
     if self.activeTask ~= nil then
         self.vehicle.ad.taskModule:addTask(self.activeTask)
     end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask self.state %s", tostring(self.state))
 end
 
 function CombineUnloaderMode:stop()
@@ -280,14 +282,15 @@ function CombineUnloaderMode:getNextTask()
     return nextTask
 end
 
-function CombineUnloaderMode:setToWaitForCall()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall start self.state %s", self.state)
+function CombineUnloaderMode:setToWaitForCall(keepCombine)
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall start self.state %s keepCombine %s", tostring(self.state), tostring(keepCombine))
     -- We just have to wait to be wait to be called (again)
     self.state = self.STATE_WAIT_TO_BE_CALLED
     self.vehicle.ad.taskModule:addTask(WaitForCallTask:new(self.vehicle))
-    if self.combine ~= nil and self.combine.ad ~= nil then
+    if self.combine ~= nil and self.combine.ad ~= nil and (keepCombine == nil or keepCombine ~= true) then
         self.combine = nil
     end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall end self.state %s self.combine %s", tostring(self.state), tostring(self.combine))
 end
 
 function CombineUnloaderMode:assignToHarvester(harvester)
@@ -693,8 +696,10 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
             chaseNode = rightChasePos
             sideIndex = AutoDrive.CHASEPOS_RIGHT
         end
-
-        if (not leftBlocked) and ((self:isUnloaderOnCorrectSide(AutoDrive.CHASEPOS_LEFT) and angleToLeftChaseSide < angleToRearChaseSide) or planningPhase) then
+        if AutoDrive:getIsCPActive(self.combine) and AutoDrive.combineIsTurning(self.combine) then
+            chaseNode = rearChasePos
+            sideIndex = AutoDrive.CHASEPOS_REAR
+        elseif (not leftBlocked) and ((self:isUnloaderOnCorrectSide(AutoDrive.CHASEPOS_LEFT) and angleToLeftChaseSide < angleToRearChaseSide) or planningPhase) then
             chaseNode = leftChasePos
             sideIndex = AutoDrive.CHASEPOS_LEFT
         elseif (not rightBlocked) and (self:isUnloaderOnCorrectSide(AutoDrive.CHASEPOS_RIGHT) or planningPhase) then
