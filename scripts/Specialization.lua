@@ -242,6 +242,7 @@ function AutoDrive:onPostLoad(savegame)
         AutoDrive.copySettingsToVehicle(self)
     end
 
+    self.ad.foldStartTime = 0
     -- Pure client side state
     self.ad.nToolTipWait = 300
     self.ad.sToolTip = ""
@@ -394,21 +395,13 @@ function AutoDrive:onUpdate(dt)
     if self.isServer and self.ad.stateModule:isActive() then
         self.ad.recordingModule:update(dt)
 
-        if not AutoDrive.experimentalFeatures.FoldImplements or AutoDrive.getAllImplementsFolded(self) then
+        if not AutoDrive.experimentalFeatures.FoldImplements or (self.ad.foldStartTime + AutoDrive.foldTimeout < g_time) then
             self.ad.taskModule:update(dt)
         else
-            if self.ad ~= nil and self.ad.specialDrivingModule ~= nil then
-                self.ad.specialDrivingModule.motorShouldNotBeStopped = true
-                self.ad.specialDrivingModule:stopVehicle()
-                self.ad.specialDrivingModule:update(dt)
-                self.ad.specialDrivingModule.motorShouldNotBeStopped = false
-            end
-        end
-
-        if AutoDrive.experimentalFeatures.FoldImplements then
-            if (g_updateLoopIndex % (AutoDrive.PERF_FRAMES * 3) == 0) then
-                -- fold animations take some time, so no need to check and initiate each frame
-                if not AutoDrive.getAllImplementsFolded(self) then
+            -- should fold implements
+            if not AutoDrive.getAllImplementsFolded(self) then
+                if (g_updateLoopIndex % (AutoDrive.PERF_FRAMES) == 0) then
+                    -- fold animations take some time, so no need to check and initiate each frame
                     if self.startMotor then
                         if not self:getIsMotorStarted() then
                             self:startMotor()
@@ -416,8 +409,18 @@ function AutoDrive:onUpdate(dt)
                     end
                     AutoDrive.foldAllImplements(self)
                 end
+                if self.ad ~= nil and self.ad.specialDrivingModule ~= nil then
+                    self.ad.specialDrivingModule.motorShouldNotBeStopped = true
+                    self.ad.specialDrivingModule:stopVehicle()
+                    self.ad.specialDrivingModule:update(dt)
+                    self.ad.specialDrivingModule.motorShouldNotBeStopped = false
+                end
+            else
+                -- all folded - no further tries necessary
+                self.ad.foldStartTime = 0
             end
         end
+
         if self.lastMovedDistance > 0 then
             -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversTraveledDistance", self.lastMovedDistance * 0.001)
         end
@@ -1035,7 +1038,7 @@ function AutoDrive:startAutoDrive()
 
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
-
+            self.ad.foldStartTime = g_time
 
             
             if self.spec_aiVehicle ~= nil then
