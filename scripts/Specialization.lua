@@ -1254,7 +1254,7 @@ function AutoDrive.AddHelper()
     helper.name = source.name .. "_" .. math.random(100, 1000)
     helper.index = g_helperManager.numHelpers
     helper.title = helper.name
-    helper.filename = source.filename
+    helper.modelFilename = source.modelFilename
 
     g_helperManager.helpers[helper.name] = helper
     g_helperManager.nameToIndex[helper.name] = g_helperManager.numHelpers
