@@ -71,7 +71,7 @@ AutoDrive.SCAN_DIALOG_RESULT_NO = 3
 AutoDrive.SCAN_DIALOG_RESULT_DONE = 4
 AutoDrive.scanDialogState = AutoDrive.SCAN_DIALOG_NONE
 
-
+AutoDrive.foldTimeout = 30000 -- 30 s time to fold all implements
 AutoDrive.MAX_BUNKERSILO_LENGTH = 100 -- length of bunker silo where speed should be lowered
 
 -- number of frames for performance modulo operation
