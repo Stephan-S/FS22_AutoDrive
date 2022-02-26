@@ -126,6 +126,15 @@ AutoDrive.seedFillTypes = {
     'LIQUIDFERTILIZER'
 }
 
+AutoDrive.modesToStartFromCP = {
+    -- AutoDrive.MODE_DRIVETO, not allowed
+    AutoDrive.MODE_PICKUPANDDELIVER,
+    -- AutoDrive.MODE_DELIVERTO, not allowed
+    AutoDrive.MODE_LOAD,
+    AutoDrive.MODE_UNLOAD
+    -- AutoDrive.MODE_BGA not allowed
+}
+
 function AutoDrive:onAllModsLoaded()
 	-- ADThirdPartyModsManager:load()
 end

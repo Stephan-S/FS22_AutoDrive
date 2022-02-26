@@ -760,8 +760,19 @@ function AutoDrive:handleCPFieldWorker(vehicle)
             vehicle.ad.restartCP = true
             if not vehicle.ad.stateModule:isActive() then
                 if vehicle.ad.stateModule:getStartCP_AIVE() and vehicle.ad.stateModule:getUseCP_AIVE() then
-                    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start AD")
-                    vehicle.ad.stateModule:getCurrentMode():start()
+                    -- CP button active
+                    if table.contains(AutoDrive.modesToStartFromCP, vehicle.ad.stateModule:getMode()) then
+                        -- mode allowed to activate
+                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start AD")
+                        vehicle.ad.stateModule:getCurrentMode():start()
+                    else
+                        -- deactivate CP button
+                        -- AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker ERROR: wrong AD mode to work with CP!")
+                        local name = vehicle.getName and vehicle:getName() or ""
+                        Logging.error("[AD] vehicle %s AutoDrive:handleCPFieldWorker ERROR: wrong AD mode to work with CP!", tostring(name))
+                        vehicle.ad.restartCP = false -- do not continue CP course
+                        vehicle.ad.stateModule:setStartCP_AIVE(false)
+                    end
                 end
             else
                 AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker - AD already active, should not happen")
