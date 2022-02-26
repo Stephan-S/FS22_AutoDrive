@@ -68,6 +68,7 @@ function ADStateModule:reset()
     self.automaticUnloadTarget = false
     self.automaticPickupTarget = false
     self.harversterPairingOk = false
+    self.currentHelperIndex = 0
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
@@ -203,6 +204,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)    
 end
 
 function ADStateModule:readStream(streamId)
@@ -231,6 +233,7 @@ function ADStateModule:readStream(streamId)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)    
+    self.currentHelperIndex = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -261,6 +264,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)    
 end
 
 function ADStateModule:readUpdateStream(streamId)
@@ -289,6 +293,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)
+    self.currentHelperIndex = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -1026,4 +1031,15 @@ end
 
 function ADStateModule:getBunkerUnloadTypeIsTrigger()
     return self.bunkerUnloadType == ADStateModule.BUNKER_UNLOAD_TRIGGER
+end
+
+function ADStateModule:getCurrentHelperIndex()
+    return self.currentHelperIndex
+end
+
+function ADStateModule:setCurrentHelperIndex(currentHelperIndex)
+    if self.currentHelperIndex ~= currentHelperIndex then
+        self.currentHelperIndex = currentHelperIndex
+        self:raiseDirtyFlag()
+    end
 end
