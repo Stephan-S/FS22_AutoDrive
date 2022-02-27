@@ -1455,29 +1455,11 @@ end
 
 function AutoDrive:updateAutoDriveLights()
     if self.ad ~= nil and self.ad.stateModule:isActive() then
-        -- If AutoDrive is active, then we take care of lights our self
-        local spec = self.spec_lights
-        local dayMinutes = g_currentMission.environment.dayTime / (1000 * 60)
-        local needLights = not g_currentMission.environment.isSunOn -- (dayMinutes > g_currentMission.environment.nightStartMinutes or dayMinutes < g_currentMission.environment.nightEndMinutes)
-        if needLights then
-            local x, y, z = getWorldTranslation(self.components[1].node)            
-            if spec.aiLightsTypesMaskWork ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMaskWork and AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(spec.aiLightsTypesMaskWork)
-                return
-            end
-            
-            if spec.aiLightsTypesMask ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMask and not AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(spec.aiLightsTypesMask)
-                return
-            end
+        local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self)
+        local isOnField = ( self.getIsOnField ~= nil and self:getIsOnField() )
 
-            if spec.lightsTypesMask ~= 1 and not AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(1)
-            end
-        else
-            if spec.lightsTypesMask ~= 0 then
-                self:setLightsTypesMask(0)
-            end
+        if self.updateAILights ~= nil then
+            self:updateAILights(isOnField or isInRangeToLoadUnloadTarget)
         end
     end
 end
