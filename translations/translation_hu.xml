@@ -70,6 +70,7 @@
 		<text name="AD_No_Shovel"								text="Nem talál kanalat" />
 		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
 		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Sofőr" />
 		<text name="AD_MODE_DELIVERTO"							text="Szállító" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Felrakás és lerakás" />

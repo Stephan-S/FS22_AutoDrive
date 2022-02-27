@@ -767,9 +767,7 @@ function AutoDrive:handleCPFieldWorker(vehicle)
                         vehicle.ad.stateModule:getCurrentMode():start()
                     else
                         -- deactivate CP button
-                        -- AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker ERROR: wrong AD mode to work with CP!")
-                        local name = vehicle.getName and vehicle:getName() or ""
-                        Logging.error("[AD] vehicle %s AutoDrive:handleCPFieldWorker ERROR: wrong AD mode to work with CP!", tostring(name))
+                        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s: $l10n_AD_Wrong_Mode_takeover_from_CP;", 5000, vehicle.ad.stateModule:getName())
                         vehicle.ad.restartCP = false -- do not continue CP course
                         vehicle.ad.stateModule:setStartCP_AIVE(false)
                     end

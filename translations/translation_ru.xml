@@ -71,6 +71,7 @@
 		<text name="AD_No_Shovel"								text="не может найти присоединённый ковш" />
 		<text name="AD_No_Refuel_Station"						text="не удалось найти заправочную станцию для:" />
 		<text name="AD_No_Repair_Station"						text="не смог найти ремонтную станцию для:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Перегон" />
 		<text name="AD_MODE_DELIVERTO"							text="Доставка" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Загрузка и доставка" />

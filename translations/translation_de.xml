@@ -72,6 +72,7 @@
 		<text name="AD_No_Shovel"								text="konnte keine Schaufel finden" />
 		<text name="AD_No_Refuel_Station"						text="konnte keine Tankstelle finden für:" />
 		<text name="AD_No_Repair_Station"						text="konnte keine Werkstatt finden für:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Falscher AD Modus für Arbeit mit CP" />
 		<text name="AD_MODE_DRIVETO"							text="Fahren" />
 		<text name="AD_MODE_DELIVERTO"							text="Abladen" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Abholen und Abliefern" />

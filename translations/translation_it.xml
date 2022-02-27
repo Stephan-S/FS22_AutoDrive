@@ -70,6 +70,7 @@
         <text name="AD_No_Shovel"               		text="Impossibile trovare una pala collegata" />
         <text name="AD_No_Refuel_Station"           		text="Impossibile trovare la stazione di rifornimento per: " />
         <text name="AD_No_Repair_Station"           		text="Impossibile trovare la stazione di riparazione per: " />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
         <text name="AD_MODE_DRIVETO"                		text="Guida" />
         <text name="AD_MODE_DELIVERTO"              		text="Consegna" />
         <text name="AD_MODE_PICKUPANDDELIVER"           	text="Carica e consegna" />

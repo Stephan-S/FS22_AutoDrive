@@ -70,6 +70,7 @@
 		<text name="AD_No_Shovel"								text="Lžíce není připojena" />
 		<text name="AD_No_Refuel_Station"						text="nemůžu najít benzinku pro:" />
 		<text name="AD_No_Repair_Station"						text="nemohl najít servisní dílnu pro :" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Jízda" />
 		<text name="AD_MODE_DELIVERTO"							text="Vykládka" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Nakládka a odvoz" />
