@@ -751,6 +751,29 @@ AutoDrive.settings.useBeaconLights = {
     isVehicleSpecific = true
 }
 
+AutoDrive.settings.useWorkLightsLoading = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_worklightsWhenLoading",
+    tooltip = "gui_ad_worklightsWhenLoading_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
+AutoDrive.settings.useWorkLightsSilo = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_worklightsWhenSilo",
+    tooltip = "gui_ad_worklightsWhenSilo_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
+
 AutoDrive.settings.activeUnloading = {
     values = {false, true},
     texts = {"gui_ad_no", "gui_ad_yes"},

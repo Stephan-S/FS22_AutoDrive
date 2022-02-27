@@ -1455,11 +1455,20 @@ end
 
 function AutoDrive:updateAutoDriveLights()
     if self.ad ~= nil and self.ad.stateModule:isActive() then
-        local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self)
-        local isOnField = ( self.getIsOnField ~= nil and self:getIsOnField() )
+        local isInRangeToLoadUnloadTarget = false
+        local isInBunkerSilo              = false
+        local isOnField                   = ( self.getIsOnField ~= nil and self:getIsOnField() )
+
+        if AutoDrive.getSetting("useWorkLightsLoading", self) then
+            isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self)
+        end
+
+        if AutoDrive.getSetting("useWorkLightsSilo", self) then
+            isInBunkerSilo = AutoDrive.isVehicleInBunkerSiloArea(self)
+        end
 
         if self.updateAILights ~= nil then
-            self:updateAILights(isOnField or isInRangeToLoadUnloadTarget)
+            self:updateAILights(isOnField or isInRangeToLoadUnloadTarget or isInBunkerSilo)
         end
     end
 end
