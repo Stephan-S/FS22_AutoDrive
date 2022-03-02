@@ -347,10 +347,6 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
         if self.getOwnerFarmId then
             farmID = self:getOwnerFarmId()
         end
-        if farmID == nil and self.errorFarmID ~= true then
-            self.errorFarmID = true
-            Logging.info("[AD] AutoDrive:onUpdateTick ERROR: farmID == nil, check your savegame!")
-        end
         if farmID ~= nil and farmID > 0 and self.ad.stateModule:isActive() then
             local driverWages = AutoDrive.getSetting("driverWages")
             local difficultyMultiplier = g_currentMission.missionInfo.buyPriceMultiplier
