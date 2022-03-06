@@ -240,7 +240,7 @@ function AutoDrive:loadMap(name)
 	ADInputManager:load()
 
 	ADMultipleTargetsManager:load()
-	AutoDrive.initTelemetry()
+	-- AutoDrive.initTelemetry()
 
 	InGameMenuAIFrame.onFrameOpen = Utils.appendedFunction(InGameMenuAIFrame.onFrameOpen, AutoDrive.onAIFrameOpen)
 	InGameMenuAIFrame.onFrameClose = Utils.appendedFunction(InGameMenuAIFrame.onFrameClose, AutoDrive.onAIFrameClose)
