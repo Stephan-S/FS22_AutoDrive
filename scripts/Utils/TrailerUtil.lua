@@ -420,24 +420,24 @@ end
 
 -- ###################################################################################################
 
-function AutoDrive.getBackImplementsOf(vehicle, onlyDischargeable)
-    AutoDrive.tempBackImplements = {}
-    AutoDrive.tempBackImplementsCount = 0
+function AutoDrive.getMostBackImplementOf(vehicle)
+    local mostBackImplement = nil
+    local backDistance = math.huge
 
-    if vehicle.getAttachedImplements ~= nil then
+    if vehicle and vehicle.getAttachedImplements ~= nil then
         for _, implement in pairs(vehicle:getAttachedImplements()) do
             if implement ~= nil and implement.object ~= nil and implement.object ~= vehicle then
                 local implementX, implementY, implementZ = getWorldTranslation(implement.object.components[1].node)
                 local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
-                if diffZ < 0 then
-                    AutoDrive.tempBackImplementsCount = AutoDrive.tempBackImplementsCount + 1
-                    AutoDrive.tempBackImplements[AutoDrive.tempBackImplementsCount] = implement.object
+                if diffZ < backDistance then
+                    backDistance = diffZ
+                    mostBackImplement = implement.object
                 end
             end
         end
     end
 
-    return AutoDrive.tempBackImplements, AutoDrive.tempBackImplementsCount
+    return mostBackImplement
 end
 
 function AutoDrive.getDistanceToTargetPosition(vehicle)
