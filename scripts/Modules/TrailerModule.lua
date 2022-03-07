@@ -240,10 +240,10 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
         self:updateStates()
         return
     end
-
-    for _, trailer in pairs(self.trailers) do
-        if #trailer.components > 1 then
-            if #trailer.componentJoints >= 2 then
+    for i, trailer in ipairs(self.trailers) do
+        if i > 1 and #trailer.components > 1 then
+            -- ignore trailing vehicle
+            if #trailer.componentJoints >= 1 then
                 if trailer.ad == nil then
                     trailer.ad = {}
                     trailer.ad.lastBlockedState = false
