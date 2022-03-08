@@ -422,7 +422,7 @@ end
 
 function AutoDrive.getMostBackImplementOf(vehicle)
     local mostBackImplement = nil
-    local backDistance = math.huge
+    local backDistance = 0
 
     if vehicle and vehicle.getAttachedImplements ~= nil then
         for _, implement in pairs(vehicle:getAttachedImplements()) do
