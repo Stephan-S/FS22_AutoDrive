@@ -55,7 +55,9 @@ function AutoDrive:checkIsConnected(toCheck, other)
     if toCheck == nil or other == nil then
         return false
     end
-    
+    if toCheck == other then
+        return true
+    end
     for _, implement in pairs(AutoDrive.getAllImplements(toCheck, true)) do
         if implement == other then
             return true
