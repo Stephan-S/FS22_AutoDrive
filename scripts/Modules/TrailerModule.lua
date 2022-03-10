@@ -466,7 +466,7 @@ function ADTrailerModule:updateUnload(dt)
                         trailer.unloadDelayTimer = AutoDriveTON:new()
                     end
                     trailer.unloadDelayTimer:timer(unloadTrigger ~= nil, 500, dt)
-                    if unloadTrigger ~= nil and trailer.unloadDelayTimer:done() then
+                    if unloadTrigger ~= nil and (trailer.unloadDelayTimer:done() or unloadTrigger.bunkerSiloArea ~= nil) then
                         trailer.unloadDelayTimer:timer(false)       -- clear timer
                         self:startUnloadingIntoTrigger(trailer, unloadTrigger)
                     end
@@ -487,7 +487,7 @@ function ADTrailerModule:updateUnload(dt)
         local fillUnitEmpty = AutoDrive.getIsFillUnitEmpty(self.isUnloadingWithTrailer, self.isUnloadingWithFillUnit)
         local allTrailersClosed = self:areAllTrailersClosed(dt)
         self.unloadDelayTimer:timer(self.isUnloading, 250, dt)
-        self.stuckInBunkerTimer:timer((self.vehicle.lastSpeedReal * 3600 < 1 and (self.waitForTrailerOpening == nil or not self.waitForTrailerOpening)), 2000, dt)
+        self.stuckInBunkerTimer:timer((self.vehicle.lastSpeedReal * 3600 < 1), 2000, dt)
         if self.unloadDelayTimer:done() then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload Monitor unloading unloadDelayTimer:done areAllTrailersClosed %s", tostring(allTrailersClosed))
             self.unloadRetryTimer:timer(self.isUnloading, ADTrailerModule.UNLOAD_RETRY_TIME, dt)
@@ -505,18 +505,6 @@ function ADTrailerModule:updateUnload(dt)
             elseif self.unloadRetryTimer:done() and self.isUnloadingWithTrailer ~= nil and self.unloadingToBunkerSilo == false then
                 self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
                 self.unloadRetryTimer:timer(false)      -- clear timer
-            elseif self.unloadingToBunkerSilo and self.waitForTrailerOpening then
-                local tipState = Trailer.TIPSTATE_OPEN
-                if self.bunkerTrailer.getTipState ~= nil then
-                    tipState = self.bunkerTrailer:getTipState()
-                end
-
-                if (tipState ~= Trailer.TIPSTATE_OPENING and tipState ~= Trailer.TIPSTATE_CLOSED) or (self.bunkerStartFillLevel > (self.fillLevel+10)) then
-                    self.vehicle.ad.drivePathModule:setUnPaused()        
-                    self.waitForTrailerOpening = false            
-                else
-                    self.vehicle.ad.drivePathModule:setPaused()
-                end
             elseif not (self.vehicle.ad.drivePathModule:getIsReversing()) and self.unloadingToBunkerSilo and self.stuckInBunkerTimer:done() then
                 -- stuck in silo bunker
                 self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
@@ -707,7 +695,7 @@ function ADTrailerModule:startUnloadingIntoTrigger(trailer, trigger)
             self.bunkerTrailer = trailer
             self.isUnloadingWithTrailer = trailer
             self.isUnloadingWithFillUnit = trailer:getCurrentDischargeNode().fillUnitIndex
-            self.waitForTrailerOpening = true
+            trailer:getCurrentDischargeNode().lastEffect = nil -- disable effect to start unloading before effect is complete visible
         end
     end
 end
