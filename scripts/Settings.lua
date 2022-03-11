@@ -981,7 +981,7 @@ AutoDrive.settings.playSounds = {
 function AutoDrive.getSetting(settingName, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]
-        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
+        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
             if vehicle.ad.settings[settingName] ~= nil then
                 setting = vehicle.ad.settings[settingName]
             end
@@ -996,7 +996,7 @@ end
 function AutoDrive.getSettingState(settingName, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]
-        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
+        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
             if vehicle.ad.settings[settingName] ~= nil then
                 setting = vehicle.ad.settings[settingName]
             end
@@ -1011,7 +1011,7 @@ end
 function AutoDrive.setSettingState(settingName, value, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]
-        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
+        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
             if vehicle.ad.settings[settingName] ~= nil then
                 setting = vehicle.ad.settings[settingName]
             end
@@ -1022,6 +1022,13 @@ function AutoDrive.setSettingState(settingName, value, vehicle)
 end
 
 function AutoDrive.copySettingsToVehicle(vehicle)
+    if vehicle == nil then
+        Logging.error("[AD] AutoDrive.copySettingsToVehicle vehicle == nil")
+        return
+    end
+    if vehicle.ad == nil then
+        vehicle.ad = {}
+    end
     if vehicle.ad.settings == nil then
         vehicle.ad.settings = {}
     end
@@ -1046,6 +1053,17 @@ function AutoDrive.copySettingsToVehicle(vehicle)
 end
 
 function AutoDrive.readVehicleSettingsFromXML(vehicle, xmlFile, key)
+    if vehicle == nil then
+        Logging.error("[AD] AutoDrive.readVehicleSettingsFromXML vehicle == nil")
+        return
+    end
+    if vehicle.ad == nil then
+        vehicle.ad = {}
+    end
+    if vehicle.ad.settings == nil then
+        vehicle.ad.settings = {}
+    end
+
     vehicle.ad.settings = {}
     for settingName, setting in pairs(AutoDrive.settings) do
         if setting.isVehicleSpecific then
