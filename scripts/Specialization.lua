@@ -40,7 +40,7 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle",                         AutoDrive.leaveVehicle)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
-    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
+    -- SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
 end
 
 function AutoDrive.registerFunctions(vehicleType)
@@ -350,7 +350,8 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
         if farmID ~= nil and farmID > 0 and self.ad.stateModule:isActive() then
             local driverWages = AutoDrive.getSetting("driverWages")
             local difficultyMultiplier = g_currentMission.missionInfo.buyPriceMultiplier
-            local price = -dt * difficultyMultiplier * (driverWages) * 0.001 --spec.pricePerMS
+            local pricePerMs = AIJobFieldWork and AIJobFieldWork.getPricePerMs and AIJobFieldWork:getPricePerMs() or 0.0005
+            local price = -dt * difficultyMultiplier * (driverWages) * pricePerMs
             --price = price + (dt * difficultyMultiplier * 0.001)   -- add the price which AI internal already substracted - no longer required for FS22
             g_currentMission:addMoney(price, farmID, MoneyType.AI, true)
         end
