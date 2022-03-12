@@ -442,6 +442,17 @@ function AutoDriveHud:toggleHud(vehicle)
 	AutoDrive.showingHud = self.showHud
 end
 
+function AutoDriveHud:isMouseOverHud( x, y)
+	--- Checks if a hud element was hit.
+    if AutoDrive.Hud and AutoDrive.Hud.hudElements then
+        for i= 1,#AutoDrive.Hud.hudElements do 
+            if AutoDrive.Hud.hudElements[i]:hit(x, y, 0) then 
+                return true
+            end
+        end
+    end
+end
+
 function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
 	
