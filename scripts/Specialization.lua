@@ -1170,7 +1170,6 @@ function AutoDrive:stopAutoDrive()
                 end
             end
 
-AutoDrive.debugMsg(self, "AutoDrive:stopAutoDrive sendStopEvent")
             AutoDriveStartStopEvent:sendStopEvent(self, isPassingToCP, isStartingAIVE)
 
 			-- currently the pass to CP is only working correct from this call
@@ -1194,11 +1193,9 @@ function AutoDrive:onStartAutoDrive()
         local helperIndex = self.ad.stateModule:getCurrentHelperIndex()
         if helperIndex > 0 then
             local helper = g_helperManager:getHelperByIndex(helperIndex)
-AutoDrive.debugMsg(self, "AutoDrive:onStartAutoDrive setRandomVehicleCharacter helperIndex %s ", tostring(helperIndex))
             self:setRandomVehicleCharacter(helper)
         else
--- TODOTODO
-AutoDrive.debugMsg(self, "AutoDrive:onStartAutoDrive setRandomVehicleCharacter else ")
+-- TODO: event is received before stateModule update, so use a random character as fallback
             self:setRandomVehicleCharacter()
         end
     end
@@ -1533,29 +1530,20 @@ end
 
 function AutoDrive:updateAutoDriveLights()
     if self.ad ~= nil and self.ad.stateModule:isActive() then
-        -- If AutoDrive is active, then we take care of lights our self
-        local spec = self.spec_lights
-        local dayMinutes = g_currentMission.environment.dayTime / (1000 * 60)
-        local needLights = not g_currentMission.environment.isSunOn -- (dayMinutes > g_currentMission.environment.nightStartMinutes or dayMinutes < g_currentMission.environment.nightEndMinutes)
-        if needLights then
-            local x, y, z = getWorldTranslation(self.components[1].node)            
-            if spec.aiLightsTypesMaskWork ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMaskWork and AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(spec.aiLightsTypesMaskWork)
-                return
-            end
-            
-            if spec.aiLightsTypesMask ~= nil and spec.lightsTypesMask ~= spec.aiLightsTypesMask and not AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(spec.aiLightsTypesMask)
-                return
-            end
+        local isInRangeToLoadUnloadTarget = false
+        local isInBunkerSilo              = false
+        local isOnField                   = ( self.getIsOnField ~= nil and self:getIsOnField() )
 
-            if spec.lightsTypesMask ~= 1 and not AutoDrive.checkIsOnField(x, y, z) then
-                self:setLightsTypesMask(1)
-            end
-        else
-            if spec.lightsTypesMask ~= 0 then
-                self:setLightsTypesMask(0)
-            end
+        if AutoDrive.getSetting("useWorkLightsLoading", self) then
+            isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self)
+        end
+
+        if AutoDrive.getSetting("useWorkLightsSilo", self) then
+            isInBunkerSilo = AutoDrive.isVehicleInBunkerSiloArea(self)
+        end
+
+        if self.updateAILights ~= nil then
+            self:updateAILights(isOnField or isInRangeToLoadUnloadTarget or isInBunkerSilo)
         end
     end
 end

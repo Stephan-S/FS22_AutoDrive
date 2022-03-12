@@ -162,6 +162,10 @@
         <text name="gui_ad_maxTriggerDistance_tooltip"                                                      text="Tetikleyicilerin algılandığı ve etkinleştirildiği hedefe olan mesafe."  />
         <text name="gui_ad_useBeaconLights"                                                                 text="Uyarı ışıkları"  />
         <text name="gui_ad_useBeaconLights_tooltip"                                                         text="Evet - Alanların dışında otomatik olarak uyarı ışıkları kullan / Hayır - uyarı ışıkları otomatik olarak açılmayacak veya kapanmayacak"  />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
         <text name="gui_ad_restrictToField"                                                                 text="Yol bulucuyu alanla sınırla"  />
         <text name="gui_ad_restrictToField_tooltip"                                                         text="Boşaltıcı sahaya zaten park edilmişse, yol bulucuyu alan sınırlarıyla sınırlayacaktır."  />
         <text name="gui_ad_showTooltips"                                                                    text="Araç ipuçlarını göster"  />

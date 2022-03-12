@@ -164,6 +164,10 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Bis zu dieser Entfernung zum Zielpunkt wird beladen/entladen bei erkanntem Trigger." />
 		<text name="gui_ad_useBeaconLights"						text="Rundumleuchten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Ja - Außerhalb des Felds automatisch eingeschaltet / Nein - Rundumleuchten werden nicht automatisch ein- oder ausgeschaltet" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Scheinwerfer beim Be- und Entladen" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Ja - Beim Be- und Entladen werden Arbeitsscheinwerfer aktiviert." />
+		<text name="gui_ad_worklightsWhenSilo"					text="Scheinwerfer im Silobunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Ja - Beim Befahren eines Silobunkers werden Arbeitsscheinwerfer aktiviert." />
 		<text name="gui_ad_activeUnloading"						text="Aktives Abfahren" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Ernter während der Fahrt abfahren" />
 		<text name="gui_ad_restrictToField"						text="Pfadplanung begrenzt" />

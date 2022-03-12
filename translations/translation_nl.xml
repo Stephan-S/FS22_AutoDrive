@@ -166,6 +166,10 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Afstand tot aflever/ophaal bestemming waar de trigger wordt gevonden en geactiveerd." />
 		<text name="gui_ad_useBeaconLights"						text="Zwaailichten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Gebruik zwaailampen buiten de velden." />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
 		<text name="gui_ad_activeUnloading"						text="Actief ontladen" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Ontlaad de oogstmachine wanneer deze rijdt." />
 		<text name="gui_ad_restrictToField"						text="Route zoeken beperken tot veld" />
