@@ -1,13 +1,15 @@
 function AutoDrive.getDriverRadius(vehicle, onlyVehicle)
-    local minTurnRadius = AIVehicleUtil.getAttachedImplementsMaxTurnRadius(vehicle)
+    local minTurnRadius = AIVehicleUtil.getAttachedImplementsMaxTurnRadius(vehicle) -- return -1 or getAITurnRadiusLimitation -> see xml value getAITurnRadiusLimitation
 
     --if minTurnRadius ~= nil then
       --  print("getAttachedImplementsMaxTurnRadius: " .. minTurnRadius)
     --end
 
     local maxToolRadius = 0
-    for _, implement in pairs(vehicle:getAttachedAIImplements()) do
-        maxToolRadius = math.max(maxToolRadius, AIVehicleUtil.getMaxToolRadius(implement))
+    if vehicle.getAttachedImplements ~= nil then
+        for _, implement in pairs(vehicle:getAttachedImplements()) do
+            maxToolRadius = math.max(maxToolRadius, AIVehicleUtil.getMaxToolRadius(implement))
+        end
     end
 
     --if maxToolRadius ~= nil then
@@ -16,7 +18,7 @@ function AutoDrive.getDriverRadius(vehicle, onlyVehicle)
 
     minTurnRadius = math.max(minTurnRadius, maxToolRadius)
 
-    if #vehicle:getAttachedAIImplements() > 0 then
+    if  vehicle.getAttachedImplements ~= nil and #vehicle:getAttachedImplements() > 0 then
         if minTurnRadius <= 5 then
             minTurnRadius = PathFinderModule.PP_CELL_X
             --if minTurnRadius ~= nil then
