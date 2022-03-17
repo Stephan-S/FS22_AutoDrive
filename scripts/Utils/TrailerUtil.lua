@@ -309,6 +309,7 @@ function AutoDrive.getAllUnits(vehicle)
         Logging.error("[AD] AutoDrive.getAllUnits vehicle == nil")
         return nil, 0
     end
+    vehicle = vehicle:getRootVehicle()
     if vehicle ~= nil then
         if vehicle.ad == nil then
             vehicle.ad = {}
@@ -362,24 +363,26 @@ function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
 
         local trailers = AutoDrive.getAllUnits(vehicle)
         for trailerIndex, trailer in ipairs(trailers) do
-            for fillUnitIndex, fillUnit in pairs(trailer:getFillUnits()) do
-                for fillType, _ in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
+            if trailer.getFillUnits then
+                for fillUnitIndex, fillUnit in pairs(trailer:getFillUnits()) do
+                    for fillType, _ in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
 
-                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                    if not table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
+                        local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
+                        if not table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
 
-                        if fillUnit.exactFillRootNode then
-                            if nonFuelFillUnits == nil then
-                                nonFuelFillUnits = {}
+                            if fillUnit.exactFillRootNode then
+                                if nonFuelFillUnits == nil then
+                                    nonFuelFillUnits = {}
+                                end
+                                table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                            elseif fillUnit.fillRootNode then
+                                if nonFuelFillUnits == nil then
+                                    nonFuelFillUnits = {}
+                                end
+                                table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
                             end
-                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
-                        elseif fillUnit.fillRootNode then
-                            if nonFuelFillUnits == nil then
-                                nonFuelFillUnits = {}
-                            end
-                            table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                            break
                         end
-                        break
                     end
                 end
             end
@@ -483,7 +486,14 @@ function AutoDrive.getDistanceToUnloadPosition(vehicle)
     if destination == nil then
         return math.huge
     end
-    return MathUtil.vector2Length(x - destination.x, z - destination.z)
+    local distance = MathUtil.vector2Length(x - destination.x, z - destination.z)
+    local rootVehicle = vehicle:getRootVehicle()
+    if rootVehicle and rootVehicle.ad and rootVehicle.ad.drivePathModule and rootVehicle.ad.drivePathModule:getIsReversing() then
+        -- if revers driving sub the train length as the vehicle is the last position on the move to target
+        local trainLength = AutoDrive.getTractorTrainLength(rootVehicle, true)
+        distance = distance - trainLength
+    end
+    return distance
 end
 
 function AutoDrive.setTrailerCoverOpen(vehicle, trailers, open)
