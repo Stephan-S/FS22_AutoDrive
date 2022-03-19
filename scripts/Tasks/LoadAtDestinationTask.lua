@@ -93,7 +93,7 @@ function LoadAtDestinationTask:update(dt)
 
                             if not self.vehicle.ad.trailerModule:isActiveAtTrigger() then
                                 -- check fill levels only if not still filling something
-                                local _, _, isFull = AutoDrive.getAllFillLevels(self.trailers)
+                                local _, _, isFull, _ = AutoDrive.getAllFillLevels(self.trailers)
                                 if isFull then
                                     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update leftCapacity <= -> self:finished")
                                     self:finished()

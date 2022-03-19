@@ -198,7 +198,7 @@ function CombineUnloaderMode:getNextTask()
 
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
     local point = nil
-    local _, _, filledToUnload, _ = AutoDrive.getAllNonFuelFillLevels(self.trailers)
+    local _, _, filledToUnload, _ = AutoDrive.getAllFillLevels(self.trailers)
 
     if self.state == self.STATE_INIT then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask STATE_INIT filledToUnload %s", tostring(filledToUnload))
@@ -301,12 +301,12 @@ function CombineUnloaderMode:assignToHarvester(harvester)
         -- if combine has extended pipe, aim for that. Otherwise DriveToVehicle and choose from there
         if AutoDrive.isPipeOut(self.combine) then
 
-            local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectNonFuelFillLevels(self.combine)
-            local cFillRatio = cfillLevel / cfillCapacity
+            local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectFillLevels(self.combine)
+            local cFillRatio = cfillCapacity > 0 and cfillLevel / cfillCapacity or 0
             
             local cpIsCalling = AutoDrive:getIsCPWaitingForUnload(harvester)
 
-            if (self.combine.spec_combine == nil or not AutoDrive.getIsBufferCombine(self.combine)) and (self.combine.ad.noMovementTimer.elapsedTime > 500 or cleftCapacity < 1.0 or cpIsCalling or cFillRatio > 0.945) then
+            if (self.combine.spec_combine == nil or not AutoDrive.getIsBufferCombine(self.combine)) and (self.combine.ad.noMovementTimer.elapsedTime > 500 or cleftCapacity < 0.1 or cpIsCalling or cFillRatio > 0.945) then
                 -- default unloading - no movement
                 self.state = self.STATE_DRIVE_TO_PIPE
                 self.vehicle.ad.taskModule:addTask(EmptyHarvesterTask:new(self.vehicle, self.combine))

@@ -235,7 +235,7 @@ function AutoDrive:onPostLoad(savegame)
 
     if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         if self.typeName == "combineCutterFruitPreparer" then
-            local vehicleFillLevel, vehicleFillCapacity, filledToUnload, vehicleFillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(self)
+            local _, vehicleFillCapacity, _, _ = AutoDrive.getObjectFillLevels(self)
             self.ad.isSugarcaneHarvester = vehicleFillCapacity == math.huge
         end
     end

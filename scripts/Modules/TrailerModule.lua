@@ -93,9 +93,9 @@ end
 function ADTrailerModule:getBunkerSiloSpeed()
     local trailer = self.bunkerTrailer
     local trigger = self.bunkerTrigger
-    local fillLevel, _, _ =  AutoDrive.getObjectNonFuelFillLevels(trailer)
+    local fillLevel, _, _ =  AutoDrive.getObjectFillLevels(trailer)
 
-    if trailer ~= nil and trailer.getCurrentDischargeNode ~= nil and fillLevel ~= nil then
+    if trailer ~= nil and trailer.getCurrentDischargeNode ~= nil and fillLevel ~= nil and fillLevel > 0 then
         local dischargeNode = trailer:getCurrentDischargeNode()
         if dischargeNode ~= nil and trigger ~= nil and trigger.bunkerSiloArea ~= nil then
             local dischargeSpeed = dischargeNode.emptySpeed
@@ -212,7 +212,7 @@ function ADTrailerModule:updateStates()
             if not self.currentBaleLoader then 
                 local fillLevelPercentage = trailer:getFillUnitFillLevelPercentage(trailer.spec_baleLoader.fillUnitIndex)
                 if fillLevelPercentage > 0.01 then 
-AutoDrive.debugMsg(trailer, "ADTrailerModule:updateStates self.currentBaleLoader = trailer %s", tostring(trailer))
+-- AutoDrive.debugMsg(trailer, "ADTrailerModule:updateStates self.currentBaleLoader = trailer %s", tostring(trailer))
                     self.currentBaleLoader = trailer
                 end
             end

@@ -130,7 +130,7 @@ function AutoDrive:StartDriving(vehicle, destinationID, unloadDestinationID, cal
                 local parkDestinationAtJobFinished = vehicle.ad.stateModule:getParkDestinationAtJobFinished()
                 if parkDestinationAtJobFinished >= 1 then
                     local trailers, _ = AutoDrive.getAllUnits(vehicle)
-                    local fillLevel, _, _ = AutoDrive.getAllNonFuelFillLevels(trailers)
+                    local fillLevel, _, _ = AutoDrive.getAllFillLevels(trailers)
                     if vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER and fillLevel > 0 then
                         -- unload before going to park
                         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartDriving unload before going to park")

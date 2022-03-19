@@ -369,12 +369,12 @@ function FollowCombineTask:updateStates(dt)
 
         local cmaxCapacity = 0
         local cfillLevel = 0
-        cfillLevel, cmaxCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(self.combine)
-        self.combineFillPercent = (cfillLevel / cmaxCapacity) * 100
+        cfillLevel, cmaxCapacity, _ = AutoDrive.getObjectFillLevels(self.combine)
+        self.combineFillPercent = cmaxCapacity > 0 and (cfillLevel / cmaxCapacity) * 100 or 0
 
         local fillFreeCapacity = 0
-        _, _, self.filledToUnload, fillFreeCapacity = AutoDrive.getAllNonFuelFillLevels(self.trailers)
-        self.filled = fillFreeCapacity <= 1
+        _, _, self.filledToUnload, fillFreeCapacity = AutoDrive.getAllFillLevels(self.trailers)
+        self.filled = fillFreeCapacity <= 0.1
         
         self.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
     end

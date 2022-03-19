@@ -12,6 +12,7 @@ function AutoDrive.isUnloadFillLevelReached(object, fillFreeCapacity, fillCapaci
 end
 
 -- new, all fill levels, fuel fillTypes only from 2nd unit - to be used mainly for transportation
+-- consider only dischargable fillUnits
 function AutoDrive.getAllFillLevels(vehicles)
     if vehicles == nil or #vehicles == 0 then
         Logging.error("[AD] AutoDrive.getAllFillLevels vehicles == nil")
@@ -24,17 +25,17 @@ function AutoDrive.getAllFillLevels(vehicles)
         return 0, 0, false, 0
     end
 
-    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0.001
-    local vehicleFillLevel, vehicleFillCapacity, vehicleFillFreeCapacity = 0, 0, 0.001
+    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0
+    local vehicleFillLevel, vehicleFillCapacity, vehicleFillFreeCapacity = 0, 0, 0
 
     for index, vehicle in ipairs(vehicles) do
 
-        if index == 1 then
-            -- do not consider fuel from 1st vehicle
-            vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(vehicle)
-        else
-            vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive.getObjectFillLevels(vehicle)
-        end
+            -- if index == 1 then
+                -- do not consider fuel from 1st vehicle
+                -- vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(vehicle)
+            -- else
+                vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive.getObjectFillLevels(vehicle)
+            -- end
         
         fillLevel    = fillLevel    + vehicleFillLevel
         fillCapacity = fillCapacity + vehicleFillCapacity
@@ -44,7 +45,7 @@ function AutoDrive.getAllFillLevels(vehicles)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
--- new
+-- new - currently not used
 function AutoDrive.getAllNonFuelFillLevels(vehicles)
     if vehicles == nil or #vehicles == 0 then
         Logging.error("[AD] AutoDrive.getAllNonFuelFillLevels vehicles == nil")
@@ -57,7 +58,7 @@ function AutoDrive.getAllNonFuelFillLevels(vehicles)
         return 0, 0, false, 0
     end
 
-    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0.001
+    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0
 
     for index, vehicle in ipairs(vehicles) do
 
@@ -70,7 +71,7 @@ function AutoDrive.getAllNonFuelFillLevels(vehicles)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
--- new
+-- new - currently not used
 -- return free capacity of all fillUnits considering the mass game setting
 function AutoDrive.getFreeCapacity(object)
     if object == nil then
@@ -89,7 +90,7 @@ function AutoDrive.getFreeCapacity(object)
 end
 
 -- new, consider all fillTypes not in AutoDrive.nonFillableFillTypes
-function AutoDrive.getObjectFillLevels(object)
+function AutoDrive.getObjectFillLevels_old(object)
     if object == nil then
         Logging.error("[AD] AutoDrive.getObjectFillLevels object == nil")
         return 0, 0, false, 0
@@ -100,7 +101,7 @@ function AutoDrive.getObjectFillLevels(object)
         return 0, 0, false, 0
     end
 
-    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0.001
+    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0
 
     if object.getFillUnits ~= nil then
         for fillUnitIndex, _ in pairs(object:getFillUnits()) do
@@ -125,6 +126,66 @@ function AutoDrive.getObjectFillLevels(object)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
+-- new
+-- consider only dischargable fillUnits
+-- consider units which should be filled but will be consumed by unit itself, i.e. sprayer, sowingMachine
+-- avoid fill levels which AD could not refill itself, i.e. additive for forage wagon / chopper, grease
+function AutoDrive.getObjectFillLevels(object)
+    if object == nil then
+        Logging.error("[AD] AutoDrive.getObjectFillLevels object == nil")
+        return 0, 0, false, 0
+    end
+    local rootVehicle = object:getRootVehicle()
+    if rootVehicle == nil then
+        Logging.error("[AD] AutoDrive.getObjectFillLevels rootVehicle == nil")
+        return 0, 0, false, 0
+    end
+
+    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0
+
+    local function updateFillLevels(fillUnitIndex)
+        if object.getFillUnitFillLevel and object.getFillUnitCapacity and object.getFillUnitFreeCapacity then
+            local unitFillLevel = object:getFillUnitFillLevel(fillUnitIndex)
+            local unitCapacity = object:getFillUnitCapacity(fillUnitIndex)
+            local unitFreeCapacity = object:getFillUnitFreeCapacity(fillUnitIndex)
+            fillLevel    = fillLevel    + unitFillLevel
+            fillCapacity = fillCapacity + unitCapacity
+            fillFreeCapacity = fillFreeCapacity + unitFreeCapacity
+        end
+    end
+
+    if object.getFillUnits ~= nil then
+        for fillUnitIndex, _ in pairs(object:getFillUnits()) do
+
+            local spec_dischargeable = object.spec_dischargeable
+            if spec_dischargeable and spec_dischargeable.dischargeNodes and #spec_dischargeable.dischargeNodes > 0 then
+                for _, dischargeNode in ipairs(spec_dischargeable.dischargeNodes) do
+                    if dischargeNode.fillUnitIndex and dischargeNode.fillUnitIndex > 0 and dischargeNode.fillUnitIndex == fillUnitIndex then
+                        -- the fillUnit can be discharged
+                        updateFillLevels(fillUnitIndex)
+                        break
+                    end
+                end
+            elseif object.spec_sowingMachine and object.getSowingMachineFillUnitIndex and object:getSowingMachineFillUnitIndex() > 0 then
+                if object:getSowingMachineFillUnitIndex() == fillUnitIndex then
+                    updateFillLevels(fillUnitIndex)
+                end
+            elseif object.spec_sprayer and object.getSprayerFillUnitIndex and object:getSprayerFillUnitIndex() > 0 then
+                if object:getSprayerFillUnitIndex() == fillUnitIndex then
+                    updateFillLevels(fillUnitIndex)
+                end
+            elseif object.spec_saltSpreader and object.spec_saltSpreader.fillUnitIndex and object.spec_saltSpreader.fillUnitIndex > 0 then
+                if object.spec_saltSpreader.fillUnitIndex == fillUnitIndex then
+                    updateFillLevels(fillUnitIndex)
+                end
+            end
+        end
+    end
+    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+    return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
+end
+
+-- new - currently not used
 -- new, consider all fillTypes not in AutoDrive.fuelFillTypes
 function AutoDrive.getObjectNonFuelFillLevels(object)
     if object == nil then
@@ -137,7 +198,7 @@ function AutoDrive.getObjectNonFuelFillLevels(object)
         return 0, 0, false, 0
     end
 
-    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0.001
+    local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0
 
     if object.getFillUnits ~= nil then
         for fillUnitIndex, _ in pairs(object:getFillUnits()) do
@@ -174,7 +235,7 @@ function AutoDrive.getIsFillUnitFull(vehicle, fillUnitIndex)
     end
     local fillUnitFull = false
 
-    if vehicle ~= nil and AutoDrive:hasAL(vehicle) then
+    if AutoDrive:hasAL(vehicle) then
         -- AutoLoad
         fillUnitFull = AutoDrive:getALFillLevelPercentage(vehicle) >= AutoDrive.getSetting("unloadFillLevel", rootVehicle) * 0.999
     else
@@ -354,7 +415,7 @@ function AutoDrive.getTrailersOfImplement(vehicle, attachedImplement, onlyDischa
 end
 
 -- new, return list of all fillUnits of vehicle and trailers for nonFuel or nil
-function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
+function AutoDrive.getAllNonFuelFillUnits_old(vehicle, initialize)
     local nonFuelFillUnits = nil
     if vehicle == nil or vehicle.ad == nil then
         return nonFuelFillUnits
@@ -392,6 +453,47 @@ function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
     return vehicle.ad.nonFuelFillUnits
 end
 
+-- consider only dischargable fillUnits
+function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
+    local nonFuelFillUnits = nil
+    if vehicle == nil or vehicle.ad == nil then
+        return nonFuelFillUnits
+    end
+    if vehicle.ad.nonFuelFillUnits == nil or initialize then
+
+        local trailers = AutoDrive.getAllUnits(vehicle)
+        for _, trailer in ipairs(trailers) do
+            if trailer.getFillUnits then
+                for fillUnitIndex, fillUnit in pairs(trailer:getFillUnits()) do
+
+                    local spec_dischargeable = trailer.spec_dischargeable
+                    if spec_dischargeable and spec_dischargeable.dischargeNodes and #spec_dischargeable.dischargeNodes > 0 then
+                        for _, dischargeNode in ipairs(spec_dischargeable.dischargeNodes) do
+                            if dischargeNode.fillUnitIndex and dischargeNode.fillUnitIndex > 0 and dischargeNode.fillUnitIndex == fillUnitIndex then
+                                -- the fillUnit can be discharged
+                                if fillUnit.exactFillRootNode then
+                                    if nonFuelFillUnits == nil then
+                                        nonFuelFillUnits = {}
+                                    end
+                                    table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                                elseif fillUnit.fillRootNode then
+                                    if nonFuelFillUnits == nil then
+                                        nonFuelFillUnits = {}
+                                    end
+                                    table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                                end
+                                break
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        vehicle.ad.nonFuelFillUnits = nonFuelFillUnits
+    end
+    return vehicle.ad.nonFuelFillUnits
+end
+
 -- new, return next fillUnit with room to fill or RootVehicle as default
 function AutoDrive.getNextFreeNonFuelFillUnit(vehicle)
     local nextFreeNonFuelFillUnit = nil
@@ -410,7 +512,7 @@ function AutoDrive.getNextFreeNonFuelFillUnit(vehicle)
         for index, item in ipairs(allNonFuelFillUnits) do
             if item.fillUnit and item.node and item.object and item.object.getFillUnitFreeCapacity and item.fillUnitIndex then
                 local freeCapacity = item.object:getFillUnitFreeCapacity(item.fillUnitIndex) -- needed to consider mass feature
-                if freeCapacity > 1 then
+                if freeCapacity > 0.1 then
                     nextFreeNonFuelFillUnit = item.fillUnit
                     nextFreeNonFuelFillNode = item.node
                     break
