@@ -93,7 +93,7 @@ function EmptyHarvesterTask:update(dt)
 
         local combineFillLevel, _, _ = AutoDrive.getObjectFillLevels(self.combine)
 
-        if combineFillLevel > 1 and self.combine.getDischargeState ~= nil and self.combine:getDischargeState() ~= Dischargeable.DISCHARGE_STATE_OFF then
+        if combineFillLevel > 0.1 and self.combine.getDischargeState ~= nil and self.combine:getDischargeState() ~= Dischargeable.DISCHARGE_STATE_OFF then
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
         else
