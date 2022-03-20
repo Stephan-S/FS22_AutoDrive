@@ -503,9 +503,9 @@ function ADGraphManager:removeMapMarker(markerId, sendEvent)
 						end
 					end
 				end
+                -- remove deleted marker from vehicle destinations
+                ADGraphManager:checkResetVehicleDestinations(markerId)
 			end
-            -- remove deleted marker from vehicle destinations
-            ADGraphManager:checkResetVehicleDestinations(markerId)
 
 			-- Calling external interop listeners
 			AutoDrive:notifyDestinationListeners()
