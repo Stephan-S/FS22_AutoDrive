@@ -178,6 +178,10 @@ function AutoDrive.getObjectFillLevels(object)
                 if object.spec_saltSpreader.fillUnitIndex == fillUnitIndex then
                     updateFillLevels(fillUnitIndex)
                 end
+            elseif object.spec_baleLoader and object.spec_baleLoader.fillUnitIndex and object.spec_baleLoader.fillUnitIndex > 0 then
+                if object.spec_baleLoader.fillUnitIndex == fillUnitIndex then
+                    updateFillLevels(fillUnitIndex)
+                end
             end
         end
     end
