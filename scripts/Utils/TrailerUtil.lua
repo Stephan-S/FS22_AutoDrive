@@ -870,16 +870,22 @@ end
 
 function AutoDrive.getTractorTrainLength(vehicle, includeTractor, onlyFirstTrailer)
     local totalLength = 0
-    if includeTractor then
-        totalLength = totalLength + vehicle.size.length
-    end
+    if vehicle ~= nil then
+        local trailers, _ = AutoDrive.getAllUnits(vehicle)
 
-    local trailers, _ = AutoDrive.getAllUnits(vehicle)
+        for i, trailer in ipairs(trailers) do
 
-    for _, trailer in ipairs(trailers) do
-        totalLength = totalLength + trailer.size.length
-        if onlyFirstTrailer then
-            break
+            if includeTractor and i == 1 then
+                -- first is the rootVehicle
+                totalLength = totalLength + trailer.size.length
+            end
+            if i > 1 then
+                -- trailers
+                totalLength = totalLength + trailer.size.length
+                if onlyFirstTrailer then
+                    break
+                end
+            end
         end
     end
     return totalLength
