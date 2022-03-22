@@ -71,6 +71,7 @@ function ADTrailerModule:reset()
     self.activeAL = false
     self.actualDistanceToUnloadTrigger = math.huge
     self.oldDistanceToUnloadTrigger = math.huge
+    self.baleTriggerStart = nil
 end
 
 function ADTrailerModule:isActiveAtTrigger()
@@ -603,7 +604,12 @@ function ADTrailerModule:lookForPossibleUnloadTrigger(trailer)
     for _, trigger in pairs(ADTriggerManager.getUnloadTriggers()) do
         local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
         if triggerX ~= nil then
-            if distanceToTarget ~= nil and (distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") or (trigger.bunkerSiloArea ~= nil and distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH))) then
+            if distanceToTarget ~= nil and
+                (distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") 
+                or (trigger.bunkerSiloArea ~= nil and distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH))
+                or (trigger.baleTrigger ~= nil and distanceToTarget < math.max(AutoDrive.getSetting("maxTriggerDistance"), 25))
+                )
+                then
                 local distanceToUnloadTrigger = MathUtil.vector2Length(triggerX - trailerX, triggerZ - trailerZ)
                 if trigger.baleTrigger then
                     -- bale trigger
@@ -664,14 +670,24 @@ function ADTrailerModule:startUnloadingIntoTrigger(trailer, trigger)
         end
         if self.actualDistanceToUnloadTrigger > self.oldDistanceToUnloadTrigger then
             -- start unloading if trailer pass away from trigger
-            if trailer.startAutomaticBaleUnloading then 
-                local spec = trailer.spec_baleLoader
-                if spec.emptyState == BaleLoader.EMPTY_NONE then
-                    trailer:startAutomaticBaleUnloading()
+            if self.baleTriggerStart == nil then
+                self.baleTriggerStart = {x = trailerX, z = trailerZ}
+            else
+                local rootVehicle = trailer:getRootVehicle()
+                local distance = MathUtil.vector2Length(self.baleTriggerStart.x - trailerX, self.baleTriggerStart.z - trailerZ)
+                if distance >= (trailer.size.length / 2) then
+                    -- move 1 / 2 length of trailer forward to hit the trigger with the back of the trailer
+                    if trailer.startAutomaticBaleUnloading then 
+                        local spec = trailer.spec_baleLoader
+
+                        if spec.emptyState == BaleLoader.EMPTY_NONE then
+                            trailer:startAutomaticBaleUnloading()
+                        end
+                        self.isUnloading = true
+                        self.isUnloadingWithTrailer = trailer
+                        self.isUnloadingWithFillUnit = trailer.spec_baleLoader.fillUnitIndex
+                    end
                 end
-                self.isUnloading = true
-                self.isUnloadingWithTrailer = trailer
-                self.isUnloadingWithFillUnit = trailer.spec_baleLoader.fillUnitIndex
             end
         end
         self.oldDistanceToUnloadTrigger = self.actualDistanceToUnloadTrigger
