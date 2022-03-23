@@ -946,8 +946,10 @@ AutoDrive.settings.autoTrailerCover = {
 }
 
 AutoDrive.settings.ALUnload = {
-    values = {0, 1, 2, 3, 4},
-    texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
+    -- values = {0, 1, 2, 3, 4},
+    values = {0, 1, 2, 4},
+    -- texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
+    texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_right"},
     default = 0,
     current = 0,
     text = "gui_ad_ALUnload",

@@ -221,14 +221,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Yes - AutoDrive open and close trailer covers as needed / No - trailer covers will not be opened or closed by AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning manoeuvre" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
+		<text name="gui_ad_ALUnload"                            text="AutoLoad: Unload Position" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
 		<text name="gui_ad_AL_off"                              text="Unload Off" />
 		<text name="gui_ad_AL_center"                           text="Unload center" />
 		<text name="gui_ad_AL_left"                             text="Unload left" />
 		<text name="gui_ad_AL_behind"                           text="Unload behind" />
 		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="AutoLoad: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="A AutoDrive deve gerar uma rede de rotas a partir do tráfego e dos dados do ajudante no mapa?" />

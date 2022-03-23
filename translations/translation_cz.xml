@@ -221,14 +221,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Ano - AutoDrive podle potřeby otevírá a zavírá kryty přívěsu / Ne - kryty přívěsu nebude AutoDrive otevírat ani zavírat" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manévr otáčení dopředu" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Ano – Odvozce AutoDrive se snaží naplánovat cestu vpřed, aby se přizpůsobila 90° otočením sklízecí mlátičky. / Ne - Odvozce před otočením zacouvají" />
-		<text name="gui_ad_ALUnload"                            text="Snadné automatické nakládání: Poloha vykládání" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Vypnuto bez automatického vykládání, vykládání uprostřed na nakládací plošině, poloha vykládání vozidla vlevo / za / vpravo (Poloha závisí na nastavení vozidla, ne AD!)" />
+		<text name="gui_ad_ALUnload"                            text="Automatické nakládání: Poloha vykládání" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Vypnuto bez automatického vykládání, vykládání uprostřed na nakládací plošině, poloha vykládání vozidla vlevo / vpravo (Poloha závisí na nastavení vozidla, ne AD!)" />
 		<text name="gui_ad_AL_off"                              text="Vyložení Vypnuto" />
 		<text name="gui_ad_AL_center"                           text="Vyložet na střed" />
 		<text name="gui_ad_AL_left"                             text="Vyložit vlevo" />
 		<text name="gui_ad_AL_behind"                           text="Vyložit dozadu" />
 		<text name="gui_ad_AL_right"                            text="Vyložit vpravo" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: čekací čas po vyložení" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Automatické nakládání: čekací čas po vyložení" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Čekací doba po vyložení, než budete pokračovat v jízdě – užitečné pro vykládání na střed: 0 – žádné čekání, čekejte zvolenou dobu" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generování sítě" />
 		<text name="gui_ad_scanConfirmationText"                text="Měla by aplikace AutoDrive generovat síť tras z dopravních a pomocných dat na mapě?" />

@@ -221,14 +221,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Oui - AutoDrive ouvre et ferme les bâches des remorques au besoin / Non - les bâches remorque ne seront pas ouvertes ou fermées par AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manoeuvres anticipées" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Oui - Les chauffeurs tenteront d'établir une trajectoire pour s'adapter aux virages à 90° de la moissonneuse. / Non - Les chauffeurs feront une marche arrière avant le virage." />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Position de déchargement" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-pas de déchargement automatique / déchargement au centre de la plateforme, gauche, derrière, droite du véhicule.La position dépend de la configuration du véhicule et non de l'AD." />
+		<text name="gui_ad_ALUnload"                            text="AutoLoad: Position de déchargement" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-pas de déchargement automatique / déchargement au centre de la plateforme, gauche, droite du véhicule.La position dépend de la configuration du véhicule et non de l'AD." />
 		<text name="gui_ad_AL_off"                              text="Déchargement désactivé" />
 		<text name="gui_ad_AL_center"                           text="Déchargement centre" />
 		<text name="gui_ad_AL_left"                             text="Déchargement gauche" />
 		<text name="gui_ad_AL_behind"                           text="Déchargement derrière" />
 		<text name="gui_ad_AL_right"                            text="Déchargement droite" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="Temps de déchargement" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="AutoLoad: Temps de déchargement" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Temps d'attente avant de continuer la route après le déchargement - utile pour le déchargement au centre. 0-pas d'attente / attendre le temps choisi" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Génération du réseau" />
 		<text name="gui_ad_scanConfirmationText"                text="AutoDrive doit-il créer un réseau routier à partir des données de trafic et d'assistance de la carte ?" />

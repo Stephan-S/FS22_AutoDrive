@@ -223,14 +223,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"			text="Да - AutoDrive открывает и закрывает тенты по мере необходимости / Нет - тенты прицепа не открываются или закрываются с помощью AutoDrive." />
 		<text name="gui_ad_useForwardTurningManoeuvre"			text="Планирование поворота" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"	text="Да - Разгрузчики AutoDrive пытаются планировать путь вперед чтобы адаптироваться к повороту комбайна на 90°. / Нет - Разгрузчики сдадут назад перед поворотом." />
-		<text name="gui_ad_ALUnload"							text="EAL: положение разгрузки" />
-		<text name="gui_ad_ALUnload_tooltip"					text="ВЫКЛ-без авторазгрузки, центр-разгрузить на платформу, влево / позади / вправо от техники (Положение зависит от настроек автомобиля, а не AD!)" />
+		<text name="gui_ad_ALUnload"							text="Автозагрузка: положение разгрузки" />
+		<text name="gui_ad_ALUnload_tooltip"					text="ВЫКЛ-без авторазгрузки, центр-разгрузить на платформу, влево / вправо от техники (Положение зависит от настроек автомобиля, а не AD!)" />
 		<text name="gui_ad_AL_off"								text="Разгрузка ВЫКЛ" />
 		<text name="gui_ad_AL_center"							text="Разгрузка в центр" />
 		<text name="gui_ad_AL_left"								text="Разгрузка влево" />
 		<text name="gui_ad_AL_behind"							text="Разгрузка позади" />
 		<text name="gui_ad_AL_right"							text="Разгрузка вправо" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: ожидание после разгрузки" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Автозагрузка: ожидание после разгрузки" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Время ожидания после разгрузки, прежде чем продолжать движение - полезно для разгрузки в центр: 0 = нет ждать, или ждать указанное время." />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Генерация маршрутной сети" />
 		<text name="gui_ad_scanConfirmationText"                text="Должен ли AutoDrive генерировать маршрутную сеть на основе данных о трафике и помощниках на карте?" />

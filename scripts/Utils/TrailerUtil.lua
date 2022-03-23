@@ -27,15 +27,25 @@ function AutoDrive.getAllFillLevels(vehicles)
 
     local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0
     local vehicleFillLevel, vehicleFillCapacity, vehicleFillFreeCapacity = 0, 0, 0
+    local hasAL = false
+
+    for _, vehicle in ipairs(vehicles) do
+        hasAL = hasAL or AutoDrive:hasAL(vehicle)
+    end
 
     for index, vehicle in ipairs(vehicles) do
 
+        if hasAL then
+            -- if AutoLoad is detected, use only AL fill levels
+            vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive:getALObjectFillLevels(vehicle)
+        else
             -- if index == 1 then
                 -- do not consider fuel from 1st vehicle
                 -- vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(vehicle)
             -- else
                 vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive.getObjectFillLevels(vehicle)
             -- end
+        end
         
         fillLevel    = fillLevel    + vehicleFillLevel
         fillCapacity = fillCapacity + vehicleFillCapacity
@@ -103,7 +113,9 @@ function AutoDrive.getObjectFillLevels_old(object)
 
     local fillLevel, fillCapacity, fillFreeCapacity = 0, 0, 0
 
-    if object.getFillUnits ~= nil then
+    if AutoDrive:hasAL(object) then
+        return AutoDrive:getALObjectFillLevels(object)
+    elseif object.getFillUnits ~= nil then
         for fillUnitIndex, _ in pairs(object:getFillUnits()) do
 
             for fillType, _ in pairs(object:getFillUnitSupportedFillTypes(fillUnitIndex)) do
@@ -154,7 +166,9 @@ function AutoDrive.getObjectFillLevels(object)
         end
     end
 
-    if object.getFillUnits ~= nil then
+    if AutoDrive:hasAL(object) then
+        return AutoDrive:getALObjectFillLevels(object)
+    elseif object.getFillUnits ~= nil then
         for fillUnitIndex, _ in pairs(object:getFillUnits()) do
 
             local spec_dischargeable = object.spec_dischargeable
@@ -241,7 +255,7 @@ function AutoDrive.getIsFillUnitFull(vehicle, fillUnitIndex)
 
     if AutoDrive:hasAL(vehicle) then
         -- AutoLoad
-        fillUnitFull = AutoDrive:getALFillLevelPercentage(vehicle) >= AutoDrive.getSetting("unloadFillLevel", rootVehicle) * 0.999
+        _, _, fillUnitFull, _ = AutoDrive:getALObjectFillLevels(vehicle)
     else
         if vehicle.getFillUnitFreeCapacity ~= nil and vehicle.getFillUnitCapacity ~= nil then
             local fillCapacity = vehicle:getFillUnitCapacity(fillUnitIndex)
@@ -264,9 +278,10 @@ function AutoDrive.getIsFillUnitEmpty(vehicle, fillUnitIndex)
 
     local fillUnitEmpty = false
 
-    if vehicle ~= nil and AutoDrive:hasAL(vehicle) then
+    if AutoDrive:hasAL(vehicle) then
         -- AutoLoad
-        fillUnitEmpty = AutoDrive:getALFillLevelPercentage(vehicle) <= 0.001
+        local fillLevel, _, _, _ = AutoDrive:getALObjectFillLevels(vehicle)
+        fillUnitEmpty = fillLevel < 0.001
     elseif vehicle.getFillUnitFillLevelPercentage ~= nil then
         fillUnitEmpty = vehicle:getFillUnitFillLevelPercentage(fillUnitIndex) <= 0.001
     end
