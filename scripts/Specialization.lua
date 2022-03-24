@@ -670,18 +670,13 @@ function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointD
         end
     else
         local supportedFillTypes = {}
-        local trailers, trailerCount = AutoDrive.getAllUnits(self)
-        for index, trailer in ipairs(trailers) do
-            if trailer.getFillUnits ~= nil then
-                for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
-                    if trailer.getFillUnitSupportedFillTypes ~= nil then
-                        for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
-                            if index == 1 then -- hide fuel types for 1st vehicle
-                                local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                                if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
-                                    supported = false
-                                end
-                            end
+        local dischargeableUnits = AutoDrive.getAllDischargeableUnits(self, true)
+        if dischargeableUnits and #dischargeableUnits > 0 then
+            for i = 1, #dischargeableUnits do
+                local dischargeableUnit = dischargeableUnits[i]
+                if dischargeableUnit.object and dischargeableUnit.object.getFillUnitSupportedFillTypes ~= nil then
+                    if dischargeableUnit.fillUnitIndex and dischargeableUnit.fillUnitIndex > 0 then
+                        for fillType, supported in pairs(dischargeableUnit.object:getFillUnitSupportedFillTypes(dischargeableUnit.fillUnitIndex)) do
                             if supported then
                                 table.insert(supportedFillTypes, fillType)
                             end
@@ -722,13 +717,14 @@ function AutoDrive:onPreDetachImplement(implement)
 end
 
 function AutoDrive:onEnterVehicle()
-    local trailers, trailerCount = AutoDrive.getAllUnits(self)
-    -- AutoDrive.debugMsg(object, "AutoDrive:onEnterVehicle trailerCount %s", tostring(trailerCount))
-    if trailerCount > 0 then
+    if AutoDrive:hasAL(self) then
         -- AutoLoad
-        local currentFillType = AutoDrive:getALCurrentFillType(trailers[1])
+        local currentFillType = AutoDrive:getALCurrentFillType(self)
         if currentFillType ~= nil then
             self.ad.stateModule:setFillType(currentFillType)
+            if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
+                AutoDrive.Hud.lastUIScale = 0
+            end
         end
     end
     if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then

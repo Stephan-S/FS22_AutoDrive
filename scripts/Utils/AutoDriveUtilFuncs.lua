@@ -529,25 +529,26 @@ function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
     local autoLoadFillTypes = nil -- AutoLoad - TODO: return the correct fillTypes
 
     if vehicle ~= nil then
+        local hasAL = false
         local trailers, _ = AutoDrive.getAllUnits(vehicle)
         for trailerIndex, trailer in ipairs(trailers) do
-            if AutoDrive:hasAL(trailer) then
-                -- AutoLoad - TODO: return the correct fillTypes
-                autoLoadFillTypes = AutoDrive:getALFillTypes(trailer)
-            else
-                if trailer.getFillUnits ~= nil then
-                    for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
-                        if trailer.getFillUnitSupportedFillTypes ~= nil then
-                            for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
-                                
-                                if trailerIndex == 1 then -- hide fuel types for 1st vehicle
-                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                                    if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
-                                        supported = false
-                                    end
-                                end
+            hasAL = hasAL or AutoDrive:hasAL(trailer)
+        end
+        supportedFillTypes = {}
+        if hasAL then
+            -- AutoLoad
+            for trailerIndex, trailer in ipairs(trailers) do
+                self.autoLoadFillTypes = AutoDrive:getALFillTypes(trailer)
+            end
+        else
+            local dischargeableUnits = AutoDrive.getAllDischargeableUnits(vehicle, true)
+            if dischargeableUnits and #dischargeableUnits > 0 then
+                for i = 1, #dischargeableUnits do
+                    local dischargeableUnit = dischargeableUnits[i]
+                    if dischargeableUnit.object and dischargeableUnit.object.getFillUnitSupportedFillTypes ~= nil then
+                        if dischargeableUnit.fillUnitIndex and dischargeableUnit.fillUnitIndex > 0 then
+                            for fillType, supported in pairs(dischargeableUnit.object:getFillUnitSupportedFillTypes(dischargeableUnit.fillUnitIndex)) do
                                 if supported then
-                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
                                     table.insert(supportedFillTypes, fillType)
                                 end
                             end

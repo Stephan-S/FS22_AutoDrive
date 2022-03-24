@@ -473,12 +473,12 @@ function AutoDrive.getAllNonFuelFillUnits_old(vehicle, initialize)
 end
 
 -- consider only dischargable fillUnits
-function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
-    local nonFuelFillUnits = nil
+function AutoDrive.getAllDischargeableUnits(vehicle, initialize)
+    local dischargeableUnits = nil
     if vehicle == nil or vehicle.ad == nil then
-        return nonFuelFillUnits
+        return dischargeableUnits
     end
-    if vehicle.ad.nonFuelFillUnits == nil or initialize then
+    if vehicle.ad.dischargeableUnits == nil or initialize then
 
         local trailers = AutoDrive.getAllUnits(vehicle)
         for _, trailer in ipairs(trailers) do
@@ -491,15 +491,15 @@ function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
                             if dischargeNode.fillUnitIndex and dischargeNode.fillUnitIndex > 0 and dischargeNode.fillUnitIndex == fillUnitIndex then
                                 -- the fillUnit can be discharged
                                 if fillUnit.exactFillRootNode then
-                                    if nonFuelFillUnits == nil then
-                                        nonFuelFillUnits = {}
+                                    if dischargeableUnits == nil then
+                                        dischargeableUnits = {}
                                     end
-                                    table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                                    table.insert(dischargeableUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
                                 elseif fillUnit.fillRootNode then
-                                    if nonFuelFillUnits == nil then
-                                        nonFuelFillUnits = {}
+                                    if dischargeableUnits == nil then
+                                        dischargeableUnits = {}
                                     end
-                                    table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                                    table.insert(dischargeableUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
                                 end
                                 break
                             end
@@ -508,38 +508,38 @@ function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
                 end
             end
         end
-        vehicle.ad.nonFuelFillUnits = nonFuelFillUnits
+        vehicle.ad.dischargeableUnits = dischargeableUnits
     end
-    return vehicle.ad.nonFuelFillUnits
+    return vehicle.ad.dischargeableUnits
 end
 
 -- new, return next fillUnit with room to fill or RootVehicle as default
-function AutoDrive.getNextFreeNonFuelFillUnit(vehicle)
-    local nextFreeNonFuelFillUnit = nil
+function AutoDrive.getNextFreeDischargeableUnit(vehicle)
+    local nextFreeDischargeableUnit = nil
     local rootVehicle = vehicle.getRootVehicle and vehicle:getRootVehicle() -- default in case no free fill unit will be found
-    local nextFreeNonFuelFillNode = rootVehicle and rootVehicle.components[1].node
-    
+    local nextFreeDischargeableNode = rootVehicle and rootVehicle.components[1].node
+
     if vehicle == nil then
-        return nextFreeNonFuelFillUnit, nextFreeNonFuelFillNode
+        return nextFreeDischargeableUnit, nextFreeDischargeableNode
     end
-    local allNonFuelFillUnits = AutoDrive.getAllNonFuelFillUnits(vehicle)
-    if allNonFuelFillUnits == nil then
-        allNonFuelFillUnits = AutoDrive.getAllNonFuelFillUnits(vehicle, true)
+    local allDischargeableUnits = AutoDrive.getAllDischargeableUnits(vehicle)
+    if allDischargeableUnits == nil then
+        allDischargeableUnits = AutoDrive.getAllDischargeableUnits(vehicle, true)
     end
 
-    if allNonFuelFillUnits ~= nil then
-        for index, item in ipairs(allNonFuelFillUnits) do
+    if allDischargeableUnits ~= nil then
+        for index, item in ipairs(allDischargeableUnits) do
             if item.fillUnit and item.node and item.object and item.object.getFillUnitFreeCapacity and item.fillUnitIndex then
                 local freeCapacity = item.object:getFillUnitFreeCapacity(item.fillUnitIndex) -- needed to consider mass feature
                 if freeCapacity > 0.1 then
-                    nextFreeNonFuelFillUnit = item.fillUnit
-                    nextFreeNonFuelFillNode = item.node
+                    nextFreeDischargeableUnit = item.fillUnit
+                    nextFreeDischargeableNode = item.node
                     break
                 end
             end
         end
     end
-    return nextFreeNonFuelFillUnit, nextFreeNonFuelFillNode
+    return nextFreeDischargeableUnit, nextFreeDischargeableNode
 end
 
 -- ###################################################################################################
