@@ -170,7 +170,7 @@ ConstructionScreen.draw = Utils.appendedFunction(ConstructionScreen.draw, ADEdit
 
 --- Overrides the destruct button, while ad category is active. 
 --- This enables wayPoint deletion with the destruct button.
-function ADEditorGUI:setSelectedCategory(ix)
+function ADEditorGUI:setSelectedCategory(superFunc, ix, ...)
 	if self.currentCategory == ix then
 		return
 	end
@@ -189,8 +189,42 @@ function ADEditorGUI:setSelectedCategory(ix)
 			self.buttonDestruct:setText(self.defaultDestructText)
 		end
 	end
+
+	superFunc(self, ix, ...)
+
+	local numTabsForCategory = 0
+	if self.currentCategory ~= nil then
+		numTabsForCategory = #self.items[self.currentCategory]
+	end
+	for t, button in ipairs(self.tabsBox.elements) do
+		if t <= numTabsForCategory then
+			--- Makes sure the icon are updated correctly.
+			local tab = self.categories[self.currentCategory].tabs[t]
+			GuiOverlay.deleteOverlay(button.icon)
+			button:setImageFilename(nil, tab.iconFilename)
+			button:setImageUVs(nil, tab.iconUVs)
+		end
+	end
+
 end
-ConstructionScreen.setSelectedCategory = Utils.prependedFunction(ConstructionScreen.setSelectedCategory, ADEditorGUI.setSelectedCategory)
+ConstructionScreen.setSelectedCategory = Utils.overwrittenFunction(ConstructionScreen.setSelectedCategory, ADEditorGUI.setSelectedCategory)
+
+function ADEditorGUI:setBrush(superFunc, brush, ...)
+	if brush == self.brush then
+		return
+	end
+	local lastBrush = self.brush
+	superFunc(self, brush, ...)
+
+	if self.brush:isa(ADBrush) and lastBrush:isa(ADBrush) then 
+		if self.brush.copyState then 
+			self.brush:copyState(lastBrush)
+		end
+	end
+end
+
+ConstructionScreen.setBrush = Utils.overwrittenFunction( ConstructionScreen.setBrush, ADEditorGUI.setBrush)
+
 
 --- Some magic draw code below, no idea how this works.
 function ADEditorGUI:onDrawAD()
