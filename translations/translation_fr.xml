@@ -12,14 +12,14 @@
 		<text name="input_ADRecord"								text="AD: Enregistrer une route à sens unique" />
 		<text name="input_ADRecord_Dual"						text="AD: Enregistrer une route à double-sens" />
 		<text name="input_ADRecord_SubPrio"						text="AD: Enregistrer une route secondaire" />
-		<text name="input_ADRecord_SubPrioDual"					text="AD: Enregistrer une route secondaire à double-sens " />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Enregistrer une route secondaire à double-sens" />
 		<text name="input_ADSelectTarget"						text="AD: Sélect. prochaine destination" />
 		<text name="input_ADSelectPreviousTarget"				text="AD: Sélect. destination précédente" />
 		<text name="input_AD_Speed_up"							text="AD: Augmenter la vitesse" />
 		<text name="input_AD_Speed_down"						text="AD: Diminuer la vitesse" />
 		<text name="input_AD_routes_manager"					text="AD: Ouvrir le gestionnaire d'itinéraires" />
 		<text name="input_AD_open_notification_history" 		text="AD: Ouvrir l'historique des notifications" />
-		<text name="input_AD_open_colorSettings" 		        text="AD: Choix des couleurs" />																					
+		<text name="input_AD_open_colorSettings" 		        text="AD: Choix des couleurs" />
 		<text name="input_AD_continue"							text="AD: Continuer" />
 		<text name="input_ADSelectTargetUnload"					text="AD: Sélect. prochain déchargement" />
 		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Sélect. déchargement précédent" />
@@ -85,10 +85,10 @@
 		<text name="AD_lshift_for_reverse" 						text="MAJG marche arrière" />
 		<text name="gui_ad_Setting"								text="AutoDrive - paramètres" />
 		<text name="gui_ad_collisionHeigth"						text="Hauteur de collision au sol" />
-		<text name="gui_ad_collisionHeigth_tooltip"				text="Réglage de la détection de collision devant le véhicule. Si d'autres véhicules ne sont pas détectés pendant la conduite, réduisez progressivement. (Par défaut 2 m)" />
+		<text name="gui_ad_collisionHeigth_tooltip"				text="Réglage de la détection de collision devant le véhicule. Si d'autres véhicules ne sont pas détectés pendant la conduite, réduisez progressivement.(Par défaut 2m)" />
 		<text name="gui_ad_blinkValue"						    text="Clignotant automatique" />
 		<text name="gui_ad_blinkValue_tooltip"					text="Angle de braquage pour activer automatiquement les clignotants. (0 = clignotants désactivés)" />
-		<text name="gui_ad_pipe_offset"							text="Décalage de la buse" />
+		<text name="gui_ad_pipe_offset"							text="Décalage de la goulotte" />
 		<text name="gui_ad_followDistance"						text="Distance de moissonneuse" />
 		<text name="gui_ad_followDistance_tooltip"				text="Distance depuis l'arrière de la moissonneuse lorsqu'elle est suivie." />
 		<text name="gui_ad_lookahead_turning"					text="Distance de détection (virage)" />
@@ -158,7 +158,7 @@
 		<text name="gui_ad_onlyDeliver"					        text="Livraison uniquement" />
 		<text name="gui_ad_PickupandDeliver"					text="Collecte et livraison" />
 		<text name="gui_ad_rotateTargets"					    text="Cycle de collecte et livraison" />
-		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: Aucune destination / uniquement les points de collecte / uniquement les points de livraison / les points de collecte et livraison sont choisis alternativement depuis un dossier (désactivé dans le dossier par défaut, possible uniquement si gestion par dossier activée)" />
+		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: Aucune destination / uniquement les points de collecte / uniquement les points de livraison / les points de collecte et livraison sont choisis alternativement depuis un dossier (désactivé dans le dossier par défaut). Possible uniquement si gestion par dossier activée)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Distance maximum du déclencheur" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance de détection du déclencheur au point de destination pour le chargement/déchargement." />
 		<text name="gui_ad_useBeaconLights"						text="Gyrophares" />
@@ -240,8 +240,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Restaurer" />
 		<text name="gui_ad_settingsClosingDialog_title"			text="Tous les changements seront perdus" />
 		<text name="gui_ad_settingsClosingDialog_text"			text="Êtes-vous sûr de vouloir fermer les paramètres sans enregistrer ?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="Définir par défaut" />
-		
+		<text name="gui_ad_setDefaultButtonText" 				text="Définir par défaut" />		
 		<text name="gui_ad_routesManagerTitle" 					text="Gestionnaire d'itinéraires" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Entrez le nom de l'itinéraire:" />
 		<text name="gui_ad_button_export" 						text="Sauvegarder" />
@@ -285,10 +284,9 @@
 		<text name="ad_color_currentConnection" 			    text="12 ligne vers l'itinéraire" />
 		<text name="ad_color_closestLine" 			            text="13 ligne du véhicule vers le point le plus proche" />
 		<text name="ad_color_editorHeightLine" 			        text="14 ligne entre le point au-dessus du véhicule et celui en surface" />
-
-		<text name="button_delete_all" 							text="Effacer tout" />
-		<text name="button_reset_selected" 					    text="Effacement sélectionné" />
 		
+		<text name="button_delete_all" 							text="Effacer tout" />
+		<text name="button_reset_selected" 					    text="Effacement sélectionné" />		
 		<text name="AD_task_pathfinding"						text="Planifier le parcours" />
 		<text name="AD_task_catch_up_with_combine"				text="Rattraper la moissonneuse-batteuse" />
 		<text name="AD_task_clearcrop"							text="Destruction de la culture" />
@@ -323,17 +321,15 @@
 		<text name = "gui_CPAD_full"							text = "full"/>		
 		<text name = "gui_ad_combineCPADHudMouse"				text = "Boutons CP/AD combinés"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: par défaut / simple: Courseplay en action secondaire souris > mouse on + off, AD: Affichage ATH > deux ATH actifs on + off / full: identique à simple mais affichage en une étape / Prérequis: désactiver le clic droit du Coursplay pour l'affichage ATH"/>
-
+  
 		<text name = "gui_ad_editorTip_1"								text = "Clic simple gauche:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Souris uniquement: sélection 1. point"/>
 		<text name = "gui_ad_editorTip_3"								text = "CTRLG = Créer un point"/>
 		<text name = "gui_ad_editorTip_4"								text = "ALTG = Supprimer un point"/>
 		<text name = "gui_ad_editorTip_5"								text = "MAJG = Basculer point en voie dégagement"/>
-
 		<text name = "gui_ad_editorTip_6"								text = "Clic au second point:"/>
 		<text name = "gui_ad_editorTip_7"								text = "Etablir connexion"/>
 		<text name = "gui_ad_editorTip_8"								text = "MAJD = Créer ligne marche AR"/>
-
 		<text name = "gui_ad_editorTip_9"								text = "1. point est une intersection, 2. point est voisin:"/>
 		<text name = "gui_ad_editorTip_10"								text = "CTRLG: Choix du segment (unique/double sens)"/>
 		<text name = "gui_ad_editorTip_11"								text = "MAJG = Etablir voie de dégagement"/>
