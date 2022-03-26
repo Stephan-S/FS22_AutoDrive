@@ -40,6 +40,10 @@ end
 
 function ADBrushCurve:moveWaypoints()
 	local x, y, z = self.cursor:getPosition()
+	if x == nil then 
+		return
+	end
+
 	local firstWayPoint = ADGraphManager:getWayPointById(self.sortedWaypoints[1])
 	local tx, tz = firstWayPoint.x, firstWayPoint.z
 

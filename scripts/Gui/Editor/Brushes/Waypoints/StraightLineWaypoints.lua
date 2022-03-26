@@ -86,7 +86,7 @@ function ADBrushStraightLine:getOldHoveredNodeId()
 	local x, y, z = self.cursor:getPosition()
 	-- try to get a waypoint in mouse range
 	for _, point in pairs(AdWaypointUtils.getWayPointsInRange(self.ad,0, math.huge)) do
-		if self:isAtPos(point, x, z) and not self.waypoints[point.id] then
+		if self:isAtPos(point, x, y, z) and not self.waypoints[point.id] then
 			return point.id
 		end
 	end
@@ -95,6 +95,9 @@ end
 
 function ADBrushStraightLine:moveWaypoints()
 	local x, y, z = self.cursor:getPosition()
+	if x == nil then 
+		return
+	end
 	local firstWayPoint = ADGraphManager:getWayPointById(self.sortedWaypoints[1])
 	local tx, tz = firstWayPoint.x, firstWayPoint.z
 
