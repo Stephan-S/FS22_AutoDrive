@@ -55,7 +55,9 @@ function AutoDrive:checkIsConnected(toCheck, other)
     if toCheck == nil or other == nil then
         return false
     end
-    
+    if toCheck == other then
+        return true
+    end
     for _, implement in pairs(AutoDrive.getAllImplements(toCheck, true)) do
         if implement == other then
             return true
@@ -321,34 +323,70 @@ end
 
 function AutoDrive.foldAllImplements(vehicle)
     local implements = AutoDrive.getAllImplements(vehicle, true)
+    local spec
+    AutoDrive.setAugerPipeOpen(implements, false) -- close all pipes first
+    for _, implement in pairs(implements) do
+        spec = implement.spec_baleLoader
+        if spec and spec.doStateChange then
+            if spec.isInWorkPosition and spec.emptyState == BaleLoader.EMPTY_NONE then
+                spec:doStateChange(BaleLoader.CHANGE_BUTTON_WORK_TRANSPORT)
+            end
+        end
+
+        spec = implement.spec_plow
+        if spec then
+            if spec.getIsPlowRotationAllowed and spec:getIsPlowRotationAllowed() and spec.rotationMax ~= false then
+                spec:setRotationMax(false)
+            end
+        end
+    end
     for _, implement in pairs(implements) do
         local spec = implement.spec_foldable
-        if implement.spec_foldable ~= nil then
-            local allowed = implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection
-            if allowed then
-                Foldable.actionControllerFoldEvent(implement, -1)
+        if spec ~= nil then
+            if implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection then
+                -- local ret = Foldable.actionControllerFoldEvent(implement, -1)
+                if spec.getIsFoldAllowed and spec:getIsFoldAllowed() and spec.setFoldState then
+                    spec:setFoldState(implement:getToggledFoldDirection())
+                end
             end
         end
     end
 end
 
 function AutoDrive.getAllImplementsFolded(vehicle)
+    local ret = true
     local implements = AutoDrive.getAllImplements(vehicle, true)
+    local spec
     for _, implement in pairs(implements) do
-        if not AutoDrive.isVehicleFolded(implement) then
-            return false
+        -- check if all is set to transport position
+        if implement.getIsAIReadyToDrive then
+            ret = ret and implement:getIsAIReadyToDrive()
+        end
+        spec = implement.spec_baleLoader
+        if spec then
+            -- bale loader
+            ret = ret and not spec:getIsAutomaticBaleUnloadingInProgress()
+            ret = ret and spec.emptyState == BaleLoader.EMPTY_NONE
         end
     end
 
-    return true
+    if ret then
+        for _, implement in pairs(implements) do
+            local spec = implement.spec_foldable
+            if spec ~= nil then
+                ret = ret and AutoDrive.isVehicleFolded(implement)
+            end
+        end
+    end
+    return ret
 end
 
 function AutoDrive.isVehicleFolded(vehicle)
-    local spec = vehicle.spec_foldable
+    local spec
+    spec = vehicle.spec_foldable
     if spec ~= nil and #spec.foldingParts > 0 then
         return spec.turnOnFoldDirection == -1 and spec.foldAnimTime >= 0.99 or spec.turnOnFoldDirection == 1 and spec.foldAnimTime <= 0.01
     end
-    
     return true
 end
 

@@ -77,9 +77,10 @@ end
 function ADCollSensor:collisionTestCallback(transformId)
     self.collisionHits = math.max(0, self.collisionHits - 1)
     local unloadDriver = ADHarvestManager:getAssignedUnloader(self.vehicle)
-    if g_currentMission.nodeToObject[transformId] ~= nil then
-        if g_currentMission.nodeToObject[transformId] ~= self and g_currentMission.nodeToObject[transformId] ~= self.vehicle and not AutoDrive:checkIsConnected(self.vehicle, g_currentMission.nodeToObject[transformId]) then
-            if unloadDriver == nil or (g_currentMission.nodeToObject[transformId] ~= unloadDriver and (not AutoDrive:checkIsConnected(unloadDriver, g_currentMission.nodeToObject[transformId]))) then
+    local collisionObject = g_currentMission.nodeToObject[transformId]
+    if collisionObject ~= nil then
+        if collisionObject ~= self and collisionObject ~= self.vehicle and not AutoDrive:checkIsConnected(self.vehicle:getRootVehicle(), collisionObject) then
+            if unloadDriver == nil or (collisionObject ~= unloadDriver and (not AutoDrive:checkIsConnected(unloadDriver:getRootVehicle(), collisionObject))) then
                 self.newHit = true
             end
         end

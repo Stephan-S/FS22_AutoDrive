@@ -131,7 +131,7 @@ function ADHarvestManager:update(dt)
                         if unloader.ad.modes[AutoDrive.MODE_UNLOAD]:getFollowingUnloader() == nil then
                             local trailers, _ = AutoDrive.getAllUnits(unloader)
 
-                            local fillLevel, _, _, fillFreeCapacity = AutoDrive.getAllNonFuelFillLevels(trailers)
+                            local fillLevel, _, _, fillFreeCapacity = AutoDrive.getAllFillLevels(trailers)
                             local maxCapacity = fillLevel + fillFreeCapacity
 
                             if fillLevel >= (maxCapacity * AutoDrive.getSetting("preCallLevel", harvester)) then
@@ -205,7 +205,7 @@ end
 
 function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
     local ret = false
-    local _, maxCapacity, _, leftCapacity = AutoDrive.getObjectNonFuelFillLevels(harvester)
+    local _, maxCapacity, _, leftCapacity = AutoDrive.getObjectFillLevels(harvester)
 
     local cpIsCalling = AutoDrive:getIsCPWaitingForUnload(harvester)
 
@@ -232,10 +232,10 @@ function ADHarvestManager.isHarvesterActive(harvester)
     if AutoDrive.getIsBufferCombine(harvester) then
         return true
     else
-        local fillLevel, fillCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(harvester)
-        local fillPercent = (fillLevel / fillCapacity)
+        local fillLevel, fillCapacity, _, fillFreeCapacity = AutoDrive.getObjectFillLevels(harvester)
+        local fillPercent = fillCapacity > 0 and (fillLevel / fillCapacity) or 0
         local reachedPreCallLevel = fillPercent >= AutoDrive.getSetting("preCallLevel", harvester)
-        local isAlmostFull = fillPercent >= ADHarvestManager.MAX_PREDRIVE_LEVEL
+        local isAlmostFull = fillPercent >= ADHarvestManager.MAX_PREDRIVE_LEVEL or fillFreeCapacity < 0.1
                
         -- Only chase the rear on low fill levels of the combine. This should prevent getting into unneccessarily tight spots for the final approach to the pipe.
         -- Also for small fields, there is often no purpose in chasing so far behind the combine as it will already start a turn soon

@@ -946,8 +946,10 @@ AutoDrive.settings.autoTrailerCover = {
 }
 
 AutoDrive.settings.ALUnload = {
-    values = {0, 1, 2, 3, 4},
-    texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
+    -- values = {0, 1, 2, 3, 4},
+    values = {0, 1, 2, 4},
+    -- texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
+    texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_right"},
     default = 0,
     current = 0,
     text = "gui_ad_ALUnload",
@@ -978,10 +980,32 @@ AutoDrive.settings.playSounds = {
     isUserSpecific = true
 }
 
+AutoDrive.settings.useWorkLightsLoading = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_worklightsWhenLoading",
+    tooltip = "gui_ad_worklightsWhenLoading_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
+AutoDrive.settings.useWorkLightsSilo = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_worklightsWhenSilo",
+    tooltip = "gui_ad_worklightsWhenSilo_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
 function AutoDrive.getSetting(settingName, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]
-        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
+        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
             if vehicle.ad.settings[settingName] ~= nil then
                 setting = vehicle.ad.settings[settingName]
             end
@@ -996,7 +1020,7 @@ end
 function AutoDrive.getSettingState(settingName, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]
-        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
+        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
             if vehicle.ad.settings[settingName] ~= nil then
                 setting = vehicle.ad.settings[settingName]
             end
@@ -1011,7 +1035,7 @@ end
 function AutoDrive.setSettingState(settingName, value, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]
-        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
+        if setting.isVehicleSpecific and vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.settings ~= nil then --try loading vehicle specific setting first, if available
             if vehicle.ad.settings[settingName] ~= nil then
                 setting = vehicle.ad.settings[settingName]
             end
@@ -1022,6 +1046,13 @@ function AutoDrive.setSettingState(settingName, value, vehicle)
 end
 
 function AutoDrive.copySettingsToVehicle(vehicle)
+    if vehicle == nil then
+        Logging.error("[AD] AutoDrive.copySettingsToVehicle vehicle == nil")
+        return
+    end
+    if vehicle.ad == nil then
+        vehicle.ad = {}
+    end
     if vehicle.ad.settings == nil then
         vehicle.ad.settings = {}
     end
@@ -1046,6 +1077,17 @@ function AutoDrive.copySettingsToVehicle(vehicle)
 end
 
 function AutoDrive.readVehicleSettingsFromXML(vehicle, xmlFile, key)
+    if vehicle == nil then
+        Logging.error("[AD] AutoDrive.readVehicleSettingsFromXML vehicle == nil")
+        return
+    end
+    if vehicle.ad == nil then
+        vehicle.ad = {}
+    end
+    if vehicle.ad.settings == nil then
+        vehicle.ad.settings = {}
+    end
+
     vehicle.ad.settings = {}
     for settingName, setting in pairs(AutoDrive.settings) do
         if setting.isVehicleSpecific then

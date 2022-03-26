@@ -70,6 +70,7 @@
 		<text name="AD_No_Shovel"								text="Lžíce není připojena" />
 		<text name="AD_No_Refuel_Station"						text="nemůžu najít benzinku pro:" />
 		<text name="AD_No_Repair_Station"						text="nemohl najít servisní dílnu pro :" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Jízda" />
 		<text name="AD_MODE_DELIVERTO"							text="Vykládka" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Nakládka a odvoz" />
@@ -163,6 +164,10 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Rozsah, ve kterém jsou detekovány aktivní triggery (např. osivo a hnojivo)." />
 		<text name="gui_ad_useBeaconLights"						text="Zapnout maják" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Použití majáku na silnici" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
 		<text name="gui_ad_activeUnloading"						text="Aktivní vykládání" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Vykládka kombajnu za jízdy." />
 		<text name="gui_ad_restrictToField"						text="Vyhledávat cestu jen na poli" />
@@ -216,14 +221,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Ano - AutoDrive podle potřeby otevírá a zavírá kryty přívěsu / Ne - kryty přívěsu nebude AutoDrive otevírat ani zavírat" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manévr otáčení dopředu" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Ano – Odvozce AutoDrive se snaží naplánovat cestu vpřed, aby se přizpůsobila 90° otočením sklízecí mlátičky. / Ne - Odvozce před otočením zacouvají" />
-		<text name="gui_ad_ALUnload"                            text="Snadné automatické nakládání: Poloha vykládání" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Vypnuto bez automatického vykládání, vykládání uprostřed na nakládací plošině, poloha vykládání vozidla vlevo / za / vpravo (Poloha závisí na nastavení vozidla, ne AD!)" />
+		<text name="gui_ad_ALUnload"                            text="Automatické nakládání: Poloha vykládání" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Vypnuto bez automatického vykládání, vykládání uprostřed na nakládací plošině, poloha vykládání vozidla vlevo / vpravo (Poloha závisí na nastavení vozidla, ne AD!)" />
 		<text name="gui_ad_AL_off"                              text="Vyložení Vypnuto" />
 		<text name="gui_ad_AL_center"                           text="Vyložet na střed" />
 		<text name="gui_ad_AL_left"                             text="Vyložit vlevo" />
 		<text name="gui_ad_AL_behind"                           text="Vyložit dozadu" />
 		<text name="gui_ad_AL_right"                            text="Vyložit vpravo" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: čekací čas po vyložení" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Automatické nakládání: čekací čas po vyložení" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Čekací doba po vyložení, než budete pokračovat v jízdě – užitečné pro vykládání na střed: 0 – žádné čekání, čekejte zvolenou dobu" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generování sítě" />
 		<text name="gui_ad_scanConfirmationText"                text="Měla by aplikace AutoDrive generovat síť tras z dopravních a pomocných dat na mapě?" />

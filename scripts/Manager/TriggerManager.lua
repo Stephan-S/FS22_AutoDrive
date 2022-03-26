@@ -118,6 +118,46 @@ function ADTriggerManager.loadAllTriggers()
                     table.insert(ADTriggerManager.repairTriggers, {node=item.spec_workshop.sellingPoint.sellTriggerNode, owner=item.ownerFarmId })
                 end
             end
+
+            if item.unloadTriggers then
+                for _, unloadTrigger in pairs(item.unloadTriggers) do
+                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
+                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
+                    end
+                end
+            end
+
+            if item.unloadingStation and item.unloadingStation.unloadTriggers then
+                for _, unloadTrigger in pairs(item.unloadingStation.unloadTriggers) do
+                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
+                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
+                    end
+                end
+            end
+
+            if item.spec_silo and item.spec_silo.unloadingStation and item.spec_silo.unloadingStation.unloadTriggers then
+                for _, unloadTrigger in pairs(item.spec_silo.unloadingStation.unloadTriggers) do
+                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
+                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
+                    end
+                end
+            end
+
+            if item.spec_husbandry and item.spec_husbandry.unloadingStation and item.spec_husbandry.unloadingStation.unloadTriggers then
+                for _, unloadTrigger in pairs(item.spec_husbandry.unloadingStation.unloadTriggers) do
+                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
+                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
+                    end
+                end
+            end
+
+            if item.spec_sellingStation and item.spec_sellingStation.sellingStation and item.spec_sellingStation.sellingStation.unloadTriggers then
+                for _, unloadTrigger in pairs(item.spec_sellingStation.sellingStation.unloadTriggers) do
+                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
+                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
+                    end
+                end
+            end
         end
     end
 
@@ -260,7 +300,7 @@ function ADTriggerManager.getRefuelTriggers(vehicle, ignoreFillLevel)
             if trigger.source ~= nil and trigger.source.getAllProvidedFillLevels ~= nil then
                 gcFillLevels, _ = trigger.source:getAllProvidedFillLevels(vehicle:getOwnerFarmId(), trigger.managerId)
             end
-            if table.getn(fillLevels) == 0 and table.getn(gcFillLevels) == 0 and trigger.source ~= nil and trigger.source.gcId ~= nil and trigger.source.fillLevels ~= nil then
+            if table.count(fillLevels) == 0 and table.count(gcFillLevels) == 0 and trigger.source ~= nil and trigger.source.gcId ~= nil and trigger.source.fillLevels ~= nil then
                 for index, fillLevel in pairs(trigger.source.fillLevels) do
                     if fillLevel ~= nil and fillLevel[1] ~= nil then
                         fillLevels[index] = fillLevel[1]
@@ -361,6 +401,12 @@ function ADTriggerManager.getTriggerPos(trigger)
     end
     if trigger.exactFillRootNode ~= nil and g_currentMission.nodeToObject[trigger.exactFillRootNode] ~= nil and entityExists(trigger.exactFillRootNode) then
         x, y, z = getWorldTranslation(trigger.exactFillRootNode)
+    end
+    if trigger.baleTrigger ~= nil then
+        local node = trigger.baleTrigger.triggerNode
+        if node ~= nil and g_currentMission.nodeToObject[node] ~= nil and entityExists(node) then
+            x, y, z = getWorldTranslation(node)
+        end
     end
     if trigger.interactionTriggerNode ~= nil and g_currentMission.nodeToObject[trigger.interactionTriggerNode] ~= nil and entityExists(trigger.interactionTriggerNode) then
         x, y, z = getWorldTranslation(trigger.interactionTriggerNode)
@@ -492,6 +538,9 @@ function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle, maxTrigger
                 x, z, xDir, zDir = sellingStation.unloadTriggers[1]:getAITargetPositionAndDirection()
             elseif sellingStation.unloadTriggers[1].exactFillRootNode ~= nil then
                 x, _, z = getWorldTranslation(sellingStation.unloadTriggers[1].exactFillRootNode)
+            elseif sellingStation.unloadTriggers[1].baleTrigger ~= nil then
+                local node = sellingStation.unloadTriggers[1].baleTrigger.triggerNode
+                x, _, z = getWorldTranslation(node)
             else
                 return -1
             end

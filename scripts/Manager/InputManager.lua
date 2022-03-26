@@ -372,7 +372,10 @@ function ADInputManager:input_nextTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local nextTarget = ADGraphManager:getNextTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(nextTarget)
-        AutoDrive:StopCP(vehicle)
+        if not (self.vehicle.spec_combine or AutoDrive.getIsBufferCombine(self.vehicle) or self.vehicle.ad.isCombine ~= nil) then
+            -- not stop / change CP for harvesters
+            AutoDrive:StopCP(vehicle)
+        end
     end
 end
 
@@ -381,7 +384,10 @@ function ADInputManager:input_previousTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local previousTarget = ADGraphManager:getPreviousTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(previousTarget)
-        AutoDrive:StopCP(vehicle)
+        if not (self.vehicle.spec_combine or AutoDrive.getIsBufferCombine(self.vehicle) or self.vehicle.ad.isCombine ~= nil) then
+            -- not stop / change CP for harvesters
+            AutoDrive:StopCP(vehicle)
+        end
     end
 end
 
@@ -442,7 +448,10 @@ function ADInputManager:input_swapTargets(vehicle)
     local currentFirstMarker = vehicle.ad.stateModule:getFirstMarkerId()
     vehicle.ad.stateModule:setFirstMarker(vehicle.ad.stateModule:getSecondMarkerId())
     vehicle.ad.stateModule:setSecondMarker(currentFirstMarker)
-    AutoDrive:StopCP(vehicle)
+    if not (self.vehicle.spec_combine or AutoDrive.getIsBufferCombine(self.vehicle) or self.vehicle.ad.isCombine ~= nil) then
+        -- not stop / change CP for harvesters
+        AutoDrive:StopCP(vehicle)
+    end
 end
 
 function ADInputManager:input_startCp(vehicle) -- enable / disable CP or AIVE

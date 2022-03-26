@@ -198,15 +198,14 @@ end
 
 function ADCollisionDetectionModule:checkReverseCollision()
     local trailers, trailerCount = AutoDrive.getAllUnits(self.vehicle)
-    local BackImplements, BackImplementsCount = AutoDrive.getBackImplementsOf(self.vehicle)
+    local mostBackImplement = AutoDrive.getMostBackImplementOf(self.vehicle)
+    
     local trailer = nil
-    if trailerCount > 0 and self.vehicle.trailer ~= nil and self.vehicle.trailer ~= self.vehicle then
+    if trailerCount > 1 and self.vehicle.trailer ~= nil and self.vehicle.trailer ~= self.vehicle then
         -- vehicle.trailer is the controlable reverse attachable
         trailer = trailers[trailerCount]
-    elseif BackImplementsCount > 0 then
-        -- as long as Giants implements are defined from reference forward and reverse it is not possible to place a rear collision sensor properly
-        -- trailer = BackImplements[BackImplementsCount]
-        -- trailer = BackImplements[1]
+    elseif mostBackImplement ~= nil then
+        trailer = mostBackImplement
     else
         return self.vehicle.ad.sensors.rearSensor:pollInfo()
 	end

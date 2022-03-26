@@ -36,7 +36,7 @@ function RefuelTask:update(dt)
         self.refuelTrigger.stoppedTimer:timer(not self.refuelTrigger.isLoading,300,dt)
     end
 
-    self.isRefueled = self.fillTypesCount > table.getn(AutoDrive.fuelFillTypes)
+    self.isRefueled = self.fillTypesCount > table.count(AutoDrive.fuelFillTypes)
 
     if self.state == RefuelTask.STATE_PATHPLANNING then
         if self.vehicle.ad.pathFinderModule:hasFinished() then

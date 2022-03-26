@@ -68,6 +68,7 @@ function ADStateModule:reset()
     self.automaticUnloadTarget = false
     self.automaticPickupTarget = false
     self.harversterPairingOk = false
+    self.currentHelperIndex = 0
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
@@ -146,15 +147,15 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
         self.bunkerUnloadType = bunkerUnloadType
     end
 
-    local automaticUnloadTarget = xmlFile:getValue(key .. "#automaticUnloadTarget")
-    if automaticUnloadTarget ~= nil then
-        self.automaticUnloadTarget = automaticUnloadTarget
-    end
+    -- local automaticUnloadTarget = xmlFile:getValue(key .. "#automaticUnloadTarget")
+    -- if automaticUnloadTarget ~= nil then
+        -- self.automaticUnloadTarget = automaticUnloadTarget
+    -- end
 
-    local automaticPickupTarget = xmlFile:getValue(key .. "#automaticPickupTarget")
-    if automaticPickupTarget ~= nil then
-        self.automaticPickupTarget = automaticPickupTarget
-    end
+    -- local automaticPickupTarget = xmlFile:getValue(key .. "#automaticPickupTarget")
+    -- if automaticPickupTarget ~= nil then
+        -- self.automaticPickupTarget = automaticPickupTarget
+    -- end
 end
 
 function ADStateModule:saveToXMLFile(xmlFile, key)    
@@ -173,8 +174,8 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
     xmlFile:setValue(key .. "#lastActive", self.active)
     xmlFile:setValue(key .. "#AIVElastActive", false)
     xmlFile:setValue(key .. "#bunkerUnloadType", self.bunkerUnloadType)
-    xmlFile:setValue(key .. "#automaticUnloadTarget", self.automaticUnloadTarget)    
-    xmlFile:setValue(key .. "#automaticPickupTarget", self.automaticPickupTarget)    
+    -- xmlFile:setValue(key .. "#automaticUnloadTarget", self.automaticUnloadTarget)    
+    -- xmlFile:setValue(key .. "#automaticPickupTarget", self.automaticPickupTarget)    
 end
 
 function ADStateModule:writeStream(streamId)
@@ -203,6 +204,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)    
 end
 
 function ADStateModule:readStream(streamId)
@@ -231,6 +233,7 @@ function ADStateModule:readStream(streamId)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)    
+    self.currentHelperIndex = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -261,6 +264,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)    
 end
 
 function ADStateModule:readUpdateStream(streamId)
@@ -289,6 +293,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)
+    self.currentHelperIndex = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -525,6 +530,8 @@ function ADStateModule:nextMode()
     else
         self.mode = AutoDrive.MODE_DRIVETO
     end
+    self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
+    self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change
     AutoDrive.Hud.lastUIScale = 0
     self:raiseDirtyFlag()
 end
@@ -535,6 +542,8 @@ function ADStateModule:previousMode()
     else
         self.mode = ADStateModule.HIGHEST_MODE
     end
+    self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
+    self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change
     AutoDrive.Hud.lastUIScale = 0
     self:raiseDirtyFlag()
 end
@@ -542,6 +551,8 @@ end
 function ADStateModule:setMode(newMode)
     if newMode >= AutoDrive.MODE_DRIVETO and newMode <= ADStateModule.HIGHEST_MODE and newMode ~= self.mode then
         self.mode = newMode
+        self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
+        self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change
         AutoDrive.Hud.lastUIScale = 0
         self:raiseDirtyFlag()
     end
@@ -1026,4 +1037,15 @@ end
 
 function ADStateModule:getBunkerUnloadTypeIsTrigger()
     return self.bunkerUnloadType == ADStateModule.BUNKER_UNLOAD_TRIGGER
+end
+
+function ADStateModule:getCurrentHelperIndex()
+    return self.currentHelperIndex
+end
+
+function ADStateModule:setCurrentHelperIndex(currentHelperIndex)
+    if self.currentHelperIndex ~= currentHelperIndex then
+        self.currentHelperIndex = currentHelperIndex
+        self:raiseDirtyFlag()
+    end
 end

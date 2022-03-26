@@ -994,11 +994,17 @@ function AutoDrive:onFillTypeSelection(fillType)
                 end
             end
             local currentFillableObject = self.currentFillableObject
+            local fillUnitIndex = self.currentFillableFillUnitIndex
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection currentFillableObject %s", tostring(currentFillableObject))
-            if currentFillableObject ~= nil then
-                local fillUnitIndex = self.currentFillableFillUnitIndex
+            if currentFillableObject ~= nil and fillUnitIndex ~= nil then
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection setIsLoading")
                 self:setIsLoading(true, currentFillableObject, fillUnitIndex, fillType)
+            end
+            if currentFillableObject ~= nil and fillUnitIndex == nil and AutoDrive.adErrorFillTypeSelection == nil then
+                -- log an invalid load trigger
+                AutoDrive.adErrorFillTypeSelection = true
+                local x, y, z = getWorldTranslation(currentFillableObject)
+                Logging.info("[AD] Info: invalid load trigger (fillUnitIndex == nil) found at position: %s , %s", tostring(x), tostring(z))
             end
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.isLoading %s", tostring(self.isLoading))
         end

@@ -70,6 +70,7 @@
         <text name="AD_No_Shovel"               		text="Impossibile trovare una pala collegata" />
         <text name="AD_No_Refuel_Station"           		text="Impossibile trovare la stazione di rifornimento per: " />
         <text name="AD_No_Repair_Station"           		text="Impossibile trovare la stazione di riparazione per: " />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
         <text name="AD_MODE_DRIVETO"                		text="Guida" />
         <text name="AD_MODE_DELIVERTO"              		text="Consegna" />
         <text name="AD_MODE_PICKUPANDDELIVER"           	text="Carica e consegna" />
@@ -163,6 +164,10 @@
         <text name="gui_ad_maxTriggerDistance_tooltip"      	text="Distanza dall'obiettivo in cui i trigger vengono rilevati e attivati." />
         <text name="gui_ad_useBeaconLights"             	text="Accendi Fari" />
         <text name="gui_ad_useBeaconLights_tooltip"         	text="Usa i fari sulla strada." />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
         <text name="gui_ad_activeUnloading"             	text="Scarico attivo" />
         <text name="gui_ad_activeUnloading_tooltip"         	text="Scaricare le mietitrici durante la guida." />
         <text name="gui_ad_restrictToField"             	text="Pianificazione del percorso limitata " />
@@ -216,14 +221,14 @@
         <text name="gui_ad_autoTrailerCover_tooltip"            text="Sì - AutoDrive apre e chiude le coperture del rimorchio secondo necessità / No - le coperture del rimorchio non verranno aperte o chiuse da AutoDrive" />
         <text name="gui_ad_useForwardTurningManoeuvre"          text="Manovra di svolta in avanti" />
         <text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Sì - gli scaricatori AutoDrive cercano di pianificare un percorso in avanti per adattarsi alla svolta a 90° della mietitrebbia. / No - Gli scaricatori si invertiranno prima del turno" />
-        <text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Posizione di scarico" />
-        <text name="gui_ad_ALUnload_tooltip"                    text="Scarico automatico spento, scarico centrale sulla piattaforma di carico, posizione di scarico del veicolo sinistra/dietro/destra (la posizione dipende dalla configurazione del veicolo, non dall'AD!)" />
+        <text name="gui_ad_ALUnload"                            text="Autoload: Posizione di scarico" />
+        <text name="gui_ad_ALUnload_tooltip"                    text="Scarico automatico spento, scarico centrale sulla piattaforma di carico, posizione di scarico del veicolo sinistra/destra (la posizione dipende dalla configurazione del veicolo, non dall'AD!)" />
         <text name="gui_ad_AL_off"                              text="Scaricamento Spento" />
         <text name="gui_ad_AL_center"                           text="Scarica al centro" />
         <text name="gui_ad_AL_left"                             text="Scarica a sinistra" />
         <text name="gui_ad_AL_behind"                           text="Scarica di dietro" />
         <text name="gui_ad_AL_right"                            text="Scarica a destra" />
-        <text name="gui_ad_ALUnloadWaitTime"                    text="EAL: tempo di attesa dopo lo scarico" />
+        <text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: tempo di attesa dopo lo scarico" />
         <text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Tempo di attesa dopo lo scarico, prima di continuare a guidare - utile per il centro di scarico: 0-no aspetta, aspetta il tempo selezionato" />
         <text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generazione di rete" />
         <text name="gui_ad_scanConfirmationText"                text="AutoDrive deve generare una rete di percorsi a partire dai dati del traffico e degli aiutanti sulla mappa?" />

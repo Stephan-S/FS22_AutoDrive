@@ -503,9 +503,9 @@ function ADGraphManager:removeMapMarker(markerId, sendEvent)
 						end
 					end
 				end
+                -- remove deleted marker from vehicle destinations
+                ADGraphManager:checkResetVehicleDestinations(markerId)
 			end
-            -- remove deleted marker from vehicle destinations
-            ADGraphManager:checkResetVehicleDestinations(markerId)
 
 			-- Calling external interop listeners
 			AutoDrive:notifyDestinationListeners()
@@ -1037,6 +1037,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
 		local count1 = 1
 		local count2 = 1
 		local count3 = 1
+		local count4 = 1
 		local mapMarkerCounter = #self:getMapMarkers() + 1
 		for i, wp in pairs(network) do
             -- mark wayPoint without outgoing connection
@@ -1086,7 +1087,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
                 end
             end
 
-            -- mark wayPoint without outgoing connection
+            -- mark wayPoint without incoming connection
             if wp.out ~= nil then
                 for _, wp_out in pairs(wp.out) do
                     local missingIncoming = self:checkForMissingIncoming(wp, self:getWayPointById(wp_out))
@@ -1103,6 +1104,28 @@ function ADGraphManager:createDebugMarkers(updateMap)
                         self:setMapMarker(mapMarker)
 
                         count3 = count3 + 1
+                        mapMarkerCounter = mapMarkerCounter + 1
+                    end
+                end
+            end
+
+            -- mark dual wayPoint with death end
+            if wp.out ~= nil then
+                for _, wp_out in pairs(wp.out) do
+                    local missingIncoming = self:checkForMissingDualConnection(wp)
+                    if missingIncoming then
+                        local debugMapMarkerName = "4_" .. tostring(count4)
+
+                        -- create the mapMarker
+                        local mapMarker = {}
+                        mapMarker.name = debugMapMarkerName
+                        mapMarker.group = ADGraphManager.debugGroupName
+                        mapMarker.markerIndex = mapMarkerCounter
+                        mapMarker.id = wp.id
+                        mapMarker.isADDebug = true
+                        self:setMapMarker(mapMarker)
+
+                        count4 = count4 + 1
                         mapMarkerCounter = mapMarkerCounter + 1
                     end
                 end
@@ -1155,6 +1178,31 @@ function ADGraphManager:checkForMissingIncoming(wp_current)
         if not reverseFound then
             -- the waypoint has no incoming connection
             ret = true
+        end
+    end
+    return ret
+end
+
+function ADGraphManager:checkForMissingDualConnection(wp_current)
+    local ret = false
+
+    if wp_current == nil then
+        return ret
+    end
+
+    if wp_current.incoming ~= nil and wp_current.out ~= nil and #wp_current.incoming == 1 and #wp_current.out == 1 then
+        if wp_current.incoming[1] ~= nil and wp_current.out[1] ~= nil and wp_current.incoming[1] == wp_current.out[1] then
+            -- dual waypoint with reverse in connection
+            ret = true
+
+            -- search for a possible reverse connection
+            for _, wp in pairs(self.wayPoints) do
+                if self:isReverseRoad(wp, wp_current) then
+                    -- reverse connection to wayPoint is OK - no death end
+                    ret = false
+                    break
+                end
+            end
         end
     end
     return ret

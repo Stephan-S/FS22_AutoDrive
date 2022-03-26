@@ -70,6 +70,7 @@
         <text name="AD_No_Shovel"                                                                           text="bağlı bir kürek bulamadım"  />
         <text name="AD_No_Refuel_Station"						                                            text="could not find refuel station for:" />
 		<text name="AD_No_Repair_Station"						                                            text="could not find repair station for:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
         <text name="AD_MODE_DRIVETO"                                                                        text="Sürüş"  />
         <text name="AD_MODE_DELIVERTO"                                                                      text="Teslim etmek"  />
         <text name="AD_MODE_PICKUPANDDELIVER"                                                               text="Toplama ve Teslim Etme"  />
@@ -161,6 +162,10 @@
         <text name="gui_ad_maxTriggerDistance_tooltip"                                                      text="Tetikleyicilerin algılandığı ve etkinleştirildiği hedefe olan mesafe."  />
         <text name="gui_ad_useBeaconLights"                                                                 text="Uyarı ışıkları"  />
         <text name="gui_ad_useBeaconLights_tooltip"                                                         text="Evet - Alanların dışında otomatik olarak uyarı ışıkları kullan / Hayır - uyarı ışıkları otomatik olarak açılmayacak veya kapanmayacak"  />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
         <text name="gui_ad_restrictToField"                                                                 text="Yol bulucuyu alanla sınırla"  />
         <text name="gui_ad_restrictToField_tooltip"                                                         text="Boşaltıcı sahaya zaten park edilmişse, yol bulucuyu alan sınırlarıyla sınırlayacaktır."  />
         <text name="gui_ad_showTooltips"                                                                    text="Araç ipuçlarını göster"  />
@@ -214,14 +219,14 @@
         <text name="gui_ad_autoTrailerCover_tooltip"                                                        text="Evet - AutoDrive gerektiğinde römork kapaklarını açıp kapat / Hayır - römork kapakları AutoDrive tarafından açılmayacak veya kapanmayacak"  />
         <text name="gui_ad_useForwardTurningManoeuvre"                                                      text="Forwards turning manoeuvre" />
         <text name="gui_ad_useForwardTurningManoeuvre_tooltip"                                              text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
+		<text name="gui_ad_ALUnload"                            text="AutoLoad: Unload Position" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
 		<text name="gui_ad_AL_off"                              text="Unload Off" />
 		<text name="gui_ad_AL_center"                           text="Unload center" />
 		<text name="gui_ad_AL_left"                             text="Unload left" />
 		<text name="gui_ad_AL_behind"                           text="Unload behind" />
 		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="AutoLoad: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="Should AutoDrive generate a route network from the traffic and helper data on the map?" />

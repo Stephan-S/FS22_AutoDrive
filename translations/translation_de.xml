@@ -72,6 +72,7 @@
 		<text name="AD_No_Shovel"								text="konnte keine Schaufel finden" />
 		<text name="AD_No_Refuel_Station"						text="konnte keine Tankstelle finden für:" />
 		<text name="AD_No_Repair_Station"						text="konnte keine Werkstatt finden für:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Falscher AD Modus für Arbeit mit CP" />
 		<text name="AD_MODE_DRIVETO"							text="Fahren" />
 		<text name="AD_MODE_DELIVERTO"							text="Abladen" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Abholen und Abliefern" />
@@ -163,6 +164,10 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Bis zu dieser Entfernung zum Zielpunkt wird beladen/entladen bei erkanntem Trigger." />
 		<text name="gui_ad_useBeaconLights"						text="Rundumleuchten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Ja - Außerhalb des Felds automatisch eingeschaltet / Nein - Rundumleuchten werden nicht automatisch ein- oder ausgeschaltet" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Arbeitslicht beim Be- und Entladen" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Ja - Beim Be- und Entladen werden Arbeitsscheinwerfer aktiviert." />
+		<text name="gui_ad_worklightsWhenSilo"					text="Arbeitslicht im Silobunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Ja - Beim Befahren eines Silobunkers werden Arbeitsscheinwerfer aktiviert." />
 		<text name="gui_ad_activeUnloading"						text="Aktives Abfahren" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Ernter während der Fahrt abfahren" />
 		<text name="gui_ad_restrictToField"						text="Pfadplanung begrenzt" />
@@ -216,14 +221,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Ja - AutoDrive öffnet und schließt Abdeckungen von Anhängern wenn notwendig / Nein - die Abdeckungen werden von AutoDrive nicht geöffnet oder geschlossen" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Vorwärts Wendemanöver" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Ja - Abfahrer planen eine Vorwärtswende wenn Drescher wendet. / Nein - Abfahrer setzen kurz zurück." />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Abladeposition" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="aus-kein Abladen, mittig-auf Ladefläche abladen, links-, hinten-, rechts-auf Standard-Entladeposition (Positionen sind im Fahrzeug festgelegt, nicht in AD!)" />
+		<text name="gui_ad_ALUnload"                            text="Autoload: Abladeposition" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="aus-kein Abladen, mittig-auf Ladefläche abladen, links-, rechts-auf Standard-Entladeposition (Positionen sind im Fahrzeug festgelegt, nicht in AD!)" />
 		<text name="gui_ad_AL_off"                              text="abladen aus" />
 		<text name="gui_ad_AL_center"                           text="abladen mittig" />
 		<text name="gui_ad_AL_left"                             text="abladen links" />
 		<text name="gui_ad_AL_behind"                           text="abladen hinten" />
 		<text name="gui_ad_AL_right"                            text="abladen rechts" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: Wartezeit für Abladen" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: Wartezeit für Abladen" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Nach Abladen warten bevor weitergefahren wird - meist sinnvoll bei Abladen mittig: 0-kein Warten, sonst Wartezeit wie ausgewählt" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Streckengenerierung" />
 		<text name="gui_ad_scanConfirmationText"                text="Soll AutoDrive aus den Verkehrs- und Helferdaten der Karte ein Wegenetz erzeugen?" />

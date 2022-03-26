@@ -91,14 +91,14 @@ function EmptyHarvesterTask:update(dt)
             end
         end
 
-        local combineFillLevel, _, _ = AutoDrive.getObjectNonFuelFillLevels(self.combine)
+        local combineFillLevel, _, _ = AutoDrive.getObjectFillLevels(self.combine)
 
-        if combineFillLevel > 1 and self.combine.getDischargeState ~= nil and self.combine:getDischargeState() ~= Dischargeable.DISCHARGE_STATE_OFF then
+        if combineFillLevel > 0.1 and self.combine.getDischargeState ~= nil and self.combine:getDischargeState() ~= Dischargeable.DISCHARGE_STATE_OFF then
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
         else
             --Is the current trailer filled or is the combine empty?
-            local _, _, filledToUnload = AutoDrive.getAllNonFuelFillLevels(self.trailers)
+            local _, _, filledToUnload = AutoDrive.getAllFillLevels(self.trailers)
             local distanceToCombine = AutoDrive.getDistanceBetween(self.vehicle, self.combine)
 
             if combineFillLevel <= 0.1 or filledToUnload then
@@ -116,8 +116,10 @@ function EmptyHarvesterTask:update(dt)
             end
         end
     elseif self.state == EmptyHarvesterTask.STATE_UNLOADING_FINISHED then
-        if AutoDrive:getIsCPCombineInPocket(self.combine) then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "EmptyHarvesterTask:update - STATE_UNLOADING_FINISHED getIsCPCombineInPocket %s", tostring(AutoDrive:getIsCPCombineInPocket(self.combine)))
+        if AutoDrive:getIsCPCombineInPocket(self.combine) or AutoDrive.combineIsTurning(self.combine) then
             -- reverse if CP unload in a pocket or pullback position
+            -- reverse if combine is turning
             self.state = EmptyHarvesterTask.STATE_REVERSING
         else
             self.state = EmptyHarvesterTask.STATE_WAITING

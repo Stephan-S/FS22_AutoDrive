@@ -442,6 +442,17 @@ function AutoDriveHud:toggleHud(vehicle)
 	AutoDrive.showingHud = self.showHud
 end
 
+function AutoDriveHud:isMouseOverHud( x, y)
+	--- Checks if a hud element was hit.
+    if AutoDrive.Hud and AutoDrive.Hud.hudElements then
+        for i= 1,#AutoDrive.Hud.hudElements do 
+            if AutoDrive.Hud.hudElements[i]:hit(x, y, 0) then 
+                return true
+            end
+        end
+    end
+end
+
 function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
 	
@@ -480,10 +491,15 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 			mouseEventHandled = true
 		end
 
+        if g_gui.currentGui ~= nil then
+            -- do not allow waypoint manipulation if any GUI is open
+            AutoDrive.resetMouseSelections(vehicle)
+        end
+
 		vehicle.ad.hoveredNodeId = nil
         vehicle.ad.sectionWayPoints = {}
 		local adjustedPaths = false
-		if (not mouseEventHandled) and AutoDrive.isInExtendedEditorMode() then
+		if (not mouseEventHandled) and AutoDrive.isInExtendedEditorMode() and g_gui.currentGui == nil then
             if
                 not AutoDrive.leftLSHIFTmodifierKeyPressed
                 and not AutoDrive.leftCTRLmodifierKeyPressed

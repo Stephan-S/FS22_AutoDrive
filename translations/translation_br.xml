@@ -70,6 +70,7 @@
 		<text name="AD_No_Shovel"								text="não foi possível encontrar uma pá conectada" />
 		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
 		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Dirigir" />
 		<text name="AD_MODE_DELIVERTO"							text="Transportar" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Carregar e Descarregar" />
@@ -163,6 +164,10 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distância do alvo em que os gatilhos são detectados e ativados." />
 		<text name="gui_ad_useBeaconLights"						text="Luzes de alerta" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Use luzes de alerta na estrada." />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
 		<text name="gui_ad_activeUnloading"						text="Active unloading" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Limitar pathfinder ao campo" />
@@ -216,14 +221,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Yes - AutoDrive open and close trailer covers as needed / No - trailer covers will not be opened or closed by AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning manoeuvre" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
+		<text name="gui_ad_ALUnload"                            text="AutoLoad: Unload Position" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
 		<text name="gui_ad_AL_off"                              text="Unload Off" />
 		<text name="gui_ad_AL_center"                           text="Unload center" />
 		<text name="gui_ad_AL_left"                             text="Unload left" />
 		<text name="gui_ad_AL_behind"                           text="Unload behind" />
 		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="AutoLoad: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="A AutoDrive deve gerar uma rede de rotas a partir do tráfego e dos dados do ajudante no mapa?" />

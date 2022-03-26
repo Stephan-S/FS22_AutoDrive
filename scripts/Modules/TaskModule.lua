@@ -63,6 +63,9 @@ function ADTaskModule:abortCurrentTask(abortMessage)
     if abortMessage ~= nil then
         AutoDrive.printMessage(self.vehicle, abortMessage)
     end
+    if self.activeTask ~= nil then
+        self.activeTask:abort()
+    end
     self.activeTask = nil
     self:onTaskChange()
 end

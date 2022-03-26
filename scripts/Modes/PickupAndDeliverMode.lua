@@ -171,7 +171,7 @@ function PickupAndDeliverMode:getNextTask(forced)
     if self.state == PickupAndDeliverMode.STATE_DELIVER_TO_NEXT_TARGET then
         -- STATE_DELIVER_TO_NEXT_TARGET - unload at multiple targets
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask STATE_DELIVER_TO_NEXT_TARGET")
-        if fillLevel > 1 and ((AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders")) then
+        if fillLevel > 0.1 and ((AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders")) then
             -- if fill material left and multiple unload active - go to unload
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask set STATE_PICKUP")
             self.state = PickupAndDeliverMode.STATE_PICKUP
