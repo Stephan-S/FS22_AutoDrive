@@ -28,7 +28,9 @@ function AutoDrive.registerEventListeners(vehicleType)
             -- CP events
             "onCpFinished",
             "onCpEmpty",
-            "onCpFull"
+            "onCpFull",
+            "onCpFuelEmpty",
+            "onCpBroken",
         }
     ) do
         SpecializationUtil.registerEventListener(vehicleType, n, AutoDrive)
@@ -64,7 +66,8 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "onDrawPreviews", AutoDrive.onDrawPreviews)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
     SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
-    SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)    
+    SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)  
+    SpecializationUtil.registerFunction(vehicleType, "getCanAdTakeControl", AutoDrive.getCanAdTakeControl)     
 end
 
 function AutoDrive.registerEvents(vehicleType)
@@ -792,6 +795,21 @@ end
 function AutoDrive:onCpFull()
     AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
     AutoDrive:handleCPFieldWorker(self)
+end
+
+function AutoDrive:onCpFuelEmpty()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty not implemented.")
+end
+
+
+function AutoDrive:onCpBroken()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken not implemented.")
+end
+
+function AutoDrive:getCanAdTakeControl()
+    if self.isServer then 
+        return self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE() and not self.ad.stateModule:isActive()
+    end
 end
 
 function AutoDrive:onDelete()
