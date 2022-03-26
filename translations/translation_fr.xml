@@ -72,7 +72,7 @@
 		<text name="AD_No_Shovel"								text="Ne trouve pas de godet" />
 		<text name="AD_No_Refuel_Station"						text="n'a pas pu trouver une station essence pour:" />
 		<text name="AD_No_Repair_Station"						text="n'a pas pu trouver un atelier pour:" />
-		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Ce mode AD ne fonctionne en conbinaison avec le CP" />
 		<text name="AD_MODE_DRIVETO"							text="Conduite" />
 		<text name="AD_MODE_DELIVERTO"							text="Livraison" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Chargement et livraison" />
@@ -164,10 +164,10 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance de détection du déclencheur au point de destination pour le chargement/déchargement." />
 		<text name="gui_ad_useBeaconLights"						text="Gyrophares" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Oui - ils seront allumés automatiquement en dehors des champs / Non - pas d'allumage ou extinction automatique" />
-		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
-		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
-		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
-		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Feux de travail pendant le chargement/déchargement" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Oui - Allume les feux de travail pendant les opérations de chargement et déchargement sur un déclencheur" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Feux de travail lors d'opérations dans un silo bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Oui - Allume les feux de travail dans un silo bunker" />
 		<text name="gui_ad_activeUnloading"						text="Déchargement en mouvement" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Déchargement des moissoneuses en roulant." />
 		<text name="gui_ad_restrictToField"						text="Recherche de parcours limité au champ" />
