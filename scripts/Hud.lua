@@ -840,9 +840,17 @@ function AutoDriveHud:moveHud(posX, posY)
 	if self.isMoving then
 		local diffX = posX - self.lastMousePosX
 		local diffY = posY - self.lastMousePosY
-		self:createHudAt(self.posX + diffX, self.posY + diffY)
+		local lastPosX = self.posX
+		local lastPosY = self.posY
+		self.posX = math.clamp(0, self.posX + diffX, 1 - self.width)
+		self.posY = math.clamp(2 * self.gapHeight, self.posY + diffY, 1 - (self.height + 3 * self.gapHeight + self.headerHeight))
+		AutoDrive.HudX = self.posX
+		AutoDrive.HudY = self.posY
 		self.lastMousePosX = posX
 		self.lastMousePosY = posY
+		for _, element in pairs(self.hudElements) do 
+			element:moveTo(self.posX - lastPosX, self.posY - lastPosY)
+		end		
 	end
 end
 
@@ -947,6 +955,15 @@ function AutoDrive:ingameMapElementMouseEvent(superFunc, posX, posY, isDown, isU
 
 	return eventUsed
 end
+
+function AutoDrive:ingameMenuAIFrameMouseEvent(superFunc, posX, posY, isDown, isUp, button, eventUsed)
+	if not AutoDrive.Hud:isMouseOverHud(posX, posY) and not AutoDrive.Hud.isMoving then 
+        eventUsed = superFunc(self, posX, posY, isDown, isUp, button, eventUsed)
+		return eventUsed
+    end
+	return true
+end
+
 
 function AutoDrive:MapHotspot_getIsVisible(superFunc)
 	local superReturn = true

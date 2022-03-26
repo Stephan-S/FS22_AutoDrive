@@ -27,6 +27,11 @@ end
 function ADGenericHudElement:update(dt)
 end
 
+function ADGenericHudElement:moveTo(dx, dy)
+    local x, y = self.position.x, self.position.y
+    self.position = {x = x + dx, y = y + dy}
+end
+
 function ADInheritsFrom(baseClass)
     local new_class = {}
     local class_mt = {__index = new_class}

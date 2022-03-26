@@ -210,3 +210,10 @@ function ADHudIcon:updateIcon(vehicle)
         self.ov:setImage(self.image)
     end
 end
+
+function ADHudIcon:moveTo(dx, dy)
+    local x, y = self.position.x, self.position.y
+    self.ov:setPosition(x + dx, y + dy)
+    self.position.x = x + dx
+    self.position.y = y + dy
+end
