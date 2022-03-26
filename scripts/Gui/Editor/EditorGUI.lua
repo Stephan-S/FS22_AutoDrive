@@ -216,7 +216,7 @@ function ADEditorGUI:setBrush(superFunc, brush, ...)
 	local lastBrush = self.brush
 	superFunc(self, brush, ...)
 
-	if self.brush:isa(ADBrush) and lastBrush:isa(ADBrush) then 
+	if self.brush and lastBrush and self.brush:isa(ADBrush) and lastBrush:isa(ADBrush) then 
 		if self.brush.copyState then 
 			self.brush:copyState(lastBrush)
 		end

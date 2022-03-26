@@ -120,7 +120,8 @@ function ADBrushStraightLine:moveWaypoints()
 end
 
 function ADBrushStraightLine:moveSingleWaypoint(i, x, y, z)
-	local _, _, dy, _ = RaycastUtil.raycastClosest(x, y + 50, z, 0, -1, 0, GuiTopDownCursor.RAYCAST_DISTANCE, self.cursor.rayCollisionMask) 
+	local ny = math.abs(ADGraphManager:getWayPointById(self.sortedWaypoints[1]).y - ADGraphManager:getWayPointById(self.sortedWaypoints[#self.sortedWaypoints]).y)
+	local _, _, dy, _ = RaycastUtil.raycastClosest(x, y + ny + 4, z, 0, -1, 0, GuiTopDownCursor.RAYCAST_DISTANCE, self.cursor.rayCollisionMask) 
 	local nodeId = self.sortedWaypoints[i+1]
 	if nodeId == nil then 
 		nodeId = self:createWaypoint(i, x, y, z)

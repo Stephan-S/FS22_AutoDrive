@@ -7,17 +7,17 @@ ADBrush = {
 	name = "base",
 	radius = 0.5
 }
-local ADBrush_mt = Class(ADBrush,ConstructionBrush)
-function ADBrush.new(customMt,cursor)
+local ADBrush_mt = Class(ADBrush, ConstructionBrush)
+function ADBrush.new(customMt, cursor)
 	local self =  ConstructionBrush.new(customMt or ADBrush_mt, cursor)
 	self.cursor:setShapeSize(self.radius)
 	self.cursor:setShape(GuiTopDownCursor.SHAPES.CIRCLE)
 	return self
 end
 
-function ADBrush:isAtPos(position, x, z)
+function ADBrush:isAtPos(position, x, y, z)
 	if MathUtil.getPointPointDistance(position.x, position.z, x, z) < self.radius then 
-		return true
+		return math.abs(position.y - y) < 3
 	end
 end
 
@@ -25,7 +25,7 @@ function ADBrush:getHoveredNodeId()
 	local x, y, z = self.cursor:getPosition()
 	-- try to get a waypoint in mouse range
 	for _, point in pairs(AdWaypointUtils.getWayPointsInRange(self.ad,0, math.huge)) do
-		if self:isAtPos(point, x, z) then
+		if self:isAtPos(point, x, y, z) then
 			return point.id
 		end
 	end
