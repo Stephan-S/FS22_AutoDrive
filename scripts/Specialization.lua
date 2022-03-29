@@ -1089,9 +1089,6 @@ function AutoDrive:startAutoDrive()
                     Logging.error("[AD] AutoDrive:startAutoDrive ERROR: unable to get helper for vehicle %s", tostring(name))
                 end
 
-                if self.spec_aiJobVehicle ~= nil then
-                    self.spec_aiJobVehicle.currentHelper = currentHelper
-                end
                 if currentHelper and currentHelper.index then
                     self.ad.currentHelper = currentHelper
                     self.ad.stateModule:setCurrentHelperIndex(currentHelper.index)
@@ -1254,9 +1251,6 @@ function AutoDrive.checkAddHelper(vehicle, helperIndex, numHelpersToAdd)
                 if helper ~= nil then
                     g_helperManager:useHelper(helper)
                     vehicle.ad.stateModule:setCurrentHelperIndex(helper.index)
-                    if vehicle.spec_aiJobVehicle ~= nil and vehicle.spec_aiJobVehicle.currentHelper == nil then
-                        vehicle.spec_aiJobVehicle.currentHelper = helper
-                    end
                 end
             end
         else
@@ -1279,10 +1273,6 @@ function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
 
         if self.ad.currentHelper ~= nil then
             g_helperManager:releaseHelper(self.ad.currentHelper)
-        end
-        if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper ~= nil and self.spec_aiJobVehicle.currentHelper == self.ad.currentHelper then
-            -- we assign a helper for spec_aiJobVehicle, but do not remove it!
-            -- self.spec_aiJobVehicle.currentHelper = nil
         end
         self.ad.currentHelper = nil
         self.ad.stateModule:setCurrentHelperIndex(0)
