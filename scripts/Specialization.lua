@@ -1281,8 +1281,8 @@ function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
             g_helperManager:releaseHelper(self.ad.currentHelper)
         end
         if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper ~= nil and self.spec_aiJobVehicle.currentHelper == self.ad.currentHelper then
-            -- we assign a helper for spec_aiJobVehicle, but do not remove it!
-            -- self.spec_aiJobVehicle.currentHelper = nil
+            -- we assign a helper for spec_aiJobVehicle and we have to remove it, wehen Autodrive stops.
+            self.spec_aiJobVehicle.currentHelper = nil
         end
         self.ad.currentHelper = nil
         self.ad.stateModule:setCurrentHelperIndex(0)
