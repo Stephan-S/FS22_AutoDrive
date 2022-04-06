@@ -433,7 +433,7 @@ function AutoDrive:hasAL(object)
     if object == nil then
         return false
     end
-    return object.spec_aPalletAutoLoader ~= nil
+    return object.spec_aPalletAutoLoader ~= nil and object.spec_aPalletAutoLoader.loadArea ~= nil and object.spec_aPalletAutoLoader.loadArea["baseNode"] ~= nil
 end
 
 --[[
@@ -442,7 +442,7 @@ end
 ]]
 
 function AutoDrive:setALOn(object)
-    if object == nil then
+    if not AutoDrive:hasAL(object) then
         return false
     end
     local spec = object.spec_aPalletAutoLoader
@@ -454,7 +454,7 @@ function AutoDrive:setALOn(object)
 end
 
 function AutoDrive:setALOff(object)
-    if object == nil then
+    if not AutoDrive:hasAL(object) then
         return false
     end
 
@@ -568,7 +568,7 @@ function AutoDrive:getALObjectFillLevels(object) -- used by getIsFillUnitEmpty, 
     local fillLevel = 0
     local fillFreeCapacity = 0
     local spec = object.spec_aPalletAutoLoader
-    if spec and object.getFillUnitCapacity and object.getFillUnitFillLevel and object.getFillUnitFreeCapacity then
+    if spec and AutoDrive:hasAL(object) and object.getFillUnitCapacity and object.getFillUnitFillLevel and object.getFillUnitFreeCapacity then
         fillCapacity = object:getFillUnitCapacity()
         fillLevel = object:getFillUnitFillLevel()
         fillFreeCapacity = object:getFillUnitFreeCapacity()
@@ -585,7 +585,7 @@ function AutoDrive:getALFillTypes(object) -- used by PullDownList, getSupportedF
     local fillTypes = {}
 
     local spec = object.spec_aPalletAutoLoader
-    if spec and object.GetAutoloadTypes then
+    if spec and AutoDrive:hasAL(object) and object.GetAutoloadTypes then
         local autoLoadTypes = object:GetAutoloadTypes()
         if autoLoadTypes and table.count(autoLoadTypes) > 0 then
             for i = 1, table.count(autoLoadTypes) do
@@ -605,7 +605,7 @@ function AutoDrive:getALCurrentFillType(object) -- used by onEnterVehicle, onPos
     end
 
     local spec = object.spec_aPalletAutoLoader
-    if spec and spec.currentautoLoadTypeIndex then
+    if spec and AutoDrive:hasAL(object) and spec.currentautoLoadTypeIndex then
         return spec.currentautoLoadTypeIndex
     end
     return nil
@@ -621,7 +621,7 @@ function AutoDrive:setALFillType(vehicle, fillType) -- used by PullDownList
         for i=1, trailerCount do
             local object = trailers[i]
             local spec = object.spec_aPalletAutoLoader
-            if spec and object.SetLoadingState and object.SetAutoloadType then
+            if spec and AutoDrive:hasAL(object) and object.SetLoadingState and object.SetAutoloadType then
                 AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALFillType fillType %s", tostring(fillType))
                 -- set loading state off
                 object:SetLoadingState(1)
