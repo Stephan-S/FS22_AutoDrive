@@ -242,6 +242,11 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
         return
     end
     for i, trailer in ipairs(self.trailers) do
+        local specAttachable = trailer.spec_attachable
+        if specAttachable and blockTrailers and specAttachable.steeringAxleAngle and specAttachable.steeringAxleAngle ~= 0 then
+            specAttachable.steeringAxleAngle = 0
+        end
+
         if i > 1 and #trailer.components > 1 then
             -- ignore trailing vehicle
             if #trailer.componentJoints >= 1 then
