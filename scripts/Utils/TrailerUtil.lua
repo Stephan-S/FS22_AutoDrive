@@ -52,6 +52,8 @@ function AutoDrive.getAllFillLevels(vehicles)
         fillFreeCapacity = fillFreeCapacity + vehicleFillFreeCapacity
     end
     local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+
+    AutoDrive.debugPrint(nil, AutoDrive.DC_TRAILERINFO, "AutoDrive.getAllFillLevels end hasAL %s fillLevel %s fillCapacity %s filledToUnload %s fillFreeCapacity %s", tostring(hasAL), tostring(fillLevel), tostring(fillCapacity), tostring(filledToUnload), tostring(fillFreeCapacity))
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
@@ -180,26 +182,20 @@ function AutoDrive.getObjectFillLevels(object)
                         break
                     end
                 end
-            elseif object.spec_sowingMachine and object.getSowingMachineFillUnitIndex and object:getSowingMachineFillUnitIndex() > 0 then
-                if object:getSowingMachineFillUnitIndex() == fillUnitIndex then
-                    updateFillLevels(fillUnitIndex)
-                end
-            elseif object.spec_sprayer and object.getSprayerFillUnitIndex and object:getSprayerFillUnitIndex() > 0 then
-                if object:getSprayerFillUnitIndex() == fillUnitIndex then
-                    updateFillLevels(fillUnitIndex)
-                end
-            elseif object.spec_saltSpreader and object.spec_saltSpreader.fillUnitIndex and object.spec_saltSpreader.fillUnitIndex > 0 then
-                if object.spec_saltSpreader.fillUnitIndex == fillUnitIndex then
-                    updateFillLevels(fillUnitIndex)
-                end
-            elseif object.spec_baleLoader and object.spec_baleLoader.fillUnitIndex and object.spec_baleLoader.fillUnitIndex > 0 then
-                if object.spec_baleLoader.fillUnitIndex == fillUnitIndex then
-                    updateFillLevels(fillUnitIndex)
-                end
+            elseif object.spec_sowingMachine and object.getSowingMachineFillUnitIndex and object:getSowingMachineFillUnitIndex() > 0 and object:getSowingMachineFillUnitIndex() == fillUnitIndex then
+                updateFillLevels(fillUnitIndex)
+            elseif object.spec_sprayer and object.getSprayerFillUnitIndex and object:getSprayerFillUnitIndex() > 0 and object:getSprayerFillUnitIndex() == fillUnitIndex then
+                updateFillLevels(fillUnitIndex)
+            elseif object.spec_saltSpreader and object.spec_saltSpreader.fillUnitIndex and object.spec_saltSpreader.fillUnitIndex > 0 and object.spec_saltSpreader.fillUnitIndex == fillUnitIndex then
+                updateFillLevels(fillUnitIndex)
+            elseif object.spec_baleLoader and object.spec_baleLoader.fillUnitIndex and object.spec_baleLoader.fillUnitIndex > 0 and object.spec_baleLoader.fillUnitIndex == fillUnitIndex then
+                updateFillLevels(fillUnitIndex)
             end
         end
     end
     local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+
+    AutoDrive.debugPrint(object, AutoDrive.DC_TRAILERINFO, "AutoDrive.getObjectFillLevels end fillLevel %s fillCapacity %s filledToUnload %s fillFreeCapacity %s", tostring(fillLevel), tostring(fillCapacity), tostring(filledToUnload), tostring(fillFreeCapacity))
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
@@ -266,6 +262,8 @@ function AutoDrive.getIsFillUnitFull(vehicle, fillUnitIndex)
             fillUnitFull = false
         end
     end
+
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getIsFillUnitFull end fillUnitIndex %s AutoDrive:hasAL(vehicle) %s fillUnitFull %s", tostring(fillUnitIndex), tostring(AutoDrive:hasAL(vehicle)), tostring(fillUnitFull))
     return fillUnitFull
 end
 
@@ -285,7 +283,7 @@ function AutoDrive.getIsFillUnitEmpty(vehicle, fillUnitIndex)
     elseif vehicle.getFillUnitFillLevelPercentage ~= nil then
         fillUnitEmpty = vehicle:getFillUnitFillLevelPercentage(fillUnitIndex) <= 0.001
     end
-
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getIsFillUnitEmpty end fillUnitIndex %s AutoDrive:hasAL(vehicle) %s fillUnitEmpty %s", tostring(fillUnitIndex), tostring(AutoDrive:hasAL(vehicle)), tostring(fillUnitEmpty))
     return fillUnitEmpty
 end
 
