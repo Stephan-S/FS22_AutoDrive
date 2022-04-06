@@ -38,7 +38,7 @@ function CombineUnloaderMode:reset()
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
     self.vehicle.ad.trailerModule:reset()
-    self.fillUnits = AutoDrive.getAllNonFuelFillUnits(self.vehicle, true) -- force initialisation
+    self.fillUnits = AutoDrive.getAllDischargeableUnits(self.vehicle, true) -- force initialisation
 end
 
 function CombineUnloaderMode:start()
@@ -672,7 +672,7 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
     end
 
     self.pipeSide = AutoDrive.getPipeSide(self.combine)
-    self.targetFillUnit, self.targetFillNode = AutoDrive.getNextFreeNonFuelFillUnit(self.vehicle)
+    self.targetFillUnit, self.targetFillNode = AutoDrive.getNextFreeDischargeableUnit(self.vehicle)
 
     local sideChaseTermX = self:getSideChaseOffsetX()
     local sideChaseTermZ = self:getSideChaseOffsetZ(AutoDrive.dynamicChaseDistance or not AutoDrive.getIsBufferCombine(self.combine))

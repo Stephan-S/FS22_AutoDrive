@@ -280,8 +280,8 @@ function AutoDrive.getIsFillUnitEmpty(vehicle, fillUnitIndex)
         -- AutoLoad
         local fillLevel, _, _, _ = AutoDrive:getALObjectFillLevels(vehicle)
         fillUnitEmpty = fillLevel < 0.001
-    elseif vehicle.getFillUnitFillLevelPercentage ~= nil then
-        fillUnitEmpty = vehicle:getFillUnitFillLevelPercentage(fillUnitIndex) <= 0.001
+    elseif vehicle.getFillUnitFillLevel ~= nil then
+        fillUnitEmpty = vehicle:getFillUnitFillLevel(fillUnitIndex) <= 0.001
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getIsFillUnitEmpty end fillUnitIndex %s AutoDrive:hasAL(vehicle) %s fillUnitEmpty %s", tostring(fillUnitIndex), tostring(AutoDrive:hasAL(vehicle)), tostring(fillUnitEmpty))
     return fillUnitEmpty
@@ -298,8 +298,8 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
         if allowedFillTypes ~= nil then
             fillTypesToCheck = allowedFillTypes
         else
-            if vehicle.ad.stateModule:getFillType() == nil then
-                table.insert(fillTypesToCheck, FillType.UNKNOWN)
+            if vehicle.ad.stateModule:getFillType() == nil or vehicle.ad.stateModule:getFillType() == FillType.UNKNOWN then
+                return false
             else
                 table.insert(fillTypesToCheck, vehicle.ad.stateModule:getFillType())
             end
@@ -350,7 +350,7 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
         if typesMatch then
             for _, allowedFillType in pairs(fillTypesToCheck) do
                 if allowedFillType == FillType.UNKNOWN then
-                    return true
+                    return false
                 end
             end
 
@@ -387,26 +387,24 @@ function AutoDrive.getAllUnits(vehicle)
         Logging.error("[AD] AutoDrive.getAllUnits vehicle == nil")
         return nil, 0
     end
+    local tempUnits = {}
     vehicle = vehicle:getRootVehicle()
     if vehicle ~= nil then
-        if vehicle.ad == nil then
-            vehicle.ad = {}
-        end
-        if vehicle.ad.tempVehicles == nil then
-            vehicle.ad.tempVehicles = {}
-        end
-
-        vehicle.ad.tempVehicles = {}
-        table.insert(vehicle.ad.tempVehicles, vehicle)  -- first is the vehicle itself
+        table.insert(tempUnits, vehicle)  -- first is the vehicle itself
 
         local onlyDischargeable = false
         if vehicle.getAttachedImplements ~= nil then
             for _, implement in pairs(vehicle:getAttachedImplements()) do
-                AutoDrive.getTrailersOfImplement(vehicle, implement.object, onlyDischargeable)
+                local trailers = AutoDrive.getTrailersOfImplement(vehicle, implement.object, onlyDischargeable)
+                if trailers then
+                    for _, trailer in pairs(trailers) do
+                        table.insert(tempUnits, trailer)
+                    end
+                end
             end
         end
 
-        return vehicle.ad.tempVehicles, #vehicle.ad.tempVehicles
+        return tempUnits, #tempUnits
     end
     return nil, 0
 end
@@ -417,18 +415,31 @@ function AutoDrive.getTrailersOfImplement(vehicle, attachedImplement, onlyDischa
         Logging.error("[AD] AutoDrive.getTrailersOfImplement vehicle == nil")
         return
     end
+    local trailersOfImplement = nil
     if attachedImplement ~= nil then
         if (((attachedImplement.typeDesc == g_i18n:getText("typeDesc_tipper") or attachedImplement.spec_dischargeable ~= nil) or not (onlyDischargeable == true)) and attachedImplement.getFillUnits ~= nil) or AutoDrive:hasAL(attachedImplement) then
             if not (attachedImplement.typeDesc == g_i18n:getText("typeDesc_frontloaderTool") or attachedImplement.typeDesc == g_i18n:getText("typeDesc_wheelLoaderTool")) then --avoid trying to fill shovels and levellers atached
-                table.insert(vehicle.ad.tempVehicles, attachedImplement)
+                if trailersOfImplement == nil then
+                    trailersOfImplement = {}
+                end
+                table.insert(trailersOfImplement, attachedImplement)
             end
         end
         if attachedImplement.getAttachedImplements ~= nil then
             for _, implement in pairs(attachedImplement:getAttachedImplements()) do
-                AutoDrive.getTrailersOfImplement(vehicle, implement.object)
+                local trailers = AutoDrive.getTrailersOfImplement(vehicle, implement.object)
+                if trailers then
+                    if trailersOfImplement == nil then
+                        trailersOfImplement = {}
+                    end
+                    for _, trailer in pairs(trailers) do
+                        table.insert(trailersOfImplement, trailer)
+                    end
+                end
             end
         end
     end
+    return trailersOfImplement
 end
 
 -- new, return list of all fillUnits of vehicle and trailers for nonFuel or nil
@@ -471,12 +482,12 @@ function AutoDrive.getAllNonFuelFillUnits_old(vehicle, initialize)
 end
 
 -- consider only dischargable fillUnits
-function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
-    local nonFuelFillUnits = nil
+function AutoDrive.getAllDischargeableUnits(vehicle, initialize)
+    local dischargeableUnits = nil
     if vehicle == nil or vehicle.ad == nil then
-        return nonFuelFillUnits
+        return dischargeableUnits
     end
-    if vehicle.ad.nonFuelFillUnits == nil or initialize then
+    if vehicle.ad.dischargeableUnits == nil or initialize then
 
         local trailers = AutoDrive.getAllUnits(vehicle)
         for _, trailer in ipairs(trailers) do
@@ -489,15 +500,15 @@ function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
                             if dischargeNode.fillUnitIndex and dischargeNode.fillUnitIndex > 0 and dischargeNode.fillUnitIndex == fillUnitIndex then
                                 -- the fillUnit can be discharged
                                 if fillUnit.exactFillRootNode then
-                                    if nonFuelFillUnits == nil then
-                                        nonFuelFillUnits = {}
+                                    if dischargeableUnits == nil then
+                                        dischargeableUnits = {}
                                     end
-                                    table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                                    table.insert(dischargeableUnits, {fillUnit = fillUnit, node = fillUnit.exactFillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
                                 elseif fillUnit.fillRootNode then
-                                    if nonFuelFillUnits == nil then
-                                        nonFuelFillUnits = {}
+                                    if dischargeableUnits == nil then
+                                        dischargeableUnits = {}
                                     end
-                                    table.insert(nonFuelFillUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
+                                    table.insert(dischargeableUnits, {fillUnit = fillUnit, node = fillUnit.fillRootNode, object = trailer, fillUnitIndex = fillUnitIndex})
                                 end
                                 break
                             end
@@ -506,38 +517,38 @@ function AutoDrive.getAllNonFuelFillUnits(vehicle, initialize)
                 end
             end
         end
-        vehicle.ad.nonFuelFillUnits = nonFuelFillUnits
+        vehicle.ad.dischargeableUnits = dischargeableUnits
     end
-    return vehicle.ad.nonFuelFillUnits
+    return vehicle.ad.dischargeableUnits
 end
 
 -- new, return next fillUnit with room to fill or RootVehicle as default
-function AutoDrive.getNextFreeNonFuelFillUnit(vehicle)
-    local nextFreeNonFuelFillUnit = nil
+function AutoDrive.getNextFreeDischargeableUnit(vehicle)
+    local nextFreeDischargeableUnit = nil
     local rootVehicle = vehicle.getRootVehicle and vehicle:getRootVehicle() -- default in case no free fill unit will be found
-    local nextFreeNonFuelFillNode = rootVehicle and rootVehicle.components[1].node
-    
+    local nextFreeDischargeableNode = rootVehicle and rootVehicle.components[1].node
+
     if vehicle == nil then
-        return nextFreeNonFuelFillUnit, nextFreeNonFuelFillNode
+        return nextFreeDischargeableUnit, nextFreeDischargeableNode
     end
-    local allNonFuelFillUnits = AutoDrive.getAllNonFuelFillUnits(vehicle)
-    if allNonFuelFillUnits == nil then
-        allNonFuelFillUnits = AutoDrive.getAllNonFuelFillUnits(vehicle, true)
+    local allDischargeableUnits = AutoDrive.getAllDischargeableUnits(vehicle)
+    if allDischargeableUnits == nil then
+        allDischargeableUnits = AutoDrive.getAllDischargeableUnits(vehicle, true)
     end
 
-    if allNonFuelFillUnits ~= nil then
-        for index, item in ipairs(allNonFuelFillUnits) do
+    if allDischargeableUnits ~= nil then
+        for index, item in ipairs(allDischargeableUnits) do
             if item.fillUnit and item.node and item.object and item.object.getFillUnitFreeCapacity and item.fillUnitIndex then
                 local freeCapacity = item.object:getFillUnitFreeCapacity(item.fillUnitIndex) -- needed to consider mass feature
                 if freeCapacity > 0.1 then
-                    nextFreeNonFuelFillUnit = item.fillUnit
-                    nextFreeNonFuelFillNode = item.node
+                    nextFreeDischargeableUnit = item.fillUnit
+                    nextFreeDischargeableNode = item.node
                     break
                 end
             end
         end
     end
-    return nextFreeNonFuelFillUnit, nextFreeNonFuelFillNode
+    return nextFreeDischargeableUnit, nextFreeDischargeableNode
 end
 
 -- ###################################################################################################
@@ -775,7 +786,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
     -- local trailers, _ = AutoDrive.getTrailersOf(vehicle, false)
     local trailers, _ = AutoDrive.getAllUnits(vehicle)
     local maxTriggerDistance = AutoDrive.getSetting("maxTriggerDistance") 
-    for index, trailer in ipairs(trailers) do
+    for _, trailer in ipairs(trailers) do
         if trailer.getFillUnits ~= nil then
             local fillUnits = trailer:getFillUnits()
             local trailerX, _, trailerZ = getWorldTranslation(trailer.components[1].node)
@@ -784,14 +795,14 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                 if triggerX ~= nil then
                     local distance = MathUtil.vector2Length(triggerX - trailerX, triggerZ - trailerZ)
                     if distance <= maxTriggerDistance then
-                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs distance %s", tostring(distance))
+                        AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs distance %s", tostring(distance))
                         vehicle.ad.debugTrigger = trigger
                         local allowedFillTypes = {vehicle.ad.stateModule:getFillType()}
 
                         -- seeds, fertilizer, liquidfertilizer should always be loaded if in trigger available
                         if #fillUnits > 1 then
                             local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(vehicle.ad.stateModule:getFillType())
-                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs #fillUnits > 1 fillTypeName %s", tostring(fillTypeName))
+                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs #fillUnits > 1 fillTypeName %s", tostring(fillTypeName))
                             if fillTypeName == 'SEEDS' or fillTypeName == 'FERTILIZER' or fillTypeName == 'LIQUIDFERTILIZER' then
                                 -- seeds, fertilizer, liquidfertilizer
                                 allowedFillTypes = {}
@@ -804,7 +815,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                         local fillLevels = {}
                         if trigger.source ~= nil and trigger.source.getAllFillLevels ~= nil then
                             fillLevels, _ = trigger.source:getAllFillLevels(vehicle:getOwnerFarmId())
-                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs fillLevels %s", tostring(fillLevels))
+                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs fillLevels %s", tostring(fillLevels))
                         end
 
                         local hasRequiredFillType = false
@@ -814,7 +825,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                             hasRequiredFillType = AutoDrive.fillTypesMatch(vehicle, trigger, trailer, allowedFillTypes, i)
                             local isNotFilled = not AutoDrive.getIsFillUnitFull(trailer, i)
 
-                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs hasRequiredFillType %s isNotFilled %s", tostring(hasRequiredFillType), tostring(isNotFilled))
+                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs hasRequiredFillType %s isNotFilled %s", tostring(hasRequiredFillType), tostring(isNotFilled))
 
                             for _, allowedFillType in pairs(allowedFillTypes) do
                                 if trailer:getFillUnitSupportsFillType(i, allowedFillType) then
@@ -822,7 +833,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                                     hasFill = hasFill or (fillLevels[allowedFillType] ~= nil and fillLevels[allowedFillType] > 0)
                                 end
                             end
-                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs isFillAllowed %s hasFill %s", tostring(isFillAllowed), tostring(hasFill))
+                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs isFillAllowed %s hasFill %s", tostring(isFillAllowed), tostring(hasFill))
 
                             local trailerIsInRange = AutoDrive.trailerIsInTriggerList(trailer, trigger, i)
                             if trailer.inRangeTimers == nil then
@@ -834,12 +845,12 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                             if trailer.inRangeTimers[i][trigger] == nil then
                                 trailer.inRangeTimers[i][trigger] = AutoDriveTON:new()
                             end
-                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs trailerIsInRange %s", tostring(trailerIsInRange))
+                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs trailerIsInRange %s", tostring(trailerIsInRange))
 
                             local timerDone = trailer.inRangeTimers[i][trigger]:timer(trailerIsInRange, 200, dt) -- vehicle.ad.stateModule:getFieldSpeedLimit()*100
 
                             if timerDone and hasRequiredFillType and isNotFilled and isFillAllowed then
-                                AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs timerDone %s", tostring(timerDone))
+                                AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs timerDone %s trigger %s fillUnitIndex %s", tostring(timerDone), tostring(trigger), tostring(i))
                                 local pair = {trailer = trailer, trigger = trigger, fillUnitIndex = i, hasFill = hasFill}
                                 table.insert(trailerTriggerPairs, pair)
                             end
@@ -969,4 +980,114 @@ function AutoDrive.isBaleUnloading(trailer)
            return true
         end
     end
+end
+
+-- return list of fillTypes which are supported to be unloaded, additional sowing, sprayer, saltSpreader
+function AutoDrive.getValidSupportedFillTypes(vehicle, excludedVehicles)
+    if vehicle == nil then
+        return {}
+    end
+    local supportedFillTypes = {}
+    local function getsupportedFillTypes(object, fillUnitIndex)
+        if object and fillUnitIndex and fillUnitIndex > 0 then
+            if object.getFillUnitSupportedFillTypes ~= nil then
+                for fillType, supported in pairs(object:getFillUnitSupportedFillTypes(fillUnitIndex)) do
+                    if supported and not table.contains(supportedFillTypes, fillType) then
+                        table.insert(supportedFillTypes, fillType)
+                    end
+                end
+            end
+        end
+    end
+    -- dischargeable Units
+    local dischargeableUnits = AutoDrive.getAllDischargeableUnits(vehicle, true)
+    if dischargeableUnits and #dischargeableUnits > 0 then
+        for i = 1, #dischargeableUnits do
+            local dischargeableUnit = dischargeableUnits[i]
+            if dischargeableUnit and dischargeableUnit.object and dischargeableUnit.fillUnitIndex and (excludedVehicles == nil or not table.contains(excludedVehicles, dischargeableUnit.object)) then
+                getsupportedFillTypes(dischargeableUnit.object, dischargeableUnit.fillUnitIndex)
+            end
+        end
+    end
+    -- sowing / fertilizing other tools
+    local trailers, _ = AutoDrive.getAllUnits(vehicle)
+    if trailers then
+        for _, trailer in pairs(trailers) do
+            if trailer.getFillUnits and (excludedVehicles == nil or not table.contains(excludedVehicles, trailer)) then
+                for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
+
+                    if trailer.spec_sowingMachine and trailer.getSowingMachineFillUnitIndex and trailer:getSowingMachineFillUnitIndex() > 0 then
+                        if trailer:getSowingMachineFillUnitIndex() == fillUnitIndex then
+                            getsupportedFillTypes(trailer, fillUnitIndex)
+                        end
+                    end
+                    if trailer.spec_sprayer and trailer.getSprayerFillUnitIndex and trailer:getSprayerFillUnitIndex() > 0 then
+                        if trailer:getSprayerFillUnitIndex() == fillUnitIndex then
+                            getsupportedFillTypes(trailer, fillUnitIndex)
+                        end
+                    end
+                    if trailer.spec_saltSpreader and trailer.spec_saltSpreader.fillUnitIndex and trailer.spec_saltSpreader.fillUnitIndex > 0 then
+                        if trailer.spec_saltSpreader.fillUnitIndex == fillUnitIndex then
+                            getsupportedFillTypes(trailer, fillUnitIndex)
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return supportedFillTypes
+end
+
+function AutoDrive.setValidSupportedFillType(vehicle, excludedImplementIndex)
+    if vehicle == nil then
+        return
+    end
+
+    local ret = false
+    local currentFillType = nil
+    local excludedVehicles = nil
+    -- try to find AL fillType
+    local trailers, _ = AutoDrive.getAllUnits(vehicle)
+    
+    -- get all vehicles attached to the excludedImplementIndex
+    if excludedImplementIndex and vehicle.getAttachedImplements ~= nil then
+        local attachedImplements = vehicle:getAttachedImplements()
+        if attachedImplements and table.count(attachedImplements) > 0 then
+            local excludedImplement = attachedImplements[excludedImplementIndex]
+            if excludedImplement and excludedImplement.object then
+                excludedVehicles = AutoDrive.getTrailersOfImplement(vehicle, excludedImplement.object)
+            end
+        end
+    end
+
+    for _, trailer in ipairs(trailers) do
+
+        if AutoDrive:hasAL(trailer) and (excludedVehicles == nil or not table.contains(excludedVehicles, trailer)) then
+            currentFillType = AutoDrive:getALCurrentFillType(trailer)
+            if currentFillType ~= nil then
+                -- first found is sufficient
+                ret = true
+                vehicle.ad.stateModule:setFillType(currentFillType)
+                break
+            end
+        end
+    end
+
+    -- no AL fillType found - continue with fillUnits
+    if currentFillType == nil then
+        local supportedFillTypes = AutoDrive.getValidSupportedFillTypes(vehicle, excludedVehicles)
+
+        local storedSelectedFillType = vehicle.ad.stateModule:getFillType()
+        if supportedFillTypes and #supportedFillTypes > 0 then
+            if not table.contains(supportedFillTypes, storedSelectedFillType) then
+                -- HUD FillType is different, so set the first supported
+                ret = true
+                vehicle.ad.stateModule:setFillType(supportedFillTypes[1])
+            end
+        else
+            ret = true
+            vehicle.ad.stateModule:setFillType(FillType.UNKNOWN)
+        end
+    end
+    return ret
 end

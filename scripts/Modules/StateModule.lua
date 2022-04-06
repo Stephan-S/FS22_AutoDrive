@@ -29,7 +29,7 @@ function ADStateModule:reset()
     self.secondMarker = ADGraphManager:getMapMarkerById(1)
     self.creationMode = ADStateModule.CREATE_OFF
 
-    self.fillType = 1
+    self.fillType = FillType.UNKNOWN
     self.loopCounter = 0
     self.loopsDone = 0
 
@@ -101,9 +101,6 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
 
     local fillType = xmlFile:getValue(key .. "#fillType")
     if fillType ~= nil then
-        if g_fillTypeManager:getFillTypeByIndex(fillType) == nil then
-            fillType = 1 -- use fillType 1 UNKNOWN as default 
-        end
         self.fillType = fillType
     end
 
@@ -184,7 +181,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self:getFirstMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
-    streamWriteUIntN(streamId, self.fillType, 8)
+    streamWriteUIntN(streamId, self.fillType, 10)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -213,7 +210,7 @@ function ADStateModule:readStream(streamId)
     self.firstMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
-    self.fillType = streamReadUIntN(streamId, 8)
+    self.fillType = streamReadUIntN(streamId, 10)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -244,7 +241,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self:getFirstMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
-    streamWriteUIntN(streamId, self.fillType, 8)
+    streamWriteUIntN(streamId, self.fillType, 10)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -273,7 +270,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.firstMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
-    self.fillType = streamReadUIntN(streamId, 8)
+    self.fillType = streamReadUIntN(streamId, 10)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -777,11 +774,10 @@ function ADStateModule:getFillType()
 end
 
 function ADStateModule:setFillType(fillType)
-    if g_fillTypeManager:getFillTypeByIndex(fillType) == nil then
-        fillType = 1 -- fillType 1 is UNKNOWN
+    if self.fillType ~= fillType then
+        self.fillType = fillType
+        self:raiseDirtyFlag()
     end
-    self.fillType = fillType
-    self:raiseDirtyFlag()
 end
 
 function ADStateModule:nextFillType()

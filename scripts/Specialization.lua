@@ -23,6 +23,7 @@ function AutoDrive.registerEventListeners(vehicleType)
             "onStopAutoDrive",
             "onPostAttachImplement",
             "onPreDetachImplement",
+            "onPostDetachImplement",
             "onEnterVehicle",
             "onLeaveVehicle",
             -- CP events
@@ -658,46 +659,10 @@ function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointD
         self.ad.attachableCombine = attachable
         attachable.ad = self.ad
     end
+    AutoDrive.setValidSupportedFillType(self)
 
-    if attachable ~= nil and AutoDrive:hasAL(attachable) then
-        -- AutoLoad
-        local currentFillType = AutoDrive:getALCurrentFillType(attachable)
-        if currentFillType ~= nil then
-            self.ad.stateModule:setFillType(currentFillType)
-            if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
-                AutoDrive.Hud.lastUIScale = 0
-            end
-        end
-    else
-        local supportedFillTypes = {}
-        local trailers, trailerCount = AutoDrive.getAllUnits(self)
-        for index, trailer in ipairs(trailers) do
-            if trailer.getFillUnits ~= nil then
-                for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
-                    if trailer.getFillUnitSupportedFillTypes ~= nil then
-                        for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
-                            if index == 1 then -- hide fuel types for 1st vehicle
-                                local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                                if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
-                                    supported = false
-                                end
-                            end
-                            if supported then
-                                table.insert(supportedFillTypes, fillType)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        local storedSelectedFillType = self.ad.stateModule:getFillType()
-        if #supportedFillTypes > 0 and not table.contains(supportedFillTypes, storedSelectedFillType) then
-            self.ad.stateModule:setFillType(supportedFillTypes[1])
-            if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
-                AutoDrive.Hud.lastUIScale = 0
-            end
-        end
+    if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
+        AutoDrive.Hud.lastUIScale = 0
     end
     AutoDrive.getFrontToolWidth(self, true)
 end
@@ -721,14 +686,25 @@ function AutoDrive:onPreDetachImplement(implement)
     end
 end
 
+-- Giants special behaviour: at time of the event the implement and all implements attached to it are still attached!
+-- thats why the attached and all following have to be taken to special consideration!
+function AutoDrive:onPostDetachImplement(implementIndex)
+    AutoDrive.setValidSupportedFillType(self, implementIndex)
+    if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
+        AutoDrive.Hud.lastUIScale = 0
+    end
+end
+
+
 function AutoDrive:onEnterVehicle()
-    local trailers, trailerCount = AutoDrive.getAllUnits(self)
-    -- AutoDrive.debugMsg(object, "AutoDrive:onEnterVehicle trailerCount %s", tostring(trailerCount))
-    if trailerCount > 0 then
+    if AutoDrive:hasAL(self) then
         -- AutoLoad
-        local currentFillType = AutoDrive:getALCurrentFillType(trailers[1])
+        local currentFillType = AutoDrive:getALCurrentFillType(self)
         if currentFillType ~= nil then
             self.ad.stateModule:setFillType(currentFillType)
+            if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
+                AutoDrive.Hud.lastUIScale = 0
+            end
         end
     end
     if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
