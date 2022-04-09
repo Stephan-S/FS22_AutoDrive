@@ -63,6 +63,8 @@
 		<text name="AD_parkVehicle_deleted"					    text="parking destination deleted!" />
 		<text name="AD_Driver_of"								text="Driver of" />
 		<text name="AD_has_reached"								text="has reached" />
+		<text name="AD_wait_CP"									text="is waiting to start CP at " />
+		<text name="AD_start_CP"								text="is starting CP at " />
 		<text name="AD_got_stuck"								text="got stuck" />
 		<text name="AD_cannot_reach"							text="can't reach" />
 		<text name="AD_cannot_find_path"						text="can't calculate a path" />
@@ -230,6 +232,8 @@
 		<text name="gui_ad_AL_right"                            text="Unload right" />
 		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: wait time after unload" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+		<text name="gui_ad_CPDelayTimer"						text="CoursePlay: Delay time after arriving" />
+		<text name="gui_ad_CPDelayTimer_tooltip"            	text="Wait time after arriving at destination before starting CoursePlay - useful for dispatching a convoy to do CP work" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="Should AutoDrive generate a route network from the traffic and helper data on the map?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />

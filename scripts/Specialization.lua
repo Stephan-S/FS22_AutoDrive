@@ -1150,9 +1150,9 @@ function AutoDrive:stopAutoDrive()
                 if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
                     self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
                 end
-
-            self.ad.stateModule:setActive(false)
-
+            if self.ad.cpDelayTimer == nil then
+                self.ad.stateModule:setActive(false)
+            end
             self.ad.taskModule:abortAllTasks()
             self.ad.taskModule:reset()
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
-	<translationContributors>Yllelder, Vanquish081</translationContributors>
+	<translationContributors>Yllelder, Vanquish081, HaploAW</translationContributors>
 	<texts>
 		<text name="UNKNOWN"									text="Desconocido" />
 		<text name="input_ADToggleHud"							text="AD: Abrir ventana AD" />
@@ -61,6 +61,8 @@
 		<text name="AD_parkVehicle_selected"					text="Destino de estacionamiento elegido: " />
 		<text name="AD_Driver_of"								text="Conductor de" />
 		<text name="AD_has_reached"								text="ha llegado" />
+		<text name="AD_wait_CP"									text="está esperando para iniciar CP en " />
+		<text name="AD_start_CP"								text="está comenzando CP en " />
 		<text name="AD_got_stuck"								text="está atascado" />
 		<text name="AD_cannot_reach"							text="no puedo llegar" />
 		<text name="AD_cannot_find_path"						text="no puedo calcular una ruta" />

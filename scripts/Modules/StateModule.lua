@@ -381,6 +381,11 @@ function ADStateModule:update(dt)
         end
         AutoDrive.renderTable(0.4, 0.4, 0.014, debug)
     end
+    if self.vehicle.cpDelayWait ~= nil then
+        if self.vehicle.cpDelayWait == true then
+            AutoDrive:StartCP(self.vehicle)
+        end
+    end
 end
 
 function ADStateModule:toggleStartCP_AIVE()

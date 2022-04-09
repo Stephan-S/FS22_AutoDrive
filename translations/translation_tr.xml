@@ -61,6 +61,8 @@
         <text name="AD_parkVehicle_selected"                                                                text="Seçilen park yeri:"  />
         <text name="AD_Driver_of"                                                                           text="Sürücüsü"  />
         <text name="AD_has_reached"                                                                         text="ulaştı"  />
+        <text name="AD_wait_CP"									text="is waiting to start CP at " />
+        <text name="AD_start_CP"								text="is starting CP at " />
         <text name="AD_got_stuck"                                                                           text="sıkışmak"  />
         <text name="AD_cannot_reach"                                                                        text="ulaşamıyorum"  />
         <text name="AD_cannot_find_path"                                                                    text="yolu hesaplayamıyorum"  />

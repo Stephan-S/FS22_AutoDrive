@@ -62,6 +62,8 @@
 		<text name="AD_parkVehicle_selected"					text="Выбранное место для парковки: " />
 		<text name="AD_Driver_of"								text="Водитель на" />
 		<text name="AD_has_reached"								text="прибыл к" />
+		<text name="AD_wait_CP"									text="is waiting to start CP at " />
+		<text name="AD_start_CP"								text="is starting CP at " />
 		<text name="AD_got_stuck"								text="застрял" />
 		<text name="AD_cannot_reach"							text="не может доехать до локации " />
 		<text name="AD_cannot_find_path"						text="не может рассчитать маршрут к" />

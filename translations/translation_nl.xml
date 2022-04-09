@@ -63,6 +63,8 @@
 		<text name="AD_parkVehicle_deleted"					    text="Parkeerplaats verwijderd" />
 		<text name="AD_Driver_of"								text="De bestuurder van" />
 		<text name="AD_has_reached"								text="is aangekomen op" />
+		<text name="AD_wait_CP"									text="is waiting to start CP at " />
+		<text name="AD_start_CP"								text="is starting CP at " />
 		<text name="AD_got_stuck"								text="is vastgelopen" />
 		<text name="AD_cannot_reach"							text="heeft geen route gevonden naar" />
 		<text name="AD_cannot_find_path"						text="kan geen route calculeren" />

@@ -218,20 +218,87 @@ function AutoDrive:getCombineOpenPipePercent(combine)	--for AIVE
 	return pipePercent
 end
 
--- start CP at first wayPoint
+-- start CP using CP HUD settings. Allows CP to control job parameters.
 function AutoDrive:StartCP(vehicle)
-    if vehicle == nil then 
-        return 
+    local cpDelay = AutoDrive.getSetting("CPDelayTimer", vehicle) -- delay in seconds, set in vehicle settings.
+    local cpDelayInc = 0.35 -- timer addition to make it work for seconds as cpDelay
+    local isPassingToCP = (vehicle.ad.stateModule:getStartCP_AIVE() and vehicle.ad.stateModule:getUseCP_AIVE())
+    local target = vehicle.ad.stateModule:getFirstMarker().name
+    local mapMarker = ADGraphManager:getMapMarkerByWayPointId(vehicle.destinationID)
+
+    if mapMarker ~= nil and mapMarker.name ~= nil then
+        target = mapMarker.name
     end
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP...")
-    -- if vehicle.startCpAtFirstWp ~= nil then
-        -- vehicle:startCpAtFirstWp()
-    if vehicle.startCpAtLastWp ~= nil then
-        vehicle:startCpAtLastWp()
-    elseif vehicle.startCpALastWp ~= nil then
-        vehicle:startCpALastWp()
+    if vehicle == nil then
+        return
+    end
+    if not isPassingToCP then
+        if vehicle.cpDelayTimer ~= nil then
+            vehicle.cpDelayTimer:timer(false)
+        end
+        if vehicle.ad.stateModule:isActive() then
+            vehicle.ad.stateModule:setActive(false)
+        end
+        vehicle.cpDelayWait = false
+        return
+    end
+    if vehicle.cpDelayTimer == nil then
+        vehicle.cpDelayTimer = AutoDriveTON:new()
+    end
+    if vehicle.cpDelay ~= nil then
+        cpDelay = vehicle.cpDelay
     else
-        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
+        vehicle.cpDelay = cpDelay * 10
+    end
+
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP...")
+    -- Use the CP hasCpCourse to verify that the CP module is available. If it is hand over to CP. If not, do nothing.hasCpCourse
+    -- TODO: Need to change behavior for when CP not available. Maybe check when CP button pressed on AD HUD.hasCpCourse
+    -- TODO: Need to add HUD data showing delay and time left
+    if AutoDrive.experimentalFeatures.DelayCoursePlay then
+        if vehicle.hasCpCourse ~= nil then
+
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Trying CP interface with delay")
+            -- Added in delay timer to allow convoy to be set from start point to CP pickup point. AD will wait to hand over to CP.hasCpCourse
+            if not vehicle.cpDelayTimer:done() then
+                if not vehicle.ad.stateModule:isActive() then
+                    AutoDriveMessageEvent.sendNotification(vehicle, ADMessagesManager.messageTypes.INFO, "$l10n_AD_Driver_of; %s $l10n_AD_wait_CP; %s", 5000, vehicle.ad.stateModule:getName(), target)
+                    vehicle.ad.stateModule:setActive(true)
+                end
+                vehicle.cpDelayWait = true
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Checking CP delay in progress")
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Checking CP delay times "..vehicle.cpDelayTimer.elapsedTime.."/"..vehicle.cpDelay)
+                vehicle.cpDelayTimer:timer(true, vehicle.cpDelay, cpDelayInc)
+
+            else
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Checking CP delay finished")
+                vehicle.cpDelayTimer:timer(false)
+                if vehicle.ad.stateModule:isActive() then
+                    vehicle.ad.stateModule:setActive(false)
+                end
+                vehicle.ad.stateModule:toggleStartCP_AIVE()
+                vehicle.cpDelayWait = false
+                AutoDriveMessageEvent.sendNotification(vehicle, ADMessagesManager.messageTypes.INFO, "$l10n_AD_Driver_of; %s $l10n_AD_start_CP; %s", 5000, vehicle.ad.stateModule:getName(), target)
+                vehicle:cpStartStopDriver()
+            end
+
+        else
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
+        end
+    else
+        if vehicle.hasCpCourse ~= nil then
+
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Trying CP interface without delay")
+
+            if vehicle.ad.stateModule:isActive() then
+                vehicle.ad.stateModule:setActive(false)
+            end
+            vehicle.ad.stateModule:toggleStartCP_AIVE()
+            AutoDriveMessageEvent.sendNotification(vehicle, ADMessagesManager.messageTypes.INFO, "$l10n_AD_Driver_of; %s $l10n_AD_start_CP; %s", 5000, vehicle.ad.stateModule:getName(), target)
+            vehicle:cpStartStopDriver()
+        else
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
+        end
     end
 end
 

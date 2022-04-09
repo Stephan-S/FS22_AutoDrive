@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.5"
+AutoDrive.version = "2.0.0.6"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -15,6 +15,7 @@ AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
 AutoDrive.experimentalFeatures.UTurn = true
 AutoDrive.experimentalFeatures.FoldImplements = true
+AutoDrive.experimentalFeatures.DelayCoursePlay = true
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true

@@ -64,6 +64,8 @@
 		<text name="AD_parkVehicle_deleted"					    text="miejsce parkowania skasowane!" />
 		<text name="AD_Driver_of"								text="Kierowca" />
 		<text name="AD_has_reached"								text="dotarł do" />
+		<text name="AD_wait_CP"									text="is waiting to start CP at " />
+		<text name="AD_start_CP"								text="is starting CP at " />
 		<text name="AD_got_stuck"								text="utknął" />
 		<text name="AD_cannot_reach"							text="nie może dotrzeć do" />
 		<text name="AD_cannot_find_path"						text="nie może określić trasy" />

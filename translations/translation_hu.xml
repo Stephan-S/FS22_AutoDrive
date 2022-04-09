@@ -61,6 +61,8 @@
 		<text name="AD_parkVehicle_selected"					text="Kiválasztott parkolóhely: " />
 		<text name="AD_Driver_of"								text="Sofőr ki" />
 		<text name="AD_has_reached"								text="Megérkezett" />
+		<text name="AD_wait_CP"									text="a CP kezdésére vár " />
+		<text name="AD_start_CP"								text="órakor kezdődik a CP " />
 		<text name="AD_got_stuck"								text="Elakadt" />
 		<text name="AD_cannot_reach"							text="Nem találja az utat" />
 		<text name="AD_cannot_find_path"						text="Nem tudja kiszámítani az útvonalat" />

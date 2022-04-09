@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
-	<translationContributors>Balu</translationContributors>
+	<translationContributors>Balu, HaploAW</translationContributors>
 	<texts>
 		<text name="UNKNOWN"									text="Unbekannt" />
 		<text name="input_ADToggleHud"							text="AD: HUD ein/ausblenden" />
@@ -63,6 +63,8 @@
 		<text name="AD_parkVehicle_deleted"					    text="Parkplatz gelöscht!" />
 		<text name="AD_Driver_of"								text="Der Fahrer von" />
 		<text name="AD_has_reached"								text="ist angekommen bei" />
+		<text name="AD_wait_CP"									text="wartet darauf, CP zu starten " />
+		<text name="AD_start_CP"								text="beginnt CP bei " />
 		<text name="AD_got_stuck"								text="hat sich fest gefahren" />
 		<text name="AD_cannot_reach"							text="hat keinen Weg gefunden zu" />
 		<text name="AD_cannot_find_path"						text="hat keinen Pfad zum Ziel berechnen können" />

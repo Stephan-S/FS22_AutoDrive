@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
-	<translationContributors>rogeriodec / andrefelipeschulle</translationContributors>
+	<translationContributors>rogeriodec / andrefelipeschulle, HaploAW</translationContributors>
 	<texts>
 		<text name="UNKNOWN"									text="Desconhecido" />
 		<text name="input_ADToggleHud"							text="AD: Mostrar/Ocultar HUD" />
@@ -61,6 +61,8 @@
 		<text name="AD_parkVehicle_selected"					text="Destino de estacionamento escolhido:" />
 		<text name="AD_Driver_of"								text="Motorista de" />
 		<text name="AD_has_reached"								text="chegou a" />
+		<text name="AD_wait_CP"									text="está esperando para iniciar o CP em " />
+		<text name="AD_start_CP"								text="está iniciando CP em " />
 		<text name="AD_got_stuck"								text="está bloqueado" />
 		<text name="AD_cannot_reach"							text="não consegue chegar a" />
 		<text name="AD_cannot_find_path"						text="não é possível calcular um caminho" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
-	<translationContributors>Anonymous, Sam, Lactic68</translationContributors>
+	<translationContributors>Anonymous, Sam, Lactic68, HaploAW</translationContributors>
 	<texts>
 		<text name="UNKNOWN"									text="Inconnu" />
 		<text name="input_ADToggleHud"							text="AD: Afficher/masquer ATH" />
@@ -63,6 +63,8 @@
 		<text name="AD_parkVehicle_deleted"					    text="Le parking en destination a été supprimé !" />		
 		<text name="AD_Driver_of"								text="Le chauffeur de" />
 		<text name="AD_has_reached"								text="est arrivé à" />
+		<text name="AD_wait_CP"									text="attend pour démarrer CP à " />
+		<text name="AD_start_CP"								text="commence CP à " />
 		<text name="AD_got_stuck"								text="est bloqué" />
 		<text name="AD_cannot_reach"							text="ne peut pas rejoindre" />
 		<text name="AD_cannot_find_path"						text="n'a pas pu calculer un chemin d'accès à la destination" />
