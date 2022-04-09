@@ -1529,7 +1529,7 @@ function AutoDrive:getCanMotorRun(superFunc)
 end
 
 function AutoDrive:getIsAIActive(superFunc)
-    return superFunc(self) or self.ad.stateModule:isActive()
+    return superFunc(self) or (self.ad and self.ad.stateModule and self.ad.stateModule:isActive())
 end
 
 function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
