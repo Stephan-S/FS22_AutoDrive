@@ -163,7 +163,7 @@
 					<GuiElement type="bitmap" profile="multiTextOptionSettingsBg" />
 					<GuiElement type="bitmap" profile="baseReference" position="730px 0px" size="50px 50px"/>
 				</GuiElement>
-				<GuiElement type="multiTextOption" profile="multiTextOptionSettings" onCreate="onCreateAutoDriveSetting" onClick="onOptionChange" name="CPDelayTimer" toolTipElementId="ingameMenuHelpBoxText">
+				<GuiElement type="multiTextOption" profile="multiTextOptionSettings" onCreate="onCreateAutoDriveSetting" onClick="onOptionChange" name="CPDelayWaitTime" toolTipElementId="ingameMenuHelpBoxText">
 					<GuiElement type="button" profile="multiTextOptionSettingsLeft" />
 					<GuiElement type="button" profile="multiTextOptionSettingsRight" />
 					<GuiElement type="text" profile="multiTextOptionSettingsText" />

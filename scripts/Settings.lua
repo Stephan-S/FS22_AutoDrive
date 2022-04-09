@@ -967,13 +967,13 @@ AutoDrive.settings.ALUnloadWaitTime = {
     translate = false,
     isVehicleSpecific = true
 }
-AutoDrive.settings.CPDelayTimer = {
+AutoDrive.settings.CPDelayWaitTime = {
     values = {0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180},
     texts = {"0s", "15s", "30s", "45s", "60s", "75s", "90s", "105s", "120s", "135s", "150s", "165s", "180s"},
     default = 2,
     current = 1,
-    text = "gui_ad_CPDelayTimer",
-    tooltip = "gui_ad_CPDelayTimer_tooltip",
+    text = "gui_ad_CPDelayWaitTime",
+    tooltip = "gui_ad_CPDelayWaitTime_tooltip",
     translate = false,
     isVehicleSpecific = true
 }
