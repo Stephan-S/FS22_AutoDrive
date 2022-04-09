@@ -493,9 +493,9 @@ end
 --[[
 APalletAutoLoaderTipsides = {
     LEFT = 1,
-    RIGHT = 2
-    MIDDLE = 3
-
+    RIGHT = 2,
+    MIDDLE = 3,
+    BACK = 4
 }
     values = {0, 1, 2, 3, 4},
     texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
@@ -511,7 +511,7 @@ function AutoDrive:unloadAL(object)
     local unloadPositions = {
         3,
         1,
-        0,
+        4,
         2
     }
 
