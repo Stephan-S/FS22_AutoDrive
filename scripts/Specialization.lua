@@ -29,7 +29,9 @@ function AutoDrive.registerEventListeners(vehicleType)
             -- CP events
             "onCpFinished",
             "onCpEmpty",
-            "onCpFull"
+            "onCpFull",
+            "onCpFuelEmpty",
+            "onCpBroken",
         }
     ) do
         SpecializationUtil.registerEventListener(vehicleType, n, AutoDrive)
@@ -66,6 +68,7 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
     SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
     SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)    
+    SpecializationUtil.registerFunction(vehicleType, "getCanAdTakeControl", AutoDrive.getCanAdTakeControl)
 end
 
 function AutoDrive.registerEvents(vehicleType)
@@ -768,6 +771,35 @@ end
 function AutoDrive:onCpFull()
     AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
     AutoDrive:handleCPFieldWorker(self)
+end
+
+function AutoDrive:handleCPMaintenance(vehicle)
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance start")
+    if vehicle.isServer then
+        if vehicle.ad and vehicle.ad.stateModule and vehicle.startAutoDrive then
+            if not vehicle.ad.stateModule:isActive() then
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance start AD")
+                vehicle.ad.stateModule:getCurrentMode():start()
+            else
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance - AD already active, should not happen")
+            end
+        end
+    else
+        Logging.devError("AutoDrive:handleCPMaintenance() must be called only on the server.")
+    end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance end")
+end
+
+function AutoDrive:onCpFuelEmpty()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty start...")
+    AutoDrive:handleCPMaintenance(self)
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty end")
+end
+
+function AutoDrive:onCpBroken()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken start...")
+    AutoDrive:handleCPMaintenance(self)
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken end")
 end
 
 function AutoDrive:onDelete()
@@ -1704,4 +1736,13 @@ function AutoDrive:enterVehicleRaycastClickToSwitch(superFunc, x, y)
     end
 
     superFunc(self, x, y)
+end
+
+function AutoDrive:getCanAdTakeControl()
+    if self.isServer then
+        if self.ad and self.ad.stateModule and not self.ad.stateModule:isActive() then
+            return self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()
+        end
+    end
+    return false
 end
