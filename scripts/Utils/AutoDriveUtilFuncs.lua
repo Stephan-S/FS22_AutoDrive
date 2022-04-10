@@ -342,11 +342,12 @@ function AutoDrive.foldAllImplements(vehicle)
     end
     for _, implement in pairs(implements) do
         local spec = implement.spec_foldable
-        if spec ~= nil then
+        if spec ~= nil and implement.getToggledFoldDirection then
             if implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection then
+                local toggledFoldDirection = implement:getToggledFoldDirection()
                 -- local ret = Foldable.actionControllerFoldEvent(implement, -1)
-                if spec.getIsFoldAllowed and spec:getIsFoldAllowed() and spec.setFoldState then
-                    spec:setFoldState(implement:getToggledFoldDirection())
+                if implement.getIsFoldAllowed and toggledFoldDirection and implement:getIsFoldAllowed(toggledFoldDirection) and implement.setFoldState then
+                    implement:setFoldState(toggledFoldDirection)
                 end
             end
         end
