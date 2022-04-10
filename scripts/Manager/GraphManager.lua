@@ -1192,8 +1192,13 @@ function ADGraphManager:checkForMissingDualConnection(wp_current)
 
     if wp_current.incoming ~= nil and wp_current.out ~= nil and #wp_current.incoming == 1 and #wp_current.out == 1 then
         if wp_current.incoming[1] ~= nil and wp_current.out[1] ~= nil and wp_current.incoming[1] == wp_current.out[1] then
-            -- dual waypoint with reverse in connection
-            ret = true
+
+            local mapMarker = ADGraphManager:getMapMarkerByWayPointId(wp_current.id)
+            -- only dual waypoint without Marker is an error
+            if mapMarker == nil then
+                -- dual waypoint
+                ret = true
+            end
 
             -- search for a possible reverse connection
             for _, wp in pairs(self.wayPoints) do
