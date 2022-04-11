@@ -310,9 +310,19 @@ function ADTriggerManager.getRefuelTriggers(vehicle, ignoreFillLevel)
 
             if #refuelFillTypes > 0 then
                 for _, refuelFillType in pairs(refuelFillTypes) do
-                    local hasCapacity = (fillLevels[refuelFillType] ~= nil and fillLevels[refuelFillType] > 0) or (gcFillLevels[refuelFillType] ~= nil and gcFillLevels[refuelFillType] > 0)
+                    local hasFill = (fillLevels[refuelFillType] ~= nil and fillLevels[refuelFillType] > 0) or (gcFillLevels[refuelFillType] ~= nil and gcFillLevels[refuelFillType] > 0)
 
-                    if hasCapacity and not table.contains(refuelTriggers, trigger) then
+                    local isVehicleTrigger = true
+                    if AutoDrive.experimentalFeatures.RefuelOnlyAtValidStations == true then
+                        isVehicleTrigger = trigger.triggerNode and CollisionFlag.getHasFlagSet(trigger.triggerNode, CollisionFlag.TRIGGER_VEHICLE)
+                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADTriggerManager.getRefuelTriggers hasFill %s isVehicleTrigger %s", tostring(hasFill), tostring(isVehicleTrigger))
+                        if isVehicleTrigger then
+                            local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
+                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADTriggerManager.getRefuelTriggers Pos: %s,%s", tostring(triggerX), tostring(triggerZ))
+                        end
+                    end
+
+                    if isVehicleTrigger and hasFill and not table.contains(refuelTriggers, trigger) then
                         table.insert(refuelTriggers, trigger)
                     end
                 end
