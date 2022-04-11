@@ -322,6 +322,7 @@ function AutoDrive.getAllImplements(vehicle, includeVehicle)
 end
 
 function AutoDrive.foldAllImplements(vehicle)
+    -- FIXME: If user has manual attachment module and hydraulic hoses are not attached, AD will just sit idle.
     local implements = AutoDrive.getAllImplements(vehicle, true)
     local spec
     AutoDrive.setAugerPipeOpen(implements, false) -- close all pipes first
