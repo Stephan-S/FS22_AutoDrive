@@ -228,8 +228,8 @@
 		<text name="gui_ad_AL_left"                             text="Unload left" />
 		<text name="gui_ad_AL_behind"                           text="Unload behind" />
 		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: wait time after unload" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: wait time un-/load" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after un-/loading, before continue to drive - useful for loading at productions or unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="Should AutoDrive generate a route network from the traffic and helper data on the map?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />

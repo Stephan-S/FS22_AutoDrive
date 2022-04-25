@@ -228,8 +228,8 @@
 		<text name="gui_ad_AL_left"                             text="abladen links" />
 		<text name="gui_ad_AL_behind"                           text="abladen hinten" />
 		<text name="gui_ad_AL_right"                            text="abladen rechts" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: Wartezeit für Abladen" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Nach Abladen warten bevor weitergefahren wird - meist sinnvoll bei Abladen mittig: 0-kein Warten, sonst Wartezeit wie ausgewählt" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: Wartezeit Be- und Abladen" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Nach Be- und Abladen warten bevor weitergefahren wird - meist sinnvoll bei Beladen an Produktionen oder Abladen mittig: 0-kein Warten, sonst Wartezeit wie ausgewählt" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Streckengenerierung" />
 		<text name="gui_ad_scanConfirmationText"                text="Soll AutoDrive aus den Verkehrs- und Helferdaten der Karte ein Wegenetz erzeugen?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Kein Ernter mit gleichem Ziel" />
