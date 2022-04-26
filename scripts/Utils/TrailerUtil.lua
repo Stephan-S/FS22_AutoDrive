@@ -442,7 +442,7 @@ function AutoDrive.getTrailersOfImplement(vehicle, attachedImplement, onlyDischa
     return trailersOfImplement
 end
 
--- new, return list of all fillUnits of vehicle and trailers for nonFuel or nil
+-- new, return list of all fillUnits of vehicle and trailers for nonFuel or nil - currently not used
 function AutoDrive.getAllNonFuelFillUnits_old(vehicle, initialize)
     local nonFuelFillUnits = nil
     if vehicle == nil or vehicle.ad == nil then
@@ -828,7 +828,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                             AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs hasRequiredFillType %s isNotFilled %s", tostring(hasRequiredFillType), tostring(isNotFilled))
 
                             for _, allowedFillType in pairs(allowedFillTypes) do
-                                if trailer:getFillUnitSupportsFillType(i, allowedFillType) then
+                                if trailer:getFillUnitSupportsFillType(i, allowedFillType) and trailer:getFillUnitAllowsFillType(i, allowedFillType) then
                                     isFillAllowed = isFillAllowed or (fillLevels[allowedFillType] ~= nil)
                                     hasFill = hasFill or (fillLevels[allowedFillType] ~= nil and fillLevels[allowedFillType] > 0)
                                 end
