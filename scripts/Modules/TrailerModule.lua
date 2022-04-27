@@ -549,7 +549,7 @@ end
 
 function ADTrailerModule:startLoadingCorrectFillTypeAtTrigger(trailer, trigger, fillUnitIndex)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:startLoadingCorrectFillTypeAtTrigger start")
-    if not AutoDrive.fillTypesMatch(self.vehicle, trigger, trailer) then
+    if not AutoDrive.fillTypesMatch(self.vehicle, trigger, trailer, nil, fillUnitIndex) then
         local storedFillType = self.vehicle.ad.stateModule:getFillType()
         local toCheck = {'SEEDS','FERTILIZER','LIQUIDFERTILIZER'}
 
