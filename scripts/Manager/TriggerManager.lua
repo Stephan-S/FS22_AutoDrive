@@ -280,7 +280,7 @@ function ADTriggerManager.getRepairTriggers()
     return ADTriggerManager.repairTriggers
 end
 
--- returns only suitable fuel triggers according to used fuel types
+-- returns only suitable fuel triggers according to required fuel types
 function ADTriggerManager.getRefuelTriggers(vehicle, ignoreFillLevel)
 
 
