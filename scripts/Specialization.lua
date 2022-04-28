@@ -1218,7 +1218,7 @@ function AutoDrive:onStartAutoDrive()
             local actualParkDestination = self.ad.stateModule:getParkDestinationAtJobFinished()
             if actualParkDestination >= 1 then
             else
-                AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+                AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_parkVehicle_noPosSet;", 5000, self.ad.stateModule:getName())
             end
         end
     end

@@ -440,7 +440,7 @@ function ADInputManager:input_parkVehicle(vehicle)
         vehicle.ad.onRouteToPark = true
     else
         vehicle.ad.onRouteToPark = false
-        AutoDriveMessageEvent.sendMessage(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+        AutoDriveMessageEvent.sendMessage(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_parkVehicle_noPosSet;", 5000, vehicle.ad.stateModule:getName())
     end
 end
 
