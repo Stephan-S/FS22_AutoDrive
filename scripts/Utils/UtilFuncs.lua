@@ -975,27 +975,27 @@ function AutoDrive:onActivateObject(superFunc, vehicle)
 end
 
 function AutoDrive:onFillTypeSelection(fillType)
-    AutoDrive.debugPrint(nil, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... #self.fillableObjects %s fillType %s self.validFillableObject %s self.currentFillableObject %s self.isLoading %s", tostring(table.count(self.fillableObjects)), tostring(fillType), tostring(self.validFillableObject), tostring(self.currentFillableObject), tostring(self.isLoading))
+    AutoDrive.debugPrint(self.validFillableObject, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection start... #self.fillableObjects %s fillType %s self.validFillableObject %s self.currentFillableObject %s self.isLoading %s", tostring(table.count(self.fillableObjects)), tostring(fillType), tostring(self.validFillableObject), tostring(self.currentFillableObject), tostring(self.isLoading))
 
     -- fillUnit for wrong fillType is active, so disable loading and check again
     if fillType ~= nil and fillType ~= FillType.UNKNOWN then
         if self.validFillableObject and self.validFillableFillUnitIndex then
             if self.validFillableObject.getFillUnitSupportsFillType and not self.validFillableObject:getFillUnitSupportsFillType(self.validFillableFillUnitIndex, fillType) then
-                AutoDrive.debugPrint(nil, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection not getFillUnitSupportsFillType -> isLoading = false")
+                AutoDrive.debugPrint(self.validFillableObject, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection not getFillUnitSupportsFillType -> isLoading = false")
                 self.isLoading = false
             end
             if self.validFillableObject.getFillUnitAllowsFillType and not self.validFillableObject:getFillUnitAllowsFillType(self.validFillableFillUnitIndex, fillType) then
-                AutoDrive.debugPrint(nil, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection not getFillUnitAllowsFillType ")
+                AutoDrive.debugPrint(self.validFillableObject, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection not getFillUnitAllowsFillType ")
                 self.isLoading = false
             end
         end
     end
 
 	if not self.isLoading then
-        AutoDrive.debugPrint(nil, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection not self.isLoading")
+        AutoDrive.debugPrint(self.validFillableObject, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection not self.isLoading")
         if fillType ~= nil and fillType ~= FillType.UNKNOWN then
             for _, fillableObject in pairs(self.fillableObjects) do --copied from gdn getIsActivatable to get a valid Fillable Object even without entering vehicle (needed for refuel first time)
-                AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection fillableObject.object")
+                AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection fillableObject.object fillableObject.fillUnitIndex %s", tostring(fillableObject.fillUnitIndex))
 
                 if fillableObject.object.getFillUnitSupportsToolType and fillableObject.object:getFillUnitSupportsToolType(fillableObject.fillUnitIndex, ToolType.TRIGGER) then
                     AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
@@ -1023,10 +1023,42 @@ function AutoDrive:onFillTypeSelection(fillType)
                     Logging.info("[AD] Info: invalid load trigger (fillUnitIndex == nil) vehicle position: %s , %s", tostring(x), tostring(z))
                 end
             end
-            AutoDrive.debugPrint(nil, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.isLoading %s", tostring(self.isLoading))
+            AutoDrive.debugPrint(self.validFillableObject, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.isLoading %s", tostring(self.isLoading))
         end
     end
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection end")
+
+	if not self.isLoading then
+        AutoDrive.debugPrint(self.validFillableObject, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection not self.isLoading")
+        if fillType ~= nil and fillType ~= FillType.UNKNOWN then
+            for _, fillableObject in pairs(self.fillableObjects) do
+
+                local spec = fillableObject.object.spec_motorized
+                if spec ~= nil and spec.consumersByFillTypeName ~= nil then
+
+                    for _, consumer in pairs(spec.consumersByFillTypeName) do
+                        local fillUnitIndex = consumer.fillUnitIndex
+                        AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection fillUnitIndex %s", tostring(fillUnitIndex))
+                        if fillableObject.object.getFillUnitSupportsToolType and fillableObject.object:getFillUnitSupportsToolType(fillUnitIndex, ToolType.TRIGGER) then
+                            AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsToolType")
+                            if fillableObject.object.getFillUnitSupportsFillType and fillableObject.object:getFillUnitSupportsFillType(fillUnitIndex, fillType) then
+                                AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitSupportsFillType")
+                                if fillableObject.object.getFillUnitAllowsFillType and fillableObject.object:getFillUnitAllowsFillType(fillUnitIndex, fillType) then
+                                    AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection getFillUnitAllowsFillType")
+                                    if fillableObject.object.getFillUnitFreeCapacity and fillableObject.object:getFillUnitFreeCapacity(fillUnitIndex) > 0 then
+                                        AutoDrive.debugPrint(fillableObject.object, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection setIsLoading self.selectedFillType %s -> fillType %s", tostring(self.selectedFillType), tostring(fillType))
+                                        self:setIsLoading(true, fillableObject.object, fillUnitIndex, fillType)
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            AutoDrive.debugPrint(self.validFillableObject, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection self.isLoading %s", tostring(self.isLoading))
+        end
+    end
+    AutoDrive.debugPrint(nil, AutoDrive.DC_VEHICLEINFO, "AutoDrive:onFillTypeSelection end")
 end
 
 function AutoDrive.driveInDirection(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)

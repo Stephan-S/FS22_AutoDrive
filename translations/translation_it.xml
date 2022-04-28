@@ -68,7 +68,7 @@
         <text name="AD_No_Trailer"              		text="Impossibile trovare il rimorchio" />
         <text name="AD_No_Bunker"               		text="Impossibile trovare il bunker" />
         <text name="AD_No_Shovel"               		text="Impossibile trovare una pala collegata" />
-        <text name="AD_No_Refuel_Station"           		text="Impossibile trovare la stazione di rifornimento per: " />
+        <text name="AD_No_Refuel_Station"           		text="Impossibile trovare la stazione di rifornimento" />
         <text name="AD_No_Repair_Station"           		text="Impossibile trovare la stazione di riparazione per: " />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
         <text name="AD_MODE_DRIVETO"                		text="Guida" />

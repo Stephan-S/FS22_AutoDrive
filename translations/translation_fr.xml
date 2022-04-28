@@ -70,7 +70,7 @@
 		<text name="AD_No_Trailer"								text="Ne trouve pas de remorque" />
 		<text name="AD_No_Bunker"								text="Ne trouve pas le silo (bunker)" />
 		<text name="AD_No_Shovel"								text="Ne trouve pas de godet" />
-		<text name="AD_No_Refuel_Station"						text="n'a pas pu trouver une station essence pour:" />
+		<text name="AD_No_Refuel_Station"						text="n'a pas pu trouver une station essence" />
 		<text name="AD_No_Repair_Station"						text="n'a pas pu trouver un atelier pour:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Conduite" />

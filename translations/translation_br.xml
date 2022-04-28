@@ -68,7 +68,7 @@
 		<text name="AD_No_Trailer"								text="não foi possível encontrar o reboque" />
 		<text name="AD_No_Bunker"								text="não foi possível encontrar o silo" />
 		<text name="AD_No_Shovel"								text="não foi possível encontrar uma pá conectada" />
-		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Refuel_Station"						text="could not find refuel station" />
 		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Dirigir" />

@@ -71,7 +71,7 @@
 		<text name="AD_No_Trailer"								text="nie znaleziono przyczepy" />
 		<text name="AD_No_Bunker"								text="nie znaleziono silosu" />
 		<text name="AD_No_Shovel"								text="nie znaleziono łychy" />
-		<text name="AD_No_Refuel_Station"						text="nie znaleziono miejsca napełniania:" />
+		<text name="AD_No_Refuel_Station"						text="nie znaleziono miejsca napełniania" />
 		<text name="AD_No_Repair_Station"						text="nie znaleziono warsztatu dla:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Jazda" />

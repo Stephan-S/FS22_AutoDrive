@@ -61,7 +61,6 @@ function ADStateModule:reset()
     end
     self.remainingDriveTime = 0
     self.calculateRemainingDriveTimeInterval = 0
-    self.refuelFillType = 0
     self.activeBeforeSave = false
     self.AIVEActiveBeforeSave = false
     self.bunkerUnloadType = ADStateModule.BUNKER_UNLOAD_TRIGGER
@@ -196,7 +195,6 @@ function ADStateModule:writeStream(streamId)
     streamWriteBool(streamId, self.useCP)
     streamWriteString(streamId, self.driverName)
     streamWriteUInt16(streamId, self.remainingDriveTime)
-    streamWriteUIntN(streamId, self.refuelFillType, 8)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
@@ -225,7 +223,6 @@ function ADStateModule:readStream(streamId)
     self.useCP = streamReadBool(streamId)
     self.driverName = streamReadString(streamId)
     self.remainingDriveTime = streamReadUInt16(streamId)
-    self.refuelFillType = streamReadUIntN(streamId, 8)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
@@ -256,7 +253,6 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteBool(streamId, self.useCP)
     streamWriteString(streamId, self.driverName)
 	streamWriteUInt16(streamId, self.remainingDriveTime)
-    streamWriteUIntN(streamId, self.refuelFillType, 8)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
@@ -285,7 +281,6 @@ function ADStateModule:readUpdateStream(streamId)
     self.useCP = streamReadBool(streamId)
     self.driverName = streamReadString(streamId)
     self.remainingDriveTime = streamReadUInt16(streamId)
-    self.refuelFillType = streamReadUIntN(streamId, 8)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
@@ -360,7 +355,6 @@ function ADStateModule:update(dt)
         debug.useCP = self.useCP
         debug.driverName = self.driverName
         debug.remainingDriveTime = self.remainingDriveTime
-        debug.refuelFillType = self.refuelFillType
         if self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD].combine ~= nil then
             debug.combine = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD].combine:getName()
         else
@@ -1007,15 +1001,6 @@ end
 
 function ADStateModule:getRemainingDriveTime()
 	return self.remainingDriveTime
-end
-
-function ADStateModule:getRefuelFillType()
-	return self.refuelFillType
-end
-
-function ADStateModule:setRefuelFillType(refuelFillType)
-	self.refuelFillType = refuelFillType
-	self:raiseDirtyFlag()
 end
 
 function ADStateModule:nextBunkerUnloadType()
