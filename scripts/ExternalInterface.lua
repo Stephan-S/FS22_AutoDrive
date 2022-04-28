@@ -425,6 +425,168 @@ function AutoDrive:getIsCPTurning(vehicle)
 
 end
 
+-- CP event handler
+function AutoDrive:onCpFinished()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished start... enableParkAtJobFinished %s", AutoDrive.getSetting("enableParkAtJobFinished", self))
+    if self.isServer then
+        if self.ad and self.ad.stateModule and self.startAutoDrive and AutoDrive.getSetting("enableParkAtJobFinished", self) then
+            self.ad.onRouteToRefuel = false
+            self.ad.onRouteToRepair = false
+            self.ad.restartCP = false
+            self.ad.stateModule:setStartCP_AIVE(false)
+            local parkDestinationAtJobFinished = self.ad.stateModule:getParkDestinationAtJobFinished()
+
+            if parkDestinationAtJobFinished >= 1 then
+                local trailers, _ = AutoDrive.getAllUnits(self)
+                local fillLevel, _, _ = AutoDrive.getAllFillLevels(trailers)
+                if self.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER and fillLevel > 0 then
+                    AutoDrive.debugPrint(self, "AutoDrive:onCpFinished fillLevel > 0 %s", tostring(fillLevel))
+                    -- unload before going to park
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished unload before going to park - fillLevel %s", tostring(fillLevel))
+                    self.ad.stateModule:setMode(AutoDrive.MODE_DELIVERTO)
+                    self.ad.stateModule:setFirstMarker(self.ad.stateModule:getSecondMarkerId())
+                else
+                    AutoDrive.debugPrint(self, "AutoDrive:onCpFinished drive to park position")
+                    self.ad.onRouteToPark = true
+                    self.ad.stateModule:setMode(AutoDrive.MODE_DRIVETO)
+                    self.ad.stateModule:setFirstMarker(parkDestinationAtJobFinished)
+                end
+                self.ad.stateModule:getCurrentMode():start()
+            else
+                AutoDriveMessageEvent.sendMessageOrNotification(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_parkVehicle_noPosSet;", 5000, self.ad.stateModule:getName())
+                -- stop vehicle movement
+                self.ad.trailerModule:handleTrailerReversing(false)
+                AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, false, 0, 0, 0, 1)
+                self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+                if self.stopMotor ~= nil then
+                    self:stopMotor()
+                end
+            end
+        end
+    else
+        Logging.devError("AutoDrive:onCpFinished() must be called only on the server.")
+    end
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished end")
+end
+
+function AutoDrive:handleCPFieldWorker(vehicle)
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start...")
+    if vehicle.isServer then
+        if vehicle.ad and vehicle.ad.stateModule and vehicle.startAutoDrive then
+            -- restart CP
+            vehicle.ad.restartCP = true
+            if not vehicle.ad.stateModule:isActive() then
+                if vehicle.ad.stateModule:getStartCP_AIVE() and vehicle.ad.stateModule:getUseCP_AIVE() then
+                    -- CP button active
+                    if table.contains(AutoDrive.modesToStartFromCP, vehicle.ad.stateModule:getMode()) then
+                        -- mode allowed to activate
+                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start AD")
+                        vehicle.ad.stateModule:getCurrentMode():start()
+                    else
+                        -- deactivate CP button
+                        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s: $l10n_AD_Wrong_Mode_takeover_from_CP;", 5000, vehicle.ad.stateModule:getName())
+                        vehicle.ad.restartCP = false -- do not continue CP course
+                        vehicle.ad.stateModule:setStartCP_AIVE(false)
+                    end
+                end
+            else
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker - AD already active, should not happen")
+            end
+        end
+    else
+        Logging.devError("AutoDrive:handleCPFieldWorker() must be called only on the server.")
+    end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker end")
+end
+
+function AutoDrive:onCpEmpty()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpEmpty start...")
+    AutoDrive:handleCPFieldWorker(self)
+end
+
+function AutoDrive:onCpFull()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
+    AutoDrive:handleCPFieldWorker(self)
+end
+
+function AutoDrive:onCpFuelEmpty()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty start... autoRefuel %s", AutoDrive.getSetting("autoRefuel", self))
+    if self.isServer then
+        if self.ad and self.ad.stateModule and self.startAutoDrive and AutoDrive.getSetting("autoRefuel", self) then
+
+            local refuelDestination = ADTriggerManager.getClosestRefuelDestination(self, true)
+            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty refuelDestination %s", tostring(refuelDestination))
+
+            if refuelDestination ~= nil and refuelDestination >= 1 then
+                if not self.ad.stateModule:isActive() then
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty getCurrentMode() start %s", tostring(self.ad.stateModule:getCurrentMode()))
+                    self.ad.onRouteToRefuel = true
+                    self.ad.restartCP = true
+                    self.ad.stateModule:getCurrentMode():start()
+                else
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty - AD already active, should not happen")
+                end
+            else
+                local refuelFillTypes = AutoDrive.getRequiredRefuels(self, true)
+                AutoDriveMessageEvent.sendMessageOrNotification(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station;", 5000, self.ad.stateModule:getName())
+            end
+        end
+    else
+        Logging.devError("AutoDrive:onCpFuelEmpty() must be called only on the server.")
+    end
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty end")
+end
+
+function AutoDrive:onCpBroken()
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken start... autoRepair %s", tostring(AutoDrive.getSetting("autoRepair", self)))
+
+    if self.isServer then
+        if self.ad and self.ad.stateModule and self.startAutoDrive and AutoDrive.getSetting("autoRepair", self) then
+            local repairDestinationMarkerNodeID = AutoDrive:getClosestRepairTrigger(self)
+            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO,"AutoDrive:onCpBroken repairDestinationMarkerNodeID %s", tostring(repairDestinationMarkerNodeID))
+            if repairDestinationMarkerNodeID ~= nil then
+                if not self.ad.stateModule:isActive() then
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken getCurrentMode() start %s", tostring(self.ad.stateModule:getCurrentMode()))
+                    self.ad.onRouteToRepair = true
+                    self.ad.restartCP = true
+                    self.ad.stateModule:getCurrentMode():start()
+                else
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken - AD already active, should not happen")
+                end
+            else
+                AutoDriveMessageEvent.sendMessageOrNotification(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Repair_Station;", 5000, self.ad.stateModule:getName())
+            end
+        end
+    else
+        Logging.devError("AutoDrive:onCpBroken() must be called only on the server.")
+    end
+    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken end")
+end
+
+--- Disables click to switch, if the user clicks on the hud or the editor mode is active.
+function AutoDrive:enterVehicleRaycastClickToSwitch(superFunc, x, y)
+
+    if AutoDrive.isEditorModeEnabled() then 
+        return
+    end
+
+    --- Checks if the mouse is over a hud element.
+    if AutoDriveHud:isMouseOverHud(x, y) then 
+        return
+    end
+
+    superFunc(self, x, y)
+end
+
+function AutoDrive:getCanAdTakeControl()
+    if self.isServer then
+        if self.ad and self.ad.stateModule and not self.ad.stateModule:isActive() then
+            return self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()
+        end
+    end
+    return false
+end
+
 -- Autoloader
 --[[
 APalletAutoLoader:

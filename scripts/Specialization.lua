@@ -26,7 +26,7 @@ function AutoDrive.registerEventListeners(vehicleType)
             "onPostDetachImplement",
             "onEnterVehicle",
             "onLeaveVehicle",
-            -- CP events
+            -- CP events, see ExternalInterface.lua
             "onCpFinished",
             "onCpEmpty",
             "onCpFull",
@@ -45,7 +45,8 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
     -- SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
 
-    --- Disables click to switch, if the user clicks on the hud or the editor mode is active.
+    -- Disables click to switch, if the user clicks on the hud or the editor mode is active.
+    -- see ExternalInterface.lua
     if vehicleType.functions["enterVehicleRaycastClickToSwitch"] ~= nil then 
         SpecializationUtil.registerOverwrittenFunction(vehicleType, "enterVehicleRaycastClickToSwitch", AutoDrive.enterVehicleRaycastClickToSwitch)
     end
@@ -68,7 +69,7 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
     SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
     SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)    
-    SpecializationUtil.registerFunction(vehicleType, "getCanAdTakeControl", AutoDrive.getCanAdTakeControl)
+    SpecializationUtil.registerFunction(vehicleType, "getCanAdTakeControl", AutoDrive.getCanAdTakeControl) -- see ExternalInterface.lua
 end
 
 function AutoDrive.registerEvents(vehicleType)
@@ -721,87 +722,6 @@ function AutoDrive:onLeaveVehicle()
     end
 end
 
--- CP event handler
-function AutoDrive:onCpFinished()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished start...")
-    if self.isServer then
-        if self.ad and self.ad.stateModule then
-            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished - event handler not implemented")
-        end
-    else
-        Logging.devError("AutoDrive:onCpFinished() must be called only on the server.")
-    end
-end
-
-function AutoDrive:handleCPFieldWorker(vehicle)
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start...")
-    if vehicle.isServer then
-        if vehicle.ad and vehicle.ad.stateModule and vehicle.startAutoDrive then
-            -- restart CP
-            vehicle.ad.restartCP = true
-            if not vehicle.ad.stateModule:isActive() then
-                if vehicle.ad.stateModule:getStartCP_AIVE() and vehicle.ad.stateModule:getUseCP_AIVE() then
-                    -- CP button active
-                    if table.contains(AutoDrive.modesToStartFromCP, vehicle.ad.stateModule:getMode()) then
-                        -- mode allowed to activate
-                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start AD")
-                        vehicle.ad.stateModule:getCurrentMode():start()
-                    else
-                        -- deactivate CP button
-                        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s: $l10n_AD_Wrong_Mode_takeover_from_CP;", 5000, vehicle.ad.stateModule:getName())
-                        vehicle.ad.restartCP = false -- do not continue CP course
-                        vehicle.ad.stateModule:setStartCP_AIVE(false)
-                    end
-                end
-            else
-                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker - AD already active, should not happen")
-            end
-        end
-    else
-        Logging.devError("AutoDrive:handleCPFieldWorker() must be called only on the server.")
-    end
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker end")
-end
-
-function AutoDrive:onCpEmpty()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpEmpty start...")
-    AutoDrive:handleCPFieldWorker(self)
-end
-
-function AutoDrive:onCpFull()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
-    AutoDrive:handleCPFieldWorker(self)
-end
-
-function AutoDrive:handleCPMaintenance(vehicle)
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance start")
-    if vehicle.isServer then
-        if vehicle.ad and vehicle.ad.stateModule and vehicle.startAutoDrive then
-            if not vehicle.ad.stateModule:isActive() then
-                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance start AD")
-                vehicle.ad.stateModule:getCurrentMode():start()
-            else
-                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance - AD already active, should not happen")
-            end
-        end
-    else
-        Logging.devError("AutoDrive:handleCPMaintenance() must be called only on the server.")
-    end
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPMaintenance end")
-end
-
-function AutoDrive:onCpFuelEmpty()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty start...")
-    AutoDrive:handleCPMaintenance(self)
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFuelEmpty end")
-end
-
-function AutoDrive:onCpBroken()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken start...")
-    AutoDrive:handleCPMaintenance(self)
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpBroken end")
-end
-
 function AutoDrive:onDelete()
     AutoDriveHud:deleteMapHotspot(self)
 end
@@ -1331,14 +1251,15 @@ function AutoDrive.passToExternalMod(vehicle)
 
     if not vehicle.ad.isStoppingWithError and distanceToStart < 30 then
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod pass to other mod...")
-        if vehicle.ad.stateModule:getStartCP_AIVE() then
-            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod CP / AIVE button enabled")
+        if vehicle.ad.stateModule:getStartCP_AIVE() or vehicle.ad.restartCP == true then
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod CP / AIVE button enabled or restartCP")
             -- CP / AIVE button enabled
-            if vehicle.cpStartStopDriver ~= nil and vehicle.ad.stateModule:getUseCP_AIVE() then
+            if (vehicle.cpStartStopDriver ~= nil and vehicle.ad.stateModule:getUseCP_AIVE()) or vehicle.ad.restartCP == true then
                 -- CP button active
                 vehicle.spec_enterable.isControlled = false
                 if vehicle.ad.restartCP == true then
                     -- restart CP to continue
+                    vehicle.ad.restartCP = false
                     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod pass control to CP with restart")
                     AutoDrive:RestartCP(vehicle)
                 else
@@ -1723,26 +1644,3 @@ function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
     end
 end
 
---- Disables click to switch, if the user clicks on the hud or the editor mode is active.
-function AutoDrive:enterVehicleRaycastClickToSwitch(superFunc, x, y)
-
-    if AutoDrive.isEditorModeEnabled() then 
-        return
-    end
-
-    --- Checks if the mouse is over a hud element.
-    if AutoDriveHud:isMouseOverHud(x, y) then 
-        return
-    end
-
-    superFunc(self, x, y)
-end
-
-function AutoDrive:getCanAdTakeControl()
-    if self.isServer then
-        if self.ad and self.ad.stateModule and not self.ad.stateModule:isActive() then
-            return self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()
-        end
-    end
-    return false
-end
