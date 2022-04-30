@@ -440,13 +440,13 @@ function AutoDrive:onCpFinished()
                 local trailers, _ = AutoDrive.getAllUnits(self)
                 local fillLevel, _, _ = AutoDrive.getAllFillLevels(trailers)
                 if self.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER and fillLevel > 0 then
-                    AutoDrive.debugPrint(self, "AutoDrive:onCpFinished fillLevel > 0 %s", tostring(fillLevel))
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished fillLevel > 0 %s", tostring(fillLevel))
                     -- unload before going to park
                     AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished unload before going to park - fillLevel %s", tostring(fillLevel))
                     self.ad.stateModule:setMode(AutoDrive.MODE_DELIVERTO)
                     self.ad.stateModule:setFirstMarker(self.ad.stateModule:getSecondMarkerId())
                 else
-                    AutoDrive.debugPrint(self, "AutoDrive:onCpFinished drive to park position")
+                    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished drive to park position")
                     self.ad.onRouteToPark = true
                     self.ad.stateModule:setMode(AutoDrive.MODE_DRIVETO)
                     self.ad.stateModule:setFirstMarker(parkDestinationAtJobFinished)
