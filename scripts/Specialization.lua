@@ -1470,6 +1470,17 @@ function AutoDrive:updateAutoDriveLights()
         if self.updateAILights ~= nil then
             self:updateAILights(isOnField or isInRangeToLoadUnloadTarget or isInBunkerSilo)
         end
+
+        if self.setTurnLightState then
+            if AutoDrive.getSetting("useHazardLightReverse", self) then
+                local drivingReverse = (self.lastSpeedReal * self.movingDirection) < 0
+                if drivingReverse then
+                    self:setTurnLightState(Lights.TURNLIGHT_HAZARD, true)
+                elseif self.lastSpeedReal * 3600 < 0.1 then
+                    self:setTurnLightState(Lights.TURNLIGHT_OFF)
+                end
+            end
+        end
     end
 end
 

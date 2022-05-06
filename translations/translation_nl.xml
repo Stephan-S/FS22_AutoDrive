@@ -170,6 +170,8 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
 		<text name="gui_ad_activeUnloading"						text="Actief ontladen" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Ontlaad de oogstmachine wanneer deze rijdt." />
 		<text name="gui_ad_restrictToField"						text="Route zoeken beperken tot veld" />
