@@ -9,7 +9,7 @@
 		</GuiElement>
 
 		<GuiElement type="bitmap" profile="ingameMenuSettingsBox" id="settingsContainer">
-			<GuiElement type="scrollingLayout" profile="ingameMenuSettingsLayout" >
+			<GuiElement type="scrollingLayout" profile="ingameMenuSettingsLayout" id="boxLayout" >
 
 				<GuiElement type="multiTextOption" profile="multiTextOptionSettings" onCreate="onCreateAutoDriveSetting" onClick="onOptionChange" name="blinkValue" toolTipElementId="ingameMenuHelpBoxText">
 					<GuiElement type="button" profile="multiTextOptionSettingsLeft" />

@@ -9,7 +9,7 @@ ADExperimentalFeaturesSettingsPage = {}
 
 local ADExperimentalFeaturesSettingsPage_mt = Class(ADExperimentalFeaturesSettingsPage, TabbedMenuFrameElement)
 
-ADExperimentalFeaturesSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "cloneElement", "headerText"}
+ADExperimentalFeaturesSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "cloneElement", "headerText", "boxLayout"}
 
 function ADExperimentalFeaturesSettingsPage:new(target)
     local element = TabbedMenuFrameElement.new(target, ADExperimentalFeaturesSettingsPage_mt)
@@ -40,6 +40,8 @@ function ADExperimentalFeaturesSettingsPage:onCreate()
                 stateNumber = 2
             end
             cloned:setState(stateNumber)
+            -- focusId has to be unique, but is copied by clone element, so generate and assign a new unique focusId
+            cloned.focusId = "adFocus_" .. featureName
             table.insert(self.experimentalFeaturesElements, cloned)
         end
         self.cloneElement:delete()
@@ -47,14 +49,18 @@ function ADExperimentalFeaturesSettingsPage:onCreate()
 end
 
 function ADExperimentalFeaturesSettingsPage:onCreateElement(element)
-    table.insert(self.experimentalFeaturesElements, element)
+    -- table.insert(self.experimentalFeaturesElements, element)
 end
 
 function ADExperimentalFeaturesSettingsPage:onFrameOpen()
     ADExperimentalFeaturesSettingsPage:superClass().onFrameOpen(self)
-    FocusManager:unsetHighlight(FocusManager.currentFocusData.highlightElement)
-    FocusManager:unsetFocus(FocusManager.currentFocusData.focusElement)
+    -- FocusManager:unsetHighlight(FocusManager.currentFocusData.highlightElement)
+    -- FocusManager:unsetFocus(FocusManager.currentFocusData.focusElement)
     self:updateElementsState()
+	for _, child in pairs(self.boxLayout.elements) do
+		FocusManager:loadElementFromCustomValues(child, child.focusId, child.focusChangeData, child.focusActive, child.isAlwaysFocusedOnOpen)
+    end
+    FocusManager:setFocus(self.boxLayout)
 end
 
 function ADExperimentalFeaturesSettingsPage:onFrameClose()
