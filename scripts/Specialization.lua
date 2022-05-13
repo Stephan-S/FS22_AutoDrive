@@ -267,7 +267,6 @@ function AutoDrive:onPostLoad(savegame)
     self.ad.showingMouse = false
 
     self.ad.lastMouseState = false
-
     -- Creating a new transform on front of the vehicle
     self.ad.frontNode = createTransformGroup(self:getName() .. "_frontNode")
     link(self.components[1].node, self.ad.frontNode)
@@ -428,6 +427,7 @@ function AutoDrive:onUpdate(dt)
             else
                 -- all folded - no further tries necessary
                 self.ad.foldStartTime = 0
+                AutoDrive.getAllVehicleDimensions(self, true)
             end
         end
 
@@ -714,6 +714,7 @@ function AutoDrive:onEnterVehicle()
     if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
         AutoDrive.Hud.lastUIScale = 0
     end
+    AutoDrive.getAllVehicleDimensions(self, true)
 end
 
 function AutoDrive:onLeaveVehicle()
@@ -981,8 +982,7 @@ function AutoDrive:startAutoDrive()
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
             self.ad.foldStartTime = g_time
-
-            
+            AutoDrive.getAllVehicleDimensions(self, true)
             if self.spec_aiVehicle ~= nil then
                 if self.getAINeedsTrafficCollisionBox ~= nil then
                     if self:getAINeedsTrafficCollisionBox() then                    

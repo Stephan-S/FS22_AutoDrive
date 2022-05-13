@@ -87,6 +87,10 @@ AutoDrive.FLAG_SUBPRIO = 1
 AutoDrive.FLAG_TRAFFIC_SYSTEM = 2
 AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 
+-- add this to measured size of vehicles
+AutoDrive.DIMENSION_ADDITION = 0.2
+
+
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
 	ad_color_dualConnection = {0, 0, 1, 1},
@@ -454,7 +458,6 @@ function AutoDrive:init()
 	else
 		ADGraphManager:checkYPositionIntegrity()
 	end
-
 	AutoDrive.updateDestinationsMapHotspots()
 	AutoDrive:registerDestinationListener(AutoDrive, AutoDrive.updateDestinationsMapHotspots)
 

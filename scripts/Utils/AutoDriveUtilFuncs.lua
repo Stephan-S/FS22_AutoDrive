@@ -578,3 +578,17 @@ function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
 
     return supportedFillTypes
 end
+
+function AutoDrive.hasVehicleRotatingYComponents(vehicle)
+    local ret = false
+    if vehicle then
+        if #vehicle.componentJoints >= 1 then
+            for k, componentJoint in ipairs(vehicle.componentJoints) do
+                if vehicle.componentJoints[k].rotLimit[2] ~= 0 then
+                    ret = true
+                end
+            end
+        end
+    end
+    return ret
+end
