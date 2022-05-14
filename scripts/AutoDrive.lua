@@ -198,11 +198,12 @@ function AutoDrive:loadMap(name)
     AutoDrive.readLocalSettingsFromXML()
 
 	ADUserDataManager:load()
+
+	AutoDrive.Hud = AutoDriveHud:new()
+
 	if g_server ~= nil then
 		ADUserDataManager:loadFromXml()
 	end
-
-	AutoDrive.Hud = AutoDriveHud:new()
 
 	AutoDrive.Hud:loadHud()
 
