@@ -50,7 +50,7 @@
         <text name="input_ADRefuelVehicle"          		text="AD: Rifornire il veicolo" />
 	<text name="input_ADRepairVehicle"			text="AD: Ripara il veicolo" />	
         <text name="input_ADSwapTargets"            		text="AD: Scambia Destinazione" />
-        <text name="input_ADStartCP"                		text="AD: Passa a CP/ALIVE" />
+        <text name="input_ADStartCP"                		text="AD: Passa a CP/AIVE" />
         <text name="input_ADToggleCP_AIVE"          		text="AD: Attiva/Disattiva CP/AIVE" />
         <text name="input_AD_devAction"             		text="AD: Azione dello sviluppatore" />
         <text name="input_ADToggleAutomaticPickupTarget"    	text="AD: Attiva/Disattiva il target di ritiro automatico" />
@@ -70,7 +70,7 @@
         <text name="AD_No_Shovel"               		text="Impossibile trovare una pala collegata" />
         <text name="AD_No_Refuel_Station"           		text="Impossibile trovare la stazione di rifornimento" />
         <text name="AD_No_Repair_Station"           		text="Impossibile trovare la stazione di riparazione per: " />
-		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Modalità AD errata per lavorare insieme al CP" />
         <text name="AD_MODE_DRIVETO"                		text="Guida" />
         <text name="AD_MODE_DELIVERTO"              		text="Consegna" />
         <text name="AD_MODE_PICKUPANDDELIVER"           	text="Carica e consegna" />
@@ -164,12 +164,12 @@
         <text name="gui_ad_maxTriggerDistance_tooltip"      	text="Distanza dall'obiettivo in cui i trigger vengono rilevati e attivati." />
         <text name="gui_ad_useBeaconLights"             	text="Accendi Fari" />
         <text name="gui_ad_useBeaconLights_tooltip"         	text="Usa i fari sulla strada." />
-		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
-		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
-		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
-		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
-		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
-		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Faro da lavoro durante carico/scarico" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Sì - Utilizzare le luci di lavoro durante il carico o lo scarico presso un trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Faro da lavoro quando si trova in un silos bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Sì - Utilizzare le luci di lavoro quando ci si trova in un silos bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Luci di emergenza" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Sì - Utilizzare le luci di emergenza durante la guida in retromarcia" />
         <text name="gui_ad_activeUnloading"             	text="Scarico attivo" />
         <text name="gui_ad_activeUnloading_tooltip"         	text="Scaricare le mietitrici durante la guida." />
         <text name="gui_ad_restrictToField"             	text="Pianificazione del percorso limitata " />
@@ -214,7 +214,7 @@
         <text name="gui_ad_playSounds"              		text="Suono" />
         <text name="gui_ad_playSounds_tooltip"          	text="Abilita gli effetti sonori per i clic del mouse e le notifiche" />
         <text name="gui_ad_syncMultiTargets"           		text="Sincronizza obbiettivi multipli" />
-        <text name="gui_ad_syncMultiTargets_tooltip"        	text="Più driver che utilizzano la stessa cartella per più target sincronizzeranno i target successivi" />
+        <text name="gui_ad_syncMultiTargets_tooltip"        	text="Più autisti che utilizzano la stessa cartella per più obiettivi sincronizzeranno gli obiettivi successivi" />
         <text name="gui_ad_enableParkAtJobFinished"         	text="Parcheggia a lavoro finito" />
         <text name="gui_ad_enableParkAtJobFinished_tooltip"     text="Disponibile solo nelle modalità Ritiro e consegna, consegna: se il lavoro è terminato, verrà raggiunta la posizione di parcheggio memorizzata del veicolo / attrezzatura. Su Dedi-Server disponibile solo per parcheggio auto!" />
         <text name="gui_ad_autoTipSide"                         text="Selezione lato automatico" />
@@ -293,8 +293,8 @@
         <text name="ad_color_currentConnection"     	text="12 Linea percorso successivo" />
         <text name="ad_color_closestLine"       	text="13 Linea dal veicolo al nodo più vicino" />
         <text name="ad_color_editorHeightLine"      	text="14 Linea dal nodo di superficie a quello sopra il veicolo" />
-		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
-		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
+		<text name="ad_color_previewOk" 			            text="15 Anteprima svolte Ok, nessuna collisione" />
+		<text name="ad_color_previewNotOk" 			            text="16 Anteprima svolte non ok, ce collisione" />
  
         <text name="button_delete_all"      text="Cancella Tutto" />
         <text name="button_reset_selected"  text="Ripristina selezionato" />
