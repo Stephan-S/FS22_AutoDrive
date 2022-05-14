@@ -290,6 +290,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 line next path" />
 		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
 		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
         <text name="button_delete_all"                                                                      text="Hepsini sil"  />
 		<text name="button_reset_selected" 					    text="Reset selected" />                                                                                          

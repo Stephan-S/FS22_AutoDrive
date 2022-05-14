@@ -292,6 +292,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 ligne vers l'itinéraire" />
 		<text name="ad_color_closestLine" 			            text="13 ligne du véhicule vers le point le plus proche" />
 		<text name="ad_color_editorHeightLine" 			        text="14 ligne entre le point au-dessus du véhicule et celui en surface" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Effacer tout" />
 		<text name="button_reset_selected" 					    text="Effacement sélectionné" />

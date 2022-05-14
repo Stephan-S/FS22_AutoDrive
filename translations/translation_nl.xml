@@ -294,6 +294,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 lijn volgend pad" />
 		<text name="ad_color_closestLine" 			            text="13 lijn van voertuig naar dichtstbijzijnde routepunt" />
 		<text name="ad_color_editorHeightLine" 			        text="14 lijn van oppervlakte routepunt naar degene boven het voertuig" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Alles verwijderen" />
 		<text name="button_reset_selected" 					    text="Geselecteerde terugzetten" />

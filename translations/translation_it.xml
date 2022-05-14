@@ -278,6 +278,7 @@
  
         <text name="gui_ad_colorSettingsTitle"          text="Assegnazioni dei colori" />
  
+        <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
         <text name="ad_color_singleConnection"      	text="01 Linea di connessione unidirezionale" />
         <text name="ad_color_dualConnection"       	text="02 Linea di connessione bidirezionale" />
         <text name="ad_color_reverseConnection"     	text="03 Linea di collegamento inverso" />
@@ -292,6 +293,8 @@
         <text name="ad_color_currentConnection"     	text="12 Linea percorso successivo" />
         <text name="ad_color_closestLine"       	text="13 Linea dal veicolo al nodo più vicino" />
         <text name="ad_color_editorHeightLine"      	text="14 Linea dal nodo di superficie a quello sopra il veicolo" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
  
         <text name="button_delete_all"      text="Cancella Tutto" />
         <text name="button_reset_selected"  text="Ripristina selezionato" />

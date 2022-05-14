@@ -294,6 +294,8 @@
 		<text name="ad_color_currentConnection" 				text="12 линия планируемого пути" />
 		<text name="ad_color_closestLine"						text="13 линия от техники до ближайшей путевой точки" />
 		<text name="ad_color_editorHeightLine"					text="14 линия от поверхности путевой точки к точке над техникой " />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Удалить все" />
 		<text name="button_reset_selected" 						text="Сбросить выбранное" />

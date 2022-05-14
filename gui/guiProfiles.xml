@@ -14,7 +14,8 @@
         <Preset name="colorGlassLight_50" value="0.718 0.716 0.715 0.0625" />
         <Preset name="colorGlassLight_75" value="0.718 0.716 0.715 0.09375" />
 
-        <Preset name="colorMainUI" value="0.9910 0.3865 0.0100 1" />
+<!-- FS 22 blue -->
+        <Preset name="colorMainUI" value="0.023 0.533 0.847 1" />
         <Preset name="colorMainUIAlt" value="0.9900 0.4640 0.0010 1" />
         <Preset name="colorDisabled" value="0.4 0.4 0.4 1" />
 
