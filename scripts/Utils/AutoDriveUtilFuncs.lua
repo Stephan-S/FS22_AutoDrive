@@ -579,13 +579,17 @@ function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
     return supportedFillTypes
 end
 
+-- rotLimit is only available on server, so asume there are Y rotateable parts
 function AutoDrive.hasVehicleRotatingYComponents(vehicle)
-    local ret = false
-    if vehicle then
-        if #vehicle.componentJoints >= 1 then
-            for k, componentJoint in ipairs(vehicle.componentJoints) do
-                if vehicle.componentJoints[k].rotLimit[2] ~= 0 then
-                    ret = true
+    local ret = true
+    if vehicle.isServer then
+        ret = false
+        if vehicle then
+            if #vehicle.componentJoints >= 1 then
+                for k, componentJoint in ipairs(vehicle.componentJoints) do
+                    if vehicle.componentJoints[k].rotLimit and vehicle.componentJoints[k].rotLimit[2] ~= 0 then
+                        ret = true
+                    end
                 end
             end
         end
