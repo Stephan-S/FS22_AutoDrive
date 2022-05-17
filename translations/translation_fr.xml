@@ -12,7 +12,7 @@
 		<text name="input_ADRecord"								text="AD: Enregistrer une route à sens unique" />
 		<text name="input_ADRecord_Dual"						text="AD: Enregistrer une route à double-sens" />
 		<text name="input_ADRecord_SubPrio"						text="AD: Enregistrer une route secondaire" />
-		<text name="input_ADRecord_SubPrioDual"					text="AD: Enregistrer une route secondaire à double-sens " />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: Enregistrer une route secondaire à double-sens" />
 		<text name="input_ADSelectTarget"						text="AD: Sélect. prochaine destination" />
 		<text name="input_ADSelectPreviousTarget"				text="AD: Sélect. destination précédente" />
 		<text name="input_AD_Speed_up"							text="AD: Augmenter la vitesse" />
@@ -70,9 +70,9 @@
 		<text name="AD_No_Trailer"								text="Ne trouve pas de remorque" />
 		<text name="AD_No_Bunker"								text="Ne trouve pas le silo (bunker)" />
 		<text name="AD_No_Shovel"								text="Ne trouve pas de godet" />
-		<text name="AD_No_Refuel_Station"						text="n'a pas pu trouver une station essence" />
+		<text name="AD_No_Refuel_Station"						text="n'a pas pu trouver une station essence pour:" />
 		<text name="AD_No_Repair_Station"						text="n'a pas pu trouver un atelier pour:" />
-		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Ce mode AD ne fonctionne en conbinaison avec le CP" />
 		<text name="AD_MODE_DRIVETO"							text="Conduite" />
 		<text name="AD_MODE_DELIVERTO"							text="Livraison" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Chargement et livraison" />
@@ -86,10 +86,10 @@
 		<text name="AD_lshift_for_reverse" 						text="MAJG marche arrière" />
 		<text name="gui_ad_Setting"								text="AutoDrive - paramètres" />
 		<text name="gui_ad_collisionHeigth"						text="Hauteur de collision au sol" />
-		<text name="gui_ad_collisionHeigth_tooltip"				text="Réglage de la détection de collision devant le véhicule. Si d'autres véhicules ne sont pas détectés pendant la conduite, réduisez progressivement. (Par défaut 2 m)" />
+		<text name="gui_ad_collisionHeigth_tooltip"				text="Réglage de la détection de collision devant le véhicule. Si d'autres véhicules ne sont pas détectés pendant la conduite, réduisez progressivement.(Par défaut 2m)" />
 		<text name="gui_ad_blinkValue"						    text="Clignotant automatique" />
 		<text name="gui_ad_blinkValue_tooltip"					text="Angle de braquage pour activer automatiquement les clignotants. (0 = clignotants désactivés)" />
-		<text name="gui_ad_pipe_offset"							text="Décalage de la buse" />
+		<text name="gui_ad_pipe_offset"							text="Décalage de la goulotte" />
 		<text name="gui_ad_followDistance"						text="Distance de moissonneuse" />
 		<text name="gui_ad_followDistance_tooltip"				text="Distance depuis l'arrière de la moissonneuse lorsqu'elle est suivie." />
 		<text name="gui_ad_lookahead_turning"					text="Distance de détection (virage)" />
@@ -159,17 +159,17 @@
 		<text name="gui_ad_onlyDeliver"					        text="Livraison uniquement" />
 		<text name="gui_ad_PickupandDeliver"					text="Collecte et livraison" />
 		<text name="gui_ad_rotateTargets"					    text="Cycle de collecte et livraison" />
-		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: Aucune destination / uniquement les points de collecte / uniquement les points de livraison / les points de collecte et livraison sont choisis alternativement depuis un dossier (désactivé dans le dossier par défaut, possible uniquement si gestion par dossier activée)" />
+		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: Aucune destination / uniquement les points de collecte / uniquement les points de livraison / les points de collecte et livraison sont choisis alternativement depuis un dossier (désactivé dans le dossier par défaut). Possible uniquement si gestion par dossier activée)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Distance maximum du déclencheur" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance de détection du déclencheur au point de destination pour le chargement/déchargement." />
 		<text name="gui_ad_useBeaconLights"						text="Gyrophares" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Oui - ils seront allumés automatiquement en dehors des champs / Non - pas d'allumage ou extinction automatique" />
-		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
-		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
-		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
-		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
-		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
-		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Feux de travail pendant le chargement/déchargement" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Oui - Allume les feux de travail pendant les opérations de chargement et déchargement sur un déclencheur" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Feux de travail lors d'opérations dans un silo bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Oui - Allume les feux de travail dans un silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Feux de détresse" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Oui - Allume les feux de détresse pendant une marche arrière" />
 		<text name="gui_ad_activeUnloading"						text="Déchargement en mouvement" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Déchargement des moissoneuses en roulant." />
 		<text name="gui_ad_restrictToField"						text="Recherche de parcours limité au champ" />
@@ -296,7 +296,7 @@
 		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Effacer tout" />
-		<text name="button_reset_selected" 					    text="Effacement sélectionné" />
+		<text name="button_reset_selected" 					    text="Effacer la sélection" />
 		
 		<text name="AD_task_pathfinding"						text="Planifier le parcours" />
 		<text name="AD_task_catch_up_with_combine"				text="Rattraper la moissonneuse-batteuse" />
