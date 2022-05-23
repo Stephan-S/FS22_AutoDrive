@@ -714,7 +714,10 @@ function AutoDrive:onEnterVehicle()
     if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
         AutoDrive.Hud.lastUIScale = 0
     end
-    AutoDrive.getAllVehicleDimensions(self, true)
+    if self.isServer and self.ad and self.ad.stateModule and not self.ad.stateModule:isActive() then
+        -- do not force dimension update while tabbing through active AD vehicles, which might be unfolded
+        AutoDrive.getAllVehicleDimensions(self, true)
+    end
 end
 
 function AutoDrive:onLeaveVehicle()
