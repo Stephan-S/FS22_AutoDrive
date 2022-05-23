@@ -444,7 +444,9 @@ function AutoDrive:onUpdate(dt)
         self.ad.taskModule:abortAllTasks()
     end
 
-    AutoDrive.updateAutoDriveLights(self)
+    if self.isServer then
+        AutoDrive.updateAutoDriveLights(self)
+    end
 
     --For 'legacy' purposes, this value should be kept since other mods already test for this:
     self.ad.mapMarkerSelected = self.ad.stateModule:getFirstMarkerId()
@@ -1089,6 +1091,7 @@ function AutoDrive:stopAutoDrive()
                 self.ad.onRouteToRepair = false
                 AutoDrive.debugPrint(self, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
             end
+            AutoDrive.updateAutoDriveLights(self, true)
 
             local isStartingAIVE = (not self.ad.isStoppingWithError and self.ad.stateModule:getStartCP_AIVE() and not self.ad.stateModule:getUseCP_AIVE())
             local isPassingToCP = not self.ad.isStoppingWithError and (self.ad.restartCP == true or (self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()))
@@ -1456,8 +1459,12 @@ function AutoDrive:leaveVehicle(superFunc)
     superFunc(self)
 end
 
-function AutoDrive:updateAutoDriveLights()
-    if self.ad ~= nil and self.ad.stateModule:isActive() then
+function AutoDrive:updateAutoDriveLights(switchOff)
+    if switchOff then
+        if AutoDrive.getSetting("useHazardLightReverse", self) then
+            self:setTurnLightState(Lights.TURNLIGHT_OFF)
+        end
+    elseif self.ad ~= nil and self.ad.stateModule:isActive() then
         local isInRangeToLoadUnloadTarget = false
         local isInBunkerSilo              = false
         local isOnField                   = ( self.getIsOnField ~= nil and self:getIsOnField() )
