@@ -366,7 +366,8 @@ function AutoDrive.getAllImplementsFolded(vehicle)
         spec = implement.spec_baleLoader
         if spec then
             -- bale loader
-            ret = ret and not spec:getIsAutomaticBaleUnloadingInProgress()
+            ret = ret and not implement:getIsAutomaticBaleUnloadingInProgress()
+            ret = ret and not implement:getIsBaleLoaderFoldingPlaying()
             ret = ret and spec.emptyState == BaleLoader.EMPTY_NONE
         end
     end
