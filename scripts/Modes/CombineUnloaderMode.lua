@@ -492,7 +492,7 @@ function CombineUnloaderMode:getSideChaseOffsetX()
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
     local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
-    local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
+    local sideChaseTermPipeOut = AutoDrive.getPipeLength(self.combine)
     -- Some combines fold up their pipe so tight that targeting it could cause a collision.
     -- So, choose the max between the two to avoid a collison
     local sideChaseTermX = math.max(sideChaseTermPipeIn, sideChaseTermPipeOut)
@@ -520,7 +520,6 @@ function CombineUnloaderMode:getSideChaseOffsetX_new()
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
     local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
-    local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
     -- Some combines fold up their pipe so tight that targeting it could cause a collision.
     -- So, choose the max between the two to avoid a collison
     local sideChaseTermX = 0
@@ -737,7 +736,7 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
                 (
                     (
                         self:isUnloaderOnCorrectSide(self.pipeSide) 
-                        and math.abs(angleToSideChaseSide) < math.abs(angleToRearChaseSide)
+                        -- and math.abs(angleToSideChaseSide) < math.abs(angleToRearChaseSide)
                     )
                     or (planningPhase == true)
                 )
