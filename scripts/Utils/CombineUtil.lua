@@ -114,7 +114,7 @@ function AutoDrive.getPipeSide(combine)
     local dischargeNode = AutoDrive.getDischargeNode(combine)
     local dischargeX, dichargeY, dischargeZ = getWorldTranslation(dischargeNode)
     local diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
-    if combine.ad ~= nil then
+    if combine.ad ~= nil and AutoDrive.isPipeOut(combine) and not AutoDrive.getIsBufferCombine(combine) then
         combine.ad.storedPipeSide = AutoDrive.sign(diffX)
     end
     return AutoDrive.sign(diffX)
