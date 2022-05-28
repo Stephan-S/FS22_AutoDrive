@@ -271,6 +271,55 @@
         <text name="gui_ad_debugChannelRoadNetwork"                                                         text="Karayolu ağı"  />
 		<text name="gui_ad_debugChannelBGA"						                                                      text="BGA Mode" />
         <text name="gui_ad_debugChannelAll"                                                                 text="Herşey"  />
+
+        <!-- Ad editor -->
+		<text name="gui_ad_editor_title"									text="Autodrive"/>
+		<text name="gui_ad_editor_basic_title"								text="Basic"/>
+		<text name="gui_ad_editor_destinations_title"						text="Destinations"/>
+		<text name="gui_ad_editor_advanced_title"							text="Advanced"/>
+
+		<!-- Ad editor brushes -->
+		<text name="gui_ad_editor_brush_connect_name"						text="Connect"/>
+		<text name="gui_ad_editor_brush_connect_primary_text"				text="Continues select"/>
+		<text name="gui_ad_editor_brush_connect_tertiary_text"				text="Change draw mode (%s)"/>
+		<text name="gui_ad_editor_brush_connect_type_normal"				text="Route"/>
+		<text name="gui_ad_editor_brush_connect_type_sub_route"				text="Sub route"/>
+		<text name="gui_ad_editor_brush_connect_type_reverse_route"			text="Reverse route"/>
+		<text name="gui_ad_editor_brush_connect_type_reverse_sub_route"		text="Reverse sub route"/>
+		<text name="gui_ad_editor_brush_connect_type_crossing_route"		text="Crossing route"/>
+		<text name="gui_ad_editor_brush_connect_type_sub_crossing_route"	text="Crossing sub route"/>
+
+		<text name="gui_ad_editor_brush_create_name"						text="Create"/>
+		<text name="gui_ad_editor_brush_create_primary_text"				text="Create a waypoint"/>
+
+		<text name="gui_ad_editor_brush_curve_name"							text="Curve line"/>
+		<text name="gui_ad_editor_brush_curve_primary_text"					text="Create a curve line"/>
+		<text name="gui_ad_editor_brush_curve_primary_axis_text"			text="Change offset (%d %%)"/>
+		<text name="gui_ad_editor_brush_curve_secondary_axis_text"			text="Change curve center (%d %%)"/>
+		<text name="gui_ad_editor_brush_curve_tertiary_text"				text="Change draw mode (%s)"/>
+
+		<text name="gui_ad_editor_brush_delete_name"						text="Delete"/>
+		<text name="gui_ad_editor_brush_delete_primary_text"				text="Delete a waypoint"/>
+
+		<text name="gui_ad_editor_brush_move_name"							text="Move"/>
+		<text name="gui_ad_editor_brush_move_primary_text"					text="Move a waypoint"/>
+
+		<text name="gui_ad_editor_brush_straight_name"						text="Straight line"/>
+		<text name="gui_ad_editor_brush_straight_primary_text"				text="Create straight line"/>
+		<text name="gui_ad_editor_brush_straight_primary_axis_text"			text="Change spacing (%d)"/>
+		<text name="gui_ad_editor_brush_straight_tertiary_text"				text="Change draw mode (%s)"/>
+
+		<text name="gui_ad_editor_brush_createDestination_name"				text="Create destination"/>
+		<text name="gui_ad_editor_brush_createDestination_primary_text"		text="Create destination"/>
+		<text name="gui_ad_editor_brush_createDestination_input_title"		text="New destination"/>
+
+		<text name="gui_ad_editor_brush_deleteDestination_name"				text="Delete destination"/>
+		<text name="gui_ad_editor_brush_deleteDestination_primary_text"		text="Delete destination"/>
+		<text name="gui_ad_editor_brush_deleteDestination_yesNo_title"		text="Delete destination (%s)"/>
+
+		<text name="gui_ad_editor_brush_renameDestination_name"				text="Rename destination"/>
+		<text name="gui_ad_editor_brush_renameDestination_primary_text"		text="Rename destination"/>
+		<text name="gui_ad_editor_brush_renameDestination_input_title"		text="Rename destination (%s)"/>
                                                                                                             
         <text name="gui_ad_notificationHistoryTitle"                                                        text="Bildirimler"  />
 

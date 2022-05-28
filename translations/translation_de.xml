@@ -279,6 +279,55 @@
 		<text name="gui_ad_debugChannelRoadNetwork"				text="Streckennetz" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA Modus" />
 		<text name="gui_ad_debugChannelAll" 					text="Alles" />
+
+		<!-- Ad editor -->
+		<text name="gui_ad_editor_title"									text="Autodrive"/>
+		<text name="gui_ad_editor_basic_title"								text="Basic"/>
+		<text name="gui_ad_editor_destinations_title"						text="Ziele"/>
+		<text name="gui_ad_editor_advanced_title"							text="Erweitert"/>
+
+		<!-- Ad editor brushes -->
+		<text name="gui_ad_editor_brush_connect_name"						text="Verbinden"/>
+		<text name="gui_ad_editor_brush_connect_primary_text"				text="Continues select"/>
+		<text name="gui_ad_editor_brush_connect_tertiary_text"				text="Ändere Route (%s)"/>
+		<text name="gui_ad_editor_brush_connect_type_normal"				text="Hauptstrecke"/>
+		<text name="gui_ad_editor_brush_connect_type_sub_route"				text="Nebenstrecke"/>
+		<text name="gui_ad_editor_brush_connect_type_reverse_route"			text="Hauptstrecke rückwärts"/>
+		<text name="gui_ad_editor_brush_connect_type_reverse_sub_route"		text="Nebenstrecke rückwärts"/>
+		<text name="gui_ad_editor_brush_connect_type_crossing_route"		text="Hauptstrecke 2-Weg"/>
+		<text name="gui_ad_editor_brush_connect_type_sub_crossing_route"	text="Nebenstrecke 2-Weg"/>
+
+		<text name="gui_ad_editor_brush_create_name"						text="Erstellen"/>
+		<text name="gui_ad_editor_brush_create_primary_text"				text="Erstellt ein Wegpunkt"/>
+
+		<text name="gui_ad_editor_brush_curve_name"							text="Kurve"/>
+		<text name="gui_ad_editor_brush_curve_primary_text"					text="Eine Linie die man kursiv einstellen kann."/>
+		<text name="gui_ad_editor_brush_curve_primary_axis_text"			text="Ändert den Offset (%d %%)"/>
+		<text name="gui_ad_editor_brush_curve_secondary_axis_text"			text="Verschiebt den Kurvenmittelpunkt(%d %%)"/>
+		<text name="gui_ad_editor_brush_curve_tertiary_text"				text="Ändere Route (%s)"/>
+
+		<text name="gui_ad_editor_brush_delete_name"						text="Löschen"/>
+		<text name="gui_ad_editor_brush_delete_primary_text"				text="Löscht einen Wegpunkt"/>
+
+		<text name="gui_ad_editor_brush_move_name"							text="Bewegen"/>
+		<text name="gui_ad_editor_brush_move_primary_text"					text="Bewegt einen Wegpunkt"/>
+
+		<text name="gui_ad_editor_brush_straight_name"						text="Gerade Linie"/>
+		<text name="gui_ad_editor_brush_straight_primary_text"				text="Eine gerade Linie"/>
+		<text name="gui_ad_editor_brush_straight_primary_axis_text"			text="Ändert den Abstand (%d)"/>
+		<text name="gui_ad_editor_brush_straight_tertiary_text"				text="Ändere Route (%s)"/>
+
+		<text name="gui_ad_editor_brush_createDestination_name"				text="Erstelle Zielpunkt"/>
+		<text name="gui_ad_editor_brush_createDestination_primary_text"		text="Erstelle Zielpunkt"/>
+		<text name="gui_ad_editor_brush_createDestination_input_title"		text="Neuen Zielpunkt"/>
+
+		<text name="gui_ad_editor_brush_deleteDestination_name"				text="Lösche Zielpunkt"/>
+		<text name="gui_ad_editor_brush_deleteDestination_primary_text"		text="Lösche Zielpunkt"/>
+		<text name="gui_ad_editor_brush_deleteDestination_yesNo_title"		text="Lösche Zielpunkt (%s)"/>
+
+		<text name="gui_ad_editor_brush_renameDestination_name"				text="Zielpunkt umbenennen"/>
+		<text name="gui_ad_editor_brush_renameDestination_primary_text"		text="Zielpunkt umbenennen"/>
+		<text name="gui_ad_editor_brush_renameDestination_input_title"		text="Zielpunkt umbenennen (%s)"/>
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Benachrichtigungen" />
 
