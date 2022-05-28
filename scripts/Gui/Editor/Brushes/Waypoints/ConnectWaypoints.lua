@@ -6,21 +6,22 @@ ADBrushConnect = {
 	name = "connect",
 	TYPE_NORMAL = 1,
 	TYPE_LOW_PRIO = 2,
-	TYPE_REVERSE_NORMAL = 3,
-	TYPE_REVERSE_LOW_PRIO = 4,
-	TYPE_CROSSING = 5,
-	TYPE_CROSSING_LOW_PRIO = 6,
+	TYPE_CROSSING = 3,
+	TYPE_CROSSING_LOW_PRIO = 4,
+	TYPE_REVERSE_NORMAL = 5,
+	TYPE_REVERSE_LOW_PRIO = 6,
 	TYPE_MIN = 1,
 	TYPE_MAX = 6,
-	typeTexts = {
-		"type_normal",
-		"type_sub_route",
-		"type_reverse_route",
-		"type_reverse_sub_route",
-		"type_crossing_route",
-		"type_sub_crossing_route"
-	},
 }
+ADBrushConnect.typeTexts = {
+	[ADBrushConnect.TYPE_NORMAL] = "type_normal",
+	[ADBrushConnect.TYPE_LOW_PRIO] = "type_sub_route",
+	[ADBrushConnect.TYPE_REVERSE_NORMAL] = "type_reverse_route",
+	[ADBrushConnect.TYPE_REVERSE_LOW_PRIO] = "type_reverse_sub_route",
+	[ADBrushConnect.TYPE_CROSSING] = "type_crossing_route",
+	[ADBrushConnect.TYPE_CROSSING_LOW_PRIO] = "type_sub_crossing_route",
+}
+
 local ADBrushConnect_mt = Class(ADBrushConnect,ADBrush)
 function ADBrushConnect.new(customMt,cursor)
 	local self =  ADBrush.new(customMt or ADBrushConnect_mt, cursor)
