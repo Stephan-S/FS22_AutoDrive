@@ -3,8 +3,7 @@
 ---@class ADBrushMove : ADBrush
 ADBrushMove = {
 	imageFilename ="textures/input_record_3.dds",
-	name = "Move",
-	primaryButtonText = "Move",
+	name = "move",
 }
 local ADBrushMove_mt = Class(ADBrushMove,ADBrush)
 function ADBrushMove.new(customMt,cursor)
@@ -54,5 +53,5 @@ function ADBrushMove:deactivate()
 end
 
 function ADBrushMove:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end

@@ -3,9 +3,7 @@
 ---@class ADBrushConnect : ADBrush
 ADBrushConnect = {
 	imageFilename ="textures/input_record_2.dds",
-	name = "Connect",
-	primaryButtonText = "Continues select",
-	tertiaryButtonText = "Change draw mode (%s)",
+	name = "connect",
 	TYPE_NORMAL = 1,
 	TYPE_LOW_PRIO = 2,
 	TYPE_REVERSE_NORMAL = 3,
@@ -15,12 +13,12 @@ ADBrushConnect = {
 	TYPE_MIN = 1,
 	TYPE_MAX = 6,
 	typeTexts = {
-		"Route",
-		"Sub route",
-		"Reverse route",
-		"Reverse sub route",
-		"Crossing route",
-		"Crossing sub route"
+		"type_normal",
+		"type_sub_route",
+		"type_reverse_route",
+		"type_reverse_sub_route",
+		"type_crossing_route",
+		"type_sub_crossing_route"
 	},
 }
 local ADBrushConnect_mt = Class(ADBrushConnect,ADBrush)
@@ -113,9 +111,9 @@ function ADBrushConnect:deactivate()
 end
 
 function ADBrushConnect:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end
 
 function ADBrushConnect:getButtonTertiaryText()
-	return string.format(self.tertiaryButtonText, self.typeTexts[self.mode])
+	return self:getTranslation(self.tertiaryButtonText, ADBrushConnect.getTranslation(ADBrushConnect, self.typeTexts[self.mode]))
 end

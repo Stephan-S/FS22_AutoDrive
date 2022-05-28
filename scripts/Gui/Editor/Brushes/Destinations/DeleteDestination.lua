@@ -4,9 +4,7 @@
 ---@class ADBrushDeleteDestination : ADBrush
 ADBrushDeleteDestination = {
 	imageFilename ="textures/input_removeMapMarker_1.dds",
-	name = "Delete destination",
-	inputTitle = "Delete destination",
-	primaryButtonText = "Delete destination",
+	name = "deleteDestination",
 }
 local ADBrushDeleteDestination_mt = Class(ADBrushDeleteDestination,ADBrush)
 function ADBrushDeleteDestination.new(customMt,cursor)
@@ -22,9 +20,16 @@ function ADBrushDeleteDestination:onButtonPrimary()
 	if nodeId ~= nil then
 		local node = ADGraphManager:getMapMarkerByWayPointId(nodeId)
 		if node then
+			-- TODO: Add yes or no dialog 
+			--self:openTextInput(self.deleteDestination,self:getTranslation(self.inputTitle), node)
+
 			ADGraphManager:removeMapMarker(node.markerIndex)
 		end
 	end
+end
+
+function ADBrushDeleteDestination:deleteDestination()
+	
 end
 
 function ADBrushDeleteDestination:onButtonSecondary(isDown, isDrag, isUp)
@@ -45,5 +50,5 @@ end
 
 
 function ADBrushDeleteDestination:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end

@@ -28,6 +28,7 @@ ADEditorGUI = {
 			z = 0
 		}
 	},	
+	translationPrefix = "gui_ad_editor_"
 }
 local ADEditorGUI_mt = Class(ADEditorGUI)
 ADEditorGUI.categoriesXmlFile = "gui/courseEditorCategories.xml"
@@ -52,7 +53,7 @@ function ADEditorGUI:loadCategoriesFromXML()
 
 	constructionXMLFile:iterate("constructionCategories.category", function (_, key)
 		local categoryName = constructionXMLFile:getString(key .. "#name")
-		local title = g_i18n:convertText(constructionXMLFile:getString(key .. "#title"))
+		local title = g_i18n:convertText(constructionXMLFile:getString(key .. "#title"), AutoDrive.currentModName)
 		local iconFilename = constructionXMLFile:getString(key .. "#iconFilename")
 		if iconFilename then 
 			iconFilename = Utils.getFilename(iconFilename, AutoDrive.directory)
@@ -65,7 +66,7 @@ function ADEditorGUI:loadCategoriesFromXML()
 		g_storeManager:addConstructionCategory(categoryName, title, iconFilename, iconUVs, "")
 		constructionXMLFile:iterate(key .. ".tab", function (_, tKey)
 			local tabName = constructionXMLFile:getString(tKey .. "#name")
-			local tabTitle = g_i18n:convertText(constructionXMLFile:getString(tKey .. "#title"))
+			local tabTitle = g_i18n:convertText(constructionXMLFile:getString(tKey .. "#title"), AutoDrive.currentModName)
 			local tabIconFilename = constructionXMLFile:getString(tKey .. "#iconFilename")
 			if tabIconFilename then 
 				tabIconFilename = Utils.getFilename(tabIconFilename, AutoDrive.directory)
@@ -121,7 +122,7 @@ function ADEditorGUI:buildTerrainSculptBrushes(superFunc,numItems)
 			table.insert(tabs[i], {
 				price = 0,
 				imageFilename = Utils.getFilename(class.imageFilename,AutoDrive.directory),
-				name = class.name,
+				name = ADBrush.getName(class),
 				brushClass = class,
 				brushParameters = {
 					ADEditorGUI.ad,
@@ -181,7 +182,7 @@ function ADEditorGUI:setSelectedCategory(superFunc, ix, ...)
 		self.destructBrush:setParameters(
 			ADEditorGUI.ad,
 			self.camera)
-		self.buttonDestruct:setText(self.destructBrush.name)
+		self.buttonDestruct:setText(ADBrush.getName(self.destructBrush))
 	else
 		if self.defaultDestructText then
 			local class = g_constructionBrushTypeManager:getClassObjectByTypeName("destruct")

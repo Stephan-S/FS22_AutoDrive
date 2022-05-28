@@ -5,7 +5,14 @@
 ADBrush = {
 	imageFilename ="textures/input_record_4.dds",
 	name = "base",
-	radius = 0.5
+	radius = 0.5,
+	translationPrefix = "gui_ad_editor_brush_",
+	primaryButtonText = "primary_text",
+	primaryAxisText = "primary_axis_text",
+	secondaryButtonText = "secondary_text",
+	secondaryAxisText = "secondary_axis_text",
+	tertiaryButtonText = "tertiary_text",
+	inputTitle = "input_title"
 }
 local ADBrush_mt = Class(ADBrush, ConstructionBrush)
 function ADBrush.new(customMt, cursor)
@@ -60,4 +67,12 @@ function ADBrush:openTextInput(callback,title,args)
 			confirmText = g_i18n:getText("button_ok"),
 			args = args
 		})
+end
+
+function ADBrush.getName(class)
+	return g_i18n:getText(ADBrush.translationPrefix .. class.name .. "_name")
+end
+
+function ADBrush:getTranslation(translation, ...)
+	return string.format(g_i18n:getText(ADBrush.translationPrefix .. self.name .. "_" .. translation), ...)
 end

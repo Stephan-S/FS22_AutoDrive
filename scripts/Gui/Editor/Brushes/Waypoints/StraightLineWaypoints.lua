@@ -3,14 +3,11 @@
 ---@class ADBrushStraightLine : ADBrushConnect
 ADBrushStraightLine = {
 	imageFilename ="textures/input_record_4.dds",
-	name = "Straight line",
+	name = "straight",
 	DELAY = 100,
 	MIN_DIST = 2,
 	MAX_DIST = 20,
 	START_DIST = 6,
-	primaryButtonText = "Create straight line",
-	primaryAxisText = "Change spacing (%d)",
-
 }
 local ADBrushStraightLine_mt = Class(ADBrushStraightLine,ADBrushConnect)
 function ADBrushStraightLine.new(customMt,cursor)
@@ -72,13 +69,15 @@ function ADBrushStraightLine:sendEvent()
 	for i=1,#self.sortedWaypoints do 
 		nodeId = self.sortedWaypoints[i]
 		node = ADGraphManager:getWayPointById(nodeId)
-		x, y, z, flags = node.x, node.y, node.z, node.flags
-		ADGraphManager:moveWayPoint(nodeId, x, y, z, flags)
+		if node then
+			x, y, z, flags = node.x, node.y, node.z, node.flags
+			ADGraphManager:moveWayPoint(nodeId, x, y, z, flags)
 
-		if i>1 then 
-			self:connectWaypoints(prevNodeId,nodeId)
+			if i>1 then 
+				self:connectWaypoints(prevNodeId,nodeId)
+			end
+			prevNodeId = nodeId
 		end
-		prevNodeId = nodeId
 	end
 end
 
@@ -188,10 +187,10 @@ function ADBrushStraightLine:deactivate()
 end
 
 function ADBrushStraightLine:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end
 
 function ADBrushStraightLine:getAxisPrimaryText()
-	return string.format(self.primaryAxisText, self.spacing)
+	return self:getTranslation(self.primaryAxisText, self.spacing)
 end
 

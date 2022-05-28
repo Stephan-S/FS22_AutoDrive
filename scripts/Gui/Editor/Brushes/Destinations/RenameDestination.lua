@@ -3,9 +3,7 @@
 ---@class ADBrushRenameDestination : ADBrush
 ADBrushRenameDestination = {
 	imageFilename ="textures/input_editMapMarker_1.dds",
-	name = "Rename destination",
-	inputTitle = "Rename destination",
-	primaryButtonText = "Delete destination",
+	name = "renameDestination",
 }
 local ADBrushRenameDestination_mt = Class(ADBrushRenameDestination,ADBrush)
 function ADBrushRenameDestination.new(customMt,cursor)
@@ -21,7 +19,7 @@ function ADBrushRenameDestination:onButtonPrimary()
 	if nodeId ~= nil then
 		local node = ADGraphManager:getMapMarkerByWayPointId(nodeId)
 		if node ~= nil then
-			self:openTextInput(self.renameDestination,self.inputTitle,node.markerIndex)
+			self:openTextInput(self.renameDestination, self:getTranslation(self.inputTitle, node.name), node.markerIndex)
 		end
 	end
 end
@@ -50,5 +48,5 @@ end
 
 
 function ADBrushRenameDestination:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end

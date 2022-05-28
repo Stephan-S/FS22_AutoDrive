@@ -3,8 +3,7 @@
 ---@class ADBrushDelete : ADBrush
 ADBrushDelete = {
 	imageFilename ="textures/input_removeWaypoint.dds",
-	name = "Delete waypoints",
-	primaryButtonText = "Delete",
+	name = "delete",
 }
 local ADBrushDelete_mt = Class(ADBrushDelete,ADBrush)
 function ADBrushDelete.new(customMt,cursor)
@@ -42,5 +41,5 @@ end
 
 
 function ADBrushDelete:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end

@@ -3,9 +3,7 @@
 ---@class ADBrushCreateDestination : ADBrush
 ADBrushCreateDestination = {
 	imageFilename ="textures/input_createMapMarker_1.dds",
-	name = "Create destination",
-	inputTitle = "New destination",
-	primaryButtonText = "Create destination",
+	name = "createDestination",
 
 }
 local ADBrushCreateDestination_mt = Class(ADBrushCreateDestination,ADBrush)
@@ -22,7 +20,7 @@ function ADBrushCreateDestination:onButtonPrimary()
 	if nodeId ~= nil then
 		local node = ADGraphManager:getMapMarkerByWayPointId(nodeId)
 		if node == nil then
-			self:openTextInput(self.createDestination,self.inputTitle,nodeId)
+			self:openTextInput(self.createDestination,self:getTranslation(self.inputTitle),nodeId)
 		end
 	end
 end
@@ -51,5 +49,5 @@ end
 
 
 function ADBrushCreateDestination:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end

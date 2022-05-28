@@ -3,8 +3,7 @@
 ---@class ADBrushCreate : ADBrush
 ADBrushCreate = {
 	imageFilename ="textures/plusSign.dds",
-	name = "Create",
-	primaryButtonText = "Create",
+	name = "create",
 }
 local ADBrushCreate_mt = Class(ADBrushCreate,ADBrush)
 function ADBrushCreate.new(customMt,cursor)
@@ -40,5 +39,5 @@ end
 
 
 function ADBrushCreate:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end

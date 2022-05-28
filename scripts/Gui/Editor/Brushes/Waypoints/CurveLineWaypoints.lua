@@ -3,7 +3,7 @@
 ---@class ADBrushCurve : ADBrushStraightLine
 ADBrushCurve = {
 	imageFilename ="textures/input_record_4.dds",
-	name = "Curve line",
+	name = "curve",
 	DELAY = 100,
 	MIN_OFFSET = -1,
 	MAX_OFFSET = 1,
@@ -11,9 +11,6 @@ ADBrushCurve = {
 	MAX_CENTER = 1,
 	START_CENTER = 0.5,
 	START_OFFSET = 0,
-	primaryButtonText = "Create curve line",
-	primaryAxisText = "Change offset (%d %%)",
-	secondaryAxisText = "Change curve center (%d %%)",
 }
 local ADBrushCurve_mt = Class(ADBrushCurve,ADBrushStraightLine)
 function ADBrushCurve.new(customMt,cursor)
@@ -131,13 +128,13 @@ function ADBrushCurve:deactivate()
 end
 
 function ADBrushCurve:getButtonPrimaryText()
-	return self.primaryButtonText
+	return self:getTranslation(self.primaryButtonText)
 end
 
 function ADBrushCurve:getAxisPrimaryText()
-	return string.format(self.primaryAxisText,self.offset)
+	return self:getTranslation(self.primaryAxisText, self.offset) 
 end
 
 function ADBrushCurve:getAxisSecondaryText()
-	return string.format(self.secondaryAxisText,self.center)
+	return self:getTranslation(self.secondaryAxisText, self.center)
 end
