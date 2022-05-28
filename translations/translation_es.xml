@@ -68,7 +68,7 @@
 		<text name="AD_No_Trailer"								text="no puedo encontrar el remolque" />
 		<text name="AD_No_Bunker"								text="no puedo encontrar el silo búnker" />
 		<text name="AD_No_Shovel"								text="no puedo encontrar una pala conectada" />
-		<text name="AD_No_Refuel_Station"						text="no puedo encontrar estación de repostaje:" />
+		<text name="AD_No_Refuel_Station"						text="no puedo encontrar estación de repostaje" />
 		<text name="AD_No_Repair_Station"						text="no puedo encontrar la estación de reparación:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Conducir" />
@@ -166,6 +166,8 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
 		<text name="gui_ad_activeUnloading"						text="Descarga activa" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Descargue las cosechadoras mientras conduce" />
 		<text name="gui_ad_restrictToField"						text="Restringir conducción solo dentro del campo" />
@@ -274,6 +276,7 @@
 
 		<text name="gui_ad_colorSettingsTitle" 			        text="Asignaciones de color" />
    
+        <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
 		<text name="ad_color_singleConnection" 			        text="01 línea de conexión unidireccional" />
 		<text name="ad_color_dualConnection" 			        text="02 línea de conexión bidireccional" />
 		<text name="ad_color_reverseConnection" 			    text="03 línea de conexión inversa" />
@@ -288,6 +291,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 líneas siguiente ruta" />
 		<text name="ad_color_closestLine" 			            text="13 líneas desde el vehículo hasta el punto de referencia más cercano" />
 		<text name="ad_color_editorHeightLine" 			        text="14 línea desde el waypoint de superficie hasta el vehículo cercano" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Eliminar todas" />
 		<text name="button_reset_selected" 					    text="Resetear seleccionados" />

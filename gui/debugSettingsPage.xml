@@ -9,7 +9,7 @@
 
 		<GuiElement type="bitmap" profile="ingameMenuSettingsBox" id="settingsContainer">
             <GuiElement type="scrollingLayout" profile="ingameMenuSettingsLayout" id="boxLayout" >
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="1">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="1">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -17,7 +17,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelVehicle" onCreate="onCreateAutoDriveText1" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="2">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="2">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -25,7 +25,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelCombine" onCreate="onCreateAutoDriveText2" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="4">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="4">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -33,7 +33,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelTrailer" onCreate="onCreateAutoDriveText3" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="8">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="8">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -41,7 +41,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelDev" onCreate="onCreateAutoDriveText4" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="16">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="16">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -49,7 +49,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelPath" onCreate="onCreateAutoDriveText5" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="32">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="32">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -57,7 +57,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelSensor" onCreate="onCreateAutoDriveText6" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="64">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="64">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -65,7 +65,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelNetwork" onCreate="onCreateAutoDriveText7" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="128">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="128">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -73,7 +73,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelExternalInterface" onCreate="onCreateAutoDriveText8" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="256">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="256">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -81,7 +81,7 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelRender" onCreate="onCreateAutoDriveText9" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="512">
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="512">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
@@ -89,15 +89,15 @@
 						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelRoadNetwork" onCreate="onCreateAutoDriveText10" />
 					</GuiElement>
 				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="1024">
-					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
-						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
-						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />
-						<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="256px 128px 128px 128px" />
-						<GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelBGA" onCreate="onCreateAutoDriveText11" />
-					</GuiElement>
-				</GuiElement>
-				<GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="65535">
+				<!-- <GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="1024"> -->
+					<!-- <GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle"> -->
+						<!-- <GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" /> -->
+						<!-- <GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" /> -->
+						<!-- <GuiElement type="bitmap" profile="autoDriveDebugSettingsCheckboxToggleIcon" imageUVs="256px 128px 128px 128px" /> -->
+						<!-- <GuiElement type="text" profile="autoDriveDebugSettingsCheckboxToggleText" text="gui_ad_debugChannelBGA" onCreate="onCreateAutoDriveText11" /> -->
+					<!-- </GuiElement> -->
+				<!-- </GuiElement> -->
+				<GuiElement type="listItem" profile="autoDriveDebugSettingsCheckbox" onCreate="onCreateCheckbox" onCreateArgs="65535">
 					<GuiElement type="toggleButton" profile="autoDriveDebugSettingsCheckboxToggle" onClick="onClickToggle">
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleTick" />
 						<GuiElement type="button" profile="autoDriveDebugSettingsCheckboxToggleUntick" />

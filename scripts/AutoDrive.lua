@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.5"
+AutoDrive.version = "2.0.0.6"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -15,6 +15,7 @@ AutoDrive.experimentalFeatures.detectGrasField = true
 AutoDrive.experimentalFeatures.colorAssignmentMode = false
 AutoDrive.experimentalFeatures.UTurn = true
 AutoDrive.experimentalFeatures.FoldImplements = true
+AutoDrive.experimentalFeatures.RefuelOnlyAtValidStations = true
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true
@@ -86,6 +87,10 @@ AutoDrive.FLAG_SUBPRIO = 1
 AutoDrive.FLAG_TRAFFIC_SYSTEM = 2
 AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 
+-- add this to measured size of vehicles
+AutoDrive.DIMENSION_ADDITION = 0.2
+
+
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
 	ad_color_dualConnection = {0, 0, 1, 1},
@@ -116,8 +121,7 @@ AutoDrive.fuelFillTypes = {
 }
 
 AutoDrive.nonFillableFillTypes = { -- these fillTypes should not be transported
-    "AIR",
-	"SILAGE_ADDITIVE"
+    "AIR"
 }
 
 AutoDrive.seedFillTypes = {
@@ -194,11 +198,12 @@ function AutoDrive:loadMap(name)
     AutoDrive.readLocalSettingsFromXML()
 
 	ADUserDataManager:load()
+
+	AutoDrive.Hud = AutoDriveHud:new()
+
 	if g_server ~= nil then
 		ADUserDataManager:loadFromXml()
 	end
-
-	AutoDrive.Hud = AutoDriveHud:new()
 
 	AutoDrive.Hud:loadHud()
 
@@ -454,7 +459,6 @@ function AutoDrive:init()
 	else
 		ADGraphManager:checkYPositionIntegrity()
 	end
-
 	AutoDrive.updateDestinationsMapHotspots()
 	AutoDrive:registerDestinationListener(AutoDrive, AutoDrive.updateDestinationsMapHotspots)
 

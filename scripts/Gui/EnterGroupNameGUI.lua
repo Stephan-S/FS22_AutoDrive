@@ -30,7 +30,10 @@ function ADEnterGroupNameGui:onClickOk()
 
     if  self.textInputElement.text ~= ADGraphManager.debugGroupName then
         -- do not allow user to create debug group
-        ADGraphManager:addGroup(self.textInputElement.text)
+        local groupName = self.textInputElement.text
+        groupName = string.gsub(groupName, ",", "_") -- remove separation characters
+        groupName = string.gsub(groupName, ";", "_")
+        ADGraphManager:addGroup(groupName)
     end
     
     self:onClickBack()

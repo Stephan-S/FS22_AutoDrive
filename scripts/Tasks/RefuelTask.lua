@@ -6,17 +6,15 @@ RefuelTask.STATE_DRIVING = 2
 function RefuelTask:new(vehicle, destinationID)
     local o = RefuelTask:create()
     o.vehicle = vehicle
-    o.isRefueled = false
     o.destinationID = destinationID
     o.trailers = nil
-    o.fillTypesCount = 1
     return o
 end
 
 function RefuelTask:setUp()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:setUp ")
     self.refuelTrigger = nil
-    self.fillTypesCount = 1
+    self.matchingFillTypes = {}
     if ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = RefuelTask.STATE_PATHPLANNING
         self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.destinationID)
@@ -30,13 +28,11 @@ function RefuelTask:setUp()
 end
 
 function RefuelTask:update(dt)
-
+    local inRefuelRange = false
     if self.refuelTrigger ~= nil and self.refuelTrigger.stoppedTimer ~= nil then
         -- update timer
         self.refuelTrigger.stoppedTimer:timer(not self.refuelTrigger.isLoading,300,dt)
     end
-
-    self.isRefueled = self.fillTypesCount > table.count(AutoDrive.fuelFillTypes)
 
     if self.state == RefuelTask.STATE_PATHPLANNING then
         if self.vehicle.ad.pathFinderModule:hasFinished() then
@@ -60,29 +56,37 @@ function RefuelTask:update(dt)
         if self.vehicle.ad.drivePathModule:isTargetReached() then
             self:finished()
         else
-            if self.refuelTrigger == nil then
-                self:isInRefuelRange()
-            end
-            if self.refuelTrigger ~= nil and not (self.refuelTrigger.isLoading or (self.refuelTrigger.stoppedTimer ~= nil and not self.refuelTrigger.stoppedTimer:done())) and not self.isRefueled then
-                self:startRefueling()
-            end
-            if self.refuelTrigger ~= nil and (self.refuelTrigger.isLoading or (self.refuelTrigger.stoppedTimer ~= nil and not self.refuelTrigger.stoppedTimer:done())) then
+            local refuelOngoing = self.refuelTrigger ~= nil and (self.refuelTrigger.isLoading or (self.refuelTrigger.stoppedTimer ~= nil and not self.refuelTrigger.stoppedTimer:done())) 
+            if refuelOngoing then
                 self.vehicle.ad.specialDrivingModule:stopVehicle()
                 self.vehicle.ad.specialDrivingModule:update(dt)
             else
                 self.vehicle.ad.drivePathModule:update(dt)
+            end
+
+            inRefuelRange = self:isInRefuelRange()
+            if inRefuelRange and not refuelOngoing then
+                if self:getMatchingFillTypes() then
+
+                    -- if self.refuelTrigger ~= nil and inRefuelRange and not (self.refuelTrigger.isLoading or (self.refuelTrigger.stoppedTimer ~= nil and not self.refuelTrigger.stoppedTimer:done())) then
+                    if self.refuelTrigger ~= nil and not (self.refuelTrigger.isLoading) then
+                        self:startRefueling()
+                    end
+
+                end
             end
         end
     end
 end
 
 function RefuelTask:abort()
+    self.vehicle.ad.onRouteToRefuel = false
+    self.refuelTrigger = nil
 end
 
 function RefuelTask:finished()
-    self.vehicle.ad.onRouteToRefuel = #AutoDrive.getRequiredRefuels(self.vehicle, true) > 0
-
-    self.vehicle.ad.stateModule:setRefuelFillType(0)        -- before start the mode again, we need to clear the refuel type
+    self.vehicle.ad.onRouteToRefuel = #AutoDrive.getRequiredRefuels(self.vehicle, self.vehicle.ad.onRouteToRefuel) > 0
+    self.refuelTrigger = nil
     self.vehicle:stopAutoDrive()
     self.vehicle.ad.stateModule:getCurrentMode():start()
     self.vehicle.ad.taskModule:setCurrentTaskFinished(ADTaskModule.DONT_PROPAGATE)
@@ -95,49 +99,86 @@ function RefuelTask:isInRefuelRange()
 
     if distance <= AutoDrive.MAX_REFUEL_TRIGGER_DISTANCE then
         if self.refuelTrigger == nil then
-            self.refuelTrigger = ADTriggerManager.getClosestRefuelTrigger(self.vehicle, self.vehicle.ad.onRouteToRefuel)
-        end
-        if self.refuelTrigger ~= nil and not self.refuelTrigger.isLoading then
-            for _, fillableObject in pairs(self.refuelTrigger.fillableObjects) do
-                if fillableObject == self.vehicle or (fillableObject.object ~= nil and fillableObject.object == self.vehicle and fillableObject.fillUnitIndex == fillUnitIndex) then
-                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:isInRefuelRange return true")
-                    return true
+
+            local refuelTrigger = ADTriggerManager.getClosestRefuelTrigger(self.vehicle, self.vehicle.ad.onRouteToRefuel)
+            if refuelTrigger then
+                for _, fillableObject in pairs(refuelTrigger.fillableObjects) do
+                    if fillableObject == self.vehicle or (fillableObject.object ~= nil and fillableObject.object == self.vehicle) then
+                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:isInRefuelRange return true")
+                        self.refuelTrigger = refuelTrigger
+                        return true
+                    end
                 end
             end
         end
     end
-    return false
+    return self.refuelTrigger ~= nil
+end
+
+function RefuelTask:getMatchingFillTypes()
+    local ret = false
+    self.matchingFillTypes = {}
+    if self.refuelTrigger ~= nil then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:getMatchingFillTypes Start ")
+
+        local requiredRefuelFillTypes = AutoDrive.getRequiredRefuels(self.vehicle, self.vehicle.ad.onRouteToRefuel)
+        if requiredRefuelFillTypes and #requiredRefuelFillTypes > 0 then
+            local spec = self.vehicle.spec_motorized
+            if spec ~= nil and spec.consumers ~= nil then
+
+                for index, consumer in pairs(spec.consumers) do
+                    for _, fillType in pairs(requiredRefuelFillTypes) do
+                        local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(fillType) and g_fillTypeManager:getFillTypeByIndex(fillType).title or "unknown"
+                        if AutoDrive.fillTypesMatch(self.vehicle, self.refuelTrigger, self.vehicle, {fillType}, consumer.fillUnitIndex) then
+                            local item = {fillType = fillType, wasLoaded = false, refuelTrigger = self.refuelTrigger}
+                            table.insert(self.matchingFillTypes, item)
+                            ret = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return ret
 end
 
 function RefuelTask:startRefueling()
     if self.refuelTrigger ~= nil and (not self.refuelTrigger.isLoading) then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:startRefueling Start refueling")
 
-        local fillUnits = self.vehicle:getFillUnits()
-        local fillTypeName = AutoDrive.fuelFillTypes[self.fillTypesCount]
-        local fillTypeIndex =  g_fillTypeManager:getFillTypeIndexByName(fillTypeName)
-        for i = 1, #fillUnits do
-            if AutoDrive.fillTypesMatch(self.vehicle, self.refuelTrigger, self.vehicle, {fillTypeIndex}, i) then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:startRefueling fillTypesMatch -> fillTypeName %s", fillTypeName)
+        local spec = self.vehicle.spec_motorized
+        if spec ~= nil and spec.consumers ~= nil then
+            for index, consumer in pairs(spec.consumers) do
+                for _, item in pairs(self.matchingFillTypes) do
+                    if not item.wasLoaded then
+                        local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(item.fillType) and g_fillTypeManager:getFillTypeByIndex(item.fillType).title or "unknown"
+                        if AutoDrive.fillTypesMatch(self.vehicle, self.refuelTrigger, self.vehicle, {item.fillType}, consumer.fillUnitIndex) then
+                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:startRefueling fillTypesMatch -> refuelFillTypeTitle %s", refuelFillTypeTitle)
 
-                self.refuelTrigger.autoStart = true
-                self.refuelTrigger.selectedFillType = fillTypeIndex
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:startRefueling Start onFillTypeSelection")
-                self.refuelTrigger:onFillTypeSelection(fillTypeIndex)
-                if self.refuelTrigger.isLoading then    
-                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:startRefueling isLoading")
-                    self.refuelTrigger.selectedFillType = fillTypeIndex
-                    self.refuelTrigger.autoStart = true
-                    g_effectManager:setFillType(self.refuelTrigger.effects, self.refuelTrigger.selectedFillType)
+                            self.refuelTrigger.autoStart = true
+                            self.refuelTrigger.selectedFillType = item.fillType
+                            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:startRefueling Start onFillTypeSelection")
+                            self.refuelTrigger:onFillTypeSelection(item.fillType)
+                            if self.refuelTrigger.isLoading then    
+                                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "RefuelTask:startRefueling isLoading")
+                                self.refuelTrigger.selectedFillType = item.fillType
+                                self.refuelTrigger.autoStart = true
+                                g_effectManager:setFillType(self.refuelTrigger.effects, self.refuelTrigger.selectedFillType)
+                            end
+                            if self.refuelTrigger.stoppedTimer == nil then
+                                self.refuelTrigger.stoppedTimer = AutoDriveTON:new()
+                            end
+                            self.refuelTrigger.stoppedTimer:timer(false, 500)
+
+							if self.refuelTrigger.isLoading then
+                            	item.wasLoaded = true
+                            	return
+							end
+                        end
+                    end
                 end
-                if self.refuelTrigger.stoppedTimer == nil then
-                    self.refuelTrigger.stoppedTimer = AutoDriveTON:new()
-                end
-                self.refuelTrigger.stoppedTimer:timer(false, 300)
-                break
             end
         end
-        self.fillTypesCount = self.fillTypesCount + 1
     end
 end
 

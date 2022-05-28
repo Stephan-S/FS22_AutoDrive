@@ -91,6 +91,7 @@ function AutoDrive.readFromXML(xmlFile)
 
 	for settingName, setting in pairs(AutoDrive.settings) do
 		if not setting.isVehicleSpecific then
+            -- also read user specific settings for backward compatibility
 			local value = getXMLFloat(xmlFile, "AutoDrive." .. settingName)
 			if value ~= nil then
 				AutoDrive.settings[settingName].current = value
@@ -282,14 +283,14 @@ function AutoDrive.saveToXML(xmlFile)
 	setXMLString(xmlFile, "AutoDrive.version", AutoDrive.version)
 	setXMLString(xmlFile, "AutoDrive.MapName", AutoDrive.loadedMap)
 
-	setXMLFloat(xmlFile, "AutoDrive.HudX", AutoDrive.HudX)
-	setXMLFloat(xmlFile, "AutoDrive.HudY", AutoDrive.HudY)
-	setXMLBool(xmlFile, "AutoDrive.HudShow", AutoDrive.Hud.showHud)
+	-- setXMLFloat(xmlFile, "AutoDrive.HudX", AutoDrive.HudX)
+	-- setXMLFloat(xmlFile, "AutoDrive.HudY", AutoDrive.HudY)
+	-- setXMLBool(xmlFile, "AutoDrive.HudShow", AutoDrive.Hud.showHud)
 
 	setXMLInt(xmlFile, "AutoDrive.currentDebugChannelMask", AutoDrive.currentDebugChannelMask)
 
 	for settingName, setting in pairs(AutoDrive.settings) do
-		if not setting.isVehicleSpecific then
+		if not setting.isVehicleSpecific and not setting.isUserSpecific then
 			setXMLFloat(xmlFile, "AutoDrive." .. settingName, AutoDrive.settings[settingName].current)
 		end
 		if setting.userDefault ~= nil then

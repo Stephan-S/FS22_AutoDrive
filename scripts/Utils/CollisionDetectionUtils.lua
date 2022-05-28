@@ -87,35 +87,46 @@ function AutoDrive.checkForVehiclePathInBox(boundingBox, minTurnRadius, searchin
     return false
 end
 
-function AutoDrive.getBoundingBoxForVehicleAtPosition(vehicle, position)
+function AutoDrive.getBoundingBoxForVehicleAtPosition(vehicle, position, force)
     local x, y, z = position.x, position.y, position.z
     local rx, _, rz = localDirectionToWorld(vehicle.components[1].node, 0, 0, 1)
-    local width = vehicle.size.width
-    local length = vehicle.size.length
-    local frontToolLength = 0 --AutoDrive.getFrontToolLength(vehicle)
+    local width, length = AutoDrive.getVehicleDimensions(vehicle, force)
+    local lengthOffset = vehicle.size.lengthOffset
     local vehicleVector = {x = rx, z = rz}
     local ortho = {x = -vehicleVector.z, z = vehicleVector.x}
 
+    local maxWidthLeft = (width / 2)
+    local maxWidthRight = (width / 2)
+    local maxLengthFront = (length / 2)
+    local maxLengthBack = (length / 2)
+    if vehicle and vehicle.ad and vehicle.ad.adDimensions and vehicle.ad.adDimensions.maxWidthLeft then
+        maxWidthLeft = vehicle.ad.adDimensions.maxWidthLeft
+        maxWidthRight = vehicle.ad.adDimensions.maxWidthRight
+        maxLengthFront = vehicle.ad.adDimensions.maxLengthFront
+        maxLengthBack = vehicle.ad.adDimensions.maxLengthBack
+        lengthOffset = 0
+    end
+
     local boundingBox = {}
     boundingBox[1] = {
-        x = x + (width / 2) * ortho.x - (length / 2) * vehicleVector.x,
+        x = x + (maxWidthRight) * ortho.x - ((maxLengthBack) - lengthOffset) * vehicleVector.x,
         y = y + 2,
-        z = z + (width / 2) * ortho.z - (length / 2) * vehicleVector.z
+        z = z + (maxWidthRight) * ortho.z - ((maxLengthBack) - lengthOffset) * vehicleVector.z
     }
     boundingBox[2] = {
-        x = x - (width / 2) * ortho.x - (length / 2) * vehicleVector.x,
+        x = x - (maxWidthLeft) * ortho.x - ((maxLengthBack) - lengthOffset) * vehicleVector.x,
         y = y + 2,
-        z = z - (width / 2) * ortho.z - (length / 2) * vehicleVector.z
+        z = z - (maxWidthLeft) * ortho.z - ((maxLengthBack) - lengthOffset) * vehicleVector.z
     }
     boundingBox[3] = {
-        x = x - (width / 2) * ortho.x + (length / 2) * vehicleVector.x,
+        x = x - (maxWidthLeft) * ortho.x + ((maxLengthFront) + lengthOffset) * vehicleVector.x,
         y = y + 2,
-        z = z - (width / 2) * ortho.z + (length / 2) * vehicleVector.z
+        z = z - (maxWidthLeft) * ortho.z + ((maxLengthFront) + lengthOffset) * vehicleVector.z
     }
     boundingBox[4] = {
-        x = x + (width / 2) * ortho.x + (length / 2) * vehicleVector.x,
+        x = x + (maxWidthRight) * ortho.x + ((maxLengthFront) + lengthOffset) * vehicleVector.x,
         y = y + 2,
-        z = z + (width / 2) * ortho.z + (length / 2) * vehicleVector.z
+        z = z + (maxWidthRight) * ortho.z + ((maxLengthFront) + lengthOffset) * vehicleVector.z
     }
 
     --ADDrawingManager:addLineTask(boundingBox[1].x, boundingBox[1].y, boundingBox[1].z, boundingBox[2].x, boundingBox[2].y, boundingBox[2].z, 1, 1, 0)
@@ -126,12 +137,12 @@ function AutoDrive.getBoundingBoxForVehicleAtPosition(vehicle, position)
     return boundingBox
 end
 
-function AutoDrive.getBoundingBoxForVehicle(vehicle)
+function AutoDrive.getBoundingBoxForVehicle(vehicle, force)
     local x, y, z = getWorldTranslation(vehicle.components[1].node)
 
     local position = {x = x, y = y, z = z}
 
-    return AutoDrive.getBoundingBoxForVehicleAtPosition(vehicle, position)
+    return AutoDrive.getBoundingBoxForVehicleAtPosition(vehicle, position, force)
 end
 
 function AutoDrive.getDistanceBetween(vehicleOne, vehicleTwo)
@@ -158,6 +169,173 @@ function AutoDrive.debugDrawBoundingBoxForVehicles()
                     ADDrawingManager:addLineTask(boundingBox[4].x, boundingBox[4].y, boundingBox[4].z, boundingBox[1].x, boundingBox[1].y, boundingBox[1].z, 1, 1, 0)
                 end
             end
+        end
+    end
+end
+
+-- dimension measurement of vehicles
+ADDimensionSensor = {}
+function ADDimensionSensor:new(vehicle)
+    local o = {}
+    setmetatable(o, self)
+    self.__index = self
+    o.vehicle = vehicle
+    o.mask = 0
+    o.collisionHits = 0
+    o.selfHits = 0
+    return o
+end
+
+function ADDimensionSensor:getMask()
+    local mask = 0
+
+    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+    return mask
+end
+
+function ADDimensionSensor:getRealVehicleDimensions()
+    self.mask = self:getMask()
+    self.collisionHits = 0
+    self.selfHits = 0
+    local measureRange = math.max(self.vehicle.size.width + 1, self.vehicle.size.length + 1)
+
+    local maxWidthLeft, maxWidthRight, maxLengthFront, maxLengthBack = 0,0,0,0
+
+    local rx, ry, rz = getWorldRotation(self.vehicle.components[1].node)
+
+    local function leftright(dimStart, dimEnd)
+        local ret = self.vehicle.size.width / 2
+        local selfHitCount = 0
+        local minDistance = math.huge
+        local diff = dimEnd - dimStart
+        local step = 0.1
+        if diff < 0 then
+            step = -step
+        end
+        for distance = dimStart, dimEnd, step do
+            local x,y,z = localToWorld(self.vehicle.components[1].node, distance, self.vehicle.size.height / 2, 0)
+            self.selfHits = 0
+            if AutoDrive.getDebugChannelIsSet(AutoDrive.DC_SENSORINFO) then
+                -- DebugUtil.drawOverlapBox(x,y,z, rx, ry, rz, 0.1, measureRange, measureRange, 1, 1, 1)
+            end
+            self.collisionHits = overlapBox(x,y,z, rx, ry, rz, 0.1, measureRange, measureRange, "getRealVehicleDimensions_Callback", self, self.mask, true, true, true)
+            if self.selfHits == 0 then
+                -- found no collision with vehicle itself
+                if selfHitCount < 5 then
+                    selfHitCount = selfHitCount + 1
+                    minDistance = math.min(minDistance, math.abs(distance))
+                else
+                    -- if n consecutive hits are reached, take the min. distance
+                    ret = minDistance
+                    break
+                end
+            else
+                -- if hit itself, reset the counting
+                selfHitCount = 0
+                minDistance = math.huge
+            end
+        end
+        return ret
+    end
+    maxWidthLeft = leftright(0, measureRange) -- measure to left
+    maxWidthRight = leftright(0, -measureRange) -- measure to right
+
+    local function frontback(dimStart, dimEnd)
+        local ret = self.vehicle.size.length / 2
+        local selfHitCount = 0
+        local minDistance = math.huge
+        local diff = dimEnd - dimStart
+        local step = 0.1
+        if diff < 0 then
+            step = -step
+        end
+        for distance = dimStart, dimEnd, step do
+            local x,y,z = localToWorld(self.vehicle.components[1].node, 0, self.vehicle.size.height / 2, distance)
+            self.selfHits = 0
+            if AutoDrive.getDebugChannelIsSet(AutoDrive.DC_SENSORINFO) then
+                -- DebugUtil.drawOverlapBox(x,y,z, rx, ry, rz, measureRange, measureRange, 0.1, 1, 1, 1)
+            end
+            self.collisionHits = overlapBox(x,y,z, rx, ry, rz, measureRange, measureRange, 0.1, "getRealVehicleDimensions_Callback", self, self.mask, true, true, true)
+            if self.selfHits == 0 then
+                -- found no collision with vehicle itself
+                if selfHitCount < 5 then
+                    selfHitCount = selfHitCount + 1
+                    minDistance = math.min(minDistance, math.abs(distance))
+                else
+                    -- if n consecutive hits are reached, take the min. distance
+                    ret = minDistance
+                    break
+                end
+            else
+                -- if hit itself, reset the counting
+                selfHitCount = 0
+                minDistance = math.huge
+            end
+        end
+        return ret
+    end
+    maxLengthFront = frontback(0, measureRange) -- measure to front
+    maxLengthBack = frontback(0, -measureRange) -- measure to back
+
+    self.vehicle.ad.adDimensions.maxWidthLeft = maxWidthLeft + AutoDrive.DIMENSION_ADDITION
+    self.vehicle.ad.adDimensions.maxWidthRight = maxWidthRight + AutoDrive.DIMENSION_ADDITION
+    self.vehicle.ad.adDimensions.maxLengthFront = maxLengthFront + AutoDrive.DIMENSION_ADDITION
+    self.vehicle.ad.adDimensions.maxLengthBack = maxLengthBack + AutoDrive.DIMENSION_ADDITION
+    local realWidth = 2 * math.max(maxWidthLeft, maxWidthRight) + AutoDrive.DIMENSION_ADDITION
+    local realLegth = 2 * math.max(maxLengthFront, maxLengthBack) + AutoDrive.DIMENSION_ADDITION
+    return realWidth, realLegth
+end
+
+function ADDimensionSensor:getRealVehicleDimensions_Callback(transformId)
+    if transformId ~= nil then
+        local collisionObject = g_currentMission.nodeToObject[transformId]
+        if collisionObject ~= nil and collisionObject == self.vehicle then
+            self.selfHits = self.selfHits + 1
+        end
+    end
+    return true
+end
+
+function AutoDrive.getVehicleDimensions(vehicle, force)
+    if vehicle == nil then
+        return 0,0
+    end
+    if vehicle.spec_pallet then
+        -- do not measure pallets
+        return vehicle.size.width, vehicle.size.length
+    end
+    if vehicle.ad == nil then
+        vehicle.ad = {}
+    end
+    if vehicle.ad.adDimensions == nil then
+        vehicle.ad.adDimensions = {}
+    end
+    -- default taken from vehicle definition
+    vehicle.ad.adDimensions.width, vehicle.ad.adDimensions.length = vehicle.size.width, vehicle.size.length
+    if force then -- only measure if force true
+        vehicle.ad.adDimensions = {}
+        if vehicle.ad.adDimSensor == nil then
+            vehicle.ad.adDimSensor = ADDimensionSensor:new(vehicle)
+        end
+        if vehicle.ad.adDimSensor and vehicle.ad.adDimSensor.getRealVehicleDimensions then
+            vehicle.ad.adDimensions.width, vehicle.ad.adDimensions.length = vehicle.ad.adDimSensor:getRealVehicleDimensions()
+        end
+    end
+    return vehicle.ad.adDimensions.width, vehicle.ad.adDimensions.length
+end
+
+-- ATTENTION: This shall only be called if all components of the complete vehicle train is folded, in transport position etc. !!!
+function AutoDrive.getAllVehicleDimensions(vehicle, force)
+    local trailers = AutoDrive.getAllImplements(vehicle, true)
+    for _, trailer in ipairs(trailers) do
+        if not AutoDrive.hasVehicleRotatingYComponents(trailer) then
+            AutoDrive.getVehicleDimensions(trailer, force)
         end
     end
 end

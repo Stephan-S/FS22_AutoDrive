@@ -23,12 +23,15 @@ function AutoDrive.registerEventListeners(vehicleType)
             "onStopAutoDrive",
             "onPostAttachImplement",
             "onPreDetachImplement",
+            "onPostDetachImplement",
             "onEnterVehicle",
             "onLeaveVehicle",
-            -- CP events
+            -- CP events, see ExternalInterface.lua
             "onCpFinished",
             "onCpEmpty",
-            "onCpFull"
+            "onCpFull",
+            "onCpFuelEmpty",
+            "onCpBroken",
         }
     ) do
         SpecializationUtil.registerEventListener(vehicleType, n, AutoDrive)
@@ -42,7 +45,8 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
     -- SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
 
-    --- Disables click to switch, if the user clicks on the hud or the editor mode is active.
+    -- Disables click to switch, if the user clicks on the hud or the editor mode is active.
+    -- see ExternalInterface.lua
     if vehicleType.functions["enterVehicleRaycastClickToSwitch"] ~= nil then 
         SpecializationUtil.registerOverwrittenFunction(vehicleType, "enterVehicleRaycastClickToSwitch", AutoDrive.enterVehicleRaycastClickToSwitch)
     end
@@ -65,6 +69,7 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
     SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
     SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)    
+    SpecializationUtil.registerFunction(vehicleType, "getCanAdTakeControl", AutoDrive.getCanAdTakeControl) -- see ExternalInterface.lua
 end
 
 function AutoDrive.registerEvents(vehicleType)
@@ -262,7 +267,6 @@ function AutoDrive:onPostLoad(savegame)
     self.ad.showingMouse = false
 
     self.ad.lastMouseState = false
-
     -- Creating a new transform on front of the vehicle
     self.ad.frontNode = createTransformGroup(self:getName() .. "_frontNode")
     link(self.components[1].node, self.ad.frontNode)
@@ -423,6 +427,7 @@ function AutoDrive:onUpdate(dt)
             else
                 -- all folded - no further tries necessary
                 self.ad.foldStartTime = 0
+                AutoDrive.getAllVehicleDimensions(self, true)
             end
         end
 
@@ -439,7 +444,9 @@ function AutoDrive:onUpdate(dt)
         self.ad.taskModule:abortAllTasks()
     end
 
-    AutoDrive.updateAutoDriveLights(self)
+    if self.isServer then
+        AutoDrive.updateAutoDriveLights(self)
+    end
 
     --For 'legacy' purposes, this value should be kept since other mods already test for this:
     self.ad.mapMarkerSelected = self.ad.stateModule:getFirstMarkerId()
@@ -658,46 +665,10 @@ function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointD
         self.ad.attachableCombine = attachable
         attachable.ad = self.ad
     end
+    AutoDrive.setValidSupportedFillType(self)
 
-    if attachable ~= nil and AutoDrive:hasAL(attachable) then
-        -- AutoLoad
-        local currentFillType = AutoDrive:getALCurrentFillType(attachable)
-        if currentFillType ~= nil then
-            self.ad.stateModule:setFillType(currentFillType)
-            if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
-                AutoDrive.Hud.lastUIScale = 0
-            end
-        end
-    else
-        local supportedFillTypes = {}
-        local trailers, trailerCount = AutoDrive.getAllUnits(self)
-        for index, trailer in ipairs(trailers) do
-            if trailer.getFillUnits ~= nil then
-                for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
-                    if trailer.getFillUnitSupportedFillTypes ~= nil then
-                        for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
-                            if index == 1 then -- hide fuel types for 1st vehicle
-                                local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                                if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
-                                    supported = false
-                                end
-                            end
-                            if supported then
-                                table.insert(supportedFillTypes, fillType)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        local storedSelectedFillType = self.ad.stateModule:getFillType()
-        if #supportedFillTypes > 0 and not table.contains(supportedFillTypes, storedSelectedFillType) then
-            self.ad.stateModule:setFillType(supportedFillTypes[1])
-            if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
-                AutoDrive.Hud.lastUIScale = 0
-            end
-        end
+    if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
+        AutoDrive.Hud.lastUIScale = 0
     end
     AutoDrive.getFrontToolWidth(self, true)
 end
@@ -721,18 +692,33 @@ function AutoDrive:onPreDetachImplement(implement)
     end
 end
 
+-- Giants special behaviour: at time of the event the implement and all implements attached to it are still attached!
+-- thats why the attached and all following have to be taken to special consideration!
+function AutoDrive:onPostDetachImplement(implementIndex)
+    AutoDrive.setValidSupportedFillType(self, implementIndex)
+    if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
+        AutoDrive.Hud.lastUIScale = 0
+    end
+end
+
+
 function AutoDrive:onEnterVehicle()
-    local trailers, trailerCount = AutoDrive.getAllUnits(self)
-    -- AutoDrive.debugMsg(object, "AutoDrive:onEnterVehicle trailerCount %s", tostring(trailerCount))
-    if trailerCount > 0 then
+    if AutoDrive:hasAL(self) then
         -- AutoLoad
-        local currentFillType = AutoDrive:getALCurrentFillType(trailers[1])
+        local currentFillType = AutoDrive:getALCurrentFillType(self)
         if currentFillType ~= nil then
             self.ad.stateModule:setFillType(currentFillType)
+            if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
+                AutoDrive.Hud.lastUIScale = 0
+            end
         end
     end
     if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil and g_currentMission.controlledVehicle == self then
         AutoDrive.Hud.lastUIScale = 0
+    end
+    if self.isServer and self.ad and self.ad.stateModule and not self.ad.stateModule:isActive() then
+        -- do not force dimension update while tabbing through active AD vehicles, which might be unfolded
+        AutoDrive.getAllVehicleDimensions(self, true)
     end
 end
 
@@ -740,58 +726,6 @@ function AutoDrive:onLeaveVehicle()
     if self.ad ~= nil and self.ad.stateModule ~= nil then
         self.ad.stateModule:disableCreationMode()
     end
-end
-
--- CP event handler
-function AutoDrive:onCpFinished()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished start...")
-    if self.isServer then
-        if self.ad and self.ad.stateModule then
-            AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFinished - event handler not implemented")
-        end
-    else
-        Logging.devError("AutoDrive:onCpFinished() must be called only on the server.")
-    end
-end
-
-function AutoDrive:handleCPFieldWorker(vehicle)
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start...")
-    if vehicle.isServer then
-        if vehicle.ad and vehicle.ad.stateModule and vehicle.startAutoDrive then
-            -- restart CP
-            vehicle.ad.restartCP = true
-            if not vehicle.ad.stateModule:isActive() then
-                if vehicle.ad.stateModule:getStartCP_AIVE() and vehicle.ad.stateModule:getUseCP_AIVE() then
-                    -- CP button active
-                    if table.contains(AutoDrive.modesToStartFromCP, vehicle.ad.stateModule:getMode()) then
-                        -- mode allowed to activate
-                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker start AD")
-                        vehicle.ad.stateModule:getCurrentMode():start()
-                    else
-                        -- deactivate CP button
-                        AutoDriveMessageEvent.sendMessageOrNotification(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s: $l10n_AD_Wrong_Mode_takeover_from_CP;", 5000, vehicle.ad.stateModule:getName())
-                        vehicle.ad.restartCP = false -- do not continue CP course
-                        vehicle.ad.stateModule:setStartCP_AIVE(false)
-                    end
-                end
-            else
-                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker - AD already active, should not happen")
-            end
-        end
-    else
-        Logging.devError("AutoDrive:handleCPFieldWorker() must be called only on the server.")
-    end
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:handleCPFieldWorker end")
-end
-
-function AutoDrive:onCpEmpty()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpEmpty start...")
-    AutoDrive:handleCPFieldWorker(self)
-end
-
-function AutoDrive:onCpFull()
-    AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
-    AutoDrive:handleCPFieldWorker(self)
 end
 
 function AutoDrive:onDelete()
@@ -1053,8 +987,7 @@ function AutoDrive:startAutoDrive()
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
             self.ad.foldStartTime = g_time
-
-            
+            AutoDrive.getAllVehicleDimensions(self, true)
             if self.spec_aiVehicle ~= nil then
                 if self.getAINeedsTrafficCollisionBox ~= nil then
                     if self:getAINeedsTrafficCollisionBox() then                    
@@ -1089,9 +1022,6 @@ function AutoDrive:startAutoDrive()
                     Logging.error("[AD] AutoDrive:startAutoDrive ERROR: unable to get helper for vehicle %s", tostring(name))
                 end
 
-                if self.spec_aiJobVehicle ~= nil then
-                    self.spec_aiJobVehicle.currentHelper = currentHelper
-                end
                 if currentHelper and currentHelper.index then
                     self.ad.currentHelper = currentHelper
                     self.ad.stateModule:setCurrentHelperIndex(currentHelper.index)
@@ -1161,6 +1091,7 @@ function AutoDrive:stopAutoDrive()
                 self.ad.onRouteToRepair = false
                 AutoDrive.debugPrint(self, AutoDrive.DC_VEHICLEINFO, "AutoDrive:startAutoDrive self.ad.onRouteToRefuel %s", tostring(self.ad.onRouteToRefuel))
             end
+            AutoDrive.updateAutoDriveLights(self, true)
 
             local isStartingAIVE = (not self.ad.isStoppingWithError and self.ad.stateModule:getStartCP_AIVE() and not self.ad.stateModule:getUseCP_AIVE())
             local isPassingToCP = not self.ad.isStoppingWithError and (self.ad.restartCP == true or (self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()))
@@ -1213,7 +1144,7 @@ function AutoDrive:onStartAutoDrive()
             local actualParkDestination = self.ad.stateModule:getParkDestinationAtJobFinished()
             if actualParkDestination >= 1 then
             else
-                AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+                AutoDriveMessageEvent.sendMessage(self, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_parkVehicle_noPosSet;", 5000, self.ad.stateModule:getName())
             end
         end
     end
@@ -1254,9 +1185,6 @@ function AutoDrive.checkAddHelper(vehicle, helperIndex, numHelpersToAdd)
                 if helper ~= nil then
                     g_helperManager:useHelper(helper)
                     vehicle.ad.stateModule:setCurrentHelperIndex(helper.index)
-                    if vehicle.spec_aiJobVehicle ~= nil and vehicle.spec_aiJobVehicle.currentHelper == nil then
-                        vehicle.spec_aiJobVehicle.currentHelper = helper
-                    end
                 end
             end
         else
@@ -1279,10 +1207,6 @@ function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
 
         if self.ad.currentHelper ~= nil then
             g_helperManager:releaseHelper(self.ad.currentHelper)
-        end
-        if self.spec_aiJobVehicle ~= nil and self.spec_aiJobVehicle.currentHelper ~= nil and self.spec_aiJobVehicle.currentHelper == self.ad.currentHelper then
-            -- we assign a helper for spec_aiJobVehicle, but do not remove it!
-            -- self.spec_aiJobVehicle.currentHelper = nil
         end
         self.ad.currentHelper = nil
         self.ad.stateModule:setCurrentHelperIndex(0)
@@ -1333,14 +1257,15 @@ function AutoDrive.passToExternalMod(vehicle)
 
     if not vehicle.ad.isStoppingWithError and distanceToStart < 30 then
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod pass to other mod...")
-        if vehicle.ad.stateModule:getStartCP_AIVE() then
-            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod CP / AIVE button enabled")
+        if vehicle.ad.stateModule:getStartCP_AIVE() or vehicle.ad.restartCP == true then
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod CP / AIVE button enabled or restartCP")
             -- CP / AIVE button enabled
-            if vehicle.cpStartStopDriver ~= nil and vehicle.ad.stateModule:getUseCP_AIVE() then
+            if (vehicle.cpStartStopDriver ~= nil and vehicle.ad.stateModule:getUseCP_AIVE()) or vehicle.ad.restartCP == true then
                 -- CP button active
                 vehicle.spec_enterable.isControlled = false
                 if vehicle.ad.restartCP == true then
                     -- restart CP to continue
+                    vehicle.ad.restartCP = false
                     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive.passToExternalMod pass control to CP with restart")
                     AutoDrive:RestartCP(vehicle)
                 else
@@ -1534,8 +1459,12 @@ function AutoDrive:leaveVehicle(superFunc)
     superFunc(self)
 end
 
-function AutoDrive:updateAutoDriveLights()
-    if self.ad ~= nil and self.ad.stateModule:isActive() then
+function AutoDrive:updateAutoDriveLights(switchOff)
+    if switchOff then
+        if AutoDrive.getSetting("useHazardLightReverse", self) then
+            self:setTurnLightState(Lights.TURNLIGHT_OFF)
+        end
+    elseif self.ad ~= nil and self.ad.stateModule:isActive() then
         local isInRangeToLoadUnloadTarget = false
         local isInBunkerSilo              = false
         local isOnField                   = ( self.getIsOnField ~= nil and self:getIsOnField() )
@@ -1551,6 +1480,17 @@ function AutoDrive:updateAutoDriveLights()
         if self.updateAILights ~= nil then
             self:updateAILights(isOnField or isInRangeToLoadUnloadTarget or isInBunkerSilo)
         end
+
+        if self.setTurnLightState then
+            if AutoDrive.getSetting("useHazardLightReverse", self) then
+                local drivingReverse = (self.lastSpeedReal * self.movingDirection) < 0
+                if drivingReverse then
+                    self:setTurnLightState(Lights.TURNLIGHT_HAZARD, true)
+                elseif self.lastSpeedReal * 3600 < 0.1 then
+                    self:setTurnLightState(Lights.TURNLIGHT_OFF)
+                end
+            end
+        end
     end
 end
 
@@ -1563,7 +1503,7 @@ function AutoDrive:getCanMotorRun(superFunc)
 end
 
 function AutoDrive:getIsAIActive(superFunc)
-    return superFunc(self) or self.ad.stateModule:isActive()
+    return superFunc(self) or (self.ad and self.ad.stateModule and self.ad.stateModule:isActive())
 end
 
 function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
@@ -1725,17 +1665,3 @@ function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
     end
 end
 
---- Disables click to switch, if the user clicks on the hud or the editor mode is active.
-function AutoDrive:enterVehicleRaycastClickToSwitch(superFunc, x, y)
-
-    if AutoDrive.isEditorModeEnabled() then 
-        return
-    end
-
-    --- Checks if the mouse is over a hud element.
-    if AutoDriveHud:isMouseOverHud(x, y) then 
-        return
-    end
-
-    superFunc(self, x, y)
-end

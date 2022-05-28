@@ -22,7 +22,7 @@ function ParkTask:setUp()
             self.actualParkDestinationName = ADGraphManager:getMapMarkerById(actualParkDestination).name
             self.vehicle.ad.onRouteToPark = true
         else
-            AutoDriveMessageEvent.sendMessage(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+            AutoDriveMessageEvent.sendMessage(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_parkVehicle_noPosSet;", 5000, self.vehicle.ad.stateModule:getName())
         end
     end
 
@@ -65,9 +65,14 @@ function ParkTask:update(dt)
 end
 
 function ParkTask:abort()
+    self.vehicle.ad.onRouteToPark = false
 end
 
 function ParkTask:finished(propagate)
+    self.vehicle.ad.onRouteToPark = false
+    -- avoid activate CP when park position is reached
+    self.vehicle.ad.restartCP = false
+    self.vehicle.ad.stateModule:setStartCP_AIVE(false)
     self.vehicle.ad.taskModule:setCurrentTaskFinished(propagate)
     if self.actualParkDestinationName ~= nil then
         AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.INFO, "$l10n_AD_Driver_of; %s $l10n_AD_has_reached; %s", 5000, self.vehicle.ad.stateModule:getName(), self.actualParkDestinationName)

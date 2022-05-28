@@ -168,7 +168,11 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Oui - Allume les feux de travail pendant les opérations de chargement et déchargement sur un déclencheur" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Feux de travail lors d'opérations dans un silo bunker" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Oui - Allume les feux de travail dans un silo bunker" />
-		<text name="gui_ad_activeUnloading"						text="Déchargement en mouvement" />
+
+		<text name="gui_ad_hazardLightReverse"					text="Feux de détresse" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Oui - Allume les feux de détresse pendant une marche arrière" />
+
+    <text name="gui_ad_activeUnloading"						text="Déchargement en mouvement" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Déchargement des moissoneuses en roulant." />
 		<text name="gui_ad_restrictToField"						text="Recherche de parcours limité au champ" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Si le chauffeur est déjà garé sur le champ, il limitera la recherche aux limites du champ." />
@@ -289,6 +293,12 @@
 		<text name="ad_color_currentConnection" 			    text="12 ligne vers l'itinéraire" />
 		<text name="ad_color_closestLine" 			            text="13 ligne du véhicule vers le point le plus proche" />
 		<text name="ad_color_editorHeightLine" 			        text="14 ligne entre le point au-dessus du véhicule et celui en surface" />
+
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
+
+		<text name="button_delete_all" 							text="Effacer tout" />
+		<text name="button_reset_selected" 					    text="Effacer la sélection" />
 		
 		<text name="button_delete_all" 							text="Effacer tout" />
 		<text name="button_reset_selected" 					    text="Effacement sélectionné" />		

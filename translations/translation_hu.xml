@@ -68,7 +68,7 @@
 		<text name="AD_No_Trailer"								text="Nem találja a pótkocsit" />
 		<text name="AD_No_Bunker"								text="Nem találja a Silót" />
 		<text name="AD_No_Shovel"								text="Nem talál kanalat" />
-		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Refuel_Station"						text="could not find refuel station" />
 		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Sofőr" />
@@ -166,6 +166,8 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
 		<text name="gui_ad_activeUnloading"						text="Active unloading" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Korlátozza az útkeresőt a földre" />
@@ -284,6 +286,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 line next path" />
 		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
 		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Összes törlése" />
 		<text name="button_reset_selected" 					    text="Reset selected" />

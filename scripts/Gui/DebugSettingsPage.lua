@@ -10,7 +10,7 @@ ADDebugSettingsPage = {}
 local ADDebugSettingsPage_mt = Class(ADDebugSettingsPage, TabbedMenuFrameElement)
 
 -- ADDebugSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "headerText"}
-ADDebugSettingsPage.CONTROLS = {"settingsContainer", "headerIcon"}
+ADDebugSettingsPage.CONTROLS = {"settingsContainer", "headerIcon", "boxLayout"}
 
 function ADDebugSettingsPage:new(target)
     local element = TabbedMenuFrameElement.new(target, ADDebugSettingsPage_mt)
@@ -28,9 +28,10 @@ end
 
 function ADDebugSettingsPage:onFrameOpen()
     ADDebugSettingsPage:superClass().onFrameOpen(self)
-    FocusManager:unsetHighlight(FocusManager.currentFocusData.highlightElement)
-    FocusManager:unsetFocus(FocusManager.currentFocusData.focusElement)
+    -- FocusManager:unsetHighlight(FocusManager.currentFocusData.highlightElement)
+    -- FocusManager:unsetFocus(FocusManager.currentFocusData.focusElement)
     self:updateDebugElements()
+	FocusManager:setFocus(self.boxLayout)
 end
 
 function ADDebugSettingsPage:onFrameClose()

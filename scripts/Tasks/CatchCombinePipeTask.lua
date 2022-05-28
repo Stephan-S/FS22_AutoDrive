@@ -101,6 +101,7 @@ function CatchCombinePipeTask:update(dt)
             local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
             self.reverseStartLocation = {x = x, y = y, z = z}
             self.state = CatchCombinePipeTask.STATE_REVERSING
+            return
         end
 
         if combineTravelDistance > 85 then

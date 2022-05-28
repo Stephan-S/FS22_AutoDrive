@@ -8,7 +8,7 @@
 		</GuiElement>
 
 		<GuiElement type="bitmap" profile="ingameMenuSettingsBox" id="settingsContainer">
-			<GuiElement type="scrollingLayout" profile="ingameMenuSettingsLayout" >
+            <GuiElement type="scrollingLayout" profile="ingameMenuSettingsLayout" id="boxLayout" >
 				<GuiElement type="multiTextOption" profile="multiTextOptionSettings" onClick="onOptionChange" onCreate="onCreateElement" id="cloneElement">
 					<GuiElement type="button" profile="multiTextOptionSettingsLeft" />
 					<GuiElement type="button" profile="multiTextOptionSettingsRight" />

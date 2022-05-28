@@ -23,7 +23,7 @@ function AutoDrive.getDischargeNode(combine)
     end
 end
 
-function AutoDrive.getPipeRoot(combine)
+function AutoDrive.getPipeRoot_old(combine)
     if combine.ad ~= nil and combine.ad.pipeRoot ~= nil then
         return combine.ad.pipeRoot
     end
@@ -68,11 +68,55 @@ function AutoDrive.getPipeRoot(combine)
     return pipeRoot
 end
 
+
+function AutoDrive.getPipeRoot(combine)
+    if combine.ad ~= nil and combine.ad.pipeRoot ~= nil then
+        return combine.ad.pipeRoot
+    end
+    local dischargeNode = AutoDrive.getDischargeNode(combine)
+    local pipeRoot = nil
+
+    if dischargeNode then
+        for _, component in ipairs(combine.components) do
+
+            local node = dischargeNode
+            local count = 0
+            repeat
+                node = getParent(node)
+                count = count + 1
+            until ((node == component.node) or (node == 0) or (node == nil) or count >= 100)
+
+            if node and node ~= 0 then
+                -- found
+                pipeRoot = node
+                break
+            end
+        end
+    end
+    if pipeRoot == nil or pipeRoot == 0 then
+        -- fallback
+        pipeRoot = combine.components[1].node
+    end
+
+    if combine.ad ~= nil then
+        combine.ad.pipeRoot = pipeRoot
+    end
+    return pipeRoot
+end
+
+-- ret: -1 right, 1 left, 0 behind
+-- not for sugarcane harvesters, choppers!!!
 function AutoDrive.getPipeSide(combine)
-    local combineNode = combine.components[1].node
+    if combine.ad ~= nil and combine.ad.storedPipeSide ~= nil then
+        return combine.ad.storedPipeSide
+    end
+    local combineNode = AutoDrive.getPipeRoot(combine)
     local dischargeNode = AutoDrive.getDischargeNode(combine)
     local dischargeX, dichargeY, dischargeZ = getWorldTranslation(dischargeNode)
     local diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
+    if combine.ad ~= nil and AutoDrive.isPipeOut(combine) and not AutoDrive.getIsBufferCombine(combine) then
+        combine.ad.storedPipeSide = AutoDrive.sign(diffX)
+    end
     return AutoDrive.sign(diffX)
 end
 
@@ -88,10 +132,10 @@ function AutoDrive.getPipeLength(combine)
                                         pipeRootZ - dischargeZ)
     --AutoDrive.debugPrint(combine, AutoDrive.DC_COMBINEINFO, "AutoDrive.getPipeLength - " .. length)
     if AutoDrive.isPipeOut(combine) and not AutoDrive.getIsBufferCombine(combine) then
-        local combineNode = combine.components[1].node
+        local combineNode = AutoDrive.getPipeRoot(combine)
         local dischargeX, dichargeY, dischargeZ = getWorldTranslation(AutoDrive.getDischargeNode(combine))
         diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
-        length = math.abs(diffX) - combine.size.width /2
+        length = math.abs(diffX)
 
         -- Store pipe length for 'normal' harvesters
         if combine.ad ~= nil then

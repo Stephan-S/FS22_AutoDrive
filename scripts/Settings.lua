@@ -39,8 +39,8 @@ AutoDrive.settings.blinkValue = {
         "150",
         "160"
     },
-    default = 0,
-    current = 0,
+    default = 1,
+    current = 1,
     text = "gui_ad_blinkValue",
     tooltip = "gui_ad_blinkValue_tooltip",
     translate = false,
@@ -946,12 +946,10 @@ AutoDrive.settings.autoTrailerCover = {
 }
 
 AutoDrive.settings.ALUnload = {
-    -- values = {0, 1, 2, 3, 4},
-    values = {0, 1, 2, 4},
-    -- texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
-    texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_right"},
-    default = 0,
-    current = 0,
+    values = {0, 1, 2, 3, 4},
+    texts = {"gui_ad_AL_off", "gui_ad_AL_center", "gui_ad_AL_left", "gui_ad_AL_behind", "gui_ad_AL_right"},
+    default = 1,
+    current = 1,
     text = "gui_ad_ALUnload",
     tooltip = "gui_ad_ALUnload_tooltip",
     translate = true,
@@ -1002,6 +1000,17 @@ AutoDrive.settings.useWorkLightsSilo = {
     isVehicleSpecific = true
 }
 
+AutoDrive.settings.useHazardLightReverse = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_hazardLightReverse",
+    tooltip = "gui_ad_hazardLightReverse_tooltip",
+    translate = true,
+    isVehicleSpecific = true
+}
+
 function AutoDrive.getSetting(settingName, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]
@@ -1012,6 +1021,9 @@ function AutoDrive.getSetting(settingName, vehicle)
         end
         if setting.values[setting.current] == nil then
             setting.current = setting.default
+        end
+        if setting.values[setting.current] == nil then
+            setting.current = 1
         end
         return setting.values[setting.current]
     end
@@ -1027,6 +1039,9 @@ function AutoDrive.getSettingState(settingName, vehicle)
         end
         if setting.values[setting.current] == nil then
             setting.current = setting.default
+        end
+        if setting.values[setting.current] == nil then
+            setting.current = 1
         end
         return setting.current
     end

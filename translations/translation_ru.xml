@@ -69,7 +69,7 @@
 		<text name="AD_No_Trailer"								text="не может найти прицеп" />
 		<text name="AD_No_Bunker"								text="не может найти силосную яму" />
 		<text name="AD_No_Shovel"								text="не может найти присоединённый ковш" />
-		<text name="AD_No_Refuel_Station"						text="не удалось найти заправочную станцию для:" />
+		<text name="AD_No_Refuel_Station"						text="не удалось найти заправочную станцию" />
 		<text name="AD_No_Repair_Station"						text="не смог найти ремонтную станцию для:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Перегон" />
@@ -169,6 +169,8 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
 		<text name="gui_ad_restrictToField"						text="Поиск маршрута ограничен полем" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Если разгружающий автомобиль уже находится на поле, он ограничит поиск маршрута границами поля." />
 		<text name="gui_ad_activeUnloading"						text="Активная разгрузка" />
@@ -292,6 +294,8 @@
 		<text name="ad_color_currentConnection" 				text="12 линия планируемого пути" />
 		<text name="ad_color_closestLine"						text="13 линия от техники до ближайшей путевой точки" />
 		<text name="ad_color_editorHeightLine"					text="14 линия от поверхности путевой точки к точке над техникой " />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Удалить все" />
 		<text name="button_reset_selected" 						text="Сбросить выбранное" />

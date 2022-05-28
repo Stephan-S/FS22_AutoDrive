@@ -70,7 +70,7 @@
 		<text name="AD_No_Trailer"								text="geen aanhanger gevonden" />
 		<text name="AD_No_Bunker"								text="geen silo bunker gevonden" />
 		<text name="AD_No_Shovel"								text="geen shovel gevonden" />
-		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Refuel_Station"						text="could not find refuel station" />
 		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Rijden" />
@@ -170,6 +170,8 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
 		<text name="gui_ad_activeUnloading"						text="Actief ontladen" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Ontlaad de oogstmachine wanneer deze rijdt." />
 		<text name="gui_ad_restrictToField"						text="Route zoeken beperken tot veld" />
@@ -292,6 +294,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 lijn volgend pad" />
 		<text name="ad_color_closestLine" 			            text="13 lijn van voertuig naar dichtstbijzijnde routepunt" />
 		<text name="ad_color_editorHeightLine" 			        text="14 lijn van oppervlakte routepunt naar degene boven het voertuig" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Alles verwijderen" />
 		<text name="button_reset_selected" 					    text="Geselecteerde terugzetten" />

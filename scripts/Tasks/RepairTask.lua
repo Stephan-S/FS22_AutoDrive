@@ -81,6 +81,7 @@ function RepairTask:update(dt)
 end
 
 function RepairTask:abort()
+    self.vehicle.ad.onRouteToRepair = false
 end
 
 function RepairTask:finished()    

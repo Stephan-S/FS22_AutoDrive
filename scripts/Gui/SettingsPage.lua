@@ -10,7 +10,7 @@ ADSettingsPage = {}
 local ADSettingsPage_mt = Class(ADSettingsPage, TabbedMenuFrameElement)
 
 -- ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox", "headerIcon", "headerText"}
-ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox"}
+ADSettingsPage.CONTROLS = {"settingsContainer", "ingameMenuHelpBox", "boxLayout"}
 
 function ADSettingsPage:new(target)
     local element = TabbedMenuFrameElement.new(target, ADSettingsPage_mt)
@@ -22,11 +22,12 @@ end
 
 function ADSettingsPage:onFrameOpen()
     ADSettingsPage:superClass().onFrameOpen(self)
-    FocusManager:unsetHighlight(FocusManager.currentFocusData.highlightElement)
-    FocusManager:unsetFocus(FocusManager.currentFocusData.focusElement)
+    -- FocusManager:unsetHighlight(FocusManager.currentFocusData.highlightElement)
+    -- FocusManager:unsetFocus(FocusManager.currentFocusData.focusElement)
     if not self:hasChanges() then
         self:loadGUISettings()
     end
+    FocusManager:setFocus(self.boxLayout)
 end
 
 function ADSettingsPage:onFrameClose()
