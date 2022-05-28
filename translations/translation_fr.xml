@@ -19,7 +19,7 @@
 		<text name="input_AD_Speed_down"						text="AD: Diminuer la vitesse" />
 		<text name="input_AD_routes_manager"					text="AD: Ouvrir le gestionnaire d'itinéraires" />
 		<text name="input_AD_open_notification_history" 		text="AD: Ouvrir l'historique des notifications" />
-		<text name="input_AD_open_colorSettings" 		        text="AD: Choix des couleurs" />																					
+		<text name="input_AD_open_colorSettings" 		        text="AD: Choix des couleurs" />
 		<text name="input_AD_continue"							text="AD: Continuer" />
 		<text name="input_ADSelectTargetUnload"					text="AD: Sélect. prochain déchargement" />
 		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Sélect. déchargement précédent" />
@@ -168,9 +168,11 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Oui - Allume les feux de travail pendant les opérations de chargement et déchargement sur un déclencheur" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Feux de travail lors d'opérations dans un silo bunker" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Oui - Allume les feux de travail dans un silo bunker" />
+
 		<text name="gui_ad_hazardLightReverse"					text="Feux de détresse" />
 		<text name="gui_ad_hazardLightReverse_tooltip"			text="Oui - Allume les feux de détresse pendant une marche arrière" />
-		<text name="gui_ad_activeUnloading"						text="Déchargement en mouvement" />
+
+    <text name="gui_ad_activeUnloading"						text="Déchargement en mouvement" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Déchargement des moissoneuses en roulant." />
 		<text name="gui_ad_restrictToField"						text="Recherche de parcours limité au champ" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Si le chauffeur est déjà garé sur le champ, il limitera la recherche aux limites du champ." />
@@ -247,8 +249,7 @@
 		<text name="gui_ad_restoreButtonText" 					text="Restaurer" />
 		<text name="gui_ad_settingsClosingDialog_title"			text="Tous les changements seront perdus" />
 		<text name="gui_ad_settingsClosingDialog_text"			text="Êtes-vous sûr de vouloir fermer les paramètres sans enregistrer ?" />
-		<text name="gui_ad_setDefaultButtonText" 				text="Définir par défaut" />
-		
+		<text name="gui_ad_setDefaultButtonText" 				text="Définir par défaut" />		
 		<text name="gui_ad_routesManagerTitle" 					text="Gestionnaire d'itinéraires" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Entrez le nom de l'itinéraire:" />
 		<text name="gui_ad_button_export" 						text="Sauvegarder" />
@@ -292,12 +293,15 @@
 		<text name="ad_color_currentConnection" 			    text="12 ligne vers l'itinéraire" />
 		<text name="ad_color_closestLine" 			            text="13 ligne du véhicule vers le point le plus proche" />
 		<text name="ad_color_editorHeightLine" 			        text="14 ligne entre le point au-dessus du véhicule et celui en surface" />
+
 		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
 		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Effacer tout" />
 		<text name="button_reset_selected" 					    text="Effacer la sélection" />
 		
+		<text name="button_delete_all" 							text="Effacer tout" />
+		<text name="button_reset_selected" 					    text="Effacement sélectionné" />		
 		<text name="AD_task_pathfinding"						text="Planifier le parcours" />
 		<text name="AD_task_catch_up_with_combine"				text="Rattraper la moissonneuse-batteuse" />
 		<text name="AD_task_clearcrop"							text="Destruction de la culture" />
@@ -332,17 +336,15 @@
 		<text name = "gui_CPAD_full"							text = "full"/>		
 		<text name = "gui_ad_combineCPADHudMouse"				text = "Boutons CP/AD combinés"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "off: par défaut / simple: Courseplay en action secondaire souris > mouse on + off, AD: Affichage ATH > deux ATH actifs on + off / full: identique à simple mais affichage en une étape / Prérequis: désactiver le clic droit du Coursplay pour l'affichage ATH"/>
-
+  
 		<text name = "gui_ad_editorTip_1"								text = "Clic simple gauche:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Souris uniquement: sélection 1. point"/>
 		<text name = "gui_ad_editorTip_3"								text = "CTRLG = Créer un point"/>
 		<text name = "gui_ad_editorTip_4"								text = "ALTG = Supprimer un point"/>
 		<text name = "gui_ad_editorTip_5"								text = "MAJG = Basculer point en voie dégagement"/>
-
 		<text name = "gui_ad_editorTip_6"								text = "Clic au second point:"/>
 		<text name = "gui_ad_editorTip_7"								text = "Etablir connexion"/>
 		<text name = "gui_ad_editorTip_8"								text = "MAJD = Créer ligne marche AR"/>
-
 		<text name = "gui_ad_editorTip_9"								text = "1. point est une intersection, 2. point est voisin:"/>
 		<text name = "gui_ad_editorTip_10"								text = "CTRLG: Choix du segment (unique/double sens)"/>
 		<text name = "gui_ad_editorTip_11"								text = "MAJG = Etablir voie de dégagement"/>

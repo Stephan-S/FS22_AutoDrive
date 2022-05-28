@@ -248,7 +248,6 @@
 		<text name="gui_ad_settingsClosingDialog_title"			text="All changes will be lost" />
 		<text name="gui_ad_settingsClosingDialog_text"			text="Are you sure you want to close the settings without saving?" />
 		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
-
 		<text name="gui_ad_routesManagerTitle" 					text="Routes Manager" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Insert route name:" />
 		<text name="gui_ad_button_export" 						text="Save" />
@@ -297,7 +296,6 @@
 
 		<text name="button_delete_all" 							text="Delete All" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
-
 		<text name="AD_task_pathfinding"						text="Planning path" />
 		<text name="AD_task_catch_up_with_combine"				text="Catching up with combine" />
 		<text name="AD_task_clearcrop"							text="Clearing crop" />
@@ -338,11 +336,9 @@
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>
 		<text name = "gui_ad_editorTip_4"								text = "LALT = Delete node"/>
 		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Toggle point as side road"/>
-
 		<text name = "gui_ad_editorTip_6"								text = "Clicking on second node:"/>
 		<text name = "gui_ad_editorTip_7"								text = "Toggle connection"/>
 		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Create reverse road"/>
-
 		<text name = "gui_ad_editorTip_9"								text = "1. node is intersection, second it's neighbor:"/>
 		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Toggle segment type (normal/dual)"/>
 		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Toggle side road"/>
