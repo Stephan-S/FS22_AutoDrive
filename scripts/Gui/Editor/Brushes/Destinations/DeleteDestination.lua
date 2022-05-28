@@ -20,34 +20,16 @@ function ADBrushDeleteDestination:onButtonPrimary()
 	if nodeId ~= nil then
 		local node = ADGraphManager:getMapMarkerByWayPointId(nodeId)
 		if node then
-			-- TODO: Add yes or no dialog 
-			--self:openTextInput(self.deleteDestination,self:getTranslation(self.inputTitle), node)
-
-			ADGraphManager:removeMapMarker(node.markerIndex)
+			self:showYesNoDialog(self.deleteDestination, self:getTranslation(self.yesNoTitle, node.name), node.markerIndex)
 		end
 	end
 end
 
-function ADBrushDeleteDestination:deleteDestination()
-	
+function ADBrushDeleteDestination:deleteDestination(clickOk, markerIndex)
+	if clickOk then
+		ADGraphManager:removeMapMarker(markerIndex)
+	end
 end
-
-function ADBrushDeleteDestination:onButtonSecondary(isDown, isDrag, isUp)
-
-end
-
-function ADBrushDeleteDestination:onButtonTertiary()
-	
-end
-
-function ADBrushDeleteDestination:activate()
-	
-end
-
-function ADBrushDeleteDestination:deactivate()
-	
-end
-
 
 function ADBrushDeleteDestination:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)

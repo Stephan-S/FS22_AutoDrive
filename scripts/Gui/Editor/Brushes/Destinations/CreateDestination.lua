@@ -31,23 +31,6 @@ function ADBrushCreateDestination:createDestination(text,clickOk,nodeId)
 	end
 end
 
-function ADBrushCreateDestination:onButtonSecondary(isDown, isDrag, isUp)
-
-end
-
-function ADBrushCreateDestination:onButtonTertiary()
-	
-end
-
-function ADBrushCreateDestination:activate()
-	
-end
-
-function ADBrushCreateDestination:deactivate()
-	
-end
-
-
 function ADBrushCreateDestination:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)
 end

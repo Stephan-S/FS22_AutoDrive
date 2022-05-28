@@ -12,7 +12,8 @@ ADBrush = {
 	secondaryButtonText = "secondary_text",
 	secondaryAxisText = "secondary_axis_text",
 	tertiaryButtonText = "tertiary_text",
-	inputTitle = "input_title"
+	inputTitle = "input_title",
+	yesNoTitle = "yesNo_title"
 }
 local ADBrush_mt = Class(ADBrush, ConstructionBrush)
 function ADBrush.new(customMt, cursor)
@@ -65,6 +66,15 @@ function ADBrush:openTextInput(callback,title,args)
 			imePrompt = title,
 			maxCharacters = 50,
 			confirmText = g_i18n:getText("button_ok"),
+			args = args
+		})
+end
+
+function ADBrush:showYesNoDialog(callback,title,args)
+	g_gui:showYesNoDialog({
+			text = title,
+			callback = callback,
+			target = self,
 			args = args
 		})
 end

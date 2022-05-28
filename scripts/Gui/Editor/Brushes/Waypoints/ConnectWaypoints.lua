@@ -80,10 +80,6 @@ function ADBrushConnect:clearConnection(startNode, endNode, sendEvent)
 	ADGraphManager:setConnectionBetween(startNode, endNode, 0, sendEvent)
 end
 
-function ADBrushConnect:onButtonSecondary()
-	
-end
-
 function ADBrushConnect:onButtonTertiary()
 	self.mode = self.mode + 1
 	if self.mode > self.TYPE_MAX then 

@@ -100,10 +100,6 @@ function ADBrushCurve:moveWaypoints()
 
 end
 
-function ADBrushCurve:onButtonSecondary()
-	
-end
-
 function ADBrushCurve:onAxisPrimary(inputValue)
 	self.offset = MathUtil.clamp(self.offset+inputValue/50,self.MIN_OFFSET,self.MAX_OFFSET)
 	self:setInputTextDirty()

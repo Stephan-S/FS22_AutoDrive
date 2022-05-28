@@ -160,10 +160,6 @@ function ADBrushStraightLine:deleteNotUsedWaypoints(n)
 	end
 end
 
-function ADBrushStraightLine:onButtonSecondary()
-	
-end
-
 function ADBrushStraightLine:onAxisPrimary(inputValue)
 	self:setSpacing(inputValue)
 	self:setInputTextDirty()

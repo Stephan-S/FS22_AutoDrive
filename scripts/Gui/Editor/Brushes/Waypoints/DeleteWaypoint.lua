@@ -23,23 +23,6 @@ function ADBrushDelete:onButtonPrimary(isDown, isDrag, isUp)
 	end
 end
 
-function ADBrushDelete:onButtonSecondary()
-	
-end
-
-function ADBrushDelete:onButtonTertiary()
-	
-end
-
-function ADBrushDelete:activate()
-	
-end
-
-function ADBrushDelete:deactivate()
-	
-end
-
-
 function ADBrushDelete:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)
 end

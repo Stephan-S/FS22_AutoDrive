@@ -30,23 +30,6 @@ function ADBrushRenameDestination:renameDestination(text,clickOk,nodeId)
 	end
 end
 
-function ADBrushRenameDestination:onButtonSecondary(isDown, isDrag, isUp)
-
-end
-
-function ADBrushRenameDestination:onButtonTertiary()
-	
-end
-
-function ADBrushRenameDestination:activate()
-	
-end
-
-function ADBrushRenameDestination:deactivate()
-	
-end
-
-
 function ADBrushRenameDestination:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)
 end

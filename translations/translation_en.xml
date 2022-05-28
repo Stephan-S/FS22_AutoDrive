@@ -316,7 +316,7 @@
 
 		<text name="gui_ad_editor_brush_deleteDestination_name"				text="Delete destination"/>
 		<text name="gui_ad_editor_brush_deleteDestination_primary_text"		text="Delete destination"/>
-		<text name="gui_ad_editor_brush_deleteDestination_input_title"		text="Delete destination (%s)"/>
+		<text name="gui_ad_editor_brush_deleteDestination_yesNo_title"		text="Delete destination (%s)"/>
 
 		<text name="gui_ad_editor_brush_renameDestination_name"				text="Rename destination"/>
 		<text name="gui_ad_editor_brush_renameDestination_primary_text"		text="Rename destination"/>

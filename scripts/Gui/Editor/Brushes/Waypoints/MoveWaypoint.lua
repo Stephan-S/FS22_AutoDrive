@@ -36,14 +36,6 @@ function ADBrushMove:onButtonPrimary(isDown, isDrag, isUp)
 	end
 end
 
-function ADBrushMove:onButtonSecondary(isDown, isDrag, isUp)
-
-end
-
-function ADBrushMove:onButtonTertiary()
-	
-end
-
 function ADBrushMove:activate()
 	self.selectedNodeId = nil
 end
