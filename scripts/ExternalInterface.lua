@@ -224,12 +224,9 @@ function AutoDrive:StartCP(vehicle)
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP...")
-    -- if vehicle.startCpAtFirstWp ~= nil then
-        -- vehicle:startCpAtFirstWp()
-    if vehicle.startCpAtLastWp ~= nil then
-        vehicle:startCpAtLastWp()
-    elseif vehicle.startCpALastWp ~= nil then
-        vehicle:startCpALastWp()
+    --- Starts the driver with the driver settings applied by the user.
+    if vehicle.startCpAtFirstWp ~= nil then
+        vehicle:startCpAtFirstWp()
     else
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:StartCP - Not possible. CP interface not found")
     end
@@ -241,10 +238,9 @@ function AutoDrive:RestartCP(vehicle)
         return 
     end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:RestartCP...")
+    --- Restarts the driver with the driver settings restored.
     if vehicle.startCpAtLastWp ~= nil then
         vehicle:startCpAtLastWp()
-    elseif vehicle.startCpALastWp ~= nil then
-        vehicle:startCpALastWp()
     else
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:RestartCP - Not possible. CP interface not found")
     end
