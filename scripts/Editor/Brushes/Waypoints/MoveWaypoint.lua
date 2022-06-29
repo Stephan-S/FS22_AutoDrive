@@ -15,33 +15,34 @@ function ADBrushMove.new(customMt,cursor)
 end
 
 function ADBrushMove:onButtonPrimary(isDown, isDrag, isUp)
-	
 	if isDown then
 		self.selectedNodeId = self:getHoveredNodeId()
+		self.graphWrapper:setSelected(self.selectedNodeId)
 	end
 	if isDrag then 
 		if self.selectedNodeId then 
-			local wayPoint = ADGraphManager:getWayPointById(self.selectedNodeId)
 			local x, y, z = self.cursor:getPosition()
-			ADGraphManager:moveWayPoint(self.selectedNodeId, x, y, z, wayPoint.flags,false)
+			self.graphWrapper:setPosition(self.selectedNodeId, x, y, z, false)
 		end
 	end
 	if isUp then
 		if self.selectedNodeId then 
-			local wayPoint = ADGraphManager:getWayPointById(self.selectedNodeId)
 			local x, y, z = self.cursor:getPosition()
-			ADGraphManager:moveWayPoint(self.selectedNodeId, x, y, z, wayPoint.flags)
+			self.graphWrapper:setPosition(self.selectedNodeId, x, y, z, true)
 		end
 		self.selectedNodeId = nil
+		self.graphWrapper:resetSelected()
 	end
 end
 
 function ADBrushMove:activate()
 	self.selectedNodeId = nil
+	self.graphWrapper:resetSelected()
 end
 
 function ADBrushMove:deactivate()
 	self.selectedNodeId = nil
+	self.graphWrapper:resetSelected()
 end
 
 function ADBrushMove:getButtonPrimaryText()

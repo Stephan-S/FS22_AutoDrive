@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<constructionCategories defaultIconFilename="icon.dds" refSize="256 256">
-
-    <category name="autoDrive" title="$l10n_gui_ad_editor_title" iconFilename="icon.dds" refSize="256 256">
-        <tab name="basic" title="$l10n_gui_ad_editor_basic_title" iconFilename="textures/input_record_2.dds"  refSize="128 128"/>
-		<tab name="destinations" title="$l10n_gui_ad_editor_destinations_title" iconFilename="textures/destination.dds" refSize="32 32"/>
-        <tab name="advanced" title="$l10n_gui_ad_editor_advanced_title" iconFilename="textures/input_record_3.dds"  refSize="128 128"/>
-    </category>
-</constructionCategories>

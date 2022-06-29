@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Categories defaultIconFilename="icon.dds" refSize="256 256">
+
+    <Category name="autoDrive" title="$l10n_gui_ad_editor_title" iconFilename="icon.dds" refSize="256 256">
+        <Tab name="basic" title="$l10n_gui_ad_editor_basic_title" iconFilename="textures/input_record_2.dds"  refSize="128 128">
+			<Brush name="move" class="ADBrushMove" title="$l10n_gui_ad_editor_brush_move_name" iconFilename="textures/input_record_3.dds"/>
+			<Brush name="create" class="ADBrushCreate" title="$l10n_gui_ad_editor_brush_create_name" iconFilename="textures/plusSign.dds"/>
+			<Brush name="connect" class="ADBrushConnect" title="$l10n_gui_ad_editor_brush_connect_name" iconFilename="textures/input_record_2.dds"/>
+		</Tab>
+		<Tab name="destinations" title="$l10n_gui_ad_editor_destinations_title" iconFilename="textures/destination.dds" refSize="32 32">
+			<Brush name="createDestination" class="ADBrushCreateDestination" title="$l10n_gui_ad_editor_brush_createDestination_name" iconFilename="textures/input_createMapMarker_1.dds"/>
+			<Brush name="renameDestination" class="ADBrushRenameDestination" title="$l10n_gui_ad_editor_brush_renameDestination_name" iconFilename="textures/input_editMapMarker_1.dds"/>
+			<Brush name="deleteDestination" class="ADBrushDeleteDestination" title="$l10n_gui_ad_editor_brush_deleteDestination_name" iconFilename="textures/input_removeMapMarker_1.dds"/>
+		</Tab>
+        <Tab name="advanced" title="$l10n_gui_ad_editor_advanced_title" iconFilename="textures/input_record_3.dds"  refSize="128 128">
+			<Brush name="straight" class="ADBrushStraightLine" title="$l10n_gui_ad_editor_brush_straight_name" iconFilename="textures/input_record_4.dds"/>
+			<Brush name="curve" class="ADBrushCurve" title="$l10n_gui_ad_editor_brush_curve_name" iconFilename="textures/input_record_4.dds"/>
+		</Tab>
+    </Category>
+</Categories>

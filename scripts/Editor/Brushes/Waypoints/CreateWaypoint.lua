@@ -16,7 +16,7 @@ end
 function ADBrushCreate:onButtonPrimary()
 	if not self:getHoveredNodeId() then 
 		local x, y, z = self.cursor:getPosition()
-		ADGraphManager:createWayPoint(x, y, z)
+		self.graphWrapper:addPoint(x, y, z)
 	end
 end
 

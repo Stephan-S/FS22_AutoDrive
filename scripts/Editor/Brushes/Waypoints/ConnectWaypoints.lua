@@ -36,30 +36,30 @@ function ADBrushConnect.new(customMt,cursor)
 end
 
 function ADBrushConnect:onButtonPrimary(isDown, isDrag, isUp)
-	if self.ad.selectedNodeId == nil and isDown then 
-		self.ad.selectedNodeId = self:getHoveredNodeId()
+	if self.selectedNodeId == nil and isDown then 
+		self.selectedNodeId = self:getHoveredNodeId()
+		self.graphWrapper:setSelected(self.selectedNodeId)
 		return
 	end
 	local nodeId = self:getHoveredNodeId()
 	if nodeId ~= nil then 
 		if isDrag then 
-			if nodeId ~= self.ad.selectedNodeId and not self.changedWaypoints[nodeId] then 
-				self:connectWaypoints(self.ad.selectedNodeId, nodeId)
-				self.ad.selectedNodeId = nodeId
+			if nodeId ~= self.selectedNodeId and not self.changedWaypoints[nodeId] then 
+				self:connectWaypoints(self.selectedNodeId, nodeId)
+				self.selectedNodeId = nodeId
 				self.changedWaypoints[nodeId] = true
 			end
 		end
 	end
 	if isUp then 
-		self.ad.selectedNodeId = nil
+		self.selectedNodeId = nil
+		self.graphWrapper:resetSelected()
 		self.changedWaypoints = {}
 	end
 end
 
 function ADBrushConnect:connectWaypoints(nodeId, targetNodeId, sendEvent)
-	local startNode, targetNode = ADGraphManager:getWayPointById(nodeId), ADGraphManager:getWayPointById(targetNodeId)
-	ADGraphManager:setConnectionBetween(startNode, targetNode, self:getCurrentConnectionType(), sendEvent)
-	self:setPrio(targetNodeId, sendEvent)
+	self.graphWrapper:setConnectionAndSubPriority(nodeId, targetNodeId, self:getCurrentConnectionType(), self:getSubPriority(), sendEvent)
 end
 
 function ADBrushConnect:getCurrentConnectionType()
@@ -72,13 +72,8 @@ function ADBrushConnect:getCurrentConnectionType()
 	return dir
 end
 
-function ADBrushConnect:setPrio(nodeId, sendEvent)
-	ADGraphManager:setSubPrio(nodeId, self.mode == self.TYPE_LOW_PRIO or self.mode == self.TYPE_REVERSE_LOW_PRIO 
-												or self.mode == self.TYPE_CROSSING_LOW_PRIO, sendEvent)
-end
-
-function ADBrushConnect:clearConnection(startNode, endNode, sendEvent)
-	ADGraphManager:setConnectionBetween(startNode, endNode, 0, sendEvent)
+function ADBrushConnect:getSubPriority()
+	return self.mode == self.TYPE_LOW_PRIO or self.mode == self.TYPE_REVERSE_LOW_PRIO or self.mode == self.TYPE_CROSSING_LOW_PRIO
 end
 
 function ADBrushConnect:onButtonTertiary()
@@ -98,13 +93,15 @@ function ADBrushConnect:copyState(from)
 end
 
 function ADBrushConnect:activate()
-	self.ad.selectedNodeId = nil
+	self.selectedNodeId = nil
 	self.changedWaypoints = {}
+	self.graphWrapper:resetSelected()
 end
 
 function ADBrushConnect:deactivate()
-	self.ad.selectedNodeId = nil
+	self.selectedNodeId = nil
 	self.changedWaypoints = {}
+	self.graphWrapper:resetSelected()
 end
 
 function ADBrushConnect:getButtonPrimaryText()
@@ -112,5 +109,5 @@ function ADBrushConnect:getButtonPrimaryText()
 end
 
 function ADBrushConnect:getButtonTertiaryText()
-	return self:getTranslation(self.tertiaryButtonText, ADBrushConnect.getTranslation(ADBrushConnect, self.typeTexts[self.mode]))
+	return self:getTranslation(self.tertiaryButtonText, self:getTranslation(self.typeTexts[self.mode]))
 end

@@ -90,7 +90,7 @@ function ADBrushCurve:moveWaypoints()
 	}
 
 	local dx, dz
-	local i = 1
+	local i = 2
 	for t=dt , 1, dt do 
 		dx, dz = ADBrushCurve:getNextPoint(t,points)
 		self:moveSingleWaypoint(i, dx, y, dz)
@@ -110,18 +110,6 @@ function ADBrushCurve:onAxisSecondary(inputValue)
 	self:setInputTextDirty()
 end
 
-
-function ADBrushCurve:activate()
-	self.waypoints = {}
-	self.sortedWaypoints = {}
-	ADBrushCurve:superClass().activate(self)
-end
-
-function ADBrushCurve:deactivate()
-	self.waypoints = {}
-	self.sortedWaypoints = {}
-	ADBrushCurve:superClass().deactivate(self)
-end
 
 function ADBrushCurve:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)

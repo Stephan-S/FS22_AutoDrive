@@ -3,8 +3,8 @@
 ---@class ADDrawUtils
 ADDrawUtils = {}
 
-function ADDrawUtils.drawCloseDestinations(ad)
-    local x1, y1, z1 = unpack(ad.position)
+function ADDrawUtils.drawCloseDestinations(position)
+    local x1, y1, z1 = unpack(position)
     --Draw close destinations
     for _, marker in pairs(ADGraphManager:getMapMarkers()) do
         local wp = ADGraphManager:getWayPointById(marker.id)
@@ -15,14 +15,16 @@ function ADDrawUtils.drawCloseDestinations(ad)
     end
 end
 
-function ADDrawUtils.drawWaypoints(ad)
-    for _, point in pairs(AdWaypointUtils.getWayPointsInRange(ad,0, AutoDrive.drawDistance)) do
-        ADDrawUtils.drawSingleWaypoint(ad, point)
-        ADDrawUtils.drawWaypointConnections(ad, point )
+function ADDrawUtils.drawWaypoints(visiblePoints, hoveredId, selectedIds, disabledIds)
+    for _, point in ipairs(visiblePoints) do
+        if not disabledIds[point.id] then
+            ADDrawUtils.drawSingleWaypoint(point, hoveredId, selectedIds, disabledIds)
+            ADDrawUtils.drawWaypointConnections(point, disabledIds)
+        end
     end
 end
 
-function ADDrawUtils.drawSingleWaypoint(ad, point)
+function ADDrawUtils.drawSingleWaypoint(point, hoveredId, selectedIds, disabledIds)
     local x = point.x
     local y = point.y
     local z = point.z
@@ -33,9 +35,9 @@ function ADDrawUtils.drawSingleWaypoint(ad, point)
     local color = colors.ad_color_default
 
     if AutoDrive.enableSphrere  then
-        if AutoDrive.mouseIsAtPos(point, 0.01) then
+        if selectedIds[point.id] then
             color = colors.ad_color_hoveredNode
-        elseif point.id == ad.selectedNodeId then
+        elseif point.id == hoveredId then
             color = colors.ad_color_selectedNode
         elseif isSubRouteWp then 
             color = colors.ad_color_subPrioNode
@@ -58,12 +60,12 @@ function ADDrawUtils.drawSingleWaypoint(ad, point)
         if point.out ~= nil then
             for _, neighbor in pairs(point.out) do
                 local nWp = ADGraphManager:getWayPointById(neighbor)
-                if nWp ~= nil then
-                    if AutoDrive.mouseIsAtPos(nWp, 0.01) then
+                if nWp ~= nil and not disabledIds[neighbor] then
+                    if nWp.id == hoveredId then
                         -- draw previous point in GOLDHOFER_PINK1
                         ADDrawingManager:addSphereTask(point.x, point.y, point.z, 3.4, unpack(AutoDrive.currentColors.ad_color_previousNode))
                     end
-                    if AutoDrive.mouseIsAtPos(point, 0.01) then
+                    if point.id == hoveredId then
                         -- draw next point
                         ADDrawingManager:addSphereTask(nWp.x, nWp.y, nWp.z, 3.2, unpack(AutoDrive.currentColors.ad_color_nextNode))
                     end
@@ -73,7 +75,7 @@ function ADDrawUtils.drawSingleWaypoint(ad, point)
     end
 end
 
-function ADDrawUtils.drawWaypointConnections(ad, point )
+function ADDrawUtils.drawWaypointConnections(point, disabledIds)
     
     local x = point.x
     local y = point.y
@@ -89,38 +91,39 @@ function ADDrawUtils.drawWaypointConnections(ad, point )
     -- draw connection lines
     if point.out ~= nil then
         for _, neighbor in pairs(point.out) do
-            
-            pointsDrawn[neighbor] = true
-            local target = ADGraphManager:getWayPointById(neighbor)
-            local targetIsSubRouteWp = ADGraphManager:getIsPointSubPrio(neighbor)
-            if target ~= nil then
-                --check if outgoing connection is a dual way connection
-                local nWp = ADGraphManager:getWayPointById(neighbor)
-                if point.incoming == nil or table.contains(point.incoming, neighbor) then
-                    --draw dual way line
-                    if point.id > nWp.id then
-                        if isSubRouteWp or targetIsSubRouteWp then
-                            color = colors.ad_color_subPrioDualConnection
-                        else
-                            color = colors.ad_color_dualConnection       
-                        end
-                        ADDrawingManager:addLineTask(x, y, z, nWp.x, nWp.y, nWp.z, unpack(color))
-                    end
-                else
-                    --draw line with direction markers (arrow)
-                    if (nWp.incoming == nil or table.contains(nWp.incoming, point.id)) then
-                        -- one way line
-                        if isSubRouteWp or targetIsSubRouteWp then
-                            color = colors.ad_color_subPrioSingleConnection
-                        else
-                            color = colors.ad_color_singleConnection
+            if not disabledIds[neighbor] then
+                pointsDrawn[neighbor] = true
+                local target = ADGraphManager:getWayPointById(neighbor)
+                local targetIsSubRouteWp = ADGraphManager:getIsPointSubPrio(neighbor)
+                if target ~= nil then
+                    --check if outgoing connection is a dual way connection
+                    local nWp = ADGraphManager:getWayPointById(neighbor)
+                    if point.incoming == nil or table.contains(point.incoming, neighbor) then
+                        --draw dual way line
+                        if point.id > nWp.id then
+                            if isSubRouteWp or targetIsSubRouteWp then
+                                color = colors.ad_color_subPrioDualConnection
+                            else
+                                color = colors.ad_color_dualConnection       
+                            end
+                            ADDrawingManager:addLineTask(x, y, z, nWp.x, nWp.y, nWp.z, unpack(color))
                         end
                     else
-                        -- reverse way line
-                        color = colors.ad_color_reverseConnection
+                        --draw line with direction markers (arrow)
+                        if (nWp.incoming == nil or table.contains(nWp.incoming, point.id)) then
+                            -- one way line
+                            if isSubRouteWp or targetIsSubRouteWp then
+                                color = colors.ad_color_subPrioSingleConnection
+                            else
+                                color = colors.ad_color_singleConnection
+                            end
+                        else
+                            -- reverse way line
+                            color = colors.ad_color_reverseConnection
+                        end
+                        ADDrawingManager:addLineTask(x, y, z, nWp.x, nWp.y, nWp.z, unpack(color))
+                        ADDrawingManager:addArrowTask(x, y, z, nWp.x, nWp.y, nWp.z, arrowPosition, unpack(color))
                     end
-                    ADDrawingManager:addLineTask(x, y, z, nWp.x, nWp.y, nWp.z, unpack(color))
-                    ADDrawingManager:addArrowTask(x, y, z, nWp.x, nWp.y, nWp.z, arrowPosition, unpack(color))
                 end
             end
         end
@@ -131,14 +134,4 @@ function ADDrawUtils.drawWaypointConnections(ad, point )
         y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z) + 0.5
         ADDrawingManager:addCrossTask(x, y, z)
     end
-end
-
-
-function ADDrawUtils.draw(ad)
-   
-    -- Draw close destinations
-    ADDrawUtils.drawCloseDestinations(ad)
-    
-    -- Draw waypoint network.
-    ADDrawUtils.drawWaypoints(ad)
 end

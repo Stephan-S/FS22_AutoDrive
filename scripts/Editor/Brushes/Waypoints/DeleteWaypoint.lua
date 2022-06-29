@@ -18,7 +18,7 @@ function ADBrushDelete:onButtonPrimary(isDown, isDrag, isUp)
 	local nodeId = self:getHoveredNodeId()	
 	if nodeId ~= nil then 
 		if isDown or isDrag then
-			ADGraphManager:removeWayPoint(nodeId)
+			self.graphWrapper:removePoint(nodeId)
 		end
 	end
 end

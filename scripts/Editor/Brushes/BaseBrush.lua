@@ -6,7 +6,7 @@ ADBrush = {
 	imageFilename ="textures/input_record_4.dds",
 	name = "base",
 	radius = 0.5,
-	translationPrefix = "gui_ad_editor_brush_",
+	translationPrefix = "gui_ad_editor_",
 	primaryButtonText = "primary_text",
 	primaryAxisText = "primary_axis_text",
 	secondaryButtonText = "secondary_text",
@@ -29,31 +29,27 @@ function ADBrush:isAtPos(position, x, y, z)
 	end
 end
 
-function ADBrush:getHoveredNodeId()
+function ADBrush:getHoveredNodeId(excludeLambda)
 	local x, y, z = self.cursor:getPosition()
 	-- try to get a waypoint in mouse range
-	for _, point in pairs(AdWaypointUtils.getWayPointsInRange(self.ad,0, math.huge)) do
+	for _, point in pairs(self.graphWrapper:getVisiblePoints()) do
 		if self:isAtPos(point, x, y, z) then
-			return point.id
+			if excludeLambda == nil or not excludeLambda(point.id) then
+				return point.id
+			end
 		end
 	end
 end
 
-function ADBrush:setParameters(ad,camera)
-	self.ad = ad
+function ADBrush:setParameters(graphWrapper, camera, translation)
+	self.graphWrapper = graphWrapper
 	self.camera = camera
+	self.translation = translation
+	print(self.translation)
 end
 
-function ADBrush:cancel()
-
-end
-
-function ADBrush:activate()
-
-end
-
-function ADBrush:deactivate()
-
+function ADBrush:update()
+	self.graphWrapper:setHovered(self:getHoveredNodeId())
 end
 
 function ADBrush:openTextInput(callback,title,args)
@@ -84,5 +80,5 @@ function ADBrush.getName(class)
 end
 
 function ADBrush:getTranslation(translation, ...)
-	return string.format(g_i18n:getText(ADBrush.translationPrefix .. self.name .. "_" .. translation), ...)
+	return string.format(g_i18n:getText(self.translation .. translation), ...)
 end
