@@ -16,7 +16,10 @@ function AutoDrive.checkForVehiclesInBox(boundingBox, excludedVehicles)
                 end
             end
         end
-
+        if otherVehicle.spec_conveyorBelt and otherVehicle.spec_motorized and otherVehicle.getIsMotorStarted and otherVehicle:getIsMotorStarted() then
+            -- ignore operating conveyor belts
+            isExcluded = true
+        end
         if (not isExcluded) and otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then
             local x, _, z = getWorldTranslation(otherVehicle.components[1].node)
             local distance = MathUtil.vector2Length(boundingBox[1].x - x, boundingBox[1].z - z)
