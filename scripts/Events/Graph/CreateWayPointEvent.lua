@@ -30,20 +30,21 @@ function AutoDriveCreateWayPointEvent:readStream(streamId, connection)
 end
 
 function AutoDriveCreateWayPointEvent:run(connection)
-	if g_server ~= nil and connection:getIsServer() == false then
-		-- If the event is coming from a client, server have only to broadcast
-		AutoDriveCreateWayPointEvent.sendEvent(self.x, self.y, self.z)
-	else
-		-- If the event is coming from the server, both clients and server have to create the way point
-		ADGraphManager:createWayPoint(self.x, self.y, self.z, false)
+	--- Create waypoint on server and receiving clients.
+	ADGraphManager:createWayPoint(self.x, self.y, self.z, false)
+
+	if not connection:getIsServer() then
+		-- If the event is coming from a client, server has to broadcast it.
+		local event = AutoDriveCreateWayPointEvent.new(self.x, self.y, self.z)
+		g_server:broadcastEvent(event, nil, connection, nil)
 	end
 end
 
 function AutoDriveCreateWayPointEvent.sendEvent(x, y, z)
 	local event = AutoDriveCreateWayPointEvent.new(x, y, z)
 	if g_server ~= nil then
-		-- Server have to broadcast to all clients and himself
-		g_server:broadcastEvent(event, true)
+		-- Server have to broadcast to all clients
+		g_server:broadcastEvent(event, nil, nil, nil)
 	else
 		-- Client have to send to server
 		g_client:getServerConnection():sendEvent(event)
