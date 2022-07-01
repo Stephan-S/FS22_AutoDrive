@@ -503,9 +503,9 @@ function ADGraphManager:removeMapMarker(markerId, sendEvent)
 						end
 					end
 				end
+                -- remove deleted marker from vehicle destinations
+                ADGraphManager:checkResetVehicleDestinations(markerId)
 			end
-            -- remove deleted marker from vehicle destinations
-            ADGraphManager:checkResetVehicleDestinations(markerId)
 
 			-- Calling external interop listeners
 			AutoDrive:notifyDestinationListeners()
@@ -697,14 +697,12 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 end
 
 function ADGraphManager:isDualRoad(start, target)
-	if start == nil or target == nil or start.incoming == nil or target.id == nil then
+	if start == nil or target == nil or start.incoming == nil or target.incoming == nil or start.id == nil or target.id == nil then
 		return false
 	end
-	for _, incoming in pairs(start.incoming) do
-		if incoming == target.id then
-			return true
-		end
-	end
+    if table.contains(start.incoming, target.id) and table.contains(target.incoming, start.id) then
+        return true
+    end
 	return false
 end
 
@@ -956,8 +954,46 @@ function ADGraphManager:prepareWayPoints()
 				end
 			end
 		end
-	end
-	self.preparedWayPoints = true
+    end
+    self.preparedWayPoints = true
+end
+
+-- this looks simlar to prepareWayPoints, but is separated to not disturb this calculation
+-- here also additional checks may be implemented
+function ADGraphManager:getNetworkErrors()
+	local network = self:getWayPoints()
+	for id, wp in ipairs(network) do
+		wp.errorMapping = {}
+
+		if #wp.incoming > 0 then
+			for outIndex, outId in ipairs(wp.out) do
+				wp.errorMapping[outId] = true -- assume no path
+			end
+
+			for inIndex, inId in ipairs(wp.incoming) do
+				local inPoint = network[inId]
+                for outIndex, outId in ipairs(wp.out) do
+                    if inId ~= outId then
+                        local outPoint = network[outId]
+                        local angle = math.abs(AutoDrive.angleBetween({x = outPoint.x - wp.x, z = outPoint.z - wp.z}, {x = wp.x - inPoint.x, z = wp.z - inPoint.z}))
+                        if angle <= 90 then
+                            wp.errorMapping[outId] = false
+                        else
+                            local isReverseStart = not table.contains(outPoint.incoming, wp.id)
+                            local isReverseEnd = table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
+                            if isReverseStart or isReverseEnd then
+                                wp.errorMapping[outId] = false
+                            end
+                        end
+                    end
+                    if inId == outId and #wp.incoming == 1 then
+                        -- only 1 dual connection
+                        wp.errorMapping[outId] = false
+                    end
+                end
+            end
+        end
+    end
 end
 
 function ADGraphManager:checkResetVehicleDestinations(destination)
@@ -1017,6 +1053,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
 	if overallnumberWP < 3 then
 		return
 	end
+    ADGraphManager:getNetworkErrors()
 	local network = self:getWayPoints()
 
     local shouldUpdateMap = updateMap
@@ -1037,8 +1074,11 @@ function ADGraphManager:createDebugMarkers(updateMap)
 		local count1 = 1
 		local count2 = 1
 		local count3 = 1
+		local count4 = 1
+		local count9 = 1
 		local mapMarkerCounter = #self:getMapMarkers() + 1
 		for i, wp in pairs(network) do
+            wp.foundError = false
             -- mark wayPoint without outgoing connection
 			if #wp.out == 0 then
 				if wp ~= nil then
@@ -1053,13 +1093,14 @@ function ADGraphManager:createDebugMarkers(updateMap)
                     mapMarker.isADDebug = true
                     self:setMapMarker(mapMarker)
 
+                    wp.foundError = true
 					count1 = count1 + 1
 					mapMarkerCounter = mapMarkerCounter + 1
 				end
 			end
 
             -- mark reverse wayPoint with less angle to be reverse -> wrong connection in network
-            if wp.incoming ~= nil then
+            if not wp.foundError and wp.incoming ~= nil then
                 for _, wp_in in pairs(wp.incoming) do
                     if wp.out ~= nil then
                         for _, wp_out in pairs(wp.out) do
@@ -1078,6 +1119,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
                                 mapMarker.isADDebug = true
                                 self:setMapMarker(mapMarker)
 
+                                wp.foundError = true
                                 count2 = count2 + 1
                                 mapMarkerCounter = mapMarkerCounter + 1
                             end
@@ -1086,8 +1128,8 @@ function ADGraphManager:createDebugMarkers(updateMap)
                 end
             end
 
-            -- mark wayPoint without outgoing connection
-            if wp.out ~= nil then
+            -- mark wayPoint without incoming connection
+            if not wp.foundError and wp.out ~= nil then
                 for _, wp_out in pairs(wp.out) do
                     local missingIncoming = self:checkForMissingIncoming(wp, self:getWayPointById(wp_out))
                     if missingIncoming then
@@ -1102,9 +1144,54 @@ function ADGraphManager:createDebugMarkers(updateMap)
                         mapMarker.isADDebug = true
                         self:setMapMarker(mapMarker)
 
+                        wp.foundError = true
                         count3 = count3 + 1
                         mapMarkerCounter = mapMarkerCounter + 1
                     end
+                end
+            end
+
+            -- mark dual wayPoint with death end
+            if not wp.foundError and wp.out ~= nil then
+                for _, wp_out in pairs(wp.out) do
+                    local missingIncoming = self:checkForMissingDualConnection(wp)
+                    if missingIncoming then
+                        local debugMapMarkerName = "4_" .. tostring(count4)
+
+                        -- create the mapMarker
+                        local mapMarker = {}
+                        mapMarker.name = debugMapMarkerName
+                        mapMarker.group = ADGraphManager.debugGroupName
+                        mapMarker.markerIndex = mapMarkerCounter
+                        mapMarker.id = wp.id
+                        mapMarker.isADDebug = true
+                        self:setMapMarker(mapMarker)
+
+                        wp.foundError = true
+                        count4 = count4 + 1
+                        mapMarkerCounter = mapMarkerCounter + 1
+                    end
+                end
+            end
+
+            -- possible other errors
+            if not wp.foundError then
+                local wrongAngle, count1, count2 = self:checkForOtherErrors(wp)
+                if wrongAngle then
+                    local debugMapMarkerName = "9_" .. tostring(count9)
+
+                    -- create the mapMarker
+                    local mapMarker = {}
+                    mapMarker.name = debugMapMarkerName
+                    mapMarker.group = ADGraphManager.debugGroupName
+                    mapMarker.markerIndex = mapMarkerCounter
+                    mapMarker.id = wp.id
+                    mapMarker.isADDebug = true
+                    self:setMapMarker(mapMarker)
+
+                    wp.foundError = true
+                    count9 = count9 + 1
+                    mapMarkerCounter = mapMarkerCounter + 1
                 end
             end
 		end
@@ -1156,6 +1243,53 @@ function ADGraphManager:checkForMissingIncoming(wp_current)
             -- the waypoint has no incoming connection
             ret = true
         end
+    end
+    return ret
+end
+
+function ADGraphManager:checkForMissingDualConnection(wp_current)
+    local ret = false
+
+    if wp_current == nil then
+        return ret
+    end
+
+    if wp_current.incoming ~= nil and wp_current.out ~= nil and #wp_current.incoming == 1 and #wp_current.out == 1 then
+        if wp_current.incoming[1] ~= nil and wp_current.out[1] ~= nil and wp_current.incoming[1] == wp_current.out[1] then
+
+            local mapMarker = ADGraphManager:getMapMarkerByWayPointId(wp_current.id)
+            -- only dual waypoint without Marker is an error
+            if mapMarker == nil then
+                -- dual waypoint
+                ret = true
+            end
+
+            -- search for a possible reverse connection
+            for _, wp in pairs(self.wayPoints) do
+                if self:isReverseRoad(wp, wp_current) then
+                    -- reverse connection to wayPoint is OK - no death end
+                    ret = false
+                    break
+                end
+            end
+        end
+    end
+    return ret
+end
+
+
+function ADGraphManager:checkForOtherErrors(wp)
+    local ret = false
+
+    if wp == nil then
+        return true
+    end
+-- TODO
+
+	local network = self:getWayPoints()
+
+    for outIndex, outId in ipairs(wp.out) do
+        ret = ret or wp.errorMapping[outId]
     end
     return ret
 end

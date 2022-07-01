@@ -3,6 +3,12 @@
 	<translationContributors>Balu</translationContributors>
 	<texts>
 		<text name="UNKNOWN"									text="Unbekannt" />
+
+		<text name="gui_ad_ControlP"							text="gui_ad_ControlP" />
+		<text name="gui_ad_ControlI"							text="gui_ad_ControlI" />
+		<text name="gui_ad_ControlD"							text="gui_ad_ControlD" />
+		<text name="gui_ad_offsetXFactor"							text="gui_ad_offsetXFactor" />
+        
 		<text name="input_ADToggleHud"							text="AD: HUD ein/ausblenden" />
 		<text name="input_ADToggleHudExtension"					text="AD: HUD Infos" />
 		<text name="input_ADToggleMouse"						text="AD: Maus ein/ausblenden" />
@@ -54,8 +60,8 @@
 		<text name="input_ADStartCP"							text="AD: Übergabe an CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: CP/AIVE umschalten" />
 		<text name="input_AD_devAction"							text="AD: Entwickler Aktion" />
-		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Toggle automatic pickup target" />
-		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
+		<text name="input_ADToggleAutomaticPickupTarget"        text="AD: Umschalten automatisches Ladeziel" />
+		<text name="input_ADToggleAutomaticUnloadTarget"        text="AD: Umschalten automatisches Entladeziel" />
 		<text name="hud_avoidFruit"								text="AD: Fruchtumfahrung" />
 		<text name="hud_startCp" 								text="AD: Starte CP / AIVE Fahrer am Zielpunkt" />
 		<text name="AD_parkVehicle_noPosSet"					text="Kein Parkplatz zugewiesen." />
@@ -70,8 +76,9 @@
 		<text name="AD_No_Trailer"								text="konnte keinen Anhänger finden" />
 		<text name="AD_No_Bunker"								text="konnte kein Fahrsilo finden" />
 		<text name="AD_No_Shovel"								text="konnte keine Schaufel finden" />
-		<text name="AD_No_Refuel_Station"						text="konnte keine Tankstelle finden für:" />
+		<text name="AD_No_Refuel_Station"						text="konnte keine Tankstelle finden" />
 		<text name="AD_No_Repair_Station"						text="konnte keine Werkstatt finden für:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Falscher AD Modus für Arbeit mit CP" />
 		<text name="AD_MODE_DRIVETO"							text="Fahren" />
 		<text name="AD_MODE_DELIVERTO"							text="Abladen" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Abholen und Abliefern" />
@@ -163,6 +170,12 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Bis zu dieser Entfernung zum Zielpunkt wird beladen/entladen bei erkanntem Trigger." />
 		<text name="gui_ad_useBeaconLights"						text="Rundumleuchten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Ja - Außerhalb des Felds automatisch eingeschaltet / Nein - Rundumleuchten werden nicht automatisch ein- oder ausgeschaltet" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Arbeitslicht beim Be- und Entladen" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Ja - Beim Be- und Entladen werden Arbeitsscheinwerfer aktiviert." />
+		<text name="gui_ad_worklightsWhenSilo"					text="Arbeitslicht im Silobunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Ja - Beim Befahren eines Silobunkers werden Arbeitsscheinwerfer aktiviert." />
+		<text name="gui_ad_hazardLightReverse"					text="Warnblinker" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Ja - Beim Rückwärtsfahren werden Warnblinker aktiviert." />
 		<text name="gui_ad_activeUnloading"						text="Aktives Abfahren" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Ernter während der Fahrt abfahren" />
 		<text name="gui_ad_restrictToField"						text="Pfadplanung begrenzt" />
@@ -216,15 +229,15 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Ja - AutoDrive öffnet und schließt Abdeckungen von Anhängern wenn notwendig / Nein - die Abdeckungen werden von AutoDrive nicht geöffnet oder geschlossen" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Vorwärts Wendemanöver" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Ja - Abfahrer planen eine Vorwärtswende wenn Drescher wendet. / Nein - Abfahrer setzen kurz zurück." />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Abladeposition" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="aus-kein Abladen, mittig-auf Ladefläche abladen, links-, hinten-, rechts-auf Standard-Entladeposition (Positionen sind im Fahrzeug festgelegt, nicht in AD!)" />
+		<text name="gui_ad_ALUnload"                            text="Autoload: Abladeposition" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="aus-kein Abladen, mittig-auf Ladefläche abladen, links-, rechts-auf Standard-Entladeposition (Positionen sind im Fahrzeug festgelegt, nicht in AD!)" />
 		<text name="gui_ad_AL_off"                              text="abladen aus" />
 		<text name="gui_ad_AL_center"                           text="abladen mittig" />
 		<text name="gui_ad_AL_left"                             text="abladen links" />
 		<text name="gui_ad_AL_behind"                           text="abladen hinten" />
 		<text name="gui_ad_AL_right"                            text="abladen rechts" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: Wartezeit für Abladen" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Nach Abladen warten bevor weitergefahren wird - meist sinnvoll bei Abladen mittig: 0-kein Warten, sonst Wartezeit wie ausgewählt" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: Wartezeit Be- und Abladen" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Nach Be- und Abladen warten bevor weitergefahren wird - meist sinnvoll bei Beladen an Produktionen oder Abladen mittig: 0-kein Warten, sonst Wartezeit wie ausgewählt" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Streckengenerierung" />
 		<text name="gui_ad_scanConfirmationText"                text="Soll AutoDrive aus den Verkehrs- und Helferdaten der Karte ein Wegenetz erzeugen?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Kein Ernter mit gleichem Ziel" />
@@ -285,6 +298,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 Pfeil nächster Pfad" />
 		<text name="ad_color_closestLine" 			            text="13 Linie Fahrzeug <-> naheliegendster Wegpunkt" />
 		<text name="ad_color_editorHeightLine" 			        text="14 senkrechte Linie Wegpunkt am Boden <-> Wegpunkt über dem Fahrzeug" />
+		<text name="ad_color_previewOk" 			            text="15 Kurve Vorschauline OK, kollisionsfrei" />
+		<text name="ad_color_previewNotOk" 			            text="16 Kurve Vorschauline hat Kollision" />
 
 		<text name="button_delete_all" 							text="Alle löschen" />
 		<text name="button_reset_selected" 					    text="Ausgewählten zurücksetzen" />

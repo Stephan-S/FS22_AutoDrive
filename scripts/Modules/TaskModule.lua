@@ -63,6 +63,9 @@ function ADTaskModule:abortCurrentTask(abortMessage)
     if abortMessage ~= nil then
         AutoDrive.printMessage(self.vehicle, abortMessage)
     end
+    if self.activeTask ~= nil then
+        self.activeTask:abort()
+    end
     self.activeTask = nil
     self:onTaskChange()
 end
@@ -107,16 +110,14 @@ function ADTaskModule:update(dt)
 end
 
 function ADTaskModule:hasToRefuel()
-    if not AutoDrive.getSetting("autoRefuel", self.vehicle) then
-        return false
+    local ret = false
+    if AutoDrive.getSetting("autoRefuel", self.vehicle) or self.vehicle.ad.onRouteToRefuel then
+        local refuelFillTypes = AutoDrive.getRequiredRefuels(self.vehicle, self.vehicle.ad.onRouteToRefuel)
+        if #refuelFillTypes > 0 then
+            ret = true
+        end
     end
-    local refuelFillTypes = AutoDrive.getRequiredRefuels(self.vehicle, self.vehicle.ad.onRouteToRefuel)
-    if #refuelFillTypes > 0 then
-        self.vehicle.ad.stateModule:setRefuelFillType(refuelFillTypes[1])
-        return true
-    else
-        return false
-    end
+    return ret
 end
 
 function ADTaskModule:RefuelIfNeeded()
@@ -128,24 +129,22 @@ function ADTaskModule:RefuelIfNeeded()
         else
             self.vehicle.ad.isStoppingWithError = true
             self.vehicle:stopAutoDrive()
-            local fillType = self.vehicle.ad.stateModule:getRefuelFillType()
-            local refuelFillTypeTitle = g_fillTypeManager:getFillTypeByIndex(fillType).title
-            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station; %s", 5000, self.vehicle.ad.stateModule:getName(), refuelFillTypeTitle)
+            AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_No_Refuel_Station;", 5000, self.vehicle.ad.stateModule:getName())
         end
     end
 end
 
 function ADTaskModule:hasToRepair()
+    local repairNeeded = false
     if self.vehicle.ad.onRouteToRepair then
+        -- repair is forced by user or CP, so send vehicle to workshop independent of damage level
         return true
     end
-    if not AutoDrive.getSetting("autoRepair", self.vehicle) then
-        return false
-    end
-    local repairNeeded = false
-    local attachedObjects = AutoDrive.getAllImplements(self.vehicle, true)
-    for _, attachedObject in pairs(attachedObjects) do
-        repairNeeded = repairNeeded or (attachedObject.spec_wearable ~= nil and attachedObject.spec_wearable.damage > 0.6)
+    if AutoDrive.getSetting("autoRepair", self.vehicle) then
+        local attachedObjects = AutoDrive.getAllImplements(self.vehicle, true)
+        for _, attachedObject in pairs(attachedObjects) do
+            repairNeeded = repairNeeded or (attachedObject.spec_wearable ~= nil and attachedObject.spec_wearable.damage > 0.6)
+        end
     end
 
     return repairNeeded

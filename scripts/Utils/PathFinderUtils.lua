@@ -1,13 +1,15 @@
 function AutoDrive.getDriverRadius(vehicle, onlyVehicle)
-    local minTurnRadius = AIVehicleUtil.getAttachedImplementsMaxTurnRadius(vehicle)
+    local minTurnRadius = AIVehicleUtil.getAttachedImplementsMaxTurnRadius(vehicle) -- return -1 or getAITurnRadiusLimitation -> see xml value getAITurnRadiusLimitation
 
     --if minTurnRadius ~= nil then
       --  print("getAttachedImplementsMaxTurnRadius: " .. minTurnRadius)
     --end
 
     local maxToolRadius = 0
-    for _, implement in pairs(vehicle:getAttachedAIImplements()) do
-        maxToolRadius = math.max(maxToolRadius, AIVehicleUtil.getMaxToolRadius(implement))
+    if vehicle.getAttachedImplements ~= nil then
+        for _, implement in pairs(vehicle:getAttachedImplements()) do
+            maxToolRadius = math.max(maxToolRadius, AIVehicleUtil.getMaxToolRadius(implement))
+        end
     end
 
     --if maxToolRadius ~= nil then
@@ -16,7 +18,7 @@ function AutoDrive.getDriverRadius(vehicle, onlyVehicle)
 
     minTurnRadius = math.max(minTurnRadius, maxToolRadius)
 
-    if #vehicle:getAttachedAIImplements() > 0 then
+    if  vehicle.getAttachedImplements ~= nil and #vehicle:getAttachedImplements() > 0 then
         if minTurnRadius <= 5 then
             minTurnRadius = PathFinderModule.PP_CELL_X
             --if minTurnRadius ~= nil then
@@ -64,47 +66,3 @@ function AutoDrive.boundingBoxFromCorners(cornerX, cornerZ, corner2X, corner2Z, 
     return boundingBox
 end
 
-AutoDrive.implementsAllowedForReverseDriving = {
-"trailer"
-,"trailerlow"
-}
-
-function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
--- return true for implements allowed move reverse
-    local ret = false
-
-    if implement ~= nil and implement.spec_attachable ~= nil and implement.spec_attachable.attacherJoint ~= nil and implement.spec_attachable.attacherJoint.jointType ~= nil then
-        for i, name in ipairs(AutoDrive.implementsAllowedForReverseDriving) do
-            local key = "JOINTTYPE_"..string.upper(name)
-            
-            if AttacherJoints[key] ~= nil and AttacherJoints[key] == implement.spec_attachable.attacherJoint.jointType then
-                -- Logging.info("[AD] isImplementAllowedForReverseDriving implement allowed %s ", tostring(key))
-                return true
-            end
-        end
-    end
-
-    if implement ~= nil and implement.spec_attachable ~= nil 
-        and AttacherJoints.JOINTTYPE_IMPLEMENT == implement.spec_attachable.attacherJoint.jointType 
-    then
-        local breakforce = implement.spec_attachable:getBrakeForce()
-        -- Logging.info("[AD] isImplementAllowedForReverseDriving implement breakforce %s ", tostring(breakforce))
-        if breakforce ~= nil and breakforce > 0.07 * 10
-            and not (implement ~= nil and implement.getName ~= nil and implement:getName() == "GL 420")     -- Grimme GL 420 needs special handling, as it has breakforce >0.07, but no trailed wheel
-        then
-            return true
-        end
-    end
-
-    if implement ~= nil and implement.spec_attachable ~= nil 
-        and AttacherJoints.JOINTTYPE_SEMITRAILER == implement.spec_attachable.attacherJoint.jointType 
-    then
-        local implementX, implementY, implementZ = getWorldTranslation(implement.components[1].node)
-        local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
-        if diffZ < -3 then
-            return true
-        end
-    end
-
-    return ret
-end

@@ -101,6 +101,7 @@ function CatchCombinePipeTask:update(dt)
             local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
             self.reverseStartLocation = {x = x, y = y, z = z}
             self.state = CatchCombinePipeTask.STATE_REVERSING
+            return
         end
 
         if combineTravelDistance > 85 then
@@ -168,10 +169,10 @@ function CatchCombinePipeTask:startNewPathFinding()
     -- Only chase the rear on low fill levels of the combine. This should prevent getting into unneccessarily tight spots for the final approach to the pipe.
     -- Also for small fields, there is often no purpose in chasing so far behind the combine as it will already start a turn soon
 
-    local cfillLevel, cfillCapacity, _ = AutoDrive.getObjectNonFuelFillLevels(self.combine)
-    local cFillRatio = cfillLevel / cfillCapacity
+    local cfillLevel, cfillCapacity, _, cfillFreeCapacity = AutoDrive.getObjectFillLevels(self.combine)
+    local cFillRatio = cfillCapacity > 0 and cfillLevel / cfillCapacity or 0
 
-    if cFillRatio > 0.91 then
+    if cFillRatio > 0.91 or cfillFreeCapacity < 0.1 then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:startNewPathFinding() - Combine is almost full - dont chase for active unloading anymore")
         self:finished(ADTaskModule.DONT_PROPAGATE)
         self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:setToWaitForCall()

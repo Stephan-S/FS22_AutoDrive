@@ -1,6 +1,7 @@
 ADUserDataManager = {}
 
 ADUserDataManager.users = {}
+ADUserDataManager.SinglePlayer = "SinglePlayer"
 
 function ADUserDataManager:getUserByConnection(connection)
     return g_currentMission.userManager:getUserByConnection(connection)
@@ -54,6 +55,17 @@ function ADUserDataManager:loadFromXml()
                 end
                 uIndex = uIndex + 1
             end
+
+            if g_currentMission.userManager.getUserByConnection then
+                local user = g_currentMission.userManager:getUserByConnection(connection)
+                if user == nil then
+                    -- no client, use a single player user
+                    local uniqueId = ADUserDataManager.SinglePlayer
+                    if self.users[uniqueId] ~= nil then
+                        self:applyUserSettings((self.users[uniqueId].hudX or 0.5), (self.users[uniqueId].hudY or 0.5), self.users[uniqueId].settings)
+                    end
+                end
+            end
             Logging.info("[AD] ADUserDataManager: loaded data for %d users", userCount)
         end
         delete(xmlFile)
@@ -77,6 +89,24 @@ end
 function ADUserDataManager:saveToXml()
     local file = g_currentMission.missionInfo.savegameDirectory .. "/AutoDriveUsersData.xml"
     local xmlFile = createXMLFile("AutoDriveUsersData_XML_temp", file, "AutoDriveUsersData")
+
+    if g_currentMission.userManager.getUserByConnection then
+        local user = g_currentMission.userManager:getUserByConnection(connection)
+        if user == nil then
+            -- no client, create a single player user ID
+            local uniqueId = ADUserDataManager.SinglePlayer
+
+            -- single player, so use the current data
+            self.users[uniqueId] = {}
+            self.users[uniqueId].hudX = AutoDrive.HudX or 0.5
+            self.users[uniqueId].hudY = AutoDrive.HudY or 0.5
+            self.users[uniqueId].settings = {}
+            for _, sn in pairs(self.userSettingNames) do
+                self.users[uniqueId].settings[sn] = AutoDrive.getSettingState(sn)
+            end
+        end
+    end
+
     local uIndex = 0
     for uniqueId, userData in pairs(self.users) do
         local uKey = string.format("AutoDriveUsersData.users.user(%d)", uIndex)

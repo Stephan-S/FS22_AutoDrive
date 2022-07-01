@@ -71,8 +71,9 @@
 		<text name="AD_No_Trailer"								text="nie znaleziono przyczepy" />
 		<text name="AD_No_Bunker"								text="nie znaleziono silosu" />
 		<text name="AD_No_Shovel"								text="nie znaleziono łychy" />
-		<text name="AD_No_Refuel_Station"						text="nie znaleziono miejsca napełniania:" />
+		<text name="AD_No_Refuel_Station"						text="nie znaleziono miejsca napełniania" />
 		<text name="AD_No_Repair_Station"						text="nie znaleziono warsztatu dla:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Jazda" />
 		<text name="AD_MODE_DELIVERTO"							text="Rozładunek" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Odbiór i rozładunek" />
@@ -164,6 +165,12 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Odległość do celów, przy której są wykrywane i aktywowane triggery." />
 		<text name="gui_ad_useBeaconLights"						text="Światła ostrzegawcze" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Używaj świateł ostrzegawczych na drodze." />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
 		<text name="gui_ad_activeUnloading"						text="Aktywne rozładowywanie" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Rozładowywanie kombajnów w czasie jazdy." />
 		<text name="gui_ad_restrictToField"						text="Ogranicz odnajdywanie trasy do obszaru pola" />
@@ -217,14 +224,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Tak - AutoDrive zdejmuje i zakłada plandekę w razie potrzeby / Nie - plandeka nie będzie zdejmowana lub zakładana przez AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manewr wyprzedzający" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Tak - rozładowujący spróbują zaplanować ścieżkę i dostosować jazdę do kombajnu skręcającego o 90°. / Nie - Rozładowujący będą cofać przed skrętem" />
-		<text name="gui_ad_ALUnload"                            text="Łatwe Auto Ładowanie (ŁAŁ): Pozycja rozładowywania" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Włącz/wyłącz automatyczne rozładowywanie, rozładowywanie na środku platformy, z lewej / z tyłu / z prawej strony pozycji rozładowczej pojazdu (pozycja zależy od konfiguracji pojazdu nie od AD!)" />
+		<text name="gui_ad_ALUnload"                            text="Auto Ładowanie: Pozycja rozładowywania" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Włącz/wyłącz automatyczne rozładowywanie, rozładowywanie na środku platformy, z lewej / z prawej strony pozycji rozładowczej pojazdu (pozycja zależy od konfiguracji pojazdu nie od AD!)" />
 		<text name="gui_ad_AL_off"                              text="Rozładowywanie wyłączone" />
 		<text name="gui_ad_AL_center"                           text="Rozładuj na środku" />
 		<text name="gui_ad_AL_left"                             text="Rozładuj z lewej" />
 		<text name="gui_ad_AL_behind"                           text="Rozładuj z tyłu" />
 		<text name="gui_ad_AL_right"                            text="Rozładuje z prawej" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="ŁAŁ: czas oczekiwania po rozładunku" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Auto Ładowanie: czas oczekiwania po rozładunku" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Czas oczekiwanie po rozładowaniu, przed rozpoczęciem dalszej jazdy - przydatne do rozładowywania na środku: 0-bez oczekiwania, oczekiwanie o wybrany czas." />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Tworzenie sieci tras" />
 		<text name="gui_ad_scanConfirmationText"                text="Czy AutoDrive powinien generować sieć tras na podstawie danych o ruchu drogowym i pomocnikach na mapie?" />
@@ -286,6 +293,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 linia kierunku jazdy" />
 		<text name="ad_color_closestLine" 			            text="13 linia od pojazdu do najbliższego punktu" />
 		<text name="ad_color_editorHeightLine" 			        text="14 linia od punktu na ziemi do punktu nad pojazdem" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Usuń wszystkie" />
 		<text name="button_reset_selected" 					    text="Zresetuj wybrane" />

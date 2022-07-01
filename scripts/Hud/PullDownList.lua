@@ -486,33 +486,19 @@ function ADPullDownList:createSelection_FillType()
 	local vehicle = AutoDrive.getADFocusVehicle()
 
     if vehicle ~= nil then
+        local hasAL = false
         local trailers, _ = AutoDrive.getAllUnits(vehicle)
-        for trailerIndex, trailer in ipairs(trailers) do
-            supportedFillTypes = {}
-            if AutoDrive:hasAL(trailer) then
-                -- AutoLoad
+        for _, trailer in ipairs(trailers) do
+            hasAL = hasAL or AutoDrive:hasAL(trailer)
+        end
+        supportedFillTypes = {}
+        if hasAL then
+            -- AutoLoad
+            for _, trailer in ipairs(trailers) do
                 self.autoLoadFillTypes = AutoDrive:getALFillTypes(trailer)
-            else
-                if trailer.getFillUnits ~= nil then
-                    for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
-                        if trailer.getFillUnitSupportedFillTypes ~= nil then
-                            for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
-                                
-                                if trailerIndex == 1 then -- hide fuel types for 1st vehicle
-                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                                    if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
-                                        supported = false
-                                    end
-                                end
-                                if supported then
-                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                                    table.insert(supportedFillTypes, fillType)
-                                end
-                            end
-                        end
-                    end
-                end
             end
+        else
+            supportedFillTypes = AutoDrive.getValidSupportedFillTypes(vehicle)
         end
     end
 
@@ -595,7 +581,7 @@ function ADPullDownList:getNewState_FillType(vehicle)
                 self.text = self.autoLoadFillTypes[vehicle.ad.stateModule:getFillType()]
                 -- AutoDrive.debugMsg(vehicle, "ADPullDownList:getNewState_FillType 1 vehicle.ad.stateModule:getFillType() %s self.text %s", tostring(vehicle.ad.stateModule:getFillType()), tostring(self.text))
             else
-                self.text = self.autoLoadFillTypes[1]
+                self.text = ""
                 -- AutoDrive.debugMsg(vehicle, "ADPullDownList:getNewState_FillType 2 self.text %s", tostring(self.text))
             end
         else

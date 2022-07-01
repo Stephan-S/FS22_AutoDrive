@@ -55,7 +55,9 @@ function AutoDrive:checkIsConnected(toCheck, other)
     if toCheck == nil or other == nil then
         return false
     end
-    
+    if toCheck == other then
+        return true
+    end
     for _, implement in pairs(AutoDrive.getAllImplements(toCheck, true)) do
         if implement == other then
             return true
@@ -321,34 +323,72 @@ end
 
 function AutoDrive.foldAllImplements(vehicle)
     local implements = AutoDrive.getAllImplements(vehicle, true)
+    local spec
+    AutoDrive.setAugerPipeOpen(implements, false) -- close all pipes first
+    for _, implement in pairs(implements) do
+        spec = implement.spec_baleLoader
+        if spec and spec.doStateChange then
+            if spec.isInWorkPosition and spec.emptyState == BaleLoader.EMPTY_NONE then
+                spec:doStateChange(BaleLoader.CHANGE_BUTTON_WORK_TRANSPORT)
+            end
+        end
+
+        spec = implement.spec_plow
+        if spec then
+            if spec.getIsPlowRotationAllowed and spec:getIsPlowRotationAllowed() and spec.rotationMax ~= false then
+                spec:setRotationMax(false)
+            end
+        end
+    end
     for _, implement in pairs(implements) do
         local spec = implement.spec_foldable
-        if implement.spec_foldable ~= nil then
-            local allowed = implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection
-            if allowed then
-                Foldable.actionControllerFoldEvent(implement, -1)
+        if spec ~= nil and implement.getToggledFoldDirection then
+            if implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection then
+                local toggledFoldDirection = implement:getToggledFoldDirection()
+                -- local ret = Foldable.actionControllerFoldEvent(implement, -1)
+                if implement.getIsFoldAllowed and toggledFoldDirection and implement:getIsFoldAllowed(toggledFoldDirection) and implement.setFoldState then
+                    implement:setFoldState(toggledFoldDirection)
+                end
             end
         end
     end
 end
 
 function AutoDrive.getAllImplementsFolded(vehicle)
+    local ret = true
     local implements = AutoDrive.getAllImplements(vehicle, true)
+    local spec
     for _, implement in pairs(implements) do
-        if not AutoDrive.isVehicleFolded(implement) then
-            return false
+        -- check if all is set to transport position
+        if implement.getIsAIReadyToDrive then
+            ret = ret and implement:getIsAIReadyToDrive()
+        end
+        spec = implement.spec_baleLoader
+        if spec then
+            -- bale loader
+            ret = ret and not implement:getIsAutomaticBaleUnloadingInProgress()
+            ret = ret and not implement:getIsBaleLoaderFoldingPlaying()
+            ret = ret and spec.emptyState == BaleLoader.EMPTY_NONE
         end
     end
 
-    return true
+    if ret then
+        for _, implement in pairs(implements) do
+            local spec = implement.spec_foldable
+            if spec ~= nil then
+                ret = ret and AutoDrive.isVehicleFolded(implement)
+            end
+        end
+    end
+    return ret
 end
 
 function AutoDrive.isVehicleFolded(vehicle)
-    local spec = vehicle.spec_foldable
+    local spec
+    spec = vehicle.spec_foldable
     if spec ~= nil and #spec.foldingParts > 0 then
         return spec.turnOnFoldDirection == -1 and spec.foldAnimTime >= 0.99 or spec.turnOnFoldDirection == 1 and spec.foldAnimTime <= 0.01
     end
-    
     return true
 end
 
@@ -491,25 +531,26 @@ function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
     local autoLoadFillTypes = nil -- AutoLoad - TODO: return the correct fillTypes
 
     if vehicle ~= nil then
+        local hasAL = false
         local trailers, _ = AutoDrive.getAllUnits(vehicle)
-        for trailerIndex, trailer in ipairs(trailers) do
-            if AutoDrive:hasAL(trailer) then
-                -- AutoLoad - TODO: return the correct fillTypes
+        for _, trailer in ipairs(trailers) do
+            hasAL = hasAL or AutoDrive:hasAL(trailer)
+        end
+        supportedFillTypes = {}
+        if hasAL then
+            -- AutoLoad - TODO: return the correct fillTypes
+            for trailerIndex, trailer in ipairs(trailers) do
                 autoLoadFillTypes = AutoDrive:getALFillTypes(trailer)
-            else
-                if trailer.getFillUnits ~= nil then
-                    for fillUnitIndex, _ in pairs(trailer:getFillUnits()) do
-                        if trailer.getFillUnitSupportedFillTypes ~= nil then
-                            for fillType, supported in pairs(trailer:getFillUnitSupportedFillTypes(fillUnitIndex)) do
-                                
-                                if trailerIndex == 1 then -- hide fuel types for 1st vehicle
-                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                                    if table.contains(AutoDrive.fuelFillTypes, fillTypeName) then
-                                        supported = false
-                                    end
-                                end
+            end
+        else
+            local dischargeableUnits = AutoDrive.getAllDischargeableUnits(vehicle, true)
+            if dischargeableUnits and #dischargeableUnits > 0 then
+                for i = 1, #dischargeableUnits do
+                    local dischargeableUnit = dischargeableUnits[i]
+                    if dischargeableUnit.object and dischargeableUnit.object.getFillUnitSupportedFillTypes ~= nil then
+                        if dischargeableUnit.fillUnitIndex and dischargeableUnit.fillUnitIndex > 0 then
+                            for fillType, supported in pairs(dischargeableUnit.object:getFillUnitSupportedFillTypes(dischargeableUnit.fillUnitIndex)) do
                                 if supported then
-                                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
                                     table.insert(supportedFillTypes, fillType)
                                 end
                             end
@@ -538,3 +579,68 @@ function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
 
     return supportedFillTypes
 end
+
+-- rotLimit is only available on server, so asume there are Y rotateable parts
+function AutoDrive.hasVehicleRotatingYComponents(vehicle)
+    local ret = true
+    if vehicle.isServer then
+        ret = false
+        if vehicle then
+            if #vehicle.componentJoints >= 1 then
+                for k, componentJoint in ipairs(vehicle.componentJoints) do
+                    if vehicle.componentJoints[k].rotLimit and vehicle.componentJoints[k].rotLimit[2] ~= 0 then
+                        ret = true
+                    end
+                end
+            end
+        end
+    end
+    return ret
+end
+
+AutoDrive.implementsAllowedForReverseDriving = {
+"trailer"
+,"trailerlow"
+,"trailerSaddled"
+,"semitrailerCar"
+}
+
+function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
+-- return true for implements allowed move reverse
+    local ret = false
+
+    if implement ~= nil and implement.spec_attachable ~= nil and implement.spec_attachable.attacherJoint ~= nil and implement.spec_attachable.attacherJoint.jointType ~= nil then
+        for i, name in ipairs(AutoDrive.implementsAllowedForReverseDriving) do
+            local key = "JOINTTYPE_"..string.upper(name)
+            
+            if AttacherJoints[key] ~= nil and AttacherJoints[key] == implement.spec_attachable.attacherJoint.jointType then
+                -- Logging.info("[AD] isImplementAllowedForReverseDriving implement allowed %s ", tostring(key))
+                return true
+            end
+        end
+    end
+
+    if implement ~= nil and implement.spec_attachable ~= nil 
+        and AttacherJoints.JOINTTYPE_IMPLEMENT == implement.spec_attachable.attacherJoint.jointType 
+    then
+        local breakforce = implement.spec_attachable:getBrakeForce()
+        -- Logging.info("[AD] isImplementAllowedForReverseDriving implement breakforce %s ", tostring(breakforce))
+        if breakforce ~= nil and breakforce > 0.07 * 10
+            and not (implement ~= nil and implement.getName ~= nil and implement:getName() == "GL 420")     -- Grimme GL 420 needs special handling, as it has breakforce >0.07, but no trailed wheel
+        then
+            return true
+        end
+    end
+
+    if implement ~= nil and implement.spec_attachable ~= nil 
+        and AttacherJoints.JOINTTYPE_SEMITRAILER == implement.spec_attachable.attacherJoint.jointType 
+    then
+        local implementX, implementY, implementZ = getWorldTranslation(implement.components[1].node)
+        local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
+        if diffZ < -3 then
+            return true
+        end
+    end
+    return ret
+end
+

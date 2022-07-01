@@ -29,7 +29,7 @@ function ADStateModule:reset()
     self.secondMarker = ADGraphManager:getMapMarkerById(1)
     self.creationMode = ADStateModule.CREATE_OFF
 
-    self.fillType = 1
+    self.fillType = FillType.UNKNOWN
     self.loopCounter = 0
     self.loopsDone = 0
 
@@ -61,13 +61,13 @@ function ADStateModule:reset()
     end
     self.remainingDriveTime = 0
     self.calculateRemainingDriveTimeInterval = 0
-    self.refuelFillType = 0
     self.activeBeforeSave = false
     self.AIVEActiveBeforeSave = false
     self.bunkerUnloadType = ADStateModule.BUNKER_UNLOAD_TRIGGER
     self.automaticUnloadTarget = false
     self.automaticPickupTarget = false
     self.harversterPairingOk = false
+    self.currentHelperIndex = 0
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
@@ -100,9 +100,6 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
 
     local fillType = xmlFile:getValue(key .. "#fillType")
     if fillType ~= nil then
-        if g_fillTypeManager:getFillTypeByIndex(fillType) == nil then
-            fillType = 1 -- use fillType 1 UNKNOWN as default 
-        end
         self.fillType = fillType
     end
 
@@ -146,15 +143,15 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
         self.bunkerUnloadType = bunkerUnloadType
     end
 
-    local automaticUnloadTarget = xmlFile:getValue(key .. "#automaticUnloadTarget")
-    if automaticUnloadTarget ~= nil then
-        self.automaticUnloadTarget = automaticUnloadTarget
-    end
+    -- local automaticUnloadTarget = xmlFile:getValue(key .. "#automaticUnloadTarget")
+    -- if automaticUnloadTarget ~= nil then
+        -- self.automaticUnloadTarget = automaticUnloadTarget
+    -- end
 
-    local automaticPickupTarget = xmlFile:getValue(key .. "#automaticPickupTarget")
-    if automaticPickupTarget ~= nil then
-        self.automaticPickupTarget = automaticPickupTarget
-    end
+    -- local automaticPickupTarget = xmlFile:getValue(key .. "#automaticPickupTarget")
+    -- if automaticPickupTarget ~= nil then
+        -- self.automaticPickupTarget = automaticPickupTarget
+    -- end
 end
 
 function ADStateModule:saveToXMLFile(xmlFile, key)    
@@ -173,8 +170,8 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
     xmlFile:setValue(key .. "#lastActive", self.active)
     xmlFile:setValue(key .. "#AIVElastActive", false)
     xmlFile:setValue(key .. "#bunkerUnloadType", self.bunkerUnloadType)
-    xmlFile:setValue(key .. "#automaticUnloadTarget", self.automaticUnloadTarget)    
-    xmlFile:setValue(key .. "#automaticPickupTarget", self.automaticPickupTarget)    
+    -- xmlFile:setValue(key .. "#automaticUnloadTarget", self.automaticUnloadTarget)    
+    -- xmlFile:setValue(key .. "#automaticPickupTarget", self.automaticPickupTarget)    
 end
 
 function ADStateModule:writeStream(streamId)
@@ -183,7 +180,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self:getFirstMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
-    streamWriteUIntN(streamId, self.fillType, 8)
+    streamWriteUIntN(streamId, self.fillType, 10)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -198,11 +195,11 @@ function ADStateModule:writeStream(streamId)
     streamWriteBool(streamId, self.useCP)
     streamWriteString(streamId, self.driverName)
     streamWriteUInt16(streamId, self.remainingDriveTime)
-    streamWriteUIntN(streamId, self.refuelFillType, 8)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)    
 end
 
 function ADStateModule:readStream(streamId)
@@ -211,7 +208,7 @@ function ADStateModule:readStream(streamId)
     self.firstMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
-    self.fillType = streamReadUIntN(streamId, 8)
+    self.fillType = streamReadUIntN(streamId, 10)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -226,11 +223,11 @@ function ADStateModule:readStream(streamId)
     self.useCP = streamReadBool(streamId)
     self.driverName = streamReadString(streamId)
     self.remainingDriveTime = streamReadUInt16(streamId)
-    self.refuelFillType = streamReadUIntN(streamId, 8)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)    
+    self.currentHelperIndex = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -241,7 +238,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self:getFirstMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
-    streamWriteUIntN(streamId, self.fillType, 8)
+    streamWriteUIntN(streamId, self.fillType, 10)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -256,11 +253,11 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteBool(streamId, self.useCP)
     streamWriteString(streamId, self.driverName)
 	streamWriteUInt16(streamId, self.remainingDriveTime)
-    streamWriteUIntN(streamId, self.refuelFillType, 8)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)    
 end
 
 function ADStateModule:readUpdateStream(streamId)
@@ -269,7 +266,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.firstMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
-    self.fillType = streamReadUIntN(streamId, 8)
+    self.fillType = streamReadUIntN(streamId, 10)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -284,11 +281,11 @@ function ADStateModule:readUpdateStream(streamId)
     self.useCP = streamReadBool(streamId)
     self.driverName = streamReadString(streamId)
     self.remainingDriveTime = streamReadUInt16(streamId)
-    self.refuelFillType = streamReadUIntN(streamId, 8)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)
+    self.currentHelperIndex = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -358,7 +355,6 @@ function ADStateModule:update(dt)
         debug.useCP = self.useCP
         debug.driverName = self.driverName
         debug.remainingDriveTime = self.remainingDriveTime
-        debug.refuelFillType = self.refuelFillType
         if self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD].combine ~= nil then
             debug.combine = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD].combine:getName()
         else
@@ -525,6 +521,8 @@ function ADStateModule:nextMode()
     else
         self.mode = AutoDrive.MODE_DRIVETO
     end
+    self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
+    self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change
     AutoDrive.Hud.lastUIScale = 0
     self:raiseDirtyFlag()
 end
@@ -535,6 +533,8 @@ function ADStateModule:previousMode()
     else
         self.mode = ADStateModule.HIGHEST_MODE
     end
+    self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
+    self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change
     AutoDrive.Hud.lastUIScale = 0
     self:raiseDirtyFlag()
 end
@@ -542,6 +542,8 @@ end
 function ADStateModule:setMode(newMode)
     if newMode >= AutoDrive.MODE_DRIVETO and newMode <= ADStateModule.HIGHEST_MODE and newMode ~= self.mode then
         self.mode = newMode
+        self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
+        self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change
         AutoDrive.Hud.lastUIScale = 0
         self:raiseDirtyFlag()
     end
@@ -766,11 +768,10 @@ function ADStateModule:getFillType()
 end
 
 function ADStateModule:setFillType(fillType)
-    if g_fillTypeManager:getFillTypeByIndex(fillType) == nil then
-        fillType = 1 -- fillType 1 is UNKNOWN
+    if self.fillType ~= fillType then
+        self.fillType = fillType
+        self:raiseDirtyFlag()
     end
-    self.fillType = fillType
-    self:raiseDirtyFlag()
 end
 
 function ADStateModule:nextFillType()
@@ -1002,15 +1003,6 @@ function ADStateModule:getRemainingDriveTime()
 	return self.remainingDriveTime
 end
 
-function ADStateModule:getRefuelFillType()
-	return self.refuelFillType
-end
-
-function ADStateModule:setRefuelFillType(refuelFillType)
-	self.refuelFillType = refuelFillType
-	self:raiseDirtyFlag()
-end
-
 function ADStateModule:nextBunkerUnloadType()
     if self.bunkerUnloadType < ADStateModule.BUNKER_UNLOAD_TRAILER then
         self.bunkerUnloadType = self.bunkerUnloadType + 1
@@ -1026,4 +1018,15 @@ end
 
 function ADStateModule:getBunkerUnloadTypeIsTrigger()
     return self.bunkerUnloadType == ADStateModule.BUNKER_UNLOAD_TRIGGER
+end
+
+function ADStateModule:getCurrentHelperIndex()
+    return self.currentHelperIndex
+end
+
+function ADStateModule:setCurrentHelperIndex(currentHelperIndex)
+    if self.currentHelperIndex ~= currentHelperIndex then
+        self.currentHelperIndex = currentHelperIndex
+        self:raiseDirtyFlag()
+    end
 end

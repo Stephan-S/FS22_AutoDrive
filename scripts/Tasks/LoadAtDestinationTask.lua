@@ -10,6 +10,7 @@ function LoadAtDestinationTask:new(vehicle, destinationID)
     o.vehicle = vehicle
     o.destinationID = destinationID
     o.trailers = nil
+    o.waitForALLoadTimer = AutoDriveTON:new()
     return o
 end
 
@@ -73,6 +74,15 @@ function LoadAtDestinationTask:update(dt)
             else
                 self.vehicle.ad.specialDrivingModule:stopVehicle()
                 self.vehicle.ad.specialDrivingModule:update(dt)
+                local waitForALUnloadTime = AutoDrive.getSetting("ALUnloadWaitTime", self.vehicle)
+
+                if self.vehicle.ad.trailerModule:getHasAL() then
+                    -- AutoLoad wait time
+                    if waitForALUnloadTime > 0 and not self.waitForALLoadTimer:timer(true, waitForALUnloadTime, dt) then
+                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "LoadAtDestinationTask:update wait time for AutoLoad...")
+                        return
+                    end
+                end
 
                 if self.vehicle.ad.trailerModule:wasAtSuitableTrigger() or ((AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYPICKUP or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders")) then
                     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update wasAtSuitableTrigger -> self:finished")
@@ -93,7 +103,7 @@ function LoadAtDestinationTask:update(dt)
 
                             if not self.vehicle.ad.trailerModule:isActiveAtTrigger() then
                                 -- check fill levels only if not still filling something
-                                local _, _, isFull = AutoDrive.getAllFillLevels(self.trailers)
+                                local _, _, isFull, _ = AutoDrive.getAllFillLevels(self.trailers)
                                 if isFull then
                                     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update leftCapacity <= -> self:finished")
                                     self:finished()

@@ -69,8 +69,9 @@
 		<text name="AD_No_Trailer"								text="не может найти прицеп" />
 		<text name="AD_No_Bunker"								text="не может найти силосную яму" />
 		<text name="AD_No_Shovel"								text="не может найти присоединённый ковш" />
-		<text name="AD_No_Refuel_Station"						text="не удалось найти заправочную станцию для:" />
+		<text name="AD_No_Refuel_Station"						text="не удалось найти заправочную станцию" />
 		<text name="AD_No_Repair_Station"						text="не смог найти ремонтную станцию для:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Неправильный режим AD для совместной работы с CP" />
 		<text name="AD_MODE_DRIVETO"							text="Перегон" />
 		<text name="AD_MODE_DELIVERTO"							text="Доставка" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Загрузка и доставка" />
@@ -164,6 +165,12 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Расстояние до локации, на котором обнаруживаются и активируются триггеры." />
 		<text name="gui_ad_useBeaconLights"						text="Маячок" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Да - использовать автоматические сигнальные огни за пределами полей / Нет - сигнальные огни не будут включаться или выключаться автоматически." />
+		<text name="gui_ad_worklightsWhenLoading"				text="Рабочий свет при загрузке/разгрузке" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Да - Использовать рабочие свет при загрузке или выгрузке на триггере" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Рабочий свет, когда в силосной яме" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Да - Использовать рабочие свет в силосной яме" />
+		<text name="gui_ad_hazardLightReverse"					text="Аварийные огни" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Да - Использовать аварийные огни при движении задним ходом" />
 		<text name="gui_ad_restrictToField"						text="Поиск маршрута ограничен полем" />
 		<text name="gui_ad_restrictToField_tooltip"				text="Если разгружающий автомобиль уже находится на поле, он ограничит поиск маршрута границами поля." />
 		<text name="gui_ad_activeUnloading"						text="Активная разгрузка" />
@@ -218,14 +225,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"			text="Да - AutoDrive открывает и закрывает тенты по мере необходимости / Нет - тенты прицепа не открываются или закрываются с помощью AutoDrive." />
 		<text name="gui_ad_useForwardTurningManoeuvre"			text="Планирование поворота" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"	text="Да - Разгрузчики AutoDrive пытаются планировать путь вперед чтобы адаптироваться к повороту комбайна на 90°. / Нет - Разгрузчики сдадут назад перед поворотом." />
-		<text name="gui_ad_ALUnload"							text="EAL: положение разгрузки" />
-		<text name="gui_ad_ALUnload_tooltip"					text="ВЫКЛ-без авторазгрузки, центр-разгрузить на платформу, влево / позади / вправо от техники (Положение зависит от настроек автомобиля, а не AD!)" />
+		<text name="gui_ad_ALUnload"							text="Автозагрузка: положение разгрузки" />
+		<text name="gui_ad_ALUnload_tooltip"					text="ВЫКЛ-без авторазгрузки, центр-разгрузить на платформу, влево / вправо от техники (Положение зависит от настроек автомобиля, а не AD!)" />
 		<text name="gui_ad_AL_off"								text="Разгрузка ВЫКЛ" />
 		<text name="gui_ad_AL_center"							text="Разгрузка в центр" />
 		<text name="gui_ad_AL_left"								text="Разгрузка влево" />
 		<text name="gui_ad_AL_behind"							text="Разгрузка позади" />
 		<text name="gui_ad_AL_right"							text="Разгрузка вправо" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: ожидание после разгрузки" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Автозагрузка: ожидание после разгрузки" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Время ожидания после разгрузки, прежде чем продолжать движение - полезно для разгрузки в центр: 0 = нет ждать, или ждать указанное время." />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Генерация маршрутной сети" />
 		<text name="gui_ad_scanConfirmationText"                text="Должен ли AutoDrive генерировать маршрутную сеть на основе данных о трафике и помощниках на карте?" />
@@ -287,6 +294,8 @@
 		<text name="ad_color_currentConnection" 				text="12 линия планируемого пути" />
 		<text name="ad_color_closestLine"						text="13 линия от техники до ближайшей путевой точки" />
 		<text name="ad_color_editorHeightLine"					text="14 линия от поверхности путевой точки к точке над техникой " />
+		<text name="ad_color_previewOk" 			            text="15 предпросмотр кривой OK, нет преград" />
+		<text name="ad_color_previewNotOk" 			            text="16 предпросмотр кривой не OK, есть преграды" />
 
 		<text name="button_delete_all" 							text="Удалить все" />
 		<text name="button_reset_selected" 						text="Сбросить выбранное" />

@@ -19,7 +19,9 @@ function ADRoutesManager:load()
     addConsoleCommand("adExportRoutesAsExternalMod", "Gives you the basic files to create an 'AutoDrive routes mod'", "exportRoutesAsExternalMod", self)
 
     -- defining and creating needed folders
-    self.rootFolder = getUserProfileAppPath() .. "autoDrive/"
+    self.settingsFolder = getUserProfileAppPath() .. "modSettings/"
+    createFolder(self.settingsFolder)
+    self.rootFolder = self.settingsFolder .. "FS22_AutoDrive/"
     createFolder(self.rootFolder)
     self.managerFolder = self.rootFolder .. "routesManager/"
     createFolder(self.managerFolder)

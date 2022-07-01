@@ -970,6 +970,14 @@ function PathFinderModule:checkGridCell(cell)
         local cellUsedByVehiclePath = AutoDrive.checkForVehiclePathInBox(corners, self.minTurnRadius, self.vehicle, dirVec)
         cell.isRestricted = cell.isRestricted or cellUsedByVehiclePath
         self.blockedByOtherVehicle = self.blockedByOtherVehicle or cellUsedByVehiclePath
+        if self.vehicle ~= nil and self.vehicle.ad ~= nil and self.vehicle.ad.debug ~= nil and AutoDrive.debugVehicleMsg ~= nil then
+            PathFinderModule.debugVehicleMsg(self.vehicle,
+                string.format("PFM checkGridCell cellUsedByVehiclePath %s self.blockedByOtherVehicle %s",
+                    tostring(cellUsedByVehiclePath),
+                    tostring(self.blockedByOtherVehicle)
+                )
+            )
+        end
     end
 end
 
@@ -1132,7 +1140,7 @@ function PathFinderModule:checkForFruitInArea(cell, corners)
     end
     if self.fruitToCheck == nil then
         for i = 1, #g_fruitTypeManager.fruitTypes do
-            if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] then
+            if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
                 local fruitType = g_fruitTypeManager.fruitTypes[i].index
                 self:checkForFruitTypeInArea(cell, fruitType, corners)
             end
@@ -1858,7 +1866,7 @@ function PathFinderModule:smoothResultingPPPath_Refined()
                     if self.goingToNetwork then
                         -- check for all fruit types
                         for i = 1, #g_fruitTypeManager.fruitTypes do
-                            if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] then
+                            if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
                                 local fruitType = g_fruitTypeManager.fruitTypes[i].index
                                 local fruitValue = 0
                                 if self.isSecondChasingVehicle then

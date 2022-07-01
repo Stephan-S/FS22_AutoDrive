@@ -372,7 +372,10 @@ function ADInputManager:input_nextTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local nextTarget = ADGraphManager:getNextTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(nextTarget)
-        AutoDrive:StopCP(vehicle)
+        if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+            -- not stop / change CP for harvesters
+            AutoDrive:StopCP(vehicle)
+        end
     end
 end
 
@@ -381,7 +384,10 @@ function ADInputManager:input_previousTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local previousTarget = ADGraphManager:getPreviousTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(previousTarget)
-        AutoDrive:StopCP(vehicle)
+        if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+            -- not stop / change CP for harvesters
+            AutoDrive:StopCP(vehicle)
+        end
     end
 end
 
@@ -434,7 +440,7 @@ function ADInputManager:input_parkVehicle(vehicle)
         vehicle.ad.onRouteToPark = true
     else
         vehicle.ad.onRouteToPark = false
-        AutoDriveMessageEvent.sendMessage(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_parkVehicle_noPosSet;", 5000)
+        AutoDriveMessageEvent.sendMessage(vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_parkVehicle_noPosSet;", 5000, vehicle.ad.stateModule:getName())
     end
 end
 
@@ -442,7 +448,10 @@ function ADInputManager:input_swapTargets(vehicle)
     local currentFirstMarker = vehicle.ad.stateModule:getFirstMarkerId()
     vehicle.ad.stateModule:setFirstMarker(vehicle.ad.stateModule:getSecondMarkerId())
     vehicle.ad.stateModule:setSecondMarker(currentFirstMarker)
-    AutoDrive:StopCP(vehicle)
+    if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+        -- not stop / change CP for harvesters
+        AutoDrive:StopCP(vehicle)
+    end
 end
 
 function ADInputManager:input_startCp(vehicle) -- enable / disable CP or AIVE

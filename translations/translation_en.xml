@@ -70,8 +70,9 @@
 		<text name="AD_No_Trailer"								text="couldn't find trailer" />
 		<text name="AD_No_Bunker"								text="couldn't find silo bunker" />
 		<text name="AD_No_Shovel"								text="couldn't find a connected shovel" />
-		<text name="AD_No_Refuel_Station"						text="could not find refuel station for:" />
+		<text name="AD_No_Refuel_Station"						text="could not find refuel station" />
 		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Drive" />
 		<text name="AD_MODE_DELIVERTO"							text="Deliver" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Pickup and Deliver" />
@@ -163,6 +164,12 @@
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance to target at which triggers are detected and activated." />
 		<text name="gui_ad_useBeaconLights"						text="Beacon lights" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Yes - Use beacon lights automatic outside of fields / No - beacon lights will not be turned on or off automatically" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
+		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
 		<text name="gui_ad_activeUnloading"						text="Active unloading" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Unload harvesters while driving." />
 		<text name="gui_ad_restrictToField"						text="Restrict pathfinder to field" />
@@ -216,15 +223,15 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Yes - AutoDrive open and close trailer covers as needed / No - trailer covers will not be opened or closed by AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning maneuver" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
-		<text name="gui_ad_ALUnload"                            text="EasyAutoLoad: Unload Position" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / behind / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
+		<text name="gui_ad_ALUnload"                            text="Autoload: Unload Position" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
 		<text name="gui_ad_AL_off"                              text="Unload Off" />
 		<text name="gui_ad_AL_center"                           text="Unload center" />
 		<text name="gui_ad_AL_left"                             text="Unload left" />
 		<text name="gui_ad_AL_behind"                           text="Unload behind" />
 		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="EAL: wait time after unload" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: wait time un-/load" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after un-/loading, before continue to drive - useful for loading at productions or unload center: 0-no wait, wait selected time" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
 		<text name="gui_ad_scanConfirmationText"                text="Should AutoDrive generate a route network from the traffic and helper data on the map?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
@@ -241,7 +248,6 @@
 		<text name="gui_ad_settingsClosingDialog_title"			text="All changes will be lost" />
 		<text name="gui_ad_settingsClosingDialog_text"			text="Are you sure you want to close the settings without saving?" />
 		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
-
 		<text name="gui_ad_routesManagerTitle" 					text="Routes Manager" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Insert route name:" />
 		<text name="gui_ad_button_export" 						text="Save" />
@@ -285,10 +291,11 @@
 		<text name="ad_color_currentConnection" 			    text="12 line next path" />
 		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
 		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
+		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Delete All" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
-
 		<text name="AD_task_pathfinding"						text="Planning path" />
 		<text name="AD_task_catch_up_with_combine"				text="Catching up with combine" />
 		<text name="AD_task_clearcrop"							text="Clearing crop" />
@@ -329,11 +336,9 @@
 		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Create node"/>
 		<text name = "gui_ad_editorTip_4"								text = "LALT = Delete node"/>
 		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Toggle point as side road"/>
-
 		<text name = "gui_ad_editorTip_6"								text = "Clicking on second node:"/>
 		<text name = "gui_ad_editorTip_7"								text = "Toggle connection"/>
 		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Create reverse road"/>
-
 		<text name = "gui_ad_editorTip_9"								text = "1. node is intersection, second it's neighbor:"/>
 		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Toggle segment type (normal/dual)"/>
 		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Toggle side road"/>

@@ -38,6 +38,7 @@ function CombineUnloaderMode:reset()
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
     self.vehicle.ad.trailerModule:reset()
+    self.fillUnits = AutoDrive.getAllDischargeableUnits(self.vehicle, true) -- force initialisation
 end
 
 function CombineUnloaderMode:start()
@@ -62,6 +63,7 @@ end
 function CombineUnloaderMode:monitorTasks(dt)
     if self.combine ~= nil and (self.state == self.STATE_DRIVE_TO_START or self.state == self.STATE_DRIVE_TO_UNLOAD or self.state == self.STATE_EXIT_FIELD) then
         if AutoDrive.getDistanceBetween(self.vehicle, self.combine) > 25 then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:monitorTasks -> unregisterAsUnloader")
             ADHarvestManager:unregisterAsUnloader(self.vehicle)
             self.followingUnloader = nil
             self.combine = nil
@@ -131,13 +133,14 @@ function CombineUnloaderMode:promoteFollowingUnloader(combine)
 end
 
 function CombineUnloaderMode:handleFinishedTask()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask")
+    -- AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask")
     self.vehicle.ad.trailerModule:reset()
     self.lastTask = self.activeTask
     self.activeTask = self:getNextTask()
     if self.activeTask ~= nil then
         self.vehicle.ad.taskModule:addTask(self.activeTask)
     end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask self.state %s", tostring(self.state))
 end
 
 function CombineUnloaderMode:stop()
@@ -195,7 +198,7 @@ function CombineUnloaderMode:getNextTask()
 
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
     local point = nil
-    local _, _, filledToUnload, _ = AutoDrive.getAllNonFuelFillLevels(self.trailers)
+    local _, _, filledToUnload, _ = AutoDrive.getAllFillLevels(self.trailers)
 
     if self.state == self.STATE_INIT then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask STATE_INIT filledToUnload %s", tostring(filledToUnload))
@@ -279,14 +282,15 @@ function CombineUnloaderMode:getNextTask()
     return nextTask
 end
 
-function CombineUnloaderMode:setToWaitForCall()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall start self.state %s", self.state)
+function CombineUnloaderMode:setToWaitForCall(keepCombine)
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall start self.state %s keepCombine %s", tostring(self.state), tostring(keepCombine))
     -- We just have to wait to be wait to be called (again)
     self.state = self.STATE_WAIT_TO_BE_CALLED
     self.vehicle.ad.taskModule:addTask(WaitForCallTask:new(self.vehicle))
-    if self.combine ~= nil and self.combine.ad ~= nil then
+    if self.combine ~= nil and self.combine.ad ~= nil and (keepCombine == nil or keepCombine ~= true) then
         self.combine = nil
     end
+    AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall end self.state %s self.combine %s", tostring(self.state), tostring(self.combine))
 end
 
 function CombineUnloaderMode:assignToHarvester(harvester)
@@ -295,15 +299,14 @@ function CombineUnloaderMode:assignToHarvester(harvester)
         self.vehicle.ad.taskModule:abortCurrentTask()
         self.combine = harvester
         -- if combine has extended pipe, aim for that. Otherwise DriveToVehicle and choose from there
-        local spec = self.combine.spec_pipe
-        if spec.currentState == spec.targetState and spec.currentState == 2 then
+        if AutoDrive.isPipeOut(self.combine) then
 
-            local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectNonFuelFillLevels(self.combine)
-            local cFillRatio = cfillLevel / cfillCapacity
+            local cfillLevel, cfillCapacity, _, cleftCapacity = AutoDrive.getObjectFillLevels(self.combine)
+            local cFillRatio = cfillCapacity > 0 and cfillLevel / cfillCapacity or 0
             
             local cpIsCalling = AutoDrive:getIsCPWaitingForUnload(harvester)
 
-            if (self.combine.spec_combine == nil or not AutoDrive.getIsBufferCombine(self.combine)) and (self.combine.ad.noMovementTimer.elapsedTime > 500 or cleftCapacity < 1.0 or cpIsCalling or cFillRatio > 0.945) then
+            if (self.combine.spec_combine == nil or not AutoDrive.getIsBufferCombine(self.combine)) and (self.combine.ad.noMovementTimer.elapsedTime > 500 or cleftCapacity < 0.1 or cpIsCalling or cFillRatio > 0.945) then
                 -- default unloading - no movement
                 self.state = self.STATE_DRIVE_TO_PIPE
                 self.vehicle.ad.taskModule:addTask(EmptyHarvesterTask:new(self.vehicle, self.combine))
@@ -479,48 +482,27 @@ function CombineUnloaderMode:getPipeSlopeCorrection()
     return self:getPipeSlopeCorrection2()
 end
 
-function CombineUnloaderMode:getTargetTrailer()
-    local currentTrailer = 1
-    local targetTrailer = self.trailers[1]
-    local fillRatio = 0
-    local trailerFillLevel = 0
-    local trailerLeftCapacity = 0
-    -- Get the next trailer that hasn't reached fill level yet
-    for trailerIndex, trailer in ipairs(self.trailers) do
-        local fillLevel, fillCapacity, filledToUnload, fillFreeCapacity = AutoDrive.getObjectNonFuelFillLevels(targetTrailer)
-        trailerLeftCapacity = fillFreeCapacity
-        if (trailerLeftCapacity < 1) and currentTrailer < self.trailerCount then
-            currentTrailer = trailerIndex
-            targetTrailer = trailer
-        end
-    end
-    --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTargetTrailer - " ..
-    --currentTrailer .. "/" .. self.trailerCount .. ":" .. trailerFillLevel .. "/" .. trailerLeftCapacity)
-    return targetTrailer, fillRatio
-end
-
 function CombineUnloaderMode:getSideChaseOffsetX()
     -- NB: We cannot apply slope correction until after we have chosen which side
     -- we are chasing on! This function only finds the base X offset "to the left".
     -- Slope and side correction MUST be applied in CombineUnloaderMode:getPipeChasePosition
     -- AFTER determining the chase side. Or this function needs to be rewritten.
     local pipeOffset = AutoDrive.getSetting("pipeOffset", self.vehicle)
-    local unloaderWidest = math.max(self.vehicle.size.width, self.targetTrailer.size.width)
+    local unloaderWidest = self.vehicle.size.width
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
     local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
-    local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
+    local sideChaseTermPipeOut = AutoDrive.getPipeLength(self.combine)
     -- Some combines fold up their pipe so tight that targeting it could cause a collision.
     -- So, choose the max between the two to avoid a collison
     local sideChaseTermX = math.max(sideChaseTermPipeIn, sideChaseTermPipeOut)
 
-    local spec = self.combine.spec_pipe
     if AutoDrive.isSugarcaneHarvester(self.combine) then
         -- check for SugarcaneHarvester has to be first, as it also is IsBufferCombine!
         sideChaseTermX = AutoDrive.getPipeLength(self.combine)
     elseif AutoDrive.getIsBufferCombine(self.combine) then
         sideChaseTermX = sideChaseTermPipeIn + CombineUnloaderMode.STATIC_X_OFFSET_FROM_HEADER
-    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and spec.currentState == 2) then
+    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or AutoDrive.isPipeOut(self.combine) then
         -- If the pipe is extended, though, target it regardless
         sideChaseTermX = sideChaseTermPipeOut
     end
@@ -534,22 +516,20 @@ function CombineUnloaderMode:getSideChaseOffsetX_new()
     -- Slope and side correction MUST be applied in CombineUnloaderMode:getPipeChasePosition
     -- AFTER determining the chase side. Or this function needs to be rewritten.
     local pipeOffset = AutoDrive.getSetting("pipeOffset", self.vehicle)
-    local unloaderWidest = math.max(self.vehicle.size.width, self.targetTrailer.size.width)
+    local unloaderWidest = self.vehicle.size.width
     local headerExtra = math.max((AutoDrive.getFrontToolWidth(self.combine) - self.combine.size.width) / 2, 0)
 
     local sideChaseTermPipeIn = self.combine.size.width / 2 + unloaderWidest / 2 + headerExtra
-    local sideChaseTermPipeOut = self.combine.size.width / 2 + (AutoDrive.getPipeLength(self.combine))
     -- Some combines fold up their pipe so tight that targeting it could cause a collision.
     -- So, choose the max between the two to avoid a collison
     local sideChaseTermX = 0
 
-    local spec = self.combine.spec_pipe
     if AutoDrive.isSugarcaneHarvester(self.combine) then
         -- check for SugarcaneHarvester has to be first, as it also is IsBufferCombine!
         sideChaseTermX = AutoDrive.getPipeLength(self.combine)
     elseif AutoDrive.getIsBufferCombine(self.combine) then
         sideChaseTermX = sideChaseTermPipeIn + CombineUnloaderMode.STATIC_X_OFFSET_FROM_HEADER
-    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or (spec.currentState == spec.targetState and spec.currentState == 2) then
+    elseif (self.combine.ad ~= nil and self.combine.ad.storedPipeLength ~= nil) or AutoDrive.isPipeOut(self.combine) then
         -- If the pipe is extended, though, target it regardless
         sideChaseTermX = 0
     end
@@ -561,7 +541,8 @@ function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
     local nodeX, nodeY, nodeZ = getWorldTranslation(AutoDrive.getDischargeNode(self.combine))
     local _, _, pipeZOffsetToCombine = worldToLocal(self.combine.components[1].node, nodeX, nodeY, nodeZ)
 
-    local targetX, targetY, targetZ = getWorldTranslation(self.targetTrailer.components[1].node)
+    local targetX, targetY, targetZ = getWorldTranslation(self.targetFillNode)
+
     local _, _, vehicleZOffsetToTarget = worldToLocal(self.vehicle.components[1].node, targetX, targetY, targetZ)
 
     local sideChaseTermZ = pipeZOffsetToCombine - vehicleZOffsetToTarget
@@ -570,7 +551,8 @@ function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
 end
 
 function CombineUnloaderMode:getDynamicSideChaseOffsetZ_fromDischargeNode(planningPhase)
-    local targetX, targetY, targetZ = getWorldTranslation(self.targetTrailer.components[1].node)
+    local targetX, targetY, targetZ = getWorldTranslation(self.targetFillNode)
+    
     local _, _, vehicleZOffsetToTarget = worldToLocal(self.vehicle.components[1].node, targetX, targetY, targetZ)
     local offset = -vehicleZOffsetToTarget
     if planningPhase then
@@ -625,7 +607,7 @@ function CombineUnloaderMode:getSideChaseOffsetZ(dynamic)
 end
 
 function CombineUnloaderMode:getRearChaseOffsetX(leftBlocked, rightBlocked)
-    local rearChaseOffset = (self.combine.size.width / 2 + math.max(self.vehicle.size.width, self.targetTrailer.size.width) / 2) + 1
+    local rearChaseOffset = (self.combine.size.width / 2 + self.vehicle.size.width / 2) + 1
 
     if AutoDrive.getIsBufferCombine(self.combine) and not AutoDrive.isSugarcaneHarvester(self.combine) then
         return 0
@@ -689,7 +671,8 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
     end
 
     self.pipeSide = AutoDrive.getPipeSide(self.combine)
-    self.targetTrailer, self.targetTrailerFillRatio = self:getTargetTrailer()
+    self.targetFillUnit, self.targetFillNode = AutoDrive.getNextFreeDischargeableUnit(self.vehicle)
+
     local sideChaseTermX = self:getSideChaseOffsetX()
     local sideChaseTermZ = self:getSideChaseOffsetZ(AutoDrive.dynamicChaseDistance or not AutoDrive.getIsBufferCombine(self.combine))
     local rearChaseTermZ = self:getRearChaseOffsetZ()
@@ -712,8 +695,10 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
             chaseNode = rightChasePos
             sideIndex = AutoDrive.CHASEPOS_RIGHT
         end
-
-        if (not leftBlocked) and ((self:isUnloaderOnCorrectSide(AutoDrive.CHASEPOS_LEFT) and angleToLeftChaseSide < angleToRearChaseSide) or planningPhase) then
+        if AutoDrive:getIsCPActive(self.combine) and AutoDrive.combineIsTurning(self.combine) then
+            chaseNode = rearChasePos
+            sideIndex = AutoDrive.CHASEPOS_REAR
+        elseif (not leftBlocked) and ((self:isUnloaderOnCorrectSide(AutoDrive.CHASEPOS_LEFT) and angleToLeftChaseSide < angleToRearChaseSide) or planningPhase) then
             chaseNode = leftChasePos
             sideIndex = AutoDrive.CHASEPOS_LEFT
         elseif (not rightBlocked) and (self:isUnloaderOnCorrectSide(AutoDrive.CHASEPOS_RIGHT) or planningPhase) then
@@ -751,7 +736,7 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
                 (
                     (
                         self:isUnloaderOnCorrectSide(self.pipeSide) 
-                        and math.abs(angleToSideChaseSide) < math.abs(angleToRearChaseSide)
+                        -- and math.abs(angleToSideChaseSide) < math.abs(angleToRearChaseSide)
                     )
                     or (planningPhase == true)
                 )
