@@ -93,17 +93,16 @@ function ADUserDataManager:saveToXml()
     if g_currentMission.userManager.getUserByConnection then
         local user = g_currentMission.userManager:getUserByConnection(connection)
         if user == nil then
-            -- no client, create a single player user
+            -- no client, create a single player user ID
             local uniqueId = ADUserDataManager.SinglePlayer
-            if self.users[uniqueId] == nil then
-                -- single player user data not loaded before, so use the current data
-                self.users[uniqueId] = {}
-                self.users[uniqueId].hudX = AutoDrive.HudX or 0.5
-                self.users[uniqueId].hudY = AutoDrive.HudY or 0.5
-                self.users[uniqueId].settings = {}
-                for _, sn in pairs(self.userSettingNames) do
-                    self.users[uniqueId].settings[sn] = AutoDrive.getSettingState(sn)
-                end
+
+            -- single player, so use the current data
+            self.users[uniqueId] = {}
+            self.users[uniqueId].hudX = AutoDrive.HudX or 0.5
+            self.users[uniqueId].hudY = AutoDrive.HudY or 0.5
+            self.users[uniqueId].settings = {}
+            for _, sn in pairs(self.userSettingNames) do
+                self.users[uniqueId].settings[sn] = AutoDrive.getSettingState(sn)
             end
         end
     end
