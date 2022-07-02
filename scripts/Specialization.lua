@@ -104,13 +104,12 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
         end
     end
 end
-AutoDrive.baseXmlKey = "."..g_currentModName..".AutoDrive"
+
 function AutoDrive.initSpecialization()
     -- print("Calling AutoDrive initSpecialization")
     local schema = Vehicle.xmlSchema
     schema:setXMLSpecializationType("AutoDrive")
-    local xmlPath = "vehicles.vehicle(?)"..AutoDrive.baseXmlKey
-    schema:register(XMLValueType.FLOAT, xmlPath.."#followDistance", "Follow distance for harveste unloading", 1)
+    schema:register(XMLValueType.FLOAT, "vehicle.AutoDrive#followDistance", "Follow distance for harveste unloading", 1)
     schema:setXMLSpecializationType()
 
     
@@ -118,24 +117,24 @@ function AutoDrive.initSpecialization()
 
     for settingName, setting in pairs(AutoDrive.settings) do
         if setting.isVehicleSpecific then
-            schemaSavegame:register(XMLValueType.INT,  xmlPath.."#" .. settingName, setting.text, setting.default)
+            schemaSavegame:register(XMLValueType.INT,  "vehicles.vehicle(?).AutoDrive#" .. settingName, setting.text, setting.default)
         end
     end
-    schemaSavegame:register(XMLValueType.STRING, xmlPath.."#groups", "groups")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#mode", "mode")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#firstMarker", "firstMarker")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#secondMarker", "secondMarker")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#fillType", "fillType")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#loopCounter", "loopCounter")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#speedLimit", "speedLimit")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#fieldSpeedLimit", "fieldSpeedLimit")
-    schemaSavegame:register(XMLValueType.STRING, xmlPath.."#driverName", "driverName")
-    schemaSavegame:register(XMLValueType.BOOL, xmlPath.."#lastActive", "lastActive")
-    schemaSavegame:register(XMLValueType.BOOL, xmlPath.."#AIVElastActive", "AIVElastActive")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#parkDestination", "parkDestination")
-    schemaSavegame:register(XMLValueType.INT, xmlPath.."#bunkerUnloadType", "bunkerUnloadType")
-    schemaSavegame:register(XMLValueType.BOOL, xmlPath.."#automaticUnloadTarget", "automaticUnloadTarget")
-    schemaSavegame:register(XMLValueType.BOOL, xmlPath.."#automaticPickupTarget", "automaticPickupTarget")   
+    schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#groups", "groups")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#mode", "mode")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#firstMarker", "firstMarker")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#secondMarker", "secondMarker")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#fillType", "fillType")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#loopCounter", "loopCounter")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#speedLimit", "speedLimit")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#fieldSpeedLimit", "fieldSpeedLimit")
+    schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#driverName", "driverName")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#lastActive", "lastActive")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#AIVElastActive", "AIVElastActive")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#parkDestination", "parkDestination")
+    schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#bunkerUnloadType", "bunkerUnloadType")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticUnloadTarget", "automaticUnloadTarget")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticPickupTarget", "automaticPickupTarget")   
 end
 
 function AutoDrive:onPreLoad(savegame)
@@ -210,7 +209,7 @@ function AutoDrive:onPostLoad(savegame)
 -- Logging.info("[AD] AutoDrive:onPostLoad savegame.xmlFile ->%s<-", tostring(savegame.xmlFile))
             local xmlFile = savegame.xmlFile
             -- local xmlFile = loadXMLFile("vehicleXML", savegame.xmlFile)
-            local key = savegame.key .. AutoDrive.baseXmlKey
+            local key = savegame.key .. ".AutoDrive"
 -- Logging.info("[AD] AutoDrive:onPostLoad key ->%s<-", tostring(key))
             -- print("Trying to load xml keys from: " .. key)
 
@@ -452,11 +451,11 @@ function AutoDrive:onUpdate(dt)
     self.ad.mapMarkerSelected_Unload = self.ad.stateModule:getSecondMarkerId()
 end
 
-function AutoDrive:saveToXMLFile(xmlFile, adKey, usedModNames)
+function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
     if self.ad == nil or self.ad.stateModule == nil then
         return
     end
-    
+    local adKey = string.gsub(key, "FS22_AutoDrive.AutoDrive", "AutoDrive")
     --if not xmlFile:hasProperty(key) then
         --xmlFile:setValue(adKey, {})
         --return
