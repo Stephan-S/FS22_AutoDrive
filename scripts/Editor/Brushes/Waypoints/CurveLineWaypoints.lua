@@ -46,9 +46,6 @@ function ADBrushCurve:moveWaypoints()
 
 	local dist = MathUtil.vector2Length(x-tx,z-tz)
 
-	--- 0-1
-	local dt = 2/dist
-
 	local spacing = 2
 
 	local nx, nz = MathUtil.vector2Normalize(x-tx, z-tz)
@@ -70,6 +67,8 @@ function ADBrushCurve:moveWaypoints()
 	local cx, cz = ax + ncx * self.offset * dist, az + ncz * self.offset * dist
 
 	local halfDist = MathUtil.vector2Length(cx - tx, cz - tz)
+
+	local dt = 2/(1.5*halfDist)
 
 	local n = math.ceil(halfDist/spacing)
 	spacing = halfDist/n

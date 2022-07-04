@@ -45,7 +45,6 @@ function ADBrush:setParameters(graphWrapper, camera, translation)
 	self.graphWrapper = graphWrapper
 	self.camera = camera
 	self.translation = translation
-	print(self.translation)
 end
 
 function ADBrush:update()
@@ -81,4 +80,9 @@ end
 
 function ADBrush:getTranslation(translation, ...)
 	return string.format(g_i18n:getText(self.translation .. translation), ...)
+end
+
+function ADBrush:debug(str, ...)
+	--- TODO: add proper debug!
+	--print(string.format("AD brush(%s/%s): ".. str, g_time, g_updateLoopIndex, ...))	
 end
