@@ -280,6 +280,7 @@
 		<!-- Ad editor brushes -->
 		<text name="gui_ad_editor_basic_connect_title"								text="Connect"/>
 		<text name="gui_ad_editor_basic_connect_primary_text"						text="Continues select"/>
+		<text name="gui_ad_editor_basic_connect_secondary_text"						text="Radius modifier(%dx)"/>
 		<text name="gui_ad_editor_basic_connect_tertiary_text"						text="Change draw mode (%s)"/>
 		<text name="gui_ad_editor_basic_connect_type_normal"						text="Route"/>
 		<text name="gui_ad_editor_basic_connect_type_sub_route"						text="Sub route"/>
@@ -293,6 +294,7 @@
 
 		<text name="gui_ad_editor_advanced_curve_title"								text="Curve line"/>
 		<text name="gui_ad_editor_advanced_curve_primary_text"						text="Create a curve line"/>
+		<text name="gui_ad_editor_advanced_curve_secondary_text"					text="Radius modifier(%dx)"/>
 		<text name="gui_ad_editor_advanced_curve_primary_axis_text"					text="Change offset (%d %%)"/>
 		<text name="gui_ad_editor_advanced_curve_secondary_axis_text"				text="Change curve center (%d %%)"/>
 		<text name="gui_ad_editor_advanced_curve_tertiary_text"						text="Change draw mode (%s)"/>
@@ -306,12 +308,13 @@
 		<text name="gui_ad_editor_delete_title"										text="Delete"/>
 		<text name="gui_ad_editor_delete_primary_text"								text="Delete a waypoint"/>
 		<text name="gui_ad_editor_delete_primary_axis_text"							text="Radius modifier(%dx)"/>
-		
+
 		<text name="gui_ad_editor_basic_move_title"									text="Move"/>
 		<text name="gui_ad_editor_basic_move_primary_text"							text="Move a waypoint"/>
 
 		<text name="gui_ad_editor_advanced_straight_title"							text="Straight line"/>
 		<text name="gui_ad_editor_advanced_straight_primary_text"					text="Create straight line"/>
+		<text name="gui_ad_editor_advanced_straight_secondary_text"					text="Radius modifier(%dx)"/>
 		<text name="gui_ad_editor_advanced_straight_primary_axis_text"				text="Change spacing (%d)"/>
 		<text name="gui_ad_editor_advanced_straight_tertiary_text"					text="Change draw mode (%s)"/>
 		<text name="gui_ad_editor_advanced_straight_type_normal"					text="Route"/>

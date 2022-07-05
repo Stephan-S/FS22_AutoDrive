@@ -21,17 +21,18 @@ function ADBrush.new(customMt, cursor)
 	local self =  ConstructionBrush.new(customMt or ADBrush_mt, cursor)
 	self.cursor:setShapeSize(self.radius)
 	self.cursor:setShape(GuiTopDownCursor.SHAPES.CIRCLE)
+	self.cursor:setCursorTerrainOffset(true)
 	self.sizeModifier = 1
 	return self
 end
 
 function ADBrush:changeSizeModifier(modifier)
 	self.sizeModifier = modifier
-	self.cursor:setShapeSize(self.radius * modifier)	
+	self.cursor:setShapeSize(self.radius * modifier * (1+self.camera.zoomFactor))	
 end
 
 function ADBrush:isAtPos(position, x, y, z)
-	if MathUtil.getPointPointDistance(position.x, position.z, x, z) < self.radius * self.sizeModifier then 
+	if MathUtil.getPointPointDistance(position.x, position.z, x, z) < self.radius * self.sizeModifier * (1+self.camera.zoomFactor) then 
 		return math.abs(position.y - y) < 3
 	end
 end
@@ -56,6 +57,8 @@ end
 
 function ADBrush:update()
 	self.graphWrapper:setHovered(self:getHoveredNodeId())
+	--- Updates the cursor size depending on the zoom.
+	self.cursor:setShapeSize(self.radius * self.sizeModifier * (1+self.camera.zoomFactor))	
 end
 
 function ADBrush:openTextInput(callback,title,args)
