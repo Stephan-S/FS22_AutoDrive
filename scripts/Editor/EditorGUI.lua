@@ -98,27 +98,29 @@ local function buildTerrainSculptBrushes(self, superFunc,numItems)
 
 	numItems = superFunc(self,numItems)
 	local category = g_storeManager:getConstructionCategoryByName(ADEditorGUI.CATEGORY)
-	local categoryIx = category.index
+	if category then
+		local categoryIx = category.index
 
-	for _, tabData in ipairs(category.tabs) do 
-		local tabName = tabData.name
-		local ix = g_storeManager:getConstructionTabByName(tabName, ADEditorGUI.CATEGORY).index
-		local tab = self.items[categoryIx][ix]
-		for i, brushData in ipairs(ADEditorGUI.brushesByTabName[tabName]) do 
-			numItems = numItems + 1
-			table.insert(tab, {
-				price = 0,
-				imageFilename = brushData.iconFilename,
-				imageUvs = brushData.iconUvs,
-				name = brushData.title,
-				brushClass =  AutoDrive.getClassObject(brushData.className),
-				brushParameters = {
-					g_adEditor.graphWrapper,
-					self.camera,
-					brushData.translation
-				},
-				uniqueIndex = numItems
-			})
+		for _, tabData in ipairs(category.tabs) do 
+			local tabName = tabData.name
+			local ix = g_storeManager:getConstructionTabByName(tabName, ADEditorGUI.CATEGORY).index
+			local tab = self.items[categoryIx][ix]
+			for i, brushData in ipairs(ADEditorGUI.brushesByTabName[tabName]) do 
+				numItems = numItems + 1
+				table.insert(tab, {
+					price = 0,
+					imageFilename = brushData.iconFilename,
+					imageUvs = brushData.iconUvs,
+					name = brushData.title,
+					brushClass =  AutoDrive.getClassObject(brushData.className),
+					brushParameters = {
+						g_adEditor.graphWrapper,
+						self.camera,
+						brushData.translation
+					},
+					uniqueIndex = numItems
+				})
+			end
 		end
 	end
 	return numItems 
@@ -129,7 +131,8 @@ ConstructionScreen.buildTerrainSculptBrushes = Utils.overwrittenFunction(Constru
 --- Draws the ad network, if the category is selected.
 local function draw(self)
 	--- Ad category selected
-	if self.currentCategory and  self.currentCategory == g_storeManager:getConstructionCategoryByName(ADEditorGUI.CATEGORY).index then 
+	local category = g_storeManager:getConstructionCategoryByName(ADEditorGUI.CATEGORY)
+	if self.currentCategory and category and self.currentCategory == g_storeManager:getConstructionCategoryByName(ADEditorGUI.CATEGORY).index then 
 			--- Current mouse position.
 		local x, y, z = self.cursor:getPosition()
 		if x == nil then
@@ -144,6 +147,10 @@ ConstructionScreen.draw = Utils.appendedFunction(ConstructionScreen.draw, draw)
 --- This enables wayPoint deletion with the destruct button.
 local function setSelectedCategory(self, superFunc, ix, ...)
 	if self.currentCategory == ix then
+		return
+	end
+	local category = g_storeManager:getConstructionCategoryByName(ADEditorGUI.CATEGORY)
+	if category == nil then 
 		return
 	end
 	local categoryIx = g_storeManager:getConstructionCategoryByName(ADEditorGUI.CATEGORY).index

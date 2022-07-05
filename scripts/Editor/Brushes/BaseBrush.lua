@@ -6,6 +6,7 @@ ADBrush = {
 	imageFilename ="textures/input_record_4.dds",
 	name = "base",
 	radius = 0.5,
+	sizeModifierMax = 10,
 	translationPrefix = "gui_ad_editor_",
 	primaryButtonText = "primary_text",
 	primaryAxisText = "primary_axis_text",
@@ -20,11 +21,18 @@ function ADBrush.new(customMt, cursor)
 	local self =  ConstructionBrush.new(customMt or ADBrush_mt, cursor)
 	self.cursor:setShapeSize(self.radius)
 	self.cursor:setShape(GuiTopDownCursor.SHAPES.CIRCLE)
+	self.cursor:setCursorTerrainOffset(true)
+	self.sizeModifier = 1
 	return self
 end
 
+function ADBrush:changeSizeModifier(modifier)
+	self.sizeModifier = modifier
+	self.cursor:setShapeSize(self.radius * modifier * (1+self.camera.zoomFactor))	
+end
+
 function ADBrush:isAtPos(position, x, y, z)
-	if MathUtil.getPointPointDistance(position.x, position.z, x, z) < self.radius then 
+	if MathUtil.getPointPointDistance(position.x, position.z, x, z) < self.radius * self.sizeModifier * (1+self.camera.zoomFactor) then 
 		return math.abs(position.y - y) < 3
 	end
 end
@@ -45,11 +53,12 @@ function ADBrush:setParameters(graphWrapper, camera, translation)
 	self.graphWrapper = graphWrapper
 	self.camera = camera
 	self.translation = translation
-	print(self.translation)
 end
 
 function ADBrush:update()
 	self.graphWrapper:setHovered(self:getHoveredNodeId())
+	--- Updates the cursor size depending on the zoom.
+	self.cursor:setShapeSize(self.radius * self.sizeModifier * (1+self.camera.zoomFactor))	
 end
 
 function ADBrush:openTextInput(callback,title,args)
@@ -81,4 +90,9 @@ end
 
 function ADBrush:getTranslation(translation, ...)
 	return string.format(g_i18n:getText(self.translation .. translation), ...)
+end
+
+function ADBrush:debug(str, ...)
+	--- TODO: add proper debug!
+	--print(string.format("AD brush(%s/%s): ".. str, g_time, g_updateLoopIndex, ...))	
 end

@@ -27,6 +27,7 @@ function ADBrushConnect.new(customMt,cursor)
 	local self =  ADBrush.new(customMt or ADBrushConnect_mt, cursor)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
+	self.supportsSecondaryButton = true
 	self.supportsTertiaryButton = true
 
 	self.changedWaypoints = {}
@@ -56,6 +57,18 @@ function ADBrushConnect:onButtonPrimary(isDown, isDrag, isUp)
 		self.graphWrapper:resetSelected()
 		self.changedWaypoints = {}
 	end
+end
+
+function ADBrushConnect:onButtonSecondary()
+	local d = self.sizeModifier + 1
+	if d > self.sizeModifierMax then 
+		self:changeSizeModifier(1)
+	elseif d <= 0 then 
+		self:changeSizeModifier(self.sizeModifierMax)
+	else
+		self:changeSizeModifier(d)
+	end
+	self:setInputTextDirty()
 end
 
 function ADBrushConnect:connectWaypoints(nodeId, targetNodeId, sendEvent)
@@ -88,6 +101,7 @@ end
 function ADBrushConnect:copyState(from)
 	if from.mode ~= nil then 
 		self.mode = from.mode
+		self.sizeModifier = from.sizeModifier or 1
 		self:setInputTextDirty()
 	end
 end
@@ -106,6 +120,10 @@ end
 
 function ADBrushConnect:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)
+end
+
+function ADBrushConnect:getButtonSecondaryText()
+	return self:getTranslation(self.secondaryButtonText, self.sizeModifier)
 end
 
 function ADBrushConnect:getButtonTertiaryText()

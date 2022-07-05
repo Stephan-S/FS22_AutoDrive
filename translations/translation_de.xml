@@ -289,6 +289,7 @@
 		<!-- Ad editor brushes -->
 		<text name="gui_ad_editor_basic_connect_title"								text="Verbinden"/>
 		<text name="gui_ad_editor_basic_connect_primary_text"						text="Durchgehende Auswahl"/>
+		<text name="gui_ad_editor_basic_connect_secondary_text"						text="Radius Modifier(%dx)"/>
 		<text name="gui_ad_editor_basic_connect_tertiary_text"						text="Ändere Streckentyp (%s)"/>
 		<text name="gui_ad_editor_basic_connect_type_normal"						text="Hauptstrecke"/>
 		<text name="gui_ad_editor_basic_connect_type_sub_route"						text="Nebenstrecke"/>
@@ -302,6 +303,7 @@
 
 		<text name="gui_ad_editor_advanced_curve_title"								text="Kurve"/>
 		<text name="gui_ad_editor_advanced_curve_primary_text"						text="Erzeugt eine Kurve mit Wegpunkten"/>
+		<text name="gui_ad_editor_advanced_curve_secondary_text"					text="Radius Modifier(%dx)"/>
 		<text name="gui_ad_editor_advanced_curve_primary_axis_text"					text="Ändert den Offset (%d %%)"/>
 		<text name="gui_ad_editor_advanced_curve_secondary_axis_text"				text="Verschiebt den Kurvenmittelpunkt(%d %%)"/>
 		<text name="gui_ad_editor_advanced_curve_tertiary_text"						text="Ändere Streckentyp (%s)"/>
@@ -314,12 +316,14 @@
 
 		<text name="gui_ad_editor_delete_title"										text="Löschen"/>
 		<text name="gui_ad_editor_delete_primary_text"								text="Löscht einen Wegpunkt"/>
+		<text name="gui_ad_editor_delete_primary_axis_text"							text="Radius Modifier(%dx)"/>
 
 		<text name="gui_ad_editor_basic_move_title"									text="Bewegen"/>
 		<text name="gui_ad_editor_basic_move_primary_text"							text="Bewegt einen Wegpunkt"/>
 
 		<text name="gui_ad_editor_advanced_straight_title"							text="Gerade Linie"/>
 		<text name="gui_ad_editor_advanced_straight_primary_text"					text="Eine gerade Linie"/>
+		<text name="gui_ad_editor_advanced_straight_secondary_text"					text="Radius Modifier(%dx)"/>
 		<text name="gui_ad_editor_advanced_straight_primary_axis_text"				text="Ändert den Abstand (%d)"/>
 		<text name="gui_ad_editor_advanced_straight_tertiary_text"					text="Ändere Streckentyp (%s)"/>
 		<text name="gui_ad_editor_advanced_straight_type_normal"					text="Hauptstrecke"/>
