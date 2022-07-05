@@ -308,6 +308,7 @@
 
 		<text name="gui_ad_editor_delete_title"										text="Delete"/>
 		<text name="gui_ad_editor_delete_primary_text"								text="Delete a waypoint"/>
+		<text name="gui_ad_editor_delete_primary_axis_text"							text="Radius modifier(%dx)"/>
 
 		<text name="gui_ad_editor_basic_move_title"									text="Move"/>
 		<text name="gui_ad_editor_basic_move_primary_text"							text="Move a waypoint"/>

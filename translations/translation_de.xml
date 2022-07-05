@@ -314,6 +314,7 @@
 
 		<text name="gui_ad_editor_delete_title"										text="Löschen"/>
 		<text name="gui_ad_editor_delete_primary_text"								text="Löscht einen Wegpunkt"/>
+		<text name="gui_ad_editor_delete_primary_axis_text"							text="Radius Modifier(%dx)"/>
 
 		<text name="gui_ad_editor_basic_move_title"									text="Bewegen"/>
 		<text name="gui_ad_editor_basic_move_primary_text"							text="Bewegt einen Wegpunkt"/>

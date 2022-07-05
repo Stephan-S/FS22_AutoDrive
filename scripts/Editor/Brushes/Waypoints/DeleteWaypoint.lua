@@ -10,7 +10,7 @@ function ADBrushDelete.new(customMt,cursor)
 	local self =  ADBrush.new(customMt or ADBrushDelete_mt, cursor)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
-
+	self.supportsPrimaryAxis = true
 	return self
 end
 
@@ -23,6 +23,22 @@ function ADBrushDelete:onButtonPrimary(isDown, isDrag, isUp)
 	end
 end
 
+function ADBrushDelete:onAxisPrimary(delta)
+	local d = self.sizeModifier + delta
+	if d > self.sizeModifierMax then 
+		self:changeSizeModifier(1)
+	elseif d <= 0 then 
+		self:changeSizeModifier(self.sizeModifierMax)
+	else
+		self:changeSizeModifier(d)
+	end
+	self:setInputTextDirty()
+end
+
 function ADBrushDelete:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)
+end
+
+function ADBrushDelete:getAxisPrimaryText()
+	return self:getTranslation(self.primaryAxisText, self.sizeModifier)
 end

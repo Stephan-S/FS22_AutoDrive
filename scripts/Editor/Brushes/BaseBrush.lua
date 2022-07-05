@@ -6,6 +6,7 @@ ADBrush = {
 	imageFilename ="textures/input_record_4.dds",
 	name = "base",
 	radius = 0.5,
+	sizeModifierMax = 10,
 	translationPrefix = "gui_ad_editor_",
 	primaryButtonText = "primary_text",
 	primaryAxisText = "primary_axis_text",
@@ -20,11 +21,17 @@ function ADBrush.new(customMt, cursor)
 	local self =  ConstructionBrush.new(customMt or ADBrush_mt, cursor)
 	self.cursor:setShapeSize(self.radius)
 	self.cursor:setShape(GuiTopDownCursor.SHAPES.CIRCLE)
+	self.sizeModifier = 1
 	return self
 end
 
+function ADBrush:changeSizeModifier(modifier)
+	self.sizeModifier = modifier
+	self.cursor:setShapeSize(self.radius * modifier)	
+end
+
 function ADBrush:isAtPos(position, x, y, z)
-	if MathUtil.getPointPointDistance(position.x, position.z, x, z) < self.radius then 
+	if MathUtil.getPointPointDistance(position.x, position.z, x, z) < self.radius * self.sizeModifier then 
 		return math.abs(position.y - y) < 3
 	end
 end
