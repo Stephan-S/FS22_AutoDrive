@@ -950,3 +950,21 @@ function ADPullDownList:sortDraggedInGroup(draggedElement, hitElement)
 
     self:sortCurrentItems()
 end
+
+function ADPullDownList:moveTo(dx, dy)
+    local x, y = self.position.x, self.position.y
+    self.position.x = x + dx
+    self.position.y = y + dy
+    x, y = self.ovBG:getPosition()
+    self.ovBG:setPosition(x + dx, y + dy)
+    x, y = self.ovExpand:getPosition()
+    self.ovExpand:setPosition(x + dx, y + dy)
+    if self.ovTop then
+        x, y = self.ovTop:getPosition()
+        self.ovTop:setPosition(x + dx, y + dy)
+        x, y = self.ovStretch:getPosition()
+        self.ovStretch:setPosition(x + dx, y + dy)
+        x, y = self.ovBottom:getPosition()
+        self.ovBottom:setPosition(x + dx, y + dy)
+    end
+end 

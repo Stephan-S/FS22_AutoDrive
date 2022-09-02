@@ -298,3 +298,10 @@ function ADHudButton:actOnIcons(vehicle, posX, posY, isDown, isUp, button)
 
     return false
 end
+
+function ADHudButton:moveTo(dx, dy)
+    local x, y = self.position.x, self.position.y
+    self.ov:setPosition(x + dx, y + dy)
+    self.position.x = x + dx
+    self.position.y = y + dy
+end 
