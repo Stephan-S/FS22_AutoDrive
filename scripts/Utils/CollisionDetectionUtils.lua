@@ -309,8 +309,12 @@ function AutoDrive.getVehicleDimensions(vehicle, force)
     if vehicle == nil then
         return 0,0
     end
-    if vehicle.spec_pallet then
-        -- do not measure pallets
+--    if vehicle.spec_pallet then
+--        -- do not measure pallets
+--        return vehicle.size.width, vehicle.size.length
+--    end
+    if vehicle.spec_pallet or vehicle.spec_pipe then
+        -- do not measure pallets and vehicles with pipes
         return vehicle.size.width, vehicle.size.length
     end
     if vehicle.ad == nil then
