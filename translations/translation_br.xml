@@ -333,7 +333,7 @@
 		<text name = "gui_ad_editorTip_5"						text = "LSHIFT = Alternar ponto como lateral da estrada"/>
 		<text name = "gui_ad_editorTip_6"						text = "Clicar no segundo nó:"/>
 		<text name = "gui_ad_editorTip_7"						text = "Alternar conexão"/>
-		<text name = "gui_ad_editorTip_8"						text = "RSHIFT = Criar estrada inversa/>
+		<text name = "gui_ad_editorTip_8"						text = "RSHIFT = Criar estrada inversa"/>
 		<text name = "gui_ad_editorTip_9"						text = "1. nó é interseção, segundo é vizinho:"/>
 		<text name = "gui_ad_editorTip_10"						text = "LCTRL: Alternar tipo de segmento (normal/dual)"/>
 		<text name = "gui_ad_editorTip_11"						text = "LSHIFT = Alternar lado da estrada"/>
