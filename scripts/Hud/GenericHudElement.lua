@@ -27,6 +27,10 @@ end
 function ADGenericHudElement:update(dt)
 end
 
+function ADGenericHudElement:moveTo(dx, dy)
+    
+end
+
 function ADInheritsFrom(baseClass)
     local new_class = {}
     local class_mt = {__index = new_class}

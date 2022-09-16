@@ -42,3 +42,8 @@ end
 function HudHarvesterInfo:act(vehicle, posX, posY, isDown, isUp, button)
     return false
 end
+
+function HudHarvesterInfo:moveTo(dx, dy)
+    self.position.x = self.position.x + dx
+    self.position.y = self.position.y + dy
+end
