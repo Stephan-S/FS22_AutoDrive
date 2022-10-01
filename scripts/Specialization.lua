@@ -352,6 +352,13 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
     if self.isServer then
         self.ad.recordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
 
+        if AutoDrive.experimentalFeatures.FoldImplements and self.ad.stateModule:isActive() then
+            -- fold combine ladder if user exit the vehicle #679
+            if not AutoDrive.isLadderFolded(self) then
+                AutoDrive.foldLadder(self)
+            end
+        end
+
         local farmID = 0
         if self.getOwnerFarmId then
             farmID = self:getOwnerFarmId()
