@@ -347,7 +347,7 @@ function AutoDrive.foldAllImplements(vehicle)
                 local toggledFoldDirection = implement:getToggledFoldDirection()
                 -- local ret = Foldable.actionControllerFoldEvent(implement, -1)
                 if implement.getIsFoldAllowed and toggledFoldDirection and implement:getIsFoldAllowed(toggledFoldDirection) and implement.setFoldState then
-                    implement:setFoldState(toggledFoldDirection)
+                    implement:setFoldState(toggledFoldDirection, false)
                 end
             end
         end
