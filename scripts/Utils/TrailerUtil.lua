@@ -748,13 +748,16 @@ function AutoDrive.findAndSetBestTipPoint(vehicle, trailer)
                 -- avoid grain door if back door available
                 local tipSide = spec.tipSides[i]
                 trailer:setCurrentDischargeNodeIndex(tipSide.dischargeNodeIndex)
-                trailer:updateRaycast(trailer:getCurrentDischargeNode())
-                if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then
-                    if trailer:getCanTogglePreferdTipSide() then
-                        trailer:setPreferedTipSide(i)
-                        trailer:updateRaycast(trailer:getCurrentDischargeNode())
-                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "Changed tip side to %s", i)
-                        return
+                local currentDischargeNode = trailer:getCurrentDischargeNode()
+                if currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
+                    trailer:updateRaycast(trailer:getCurrentDischargeNode())
+                    if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then
+                        if trailer:getCanTogglePreferdTipSide() then
+                            trailer:setPreferedTipSide(i)
+                            trailer:updateRaycast(trailer:getCurrentDischargeNode())
+                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "Changed tip side to %s", i)
+                            return
+                        end
                     end
                 end
             end
