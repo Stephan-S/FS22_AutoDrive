@@ -725,7 +725,9 @@ function AutoDrive:onEnterVehicle()
     end
     if self.isServer and self.ad and self.ad.stateModule and not self.ad.stateModule:isActive() then
         -- do not force dimension update while tabbing through active AD vehicles, which might be unfolded
-        AutoDrive.getAllVehicleDimensions(self, true)
+        if AutoDrive.getAllImplementsFolded(self) then
+            AutoDrive.getAllVehicleDimensions(self, true)
+        end
     end
 end
 
