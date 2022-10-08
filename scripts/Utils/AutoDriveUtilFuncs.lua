@@ -391,12 +391,9 @@ function AutoDrive.foldLadder(vehicle)
     local spec = vehicle.spec_combine
     if spec ~= nil then
         local ladder = spec.ladder
-        if ladder and ladder.animName and ladder.animSpeedScale and ladder.foldDirection and vehicle.getAnimationTime then
-            if vehicle.getToggledFoldDirection then
-                toggledFoldDirection = vehicle:getToggledFoldDirection()
-            end
-            if toggledFoldDirection then
-                vehicle:playAnimation(ladder.animName, toggledFoldDirection*ladder.animSpeedScale*(-ladder.foldDirection), vehicle:getAnimationTime(ladder.animName), true)
+        if ladder and ladder.animName and ladder.foldDirection and vehicle.getAnimationTime then
+            if not vehicle:getIsAnimationPlaying(ladder.animName) then
+                vehicle:playAnimation(ladder.animName, -ladder.foldDirection, vehicle:getAnimationTime(ladder.animName), true)
             end
         end
     end
@@ -407,10 +404,14 @@ function AutoDrive.isLadderFolded(vehicle)
     local spec = vehicle.spec_combine
     if spec then
         local ladder = spec.ladder
-        if ladder and ladder.animName and vehicle.getFoldAnimTime then
-            local foldAnimTime = vehicle:getFoldAnimTime()
+        if ladder and ladder.animName and vehicle.getAnimationTime then
+            local foldAnimTime = vehicle:getAnimationTime(ladder.animName)
             if foldAnimTime then
-                ret = ret and not (vehicle:getAnimationTime(ladder.animName) < 1)
+                if ladder.foldDirection == 1 then
+                    ret = ret and (foldAnimTime < 0.01)
+                else
+                    ret = ret and (foldAnimTime >= 1)
+                end
             end
         end
     end
