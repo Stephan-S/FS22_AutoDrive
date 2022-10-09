@@ -241,7 +241,7 @@ function ADDrivePathModule:followWaypoints(dt)
             local currentTask = self.vehicle.ad.taskModule:getActiveTask()
             local isCatchingCombine = currentTask.taskType ~= nil and self.vehicle.ad.taskModule:getActiveTask().taskType == "CatchCombinePipeTask"
             if not isCatchingCombine then
-                self.speedLimit = math.clamp(8, self.speedLimit, 2 + self.distanceToTarget)
+                self.speedLimit = math.clamp(self.speedLimit, 8, 2 + self.distanceToTarget)
             end
         end
 
@@ -394,7 +394,7 @@ function ADDrivePathModule:getHighestApproachingAngle()
             
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getHighestApproachingAngle -> angle: " .. angle)
 
-            self.turnAngle = self.turnAngle + math.clamp(-90, angle, 90)
+            self.turnAngle = self.turnAngle + math.clamp(angle, -90, 90)
 
             angle = math.abs(angle)
 
@@ -486,7 +486,7 @@ function ADDrivePathModule:getMaxSpeedForAngle(angle)
     if angle < 5 then
         maxSpeed = math.huge
     elseif angle < 50 then
-        maxSpeed = 12 + 48 * (1 - math.clamp(0, (angle - 5), 25) / (30 - 5))
+        maxSpeed = 12 + 48 * (1 - math.clamp((angle - 5), 0, 25) / (30 - 5))
     elseif angle >= 50 then
         maxSpeed = 3
     end
