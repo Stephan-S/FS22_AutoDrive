@@ -698,11 +698,11 @@ function AutoDrive.findGrainBackDoorTipSideIndex(vehicle, trailer)
         local tx, ty, tz = getWorldTranslation(currentDischargeNode.node)
         local _, _, diffZ = worldToLocal(trailer.components[1].node, tx, ty, tz + 50)
         -- get the 2 most back doors
-        if diffZ < backDistance1 then
+        if diffZ < backDistance1 and currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
             backDistance1 = diffZ
             dischargeSpeed1 = currentDischargeNode.emptySpeed
             tipSideIndex1 = i
-        elseif diffZ < backDistance2 then
+        elseif diffZ < backDistance2 and currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
             backDistance2 = diffZ
             dischargeSpeed2 = currentDischargeNode.emptySpeed
             tipSideIndex2 = i
@@ -748,13 +748,16 @@ function AutoDrive.findAndSetBestTipPoint(vehicle, trailer)
                 -- avoid grain door if back door available
                 local tipSide = spec.tipSides[i]
                 trailer:setCurrentDischargeNodeIndex(tipSide.dischargeNodeIndex)
-                trailer:updateRaycast(trailer:getCurrentDischargeNode())
-                if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then
-                    if trailer:getCanTogglePreferdTipSide() then
-                        trailer:setPreferedTipSide(i)
-                        trailer:updateRaycast(trailer:getCurrentDischargeNode())
-                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "Changed tip side to %s", i)
-                        return
+                local currentDischargeNode = trailer:getCurrentDischargeNode()
+                if currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
+                    trailer:updateRaycast(trailer:getCurrentDischargeNode())
+                    if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then
+                        if trailer:getCanTogglePreferdTipSide() then
+                            trailer:setPreferedTipSide(i)
+                            trailer:updateRaycast(trailer:getCurrentDischargeNode())
+                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "Changed tip side to %s", i)
+                            return
+                        end
                     end
                 end
             end

@@ -585,8 +585,9 @@ function ADPullDownList:getNewState_FillType(vehicle)
                 -- AutoDrive.debugMsg(vehicle, "ADPullDownList:getNewState_FillType 2 self.text %s", tostring(self.text))
             end
         else
-            if vehicle.ad.stateModule:getFillType() ~= g_fillTypeManager:getFillTypeIndexByName('UNKNOWN') then
-                self.text = g_fillTypeManager:getFillTypeByIndex(vehicle.ad.stateModule:getFillType()).title
+            local fillType = g_fillTypeManager:getFillTypeByIndex(vehicle.ad.stateModule:getFillType())
+            if fillType and vehicle.ad.stateModule:getFillType() ~= g_fillTypeManager:getFillTypeIndexByName('UNKNOWN') then
+                self.text = fillType.title
             else
                 self.text = ""
             end

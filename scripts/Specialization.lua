@@ -350,6 +350,13 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
     if self.isServer then
         self.ad.recordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
 
+        if AutoDrive.experimentalFeatures.FoldImplements and self.ad.stateModule:isActive() then
+            -- fold combine ladder if user exit the vehicle #679
+            if not AutoDrive.isLadderFolded(self) then
+                AutoDrive.foldLadder(self)
+            end
+        end
+
         local farmID = 0
         if self.getOwnerFarmId then
             farmID = self:getOwnerFarmId()
@@ -715,7 +722,9 @@ function AutoDrive:onEnterVehicle()
     end
     if self.isServer and self.ad and self.ad.stateModule and not self.ad.stateModule:isActive() then
         -- do not force dimension update while tabbing through active AD vehicles, which might be unfolded
-        AutoDrive.getAllVehicleDimensions(self, true)
+        if AutoDrive.getAllImplementsFolded(self) then
+            AutoDrive.getAllVehicleDimensions(self, true)
+        end
     end
 end
 

@@ -1541,6 +1541,25 @@ function ADGraphManager:deleteWayPointsInSection(vehicle)
         for i = 2, #vehicle.ad.sectionWayPoints - 1 do
             table.insert(pointsToDelete, vehicle.ad.sectionWayPoints[i])
         end
+
+        -- delete last wayPoint if not connected to a junction
+        local lastWayPointID = vehicle.ad.sectionWayPoints[#vehicle.ad.sectionWayPoints]
+        local lastWayPoint = self:getWayPointById(lastWayPointID)
+        local connectedIds = {}
+        for _, incomingId in pairs(lastWayPoint.incoming) do
+            if not table.contains(connectedIds, incomingId) then
+                table.insert(connectedIds, incomingId)
+            end
+        end
+        for _, outId in pairs(lastWayPoint.out) do
+            if not table.contains(connectedIds, outId) then
+                table.insert(connectedIds, outId)
+            end
+        end
+        if #connectedIds == 1 then
+            table.insert(pointsToDelete, lastWayPointID)
+        end
+
         -- sort the wayPoints to delete in descant order to ensure correct linkage deletion
         local sort_func = function(a, b)
             return a > b
