@@ -1087,9 +1087,9 @@ function AutoDrive.setValidSupportedFillType(vehicle, excludedImplementIndex)
                 ret = true
                 vehicle.ad.stateModule:setFillType(supportedFillTypes[1])
             end
-        else
-            ret = true
-            vehicle.ad.stateModule:setFillType(FillType.UNKNOWN)
+        -- else
+            -- ret = true
+            -- vehicle.ad.stateModule:setFillType(FillType.UNKNOWN)
         end
     end
     return ret
