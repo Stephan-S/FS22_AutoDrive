@@ -251,7 +251,9 @@ function AutoDrive.cycleEditMode()
                 ADGraphManager:deleteColorSelectionWayPoints()
             end
             if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
-                vehicle.ad.stateModule:disableCreationMode()
+                if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+                    vehicle.ad.stateModule:disableCreationMode()
+                end
             end
         end
     end
@@ -266,7 +268,9 @@ function AutoDrive.cycleEditorShowMode()
         else
             AutoDrive.setEditorMode(AutoDrive.EDITOR_OFF)
             if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
-                vehicle.ad.stateModule:disableCreationMode()
+                if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+                    vehicle.ad.stateModule:disableCreationMode()
+                end
             end
         end
     end

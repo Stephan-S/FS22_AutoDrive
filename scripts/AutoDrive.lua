@@ -16,6 +16,7 @@ AutoDrive.experimentalFeatures.colorAssignmentMode = false
 AutoDrive.experimentalFeatures.UTurn = true
 AutoDrive.experimentalFeatures.FoldImplements = true
 AutoDrive.experimentalFeatures.RefuelOnlyAtValidStations = true
+AutoDrive.experimentalFeatures.RecordWhileNotInVehicle = false
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true

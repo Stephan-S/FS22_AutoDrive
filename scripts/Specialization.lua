@@ -743,8 +743,10 @@ function AutoDrive:onEnterVehicle(isControlling)
 end
 
 function AutoDrive:onLeaveVehicle(wasEntered)
-    if self.ad ~= nil and self.ad.stateModule ~= nil then
-        self.ad.stateModule:disableCreationMode()
+    if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+        if self.ad ~= nil and self.ad.stateModule ~= nil then
+            self.ad.stateModule:disableCreationMode()
+        end
     end
     local spec = self.spec_enterable
     if spec then

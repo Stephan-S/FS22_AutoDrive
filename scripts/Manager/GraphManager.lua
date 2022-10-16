@@ -674,11 +674,12 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 		end
 	end
 
-    -- play sound only on client with enabled editor mode
+    -- play sound only on client with enabled editor mode or RecordWhileNotInVehicle
     if g_client ~= nil then
         local vehicle = g_currentMission.controlledVehicle
-        if vehicle ~= nil and vehicle.ad ~= nil and AutoDrive.isInExtendedEditorMode() then
-            AutoDrive.playSample(AutoDrive.recordWaypointSample, 0.25)
+        local forced = AutoDrive.experimentalFeatures.RecordWhileNotInVehicle
+        if (vehicle ~= nil and vehicle.ad ~= nil and AutoDrive.isInExtendedEditorMode()) or forced then
+            AutoDrive.playSample(AutoDrive.recordWaypointSample, 0.25, forced)
         end
     end
 

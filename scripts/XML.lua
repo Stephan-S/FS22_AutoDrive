@@ -299,7 +299,9 @@ function AutoDrive.saveToXML(xmlFile)
 	end
 
 	for feature, enabled in pairs(AutoDrive.experimentalFeatures) do
-		setXMLBool(xmlFile, "AutoDrive.experimentalFeatures." .. feature .. "#enabled", enabled)
+        if not feature == "RecordWhileNotInVehicle" then
+            setXMLBool(xmlFile, "AutoDrive.experimentalFeatures." .. feature .. "#enabled", enabled)
+        end
 	end
 
     ADGraphManager:deleteColorSelectionWayPoints() -- delete color selection wayPoints if there are any -> do not save them in config!
