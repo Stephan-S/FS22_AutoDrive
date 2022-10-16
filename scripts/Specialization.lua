@@ -1107,7 +1107,7 @@ function AutoDrive:stopAutoDrive()
                     end
                 end
 
-                if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+                if self.spec_aiVehicle and self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
                     self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
                 end
 
