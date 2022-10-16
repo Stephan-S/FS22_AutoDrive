@@ -182,6 +182,14 @@
     </Profile>
 
 <!-- new used -->
+    <Profile name="autoDriveDebugSettingsCheckboxToggleIcon3" extends="baseReference" with="lightFrame">
+        <Value name="size" value="48px 48px" />
+        <Value name="position" value="48px 0px" />
+        <Value name="imageFilename" value="g_baseUIFilename" />
+        <Value name="frameThickness" value="0 0 1dp 0" />
+    </Profile>
+
+<!-- new used -->
     <Profile name="autoDriveDebugSettingsCheckboxToggleIcon2" extends="baseReference" with="lightFrame">
         <Value name="size" value="48px 48px" />
         <Value name="position" value="48px 0px" />

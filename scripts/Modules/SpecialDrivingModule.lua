@@ -61,6 +61,10 @@ function ADSpecialDrivingModule:isStoppingVehicle()
 end
 
 function ADSpecialDrivingModule:stopAndHoldVehicle(dt)
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        self.vehicle.ad.trainModule:stopAndHoldVehicle(dt)
+        return
+    end
     local finalSpeed = 0
     local acc = -0.6
     local allowedToDrive = false

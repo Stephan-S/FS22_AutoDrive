@@ -273,6 +273,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Renderowanie" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Sieć dróg" />
 		<text name="gui_ad_debugChannelBGA"						text="Tryb silosu" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Wszystko" />
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Powiadomienia" />

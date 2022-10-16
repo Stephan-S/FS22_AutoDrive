@@ -45,7 +45,9 @@ function ADTaskModule:setCurrentTaskFinished(stoppedFlag)
 
     self.activeTask = nil
 
-    self:RefuelIfNeeded()
+    if not self.vehicle.spec_locomotive then
+        self:RefuelIfNeeded()
+    end
 
     -- No refuel needed or no refuel trigger available
     if self.activeTask == nil then
@@ -93,8 +95,10 @@ function ADTaskModule:update(dt)
             self:onTaskInfoChange(taskInfo)
         end
     else
-        self:RefuelIfNeeded()
-        self:RepairIfNeeded()
+        if not self.vehicle.spec_locomotive then
+            self:RefuelIfNeeded()
+            self:RepairIfNeeded()
+        end
     
         -- No refuel needed or no refuel trigger available
         if self.activeTask == nil then

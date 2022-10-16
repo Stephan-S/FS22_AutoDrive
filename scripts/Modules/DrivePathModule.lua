@@ -23,6 +23,11 @@ function ADDrivePathModule:new(vehicle)
 end
 
 function ADDrivePathModule:reset()
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        -- train
+        self.vehicle.ad.trainModule:reset()
+        return
+    end
     self.turnAngle = 0
     self.isPaused = false
     self.atTarget = false
@@ -141,6 +146,11 @@ function ADDrivePathModule:resetDirtyFlag()
 end
 
 function ADDrivePathModule:update(dt)
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        -- train new
+        self.vehicle.ad.trainModule:update(dt)
+        return
+    end
     if self.waitTimer:timer(self.isPaused, ADDrivePathModule.PAUSE_TIMEOUT, dt) then        -- used to wait for the CP silo compacter
         self:setUnPaused()
     end
@@ -327,6 +337,10 @@ function ADDrivePathModule:reachedTarget()
 end
 
 function ADDrivePathModule:isTargetReached()
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        -- train
+        return self.vehicle.ad.trainModule:isTargetReached()
+    end
     return self.atTarget
 end
 

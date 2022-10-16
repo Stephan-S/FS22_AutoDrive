@@ -410,11 +410,17 @@ function ADStateModule:getUseCP_AIVE()
 end
 
 function ADStateModule:toggleAutomaticUnloadTarget()
+    if self.vehicle.spec_locomotive then
+        return
+    end
     self.automaticUnloadTarget = not self.automaticUnloadTarget
     self:raiseDirtyFlag()
 end
 
 function ADStateModule:setAutomaticUnloadTarget(enabled)
+    if self.vehicle.spec_locomotive then
+        return
+    end
     if enabled ~= self.automaticUnloadTarget then
         self.automaticUnloadTarget = enabled
         self:raiseDirtyFlag()
@@ -422,15 +428,21 @@ function ADStateModule:setAutomaticUnloadTarget(enabled)
 end
 
 function ADStateModule:getAutomaticUnloadTarget()
-    return self.automaticUnloadTarget
+    return self.automaticUnloadTarget and not self.vehicle.spec_locomotive
 end
 
 function ADStateModule:toggleAutomaticPickupTarget()
+    if self.vehicle.spec_locomotive then
+        return
+    end
     self.automaticPickupTarget = not self.automaticPickupTarget
     self:raiseDirtyFlag()
 end
 
 function ADStateModule:setAutomaticPickupTarget(enabled)
+    if self.vehicle.spec_locomotive then
+        return
+    end
     if enabled ~= self.automaticPickupTarget then
         self.automaticPickupTarget = enabled
         self:raiseDirtyFlag()
@@ -438,7 +450,7 @@ function ADStateModule:setAutomaticPickupTarget(enabled)
 end
 
 function ADStateModule:getAutomaticPickupTarget()
-    return self.automaticPickupTarget
+    return self.automaticPickupTarget and not self.vehicle.spec_locomotive
 end
 
 function ADStateModule:setHarvesterPairingOk(ok)
@@ -528,6 +540,13 @@ end
 function ADStateModule:nextMode()
     if self.mode < ADStateModule.HIGHEST_MODE then
         self.mode = self.mode + 1
+        if self.vehicle.spec_locomotive and self.mode == AutoDrive.MODE_UNLOAD then
+            -- skip harvester mode for train
+            self.mode = self.mode + 1
+            if self.mode >= ADStateModule.HIGHEST_MODE then
+                self.mode = AutoDrive.MODE_DRIVETO
+            end
+        end
     else
         self.mode = AutoDrive.MODE_DRIVETO
     end
@@ -540,6 +559,13 @@ end
 function ADStateModule:previousMode()
     if self.mode > AutoDrive.MODE_DRIVETO then
         self.mode = self.mode - 1
+        if self.vehicle.spec_locomotive and self.mode == AutoDrive.MODE_UNLOAD then
+            -- skip harvester mode for train
+            self.mode = self.mode - 1
+            if self.mode <= ADStateModule.MODE_DRIVETO then
+                self.mode = AutoDrive.HIGHEST_MODE
+            end
+        end
     else
         self.mode = ADStateModule.HIGHEST_MODE
     end
@@ -550,7 +576,10 @@ function ADStateModule:previousMode()
 end
 
 function ADStateModule:setMode(newMode)
-    if newMode >= AutoDrive.MODE_DRIVETO and newMode <= ADStateModule.HIGHEST_MODE and newMode ~= self.mode then
+    if self.vehicle.spec_locomotive and newMode == AutoDrive.MODE_UNLOAD then
+        -- skip harvester mode for train
+        return
+    elseif newMode >= AutoDrive.MODE_DRIVETO and newMode <= ADStateModule.HIGHEST_MODE and newMode ~= self.mode then
         self.mode = newMode
         self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
         self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change

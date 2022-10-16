@@ -929,12 +929,19 @@ function AutoDrive.isInRangeToLoadUnloadTarget(vehicle)
         return false
     end
     local ret = false
-    ret =
-            (
-                ((vehicle.ad.stateModule:getCurrentMode():shouldLoadOnTrigger() == true) and AutoDrive.getDistanceToTargetPosition(vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
-                or
-                ((vehicle.ad.stateModule:getCurrentMode():shouldUnloadAtTrigger() == true) and AutoDrive.getDistanceToUnloadPosition(vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
-            )
+    local rootVehicle = vehicle.getRootVehicle and vehicle:getRootVehicle()
+    if rootVehicle then
+        if rootVehicle.spec_locomotive and rootVehicle.ad and rootVehicle.ad.trainModule then
+            ret = rootVehicle.ad.trainModule:isInRangeToLoadUnloadTarget(vehicle)
+        else
+            ret =
+                    (
+                        ((rootVehicle.ad.stateModule:getCurrentMode():shouldLoadOnTrigger() == true) and AutoDrive.getDistanceToTargetPosition(vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
+                        or
+                        ((rootVehicle.ad.stateModule:getCurrentMode():shouldUnloadAtTrigger() == true) and AutoDrive.getDistanceToUnloadPosition(vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
+                    )
+        end
+    end
     return ret
 end
 

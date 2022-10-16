@@ -1,6 +1,15 @@
 function AutoDrive.prerequisitesPresent(specializations)
-    return SpecializationUtil.hasSpecialization(AIVehicle, specializations) and SpecializationUtil.hasSpecialization(Motorized, specializations) and SpecializationUtil.hasSpecialization(Drivable, specializations) and
-        SpecializationUtil.hasSpecialization(Enterable, specializations)
+    return (SpecializationUtil.hasSpecialization(AIVehicle, specializations) 
+    and SpecializationUtil.hasSpecialization(Motorized, specializations) 
+    and SpecializationUtil.hasSpecialization(Drivable, specializations) 
+    and SpecializationUtil.hasSpecialization(Enterable, specializations)
+    )
+    or
+-- locomotive
+    (
+    SpecializationUtil.hasSpecialization(SplineVehicle, specializations) 
+    and SpecializationUtil.hasSpecialization(Drivable, specializations)
+    )
 end
 
 function AutoDrive.registerEventListeners(vehicleType)
@@ -177,6 +186,9 @@ function AutoDrive:onLoad(savegame)
     self.ad.specialDrivingModule = ADSpecialDrivingModule:new(self)
     self.ad.collisionDetectionModule = ADCollisionDetectionModule:new(self)
     self.ad.pathFinderModule = PathFinderModule:new(self)
+    if self.spec_locomotive then
+        self.ad.trainModule = ADTrainModule:new(self)
+    end
 
     self.ad.modes = {}
     self.ad.modes[AutoDrive.MODE_DRIVETO] = DriveToMode:new(self)
@@ -1079,6 +1091,9 @@ function AutoDrive:stopAutoDrive()
             self.ad.specialDrivingModule:reset()
             self.ad.trailerModule:reset()
 
+            if self.spec_locomotive and self.ad and self.ad.trainModule then
+                self.ad.trainModule:reset()
+            end
             for _, mode in pairs(self.ad.modes) do
                 mode:reset()
             end
@@ -1090,10 +1105,11 @@ function AutoDrive:stopAutoDrive()
                 self:setTurnLightState(Lights.TURNLIGHT_OFF)
             end
 
-
+            if not self.spec_locomotive then
                 self.ad.trailerModule:handleTrailerReversing(false)
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+            end
 
                 if self.ad.onRouteToPark then 
                     SpecializationUtil.raiseEvent(self, "onAutoDriveParked")
@@ -1103,15 +1119,16 @@ function AutoDrive:stopAutoDrive()
                     self.ad.onRouteToPark = false
                 end
 
+            if not self.spec_locomotive then
                 if self.ad.sensors ~= nil then
                     for _, sensor in pairs(self.ad.sensors) do
                         sensor:setEnabled(false)
                     end
                 end
-
-                if self.spec_aiVehicle and self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
-                    self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
-                end
+            end
+            if self.spec_aiVehicle and self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+                self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
+            end
 
             self.ad.stateModule:setActive(false)
 

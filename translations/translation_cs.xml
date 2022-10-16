@@ -273,6 +273,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="渲染" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="道路网络" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA模式" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="全部" />
 
 		<text name="gui_ad_notificationHistoryTitle" 			text="通知" />

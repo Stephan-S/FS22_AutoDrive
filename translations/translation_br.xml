@@ -269,6 +269,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Renderização" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Rodovias" />
 		<text name="gui_ad_debugChannelBGA"						text="Modo BGA" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Todos" />
 
 		<text name="gui_ad_notificationHistoryTitle" 			text="Notificações" />
