@@ -68,6 +68,8 @@ function ADStateModule:reset()
     self.automaticPickupTarget = false
     self.harversterPairingOk = false
     self.currentHelperIndex = 0
+    self.playerFarmId = 0
+    self.actualFarmId = 0
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
@@ -200,6 +202,8 @@ function ADStateModule:writeStream(streamId)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
     streamWriteUInt8(streamId, self.currentHelperIndex)    
+    streamWriteUInt8(streamId, self.playerFarmId)
+    streamWriteUInt8(streamId, self.actualFarmId)
 end
 
 function ADStateModule:readStream(streamId)
@@ -228,6 +232,8 @@ function ADStateModule:readStream(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)    
     self.currentHelperIndex = streamReadUInt8(streamId)
+    self.playerFarmId = streamReadUInt8(streamId)
+    self.actualFarmId = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -257,7 +263,9 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
-    streamWriteUInt8(streamId, self.currentHelperIndex)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)
+    streamWriteUInt8(streamId, self.playerFarmId)
+    streamWriteUInt8(streamId, self.actualFarmId)
 end
 
 function ADStateModule:readUpdateStream(streamId)
@@ -286,6 +294,8 @@ function ADStateModule:readUpdateStream(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)
     self.currentHelperIndex = streamReadUInt8(streamId)
+    self.playerFarmId = streamReadUInt8(streamId)
+    self.actualFarmId = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -768,7 +778,7 @@ function ADStateModule:getFillType()
 end
 
 function ADStateModule:setFillType(fillType)
-    if self.fillType ~= fillType then
+    if fillType > 0 and self.fillType ~= fillType then
         self.fillType = fillType
         self:raiseDirtyFlag()
     end
@@ -1028,5 +1038,31 @@ function ADStateModule:setCurrentHelperIndex(currentHelperIndex)
     if self.currentHelperIndex ~= currentHelperIndex then
         self.currentHelperIndex = currentHelperIndex
         self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:getPlayerFarmId(farmId)
+    return self.playerFarmId
+end
+
+function ADStateModule:setPlayerFarmId(farmId, sendEvent)
+    if farmId and self.playerFarmId ~= farmId then
+        self.playerFarmId = farmId
+        if sendEvent == nil or sendEvent == true then
+            self:raiseDirtyFlag()
+        end
+    end
+end
+
+function ADStateModule:getActualFarmId(farmId)
+    return self.actualFarmId
+end
+
+function ADStateModule:setActualFarmId(farmId, sendEvent)
+    if farmId and self.actualFarmId ~= farmId then
+        self.actualFarmId = farmId
+        if sendEvent == nil or sendEvent == true then
+            self:raiseDirtyFlag()
+        end
     end
 end

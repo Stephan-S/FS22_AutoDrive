@@ -501,6 +501,16 @@ function AutoDrive:getIsEntered(vehicle)
     return user ~= nil
 end
 
+function AutoDrive:getAIFrameFarmId()
+    local actualFarmId = nil
+    if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle and AutoDrive.aiFrameVehicle.ad and AutoDrive.aiFrameVehicle.ad.stateModule then
+        if g_currentMission and g_currentMission.player and g_currentMission.player.farmId and g_currentMission.player.farmId > 0 then
+            actualFarmId = g_currentMission.player.farmId
+        end
+    end
+    return actualFarmId
+end
+
 function AutoDrive:getColorKeyNames()
     local colorKeyNames = {}
 	for k, v in pairs(AutoDrive.colors) do

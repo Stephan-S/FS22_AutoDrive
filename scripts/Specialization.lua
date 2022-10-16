@@ -43,7 +43,7 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle",                         AutoDrive.leaveVehicle)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
-    -- SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
 
     -- Disables click to switch, if the user clicks on the hud or the editor mode is active.
     -- see ExternalInterface.lua
@@ -435,6 +435,7 @@ function AutoDrive:onUpdate(dt)
                 -- all folded - no further tries necessary
                 self.ad.foldStartTime = 0
                 AutoDrive.getAllVehicleDimensions(self, true)
+                self:raiseActive()
             end
         end
 
@@ -709,7 +710,7 @@ function AutoDrive:onPostDetachImplement(implementIndex)
 end
 
 
-function AutoDrive:onEnterVehicle()
+function AutoDrive:onEnterVehicle(isControlling)
     if AutoDrive:hasAL(self) then
         -- AutoLoad
         local currentFillType = AutoDrive:getALCurrentFillType(self)
@@ -729,11 +730,30 @@ function AutoDrive:onEnterVehicle()
             AutoDrive.getAllVehicleDimensions(self, true)
         end
     end
+
+    local spec = self.spec_enterable
+    if spec and spec.isControlled then
+        if self.ad and self.ad.stateModule then
+            self.ad.stateModule:setPlayerFarmId(spec.controllerFarmId)
+        end
+        if not self.ad.stateModule:isActive() and not AutoDrive:getIsCPActive(self) then
+            self.ad.stateModule:setActualFarmId(self.ad.stateModule:getPlayerFarmId()) -- onEnterVehicle
+        end
+    end
 end
 
-function AutoDrive:onLeaveVehicle()
+function AutoDrive:onLeaveVehicle(wasEntered)
     if self.ad ~= nil and self.ad.stateModule ~= nil then
         self.ad.stateModule:disableCreationMode()
+    end
+    local spec = self.spec_enterable
+    if spec then
+        if self.ad and self.ad.stateModule then
+            self.ad.stateModule:setPlayerFarmId(0)
+        end
+        if not self.ad.stateModule:isActive() and not AutoDrive:getIsCPActive(self) then
+            self.ad.stateModule:setActualFarmId(self.ad.stateModule:getPlayerFarmId()) -- onLeaveVehicle
+        end
     end
 end
 
@@ -996,6 +1016,7 @@ function AutoDrive:startAutoDrive()
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
             self.ad.foldStartTime = g_time
+
             AutoDrive.getAllVehicleDimensions(self, true)
             if self.spec_aiVehicle ~= nil then
                 if self.getAINeedsTrafficCollisionBox ~= nil then
@@ -1520,8 +1541,10 @@ function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
 end
 
 function AutoDrive:getActiveFarm(superFunc)
-    if self.spec_aiVehicle ~= 0 and self.spec_aiVehicle.startedFarmId and self.ad.stateModule:isActive() then
-        return self.spec_aiVehicle.startedFarmId
+    local actualFarmID = self.ad.stateModule:getActualFarmId()
+    if self.ad and self.ad.stateModule and self.ad.stateModule:isActive() and actualFarmID > FarmManager.SPECTATOR_FARM_ID then
+        -- return farmID only for valid farms, not spectator farm
+        return actualFarmID
     else
         return superFunc(self)
     end
