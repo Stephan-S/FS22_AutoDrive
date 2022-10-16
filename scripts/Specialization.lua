@@ -1127,7 +1127,7 @@ function AutoDrive:stopAutoDrive()
             local isPassingToCP = not self.ad.isStoppingWithError and (self.ad.restartCP == true or (self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()))
 
             if not isStartingAIVE and not isPassingToCP then
-                if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
+                if not AutoDrive:getIsEntered(self) then
                     if self.deactivateLights ~= nil then
                         self:deactivateLights()
                     end
