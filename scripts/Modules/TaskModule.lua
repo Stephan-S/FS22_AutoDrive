@@ -125,6 +125,9 @@ function ADTaskModule:RefuelIfNeeded()
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADTaskModule:RefuelIfNeeded hasToRefuel")
         local refuelDestinationMarkerID = ADTriggerManager.getClosestRefuelDestination(self.vehicle, self.vehicle.ad.onRouteToRefuel)
         if refuelDestinationMarkerID ~= nil then
+            ADHarvestManager:unregisterAsUnloader(self.vehicle)
+            self.followingUnloader = nil
+            self.combine = nil
             self.activeTask = RefuelTask:new(self.vehicle, ADGraphManager:getMapMarkerById(refuelDestinationMarkerID).id)
         else
             self.vehicle.ad.isStoppingWithError = true
@@ -155,6 +158,9 @@ function ADTaskModule:RepairIfNeeded()
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADTaskModule:RepairIfNeeded hasToRepair")
         local repairDestinationMarkerNodeID = AutoDrive:getClosestRepairTrigger(self.vehicle)
         if repairDestinationMarkerNodeID ~= nil then
+            ADHarvestManager:unregisterAsUnloader(self.vehicle)
+            self.followingUnloader = nil
+            self.combine = nil
             self.activeTask = RepairTask:new(self.vehicle, repairDestinationMarkerNodeID.marker)
         else
             --self.vehicle.ad.isStoppingWithError = true
