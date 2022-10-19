@@ -274,6 +274,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Рендеринг" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Дорожная сеть" />
 		<text name="gui_ad_debugChannelBGA"						text="Режим BGA" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Все" />
 
 		<text name="gui_ad_notificationHistoryTitle" 			text="Уведомления" />

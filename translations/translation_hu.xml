@@ -267,6 +267,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Rendering" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Úthálózat" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Mind" />
 		<text name="gui_ad_notificationHistoryTitle" 			text="Értesítések" />
 

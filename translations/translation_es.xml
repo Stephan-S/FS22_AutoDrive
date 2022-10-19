@@ -56,7 +56,7 @@
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Cambiar a carga automática en destino" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Cambiar a descarga automática en destino" />
 		<text name="hud_avoidFruit"								text="AD: Evitar destruir cosechas" />
-		<text name="hud_startCp" 								text="AD: Iniciar CP / AIVE en destino" />
+		<text name="hud_startCp" 								text="AD: Iniciar CP/AIVE en destino" />
 		<text name="AD_parkVehicle_noPosSet"					text="No se ha asignado ningún destino de estacionamiento. Asigna el destino seleccionado actualmente haciendo clic derecho. " />
 		<text name="AD_parkVehicle_selected"					text="Destino de estacionamiento elegido: " />
 		<text name="AD_Driver_of"								text="Conductor de" />
@@ -70,7 +70,7 @@
 		<text name="AD_No_Shovel"								text="no puedo encontrar una pala conectada" />
 		<text name="AD_No_Refuel_Station"						text="no puedo encontrar estación de repostaje" />
 		<text name="AD_No_Repair_Station"						text="no puedo encontrar la estación de reparación:" />
-		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Modo AD incorrecto para trabajar junto con CP" />
 		<text name="AD_MODE_DRIVETO"							text="Conducir" />
 		<text name="AD_MODE_DELIVERTO"							text="Entregar" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Cargar y entregar" />
@@ -157,17 +157,17 @@
 		<text name="gui_ad_onlyDeliver"					        text="Solo entrega" />
 		<text name="gui_ad_PickupandDeliver"					text="Recogida y entrega" />
 		<text name="gui_ad_rotateTargets"					    text="Recogida y entrega en bucle" />
-		<text name="gui_ad_rotateTargets_tooltip"			    text="4 modos: sin cambio de objetivos / solo recoger de objetivos / solo entregar a objetivos / recoger y entregar a objetivos dentro de la carpeta en bucle (no funciona con la carpeta por defecto) (solo funciona si se activa la opción de usar carpetas)" />
+		<text name="gui_ad_rotateTargets_tooltip"			    text="4 modos: sin cambio de objetivos/solo recoger de objetivos/solo entregar a objetivos/recoger y entregar a objetivos dentro de la carpeta en bucle (no funciona con la carpeta por defecto) (solo funciona si se activa la opción de usar carpetas)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Distancia máxima al desencadenante" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distancia a la que se detectan y activan los desencadenantes (por ejemplo, al llegar a un punto de descarga)." />		
 		<text name="gui_ad_useBeaconLights"						text="Luces rotativas" />
-		<text name="gui_ad_useBeaconLights_tooltip"				text="Sí - usa luces rotativas automáticas fuera de los campos / No - las luces rotativas no se encenderán ni apagarán automáticamente" />
-		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
-		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
-		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
-		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
-		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
-		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
+		<text name="gui_ad_useBeaconLights_tooltip"				text="Sí - usa luces rotativas automáticas fuera de los campos/No - las luces rotativas no se encenderán ni apagarán automáticamente" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Luz de trabajo al Cargar/Descargar" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Sí - Usa las luces de trabajo en las zonas de Carga/Descarga" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Luz de trabajo cuando está en un Silo Búnker" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Sí - Usa las luces de trabajo cuando está en un Silo Búnker" />
+		<text name="gui_ad_hazardLightReverse"					text="Luces Intermitentes" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Sí - Usa las luces intermitentes mientras conduce en marcha atrás" />
 		<text name="gui_ad_activeUnloading"						text="Descarga activa" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Descargue las cosechadoras mientras conduce" />
 		<text name="gui_ad_restrictToField"						text="Restringir conducción solo dentro del campo" />
@@ -216,13 +216,13 @@
 		<text name="gui_ad_enableParkAtJobFinished"				text="Aparcar al terminar el trabajo" />
 		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Solo disponible en los modos Recoger y entregar. Entregar: si el trabajo se ha terminado y el vehículo tiene posición de aparcamiento, los aperos o remolques se llevarán al aparcamiento también. En servidores dedicados, solo está disponible para aparcar el vehículo." />
 		<text name="gui_ad_autoTipSide"                         text="Lado Descarga Automático" />
-		<text name="gui_ad_autoTipSide_tooltip"                 text="Sí - AD selecciona automaticamente el lado de descarga / No - Se utilizará el lado de descarga ya seleccionado" />
+		<text name="gui_ad_autoTipSide_tooltip"                 text="Sí - AD selecciona automaticamente el lado de descarga/No - Se utilizará el lado de descarga ya seleccionado" />
 		<text name="gui_ad_autoTrailerCover"                    text="Lonas de remolque automáticas" />
-		<text name="gui_ad_autoTrailerCover_tooltip"            text="Sí - AutoDrive abrirá y cerrará las lonas según necesite / No - las lonas no se abrirán ni cerrarán automáticamente" />
+		<text name="gui_ad_autoTrailerCover_tooltip"            text="Sí - AutoDrive abrirá y cerrará las lonas según necesite/No - las lonas no se abrirán ni cerrarán automáticamente" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Maniobra de giro hacia adelante" />
-		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Sí - Los descargadores de AutoDrive intentan planificar un camino hacia adelante para adaptarse al giro de 90° de la cosechadora. / No - Los descargadores se revertirán antes del giro" />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Sí - Los descargadores de AutoDrive intentan planificar un camino hacia adelante para adaptarse al giro de 90° de la cosechadora./No - Los descargadores se revertirán antes del giro" />
 		<text name="gui_ad_ALUnload"                            text="Autoload: Posición de descarga" />
-		<text name="gui_ad_ALUnload_tooltip"                    text="Off- La posición de descarga depende de la configuración del vehículo, no de Autodrive AD!) " />
+		<text name="gui_ad_ALUnload_tooltip"                    text="Off - La posición de descarga depende de la configuración del vehículo, no de AutoDrive)" />
 		<text name="gui_ad_AL_off"                              text="No descargar" />
 		<text name="gui_ad_AL_center"                           text="Descargar sobre el vehiculo" />
 		<text name="gui_ad_AL_left"                             text="Descargar a la izquierda" />
@@ -230,8 +230,8 @@
 		<text name="gui_ad_AL_right"                            text="Descargar a la derecha" />
 		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: tiempo de espera después de empezar la descarga" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Tiempo de espera después de la descarga, antes de continuar conduciendo - útil para el centro de descarga: 0-no espera, espera el tiempo seleccionado" />
-		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
-		<text name="gui_ad_scanConfirmationText"                text="¿Debe AutoDrive generar una red de rutas a partir de los datos de tráfico y ayuda del mapa?" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generación de Red de Rutas" />
+		<text name="gui_ad_scanConfirmationText"                text="¿Debe AutoDrive generar una Red de Rutas a partir de los datos de tráfico y ayuda del mapa?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="No hay cosechadoras en destino" />
 		<text name="gui_ad_noUnloaderAvailable"					text="No hay descargadero en destino" />
 		
@@ -270,6 +270,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Renderizado" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Red de carreteras" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Todo" />
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Notificaciones" />
@@ -291,8 +292,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 líneas siguiente ruta" />
 		<text name="ad_color_closestLine" 			            text="13 líneas desde el vehículo hasta el punto de referencia más cercano" />
 		<text name="ad_color_editorHeightLine" 			        text="14 línea desde el waypoint de superficie hasta el vehículo cercano" />
-		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
-		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
+		<text name="ad_color_previewOk" 			            text="15 vista previa de la curva OK, sin colisión" />
+		<text name="ad_color_previewNotOk" 			            text="16 vista previa de la curva no OK, tiene colisión" />
 
 		<text name="button_delete_all" 							text="Eliminar todas" />
 		<text name="button_reset_selected" 					    text="Resetear seleccionados" />
@@ -304,13 +305,13 @@
 		<text name="AD_task_drive_to_vehicle"					text="Conduciendo al vehículo objetivo" />
 		<text name="AD_task_drive_to_combine_pipe"				text="Conduciendo hacia el tubo de la cosechadora" />
 		<text name="AD_task_unloading_combine"					text="Descargando cosechadora" />
-		<text name="AD_task_reversing_from_combine"				text="Marcha atrás de la cosechadora" />
+		<text name="AD_task_reversing_from_combine"				text="Marcha atrás desde la cosechadora" />
 		<text name="AD_task_waiting_for_space"					text="Esperando que termine de maniobrar" />
-		<text name="AD_task_wait_for_combine_turn"				text="Esperando el turno de la cosechadora" />
+		<text name="AD_task_wait_for_combine_turn"				text="Esperando que la cosechadora gire" />
 		<text name="AD_task_drive_to_load_point"				text="Conduciendo al punto de carga" />
 		<text name="AD_task_drive_to_refuel_point"				text="Conduciendo a la gasolinera" />
 		<text name="AD_task_drive_to_repair_point"				text="Conduciendo al taller de reparación" />
-		<text name="AD_task_stop_and_disable"					text="Deteniendo" />
+		<text name="AD_task_stop_and_disable"					text="Deteniendo " />
 		<text name="AD_task_drive_to_unload_point"				text="Conduciendo al punto de descarga" />
 		<text name="AD_task_wait_for_call"						text="Esperando llamada" />	
 		<text name="AD_task_chasing_combine"					text="Persiguiendo a la cosechadora" />	
@@ -320,9 +321,9 @@
 		<text name="AD_task_chase_side_left"					text="izquierdo" />
 		<text name="AD_task_chase_side_rear"					text="trasero" />
 		<text name="AD_task_chase_side_right"					text="derecho" />
-		<text name="AD_task_waiting_for_room"					text="Esperando un hueco" />
+		<text name="AD_task_waiting_for_room"					text="Esperando un espacio libre" />
 		<text name="AD_task_exiting_field"						text="Saliendo del campo" />
-		<text name="AD_task_reversing_from_collision"			text="Buscando un área libre" />
+		<text name="AD_task_reversing_from_collision"			text="Retrocediendo para evitar posible colisión" />
         <text name="AD_task_drive_to_park"				        text="Conduciendo al aparcamiento" />
 		<text name="AD_task_unload_area_in_fruit"			    text="Área de descarga bloqueada" />
 
@@ -330,7 +331,7 @@
 		<text name = "gui_CPAD_simple"							text = "Simple"/>
 		<text name = "gui_CPAD_full"							text = "Lleno"/>		
 		<text name = "gui_ad_combineCPADHudMouse"				text = "Combinar Botones CP/AD"/>
-    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "Off: Por Defecto / Simple: CP: Bot.Sec.Raton > Raton ON + Off, AD: Alternar Hud > Ambos Huds On + Off / Lleno: Así de simple, pero los Huds alternar en pasos simples / Requerido: Desactivar Click Derecho HUD en ajustes CP"/>
+    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "Off: Por Defecto/Simple: CP: Bot.Sec.Raton > Raton ON + Off, AD: Alternar Hud > Ambos Huds On + Off / Lleno: Así de simple, pero los Huds alternar en pasos simples / Requerido: Desactivar Click Derecho HUD en ajustes CP"/>
 	
 		<text name = "gui_ad_editorTip_1"								text = "Simple clic izquierdo del ratón:"/>
 		<text name = "gui_ad_editorTip_2"								text = "Sólo ratón: Seleccione 1. punto"/>

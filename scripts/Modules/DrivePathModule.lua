@@ -23,6 +23,11 @@ function ADDrivePathModule:new(vehicle)
 end
 
 function ADDrivePathModule:reset()
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        -- train
+        self.vehicle.ad.trainModule:reset()
+        return
+    end
     self.turnAngle = 0
     self.isPaused = false
     self.atTarget = false
@@ -141,6 +146,11 @@ function ADDrivePathModule:resetDirtyFlag()
 end
 
 function ADDrivePathModule:update(dt)
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        -- train new
+        self.vehicle.ad.trainModule:update(dt)
+        return
+    end
     if self.waitTimer:timer(self.isPaused, ADDrivePathModule.PAUSE_TIMEOUT, dt) then        -- used to wait for the CP silo compacter
         self:setUnPaused()
     end
@@ -241,7 +251,7 @@ function ADDrivePathModule:followWaypoints(dt)
             local currentTask = self.vehicle.ad.taskModule:getActiveTask()
             local isCatchingCombine = currentTask.taskType ~= nil and self.vehicle.ad.taskModule:getActiveTask().taskType == "CatchCombinePipeTask"
             if not isCatchingCombine then
-                self.speedLimit = math.clamp(8, self.speedLimit, 2 + self.distanceToTarget)
+                self.speedLimit = math.clamp(self.speedLimit, 8, 2 + self.distanceToTarget)
             end
         end
 
@@ -327,6 +337,10 @@ function ADDrivePathModule:reachedTarget()
 end
 
 function ADDrivePathModule:isTargetReached()
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        -- train
+        return self.vehicle.ad.trainModule:isTargetReached()
+    end
     return self.atTarget
 end
 
@@ -394,7 +408,7 @@ function ADDrivePathModule:getHighestApproachingAngle()
             
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getHighestApproachingAngle -> angle: " .. angle)
 
-            self.turnAngle = self.turnAngle + math.clamp(-90, angle, 90)
+            self.turnAngle = self.turnAngle + math.clamp(angle, -90, 90)
 
             angle = math.abs(angle)
 
@@ -486,7 +500,7 @@ function ADDrivePathModule:getMaxSpeedForAngle(angle)
     if angle < 5 then
         maxSpeed = math.huge
     elseif angle < 50 then
-        maxSpeed = 12 + 48 * (1 - math.clamp(0, (angle - 5), 25) / (30 - 5))
+        maxSpeed = 12 + 48 * (1 - math.clamp((angle - 5), 0, 25) / (30 - 5))
     elseif angle >= 50 then
         maxSpeed = 3
     end

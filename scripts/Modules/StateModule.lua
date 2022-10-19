@@ -68,6 +68,8 @@ function ADStateModule:reset()
     self.automaticPickupTarget = false
     self.harversterPairingOk = false
     self.currentHelperIndex = 0
+    self.playerFarmId = 0
+    self.actualFarmId = 0
 end
 
 function ADStateModule:readFromXMLFile(xmlFile, key)
@@ -200,6 +202,8 @@ function ADStateModule:writeStream(streamId)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
     streamWriteUInt8(streamId, self.currentHelperIndex)    
+    streamWriteUInt8(streamId, self.playerFarmId)
+    streamWriteUInt8(streamId, self.actualFarmId)
 end
 
 function ADStateModule:readStream(streamId)
@@ -228,6 +232,8 @@ function ADStateModule:readStream(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)    
     self.currentHelperIndex = streamReadUInt8(streamId)
+    self.playerFarmId = streamReadUInt8(streamId)
+    self.actualFarmId = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -257,7 +263,9 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
     streamWriteBool(streamId, self.harversterPairingOk)    
-    streamWriteUInt8(streamId, self.currentHelperIndex)    
+    streamWriteUInt8(streamId, self.currentHelperIndex)
+    streamWriteUInt8(streamId, self.playerFarmId)
+    streamWriteUInt8(streamId, self.actualFarmId)
 end
 
 function ADStateModule:readUpdateStream(streamId)
@@ -286,6 +294,8 @@ function ADStateModule:readUpdateStream(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
     self.harversterPairingOk = streamReadBool(streamId)
     self.currentHelperIndex = streamReadUInt8(streamId)
+    self.playerFarmId = streamReadUInt8(streamId)
+    self.actualFarmId = streamReadUInt8(streamId)
 
     self.currentLocalizedTaskInfo = AutoDrive.localize(self.currentTaskInfo)
 end
@@ -400,11 +410,17 @@ function ADStateModule:getUseCP_AIVE()
 end
 
 function ADStateModule:toggleAutomaticUnloadTarget()
+    if self.vehicle.spec_locomotive then
+        return
+    end
     self.automaticUnloadTarget = not self.automaticUnloadTarget
     self:raiseDirtyFlag()
 end
 
 function ADStateModule:setAutomaticUnloadTarget(enabled)
+    if self.vehicle.spec_locomotive then
+        return
+    end
     if enabled ~= self.automaticUnloadTarget then
         self.automaticUnloadTarget = enabled
         self:raiseDirtyFlag()
@@ -412,15 +428,21 @@ function ADStateModule:setAutomaticUnloadTarget(enabled)
 end
 
 function ADStateModule:getAutomaticUnloadTarget()
-    return self.automaticUnloadTarget
+    return self.automaticUnloadTarget and not self.vehicle.spec_locomotive
 end
 
 function ADStateModule:toggleAutomaticPickupTarget()
+    if self.vehicle.spec_locomotive then
+        return
+    end
     self.automaticPickupTarget = not self.automaticPickupTarget
     self:raiseDirtyFlag()
 end
 
 function ADStateModule:setAutomaticPickupTarget(enabled)
+    if self.vehicle.spec_locomotive then
+        return
+    end
     if enabled ~= self.automaticPickupTarget then
         self.automaticPickupTarget = enabled
         self:raiseDirtyFlag()
@@ -428,7 +450,7 @@ function ADStateModule:setAutomaticPickupTarget(enabled)
 end
 
 function ADStateModule:getAutomaticPickupTarget()
-    return self.automaticPickupTarget
+    return self.automaticPickupTarget and not self.vehicle.spec_locomotive
 end
 
 function ADStateModule:setHarvesterPairingOk(ok)
@@ -518,6 +540,13 @@ end
 function ADStateModule:nextMode()
     if self.mode < ADStateModule.HIGHEST_MODE then
         self.mode = self.mode + 1
+        if self.vehicle.spec_locomotive and self.mode == AutoDrive.MODE_UNLOAD then
+            -- skip harvester mode for train
+            self.mode = self.mode + 1
+            if self.mode >= ADStateModule.HIGHEST_MODE then
+                self.mode = AutoDrive.MODE_DRIVETO
+            end
+        end
     else
         self.mode = AutoDrive.MODE_DRIVETO
     end
@@ -530,6 +559,13 @@ end
 function ADStateModule:previousMode()
     if self.mode > AutoDrive.MODE_DRIVETO then
         self.mode = self.mode - 1
+        if self.vehicle.spec_locomotive and self.mode == AutoDrive.MODE_UNLOAD then
+            -- skip harvester mode for train
+            self.mode = self.mode - 1
+            if self.mode <= ADStateModule.MODE_DRIVETO then
+                self.mode = AutoDrive.HIGHEST_MODE
+            end
+        end
     else
         self.mode = ADStateModule.HIGHEST_MODE
     end
@@ -540,7 +576,10 @@ function ADStateModule:previousMode()
 end
 
 function ADStateModule:setMode(newMode)
-    if newMode >= AutoDrive.MODE_DRIVETO and newMode <= ADStateModule.HIGHEST_MODE and newMode ~= self.mode then
+    if self.vehicle.spec_locomotive and newMode == AutoDrive.MODE_UNLOAD then
+        -- skip harvester mode for train
+        return
+    elseif newMode >= AutoDrive.MODE_DRIVETO and newMode <= ADStateModule.HIGHEST_MODE and newMode ~= self.mode then
         self.mode = newMode
         self:setAutomaticPickupTarget(false) -- disable automatic target on mode change
         self:setAutomaticUnloadTarget(false) -- disable automatic target on mode change
@@ -768,7 +807,7 @@ function ADStateModule:getFillType()
 end
 
 function ADStateModule:setFillType(fillType)
-    if self.fillType ~= fillType then
+    if fillType > 0 and self.fillType ~= fillType then
         self.fillType = fillType
         self:raiseDirtyFlag()
     end
@@ -1028,5 +1067,31 @@ function ADStateModule:setCurrentHelperIndex(currentHelperIndex)
     if self.currentHelperIndex ~= currentHelperIndex then
         self.currentHelperIndex = currentHelperIndex
         self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:getPlayerFarmId(farmId)
+    return self.playerFarmId
+end
+
+function ADStateModule:setPlayerFarmId(farmId, sendEvent)
+    if farmId and self.playerFarmId ~= farmId then
+        self.playerFarmId = farmId
+        if sendEvent == nil or sendEvent == true then
+            self:raiseDirtyFlag()
+        end
+    end
+end
+
+function ADStateModule:getActualFarmId(farmId)
+    return self.actualFarmId
+end
+
+function ADStateModule:setActualFarmId(farmId, sendEvent)
+    if farmId and self.actualFarmId ~= farmId then
+        self.actualFarmId = farmId
+        if sendEvent == nil or sendEvent == true then
+            self:raiseDirtyFlag()
+        end
     end
 end

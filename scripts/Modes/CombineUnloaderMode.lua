@@ -38,7 +38,7 @@ function CombineUnloaderMode:reset()
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
     self.vehicle.ad.trailerModule:reset()
-    self.fillUnits = AutoDrive.getAllDischargeableUnits(self.vehicle, true) -- force initialisation
+    AutoDrive.getAllDischargeableUnits(self.vehicle, true) -- force initialisation
 end
 
 function CombineUnloaderMode:start()
