@@ -251,7 +251,9 @@ function AutoDrive.cycleEditMode()
                 ADGraphManager:deleteColorSelectionWayPoints()
             end
             if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
-                vehicle.ad.stateModule:disableCreationMode()
+                if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+                    vehicle.ad.stateModule:disableCreationMode()
+                end
             end
         end
     end
@@ -266,7 +268,9 @@ function AutoDrive.cycleEditorShowMode()
         else
             AutoDrive.setEditorMode(AutoDrive.EDITOR_OFF)
             if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
-                vehicle.ad.stateModule:disableCreationMode()
+                if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+                    vehicle.ad.stateModule:disableCreationMode()
+                end
             end
         end
     end
@@ -499,6 +503,16 @@ function AutoDrive:getIsEntered(vehicle)
         end
     end
     return user ~= nil
+end
+
+function AutoDrive:getAIFrameFarmId()
+    local actualFarmId = nil
+    if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle and AutoDrive.aiFrameVehicle.ad and AutoDrive.aiFrameVehicle.ad.stateModule then
+        if g_currentMission and g_currentMission.player and g_currentMission.player.farmId and g_currentMission.player.farmId > 0 then
+            actualFarmId = g_currentMission.player.farmId
+        end
+    end
+    return actualFarmId
 end
 
 function AutoDrive:getColorKeyNames()

@@ -1,6 +1,15 @@
 function AutoDrive.prerequisitesPresent(specializations)
-    return SpecializationUtil.hasSpecialization(AIVehicle, specializations) and SpecializationUtil.hasSpecialization(Motorized, specializations) and SpecializationUtil.hasSpecialization(Drivable, specializations) and
-        SpecializationUtil.hasSpecialization(Enterable, specializations)
+    return (SpecializationUtil.hasSpecialization(AIVehicle, specializations) 
+    and SpecializationUtil.hasSpecialization(Motorized, specializations) 
+    and SpecializationUtil.hasSpecialization(Drivable, specializations) 
+    and SpecializationUtil.hasSpecialization(Enterable, specializations)
+    )
+    or
+-- locomotive
+    (
+    SpecializationUtil.hasSpecialization(SplineVehicle, specializations) 
+    and SpecializationUtil.hasSpecialization(Drivable, specializations)
+    )
 end
 
 function AutoDrive.registerEventListeners(vehicleType)
@@ -43,7 +52,7 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "leaveVehicle",                         AutoDrive.leaveVehicle)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsAIActive",                        AutoDrive.getIsAIActive)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, "getIsVehicleControlledByPlayer",       AutoDrive.getIsVehicleControlledByPlayer)
-    -- SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
+    SpecializationUtil.registerOverwrittenFunction(vehicleType, "getActiveFarm",                        AutoDrive.getActiveFarm)
 
     -- Disables click to switch, if the user clicks on the hud or the editor mode is active.
     -- see ExternalInterface.lua
@@ -177,6 +186,9 @@ function AutoDrive:onLoad(savegame)
     self.ad.specialDrivingModule = ADSpecialDrivingModule:new(self)
     self.ad.collisionDetectionModule = ADCollisionDetectionModule:new(self)
     self.ad.pathFinderModule = PathFinderModule:new(self)
+    if self.spec_locomotive then
+        self.ad.trainModule = ADTrainModule:new(self)
+    end
 
     self.ad.modes = {}
     self.ad.modes[AutoDrive.MODE_DRIVETO] = DriveToMode:new(self)
@@ -435,6 +447,7 @@ function AutoDrive:onUpdate(dt)
                 -- all folded - no further tries necessary
                 self.ad.foldStartTime = 0
                 AutoDrive.getAllVehicleDimensions(self, true)
+                self:raiseActive()
             end
         end
 
@@ -709,7 +722,7 @@ function AutoDrive:onPostDetachImplement(implementIndex)
 end
 
 
-function AutoDrive:onEnterVehicle()
+function AutoDrive:onEnterVehicle(isControlling)
     if AutoDrive:hasAL(self) then
         -- AutoLoad
         local currentFillType = AutoDrive:getALCurrentFillType(self)
@@ -729,11 +742,32 @@ function AutoDrive:onEnterVehicle()
             AutoDrive.getAllVehicleDimensions(self, true)
         end
     end
+
+    local spec = self.spec_enterable
+    if spec and spec.isControlled then
+        if self.ad and self.ad.stateModule then
+            self.ad.stateModule:setPlayerFarmId(spec.controllerFarmId)
+        end
+        if not self.ad.stateModule:isActive() and not AutoDrive:getIsCPActive(self) then
+            self.ad.stateModule:setActualFarmId(self.ad.stateModule:getPlayerFarmId()) -- onEnterVehicle
+        end
+    end
 end
 
-function AutoDrive:onLeaveVehicle()
-    if self.ad ~= nil and self.ad.stateModule ~= nil then
-        self.ad.stateModule:disableCreationMode()
+function AutoDrive:onLeaveVehicle(wasEntered)
+    if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+        if self.ad ~= nil and self.ad.stateModule ~= nil then
+            self.ad.stateModule:disableCreationMode()
+        end
+    end
+    local spec = self.spec_enterable
+    if spec then
+        if self.ad and self.ad.stateModule then
+            self.ad.stateModule:setPlayerFarmId(0)
+        end
+        if not self.ad.stateModule:isActive() and not AutoDrive:getIsCPActive(self) then
+            self.ad.stateModule:setActualFarmId(self.ad.stateModule:getPlayerFarmId()) -- onLeaveVehicle
+        end
     end
 end
 
@@ -996,6 +1030,7 @@ function AutoDrive:startAutoDrive()
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
             self.ad.foldStartTime = g_time
+
             AutoDrive.getAllVehicleDimensions(self, true)
             if self.spec_aiVehicle ~= nil then
                 if self.getAINeedsTrafficCollisionBox ~= nil then
@@ -1056,6 +1091,9 @@ function AutoDrive:stopAutoDrive()
             self.ad.specialDrivingModule:reset()
             self.ad.trailerModule:reset()
 
+            if self.spec_locomotive and self.ad and self.ad.trainModule then
+                self.ad.trainModule:reset()
+            end
             for _, mode in pairs(self.ad.modes) do
                 mode:reset()
             end
@@ -1067,10 +1105,11 @@ function AutoDrive:stopAutoDrive()
                 self:setTurnLightState(Lights.TURNLIGHT_OFF)
             end
 
-
+            if not self.spec_locomotive then
                 self.ad.trailerModule:handleTrailerReversing(false)
                 AutoDrive.driveInDirection(self, 16, 30, 0, 0.2, 20, false, self.ad.drivingForward, 0, 0, 0, 1)
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+            end
 
                 if self.ad.onRouteToPark then 
                     SpecializationUtil.raiseEvent(self, "onAutoDriveParked")
@@ -1080,15 +1119,16 @@ function AutoDrive:stopAutoDrive()
                     self.ad.onRouteToPark = false
                 end
 
+            if not self.spec_locomotive then
                 if self.ad.sensors ~= nil then
                     for _, sensor in pairs(self.ad.sensors) do
                         sensor:setEnabled(false)
                     end
                 end
-
-                if self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
-                    self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
-                end
+            end
+            if self.spec_aiVehicle and self.spec_aiVehicle.aiTrafficCollisionTranslation ~= nil then
+                self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
+            end
 
             self.ad.stateModule:setActive(false)
 
@@ -1106,7 +1146,7 @@ function AutoDrive:stopAutoDrive()
             local isPassingToCP = not self.ad.isStoppingWithError and (self.ad.restartCP == true or (self.ad.stateModule:getStartCP_AIVE() and self.ad.stateModule:getUseCP_AIVE()))
 
             if not isStartingAIVE and not isPassingToCP then
-                if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
+                if not AutoDrive:getIsEntered(self) then
                     if self.deactivateLights ~= nil then
                         self:deactivateLights()
                     end
@@ -1520,8 +1560,10 @@ function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
 end
 
 function AutoDrive:getActiveFarm(superFunc)
-    if self.spec_aiVehicle ~= 0 and self.spec_aiVehicle.startedFarmId and self.ad.stateModule:isActive() then
-        return self.spec_aiVehicle.startedFarmId
+    local actualFarmID = self.ad.stateModule:getActualFarmId()
+    if self.ad and self.ad.stateModule and self.ad.stateModule:isActive() and actualFarmID > FarmManager.SPECTATOR_FARM_ID then
+        -- return farmID only for valid farms, not spectator farm
+        return actualFarmID
     else
         return superFunc(self)
     end

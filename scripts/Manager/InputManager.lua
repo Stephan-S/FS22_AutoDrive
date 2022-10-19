@@ -97,8 +97,17 @@ function ADInputManager.onActionCall(vehicle, actionName)
     end
 end
 
-function ADInputManager:onInputCall(vehicle, input, sendEvent)
+function ADInputManager:onInputCall(vehicle, input, farmId, sendEvent)
+    local actualFarmId = farmId or 0
+    if actualFarmId == 0 then
+        actualFarmId = AutoDrive:getAIFrameFarmId() or 0
+    end
+    if actualFarmId == 0 and vehicle.ad and vehicle.ad.stateModule then
+        actualFarmId = vehicle.ad.stateModule:getActualFarmId()
+    end
+
     local controlledVehicle = g_currentMission.controlledVehicle
+
     for k, v in pairs(ADInputManager.actionsToInputs) do
         local allowed = ADInputManager.actionsToInputs[k][3] or ((controlledVehicle ~= nil and controlledVehicle == vehicle) or v[4])
         if input == ADInputManager.actionsToInputs[k][2] and allowed then
@@ -111,12 +120,12 @@ function ADInputManager:onInputCall(vehicle, input, sendEvent)
             if sendEvent == nil or sendEvent == true then
                 local inputId = self.inputsToIds[input]
                 if inputId ~= nil then
-                    AutoDriveInputEventEvent.sendEvent(vehicle, inputId)
+                    AutoDriveInputEventEvent.sendEvent(vehicle, inputId, actualFarmId)
                     return
                 end
             end
 
-            func(ADInputManager, vehicle)
+            func(ADInputManager, vehicle, actualFarmId)
             break
         end
     end
@@ -246,7 +255,7 @@ end
 
 -- Sender and server events
 
-function ADInputManager:input_start_stop(vehicle)
+function ADInputManager:input_start_stop(vehicle, farmId)
     if ADGraphManager:getWayPointById(1) == nil or vehicle.ad.stateModule:getFirstMarker() == nil then
         return
     end
@@ -254,6 +263,11 @@ function ADInputManager:input_start_stop(vehicle)
         vehicle.ad.isStoppingWithError = true
         vehicle:stopAutoDrive()
     else
+        if farmId and farmId > 0 then
+            -- set the farmId for the vehicle controlled by AD
+            vehicle.ad.stateModule:setActualFarmId(farmId) -- input_start_stop
+        end
+
         vehicle.ad.stateModule:getCurrentMode():start()
 
         if AutoDrive.rightSHIFTmodifierKeyPressed then
@@ -275,8 +289,9 @@ function ADInputManager:input_start_stop(vehicle)
             -- g_currentMission:requestToEnterVehicle(vehicle)
         end
     end
-
-    --AutoDrive.dumpTable(ADTriggerManager.tipTriggers, "ADTriggerManager.tipTriggers", 4)
+    if vehicle.isServer then
+        SpecializationUtil.raiseEvent(vehicle, "onUpdate", 16, false, false, false)
+    end
 end
 
 function ADInputManager:input_incLoopCounter(vehicle)

@@ -16,7 +16,10 @@ function UnloadAtDestinationTask:new(vehicle, destinationID)
 end
 
 function UnloadAtDestinationTask:setUp()
-    if ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        self.state = UnloadAtDestinationTask.STATE_DRIVING
+        self.vehicle.ad.trainModule:setPathTo(self.destinationID)
+    elseif ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = UnloadAtDestinationTask.STATE_PATHPLANNING
         if self.vehicle.ad.restartCP == true then
             if self.vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
@@ -160,15 +163,6 @@ end
 
 function UnloadAtDestinationTask:finished()
     self.vehicle.ad.taskModule:setCurrentTaskFinished()
-end
-
-function UnloadAtDestinationTask:getInfoText()
-    if self.state == UnloadAtDestinationTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        return g_i18n:getText("AD_task_pathfinding") .. string.format(" %d / %d ", actualState, maxStates)
-    else
-        return g_i18n:getText("AD_task_drive_to_unload_point")
-    end
 end
 
 function UnloadAtDestinationTask:getI18nInfo()
