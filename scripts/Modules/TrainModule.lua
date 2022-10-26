@@ -121,14 +121,15 @@ function ADTrainModule:update(dt)
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:update shouldBrake speedReal %s", tostring(speedReal))
         end
 
-        if math.abs(speedReal) > (2 * ADTrainModule.LOAD_UNLOAD_SPEED) then
-            if self.vehicle.movingDirection > 0 then
+        if self.vehicle.movingDirection > 0 then
+            if math.abs(speedReal) > (2 * ADTrainModule.LOAD_UNLOAD_SPEED) then
                 self.vehicle:updateVehiclePhysics(-ADTrainModule.BRAKE_FACTOR, 0, 0, dt)
-            end
-        elseif math.abs(speedReal) > ADTrainModule.LOAD_UNLOAD_SPEED then
-            if self.vehicle.movingDirection > 0 then
+            elseif math.abs(speedReal) > ADTrainModule.LOAD_UNLOAD_SPEED then
                 self.vehicle:updateVehiclePhysics(-1, 0, 0, dt)
             end
+        else
+            -- it happens that the movingDirection becomes 0 or -1, so move away
+            self.vehicle:updateVehiclePhysics(1, 0, 0, dt)
         end
     else
         if (g_updateLoopIndex % (60) == 0) then
