@@ -11,13 +11,20 @@ function ADTrainModule:new(vehicle)
     setmetatable(o, self)
     self.__index = self
     o.vehicle = vehicle
-    ADTrainModule.reset(o)
+    ADTrainModule.init(o)
     return o
+end
+
+function ADTrainModule:init()
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:init")
+    self.destinationID = nil
+    self.lastDistance = math.huge
 end
 
 function ADTrainModule:reset()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:reset")
 
+    self:init()
     local spec = self.vehicle.spec_locomotive
     if AutoDrive:getIsEntered(self.vehicle) then
         if spec and spec.state ~= Locomotive.STATE_MANUAL_TRAVEL_ACTIVE then
@@ -30,8 +37,6 @@ function ADTrainModule:reset()
             self.vehicle:setLocomotiveState(Locomotive.STATE_MANUAL_TRAVEL_INACTIVE)
         end
     end
-    self.destinationID = nil
-    self.lastDistance = math.huge
     self.trailers = AutoDrive.getAllImplements(self.vehicle, true)
     self.lastTrailer, self.trainLength = self:getLastTrailer()
     
@@ -76,6 +81,9 @@ end
 function ADTrainModule:update(dt)
     if (g_updateLoopIndex % (60) == 0) then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:update")
+    end
+    if not self.destinationID then
+        return
     end
 
     local spec = self.vehicle.spec_locomotive
