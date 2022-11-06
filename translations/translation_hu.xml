@@ -211,6 +211,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Használjon széles HUD módot, amely lehetővé teszi még néhány beállítási gombot a HUD-ban" />
 		<text name="gui_ad_playSounds"							text="Sound" />
 		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Több cél szinkronizálása" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Több útvonal, amely ugyanazt a mappát használja több célhoz, szinkronizálja a következő célokat" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Parkolás a végén" />

@@ -213,6 +213,8 @@
         <text name="gui_ad_wideHUD_tooltip"             	text="Utilizzare la modalità HUD estersa, che consente anche qualche altro pulsante di impostazione nell'HUD" />
         <text name="gui_ad_playSounds"              		text="Suono" />
         <text name="gui_ad_playSounds_tooltip"          	text="Abilita gli effetti sonori per i clic del mouse e le notifiche" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
         <text name="gui_ad_syncMultiTargets"           		text="Sincronizza obbiettivi multipli" />
         <text name="gui_ad_syncMultiTargets_tooltip"        	text="Più autisti che utilizzano la stessa cartella per più obiettivi sincronizzeranno gli obiettivi successivi" />
         <text name="gui_ad_enableParkAtJobFinished"         	text="Parcheggia a lavoro finito" />

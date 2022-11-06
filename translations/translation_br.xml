@@ -211,6 +211,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Use o modo HUD ampliado, que também permite mais alguns botões de configuração no HUD" />
 		<text name="gui_ad_playSounds"							text="Sons" />
 		<text name="gui_ad_playSounds_tooltip"					text="Ativa os efeitos sonoros para cliques do mouse e notificações" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Sync multiplos destinos" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Vários motoristas usando a mesma pasta para vários destinos sincronizarão os próximos destinos" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Estacionar quando o trabalho for finalizado" />

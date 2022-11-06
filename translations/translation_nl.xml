@@ -215,6 +215,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Gebruik brede hud modus, die ook een paar meer instellingen knoppen in de HUD mogelijk maakt" />
 		<text name="gui_ad_playSounds"							text="Geluid" />
 		<text name="gui_ad_playSounds_tooltip"					text="Schakelt de geluidseffecten voor muisklikken en meldingen in" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchroniseer meerdere bestemmingen" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Meerdere bestuurders die dezelfde map gebruiken voor meerdere doelen, die synchroniseren de voldende bestemmingen" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Parkeer wanneer de klus geklaard is" />

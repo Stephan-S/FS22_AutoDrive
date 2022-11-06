@@ -214,6 +214,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Использовать режим широкого HUD, который также позволяет использовать еще несколько кнопок настройки в HUD." />
 		<text name="gui_ad_playSounds"							text="Звук" />
 		<text name="gui_ad_playSounds_tooltip"					text="Включает звуковые эффекты для щелчков мыши и уведомлений." />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Синхронизация нескольких локаций" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Если несколько водителей едут в одно и то же место, выбор места назначения синхронизируется." />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Припарковать по завершению" />
