@@ -215,6 +215,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="使用宽 HUD 模式，该模式还允许在 HUD 中添加更多设置按钮" />
 		<text name="gui_ad_playSounds"							text="声音" />
 		<text name="gui_ad_playSounds_tooltip"					text="启用鼠标点击和通知的音效" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="同步多个目的地" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="如果几个司机开车到同一个目的地，目的地选择是同步的。" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="工作完成后停车" />

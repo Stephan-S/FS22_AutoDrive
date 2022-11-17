@@ -213,6 +213,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Použijte široký režim HUD, který také umožňuje několik dalších tlačítek pro nastavení v HUD" />
 		<text name="gui_ad_playSounds"							text="Zvuk" />
 		<text name="gui_ad_playSounds_tooltip"					text="Umožňuje zvukové efekty pro kliknutí myší a upozornění" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizujte více cílů" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Více řidičů používá stejnou složku s více cíly a budou  sychronizovány s dalšími cíly" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkovat po dokončení práce" />

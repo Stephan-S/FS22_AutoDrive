@@ -11,13 +11,20 @@ function ADTrainModule:new(vehicle)
     setmetatable(o, self)
     self.__index = self
     o.vehicle = vehicle
-    ADTrainModule.reset(o)
+    ADTrainModule.init(o)
     return o
+end
+
+function ADTrainModule:init()
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:init")
+    self.destinationID = nil
+    self.lastDistance = math.huge
 end
 
 function ADTrainModule:reset()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:reset")
 
+    self:init()
     local spec = self.vehicle.spec_locomotive
     if AutoDrive:getIsEntered(self.vehicle) then
         if spec and spec.state ~= Locomotive.STATE_MANUAL_TRAVEL_ACTIVE then
@@ -30,8 +37,6 @@ function ADTrainModule:reset()
             self.vehicle:setLocomotiveState(Locomotive.STATE_MANUAL_TRAVEL_INACTIVE)
         end
     end
-    self.destinationID = nil
-    self.lastDistance = math.huge
     self.trailers = AutoDrive.getAllImplements(self.vehicle, true)
     self.lastTrailer, self.trainLength = self:getLastTrailer()
     
@@ -77,6 +82,9 @@ function ADTrainModule:update(dt)
     if (g_updateLoopIndex % (60) == 0) then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:update")
     end
+    if not self.destinationID then
+        return
+    end
 
     local spec = self.vehicle.spec_locomotive
     local speedReal = spec.speed * 3.6
@@ -121,14 +129,15 @@ function ADTrainModule:update(dt)
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:update shouldBrake speedReal %s", tostring(speedReal))
         end
 
-        if math.abs(speedReal) > (2 * ADTrainModule.LOAD_UNLOAD_SPEED) then
-            if self.vehicle.movingDirection > 0 then
+        if self.vehicle.movingDirection > 0 then
+            if math.abs(speedReal) > (2 * ADTrainModule.LOAD_UNLOAD_SPEED) then
                 self.vehicle:updateVehiclePhysics(-ADTrainModule.BRAKE_FACTOR, 0, 0, dt)
-            end
-        elseif math.abs(speedReal) > ADTrainModule.LOAD_UNLOAD_SPEED then
-            if self.vehicle.movingDirection > 0 then
+            elseif math.abs(speedReal) > ADTrainModule.LOAD_UNLOAD_SPEED then
                 self.vehicle:updateVehiclePhysics(-1, 0, 0, dt)
             end
+        else
+            -- it happens that the movingDirection becomes 0 or -1, so move away
+            self.vehicle:updateVehiclePhysics(1, 0, 0, dt)
         end
     else
         if (g_updateLoopIndex % (60) == 0) then
