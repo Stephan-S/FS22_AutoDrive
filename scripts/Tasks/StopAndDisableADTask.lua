@@ -13,6 +13,9 @@ function StopAndDisableADTask:setUp()
     self.vehicle.ad.specialDrivingModule:stopVehicle()
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
+    if self.vehicle.spec_locomotive then
+        self.vehicle:raiseActive()
+    end
 end
 
 function StopAndDisableADTask:update(dt)

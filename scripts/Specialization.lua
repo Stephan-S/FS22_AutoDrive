@@ -1150,6 +1150,15 @@ function AutoDrive:stopAutoDrive()
                     if self.deactivateLights ~= nil then
                         self:deactivateLights()
                     end
+
+                    if self.spec_locomotive then
+                        if self.setCruiseControlState then
+                            self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+                            self:updateVehiclePhysics(0, 0, 0, 16)
+                            self:raiseActive()
+                        end
+                    end
+
                     if self.stopMotor ~= nil then
                         self:stopMotor()
                     end

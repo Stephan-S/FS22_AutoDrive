@@ -37,10 +37,13 @@ function ADTrainModule:reset()
             self.vehicle:setLocomotiveState(Locomotive.STATE_MANUAL_TRAVEL_INACTIVE)
         end
     end
-    self.trailers = AutoDrive.getAllImplements(self.vehicle, true)
-    self.lastTrailer, self.trainLength = self:getLastTrailer()
     
     if self.vehicle:getIsMotorStarted() and not AutoDrive:getIsEntered(self.vehicle) then
+        if self.setCruiseControlState then
+            self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+            self:updateVehiclePhysics(0, 0, 0, 16)
+            self.vehicle:raiseActive()
+        end
         self.vehicle:stopMotor()
     end
     self.vehicle:raiseActive()
@@ -48,7 +51,6 @@ end
 
 function ADTrainModule:setUp()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:setUp")
-    -- need to be done again
     self.trailers = AutoDrive.getAllImplements(self.vehicle, true)
     self.lastTrailer, self.trainLength = self:getLastTrailer()
     -- disable train vehicles to be entered to unload
@@ -75,6 +77,7 @@ function ADTrainModule:setPathTo(destinationID)
         self.destinationID = nil
     end
     self:setUp()
+    self.vehicle:raiseActive()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:setPathTo self.destinationID %s", tostring(self.destinationID))
 end
 
@@ -153,6 +156,7 @@ function ADTrainModule:stopAndHoldVehicle(dt)
     local spec = self.vehicle.spec_locomotive
     local speedReal = spec.speed * 3.6
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node) 
+    local distance = 12345
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:stopAndHoldVehicle speedReal %s", tostring(speedReal))
 
     if self.destinationID then
@@ -162,7 +166,7 @@ function ADTrainModule:stopAndHoldVehicle(dt)
         end
         if self.lastTrailer then
             local x, y, z = getWorldTranslation(self.lastTrailer.components[1].node)
-            local distance = MathUtil.vector2Length(wayPoint.x - x, wayPoint.z - z)
+            distance = MathUtil.vector2Length(wayPoint.x - x, wayPoint.z - z)
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:stopAndHoldVehicle distance %s", tostring(distance))
         end
     end
@@ -178,6 +182,13 @@ function ADTrainModule:stopAndHoldVehicle(dt)
             self.vehicle.ad.specialDrivingModule.motorShouldBeStopped = true
             if self.vehicle.ad.specialDrivingModule:shouldStopMotor() and self.vehicle:getIsMotorStarted() and (not g_currentMission.missionInfo.automaticMotorStartEnabled) then
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAINS, "ADTrainModule:stopAndHoldVehicle stopMotor")
+
+                if self.setCruiseControlState then
+                    self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
+                    self:updateVehiclePhysics(0, 0, 0, 16)
+                    self:raiseActive()
+                end
+
                 self.vehicle:stopMotor()
             end
         end
