@@ -163,6 +163,7 @@ function PickupAndDeliverMode:getNextTask(forced)
         -- STATE_PICKUP_FROM_NEXT_TARGET - load at multiple targets
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask STATE_PICKUP_FROM_NEXT_TARGET")
         -- by default - go to unload
+        self.vehicle.ad.stateModule:setLoopsDone(self.vehicle.ad.stateModule:getLoopsDone() + 1)
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask set STATE_PICKUP")
         self.state = PickupAndDeliverMode.STATE_PICKUP
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask STATE_PICKUP_FROM_NEXT_TARGET end")
@@ -195,7 +196,7 @@ function PickupAndDeliverMode:getNextTask(forced)
             self.state = PickupAndDeliverMode.STATE_PICKUP_FROM_NEXT_TARGET
             if not ((AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYPICKUP or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders")) then
                 -- increase loops only if not rotate targets
-                self.vehicle.ad.stateModule:setLoopsDone(self.vehicle.ad.stateModule:getLoopsDone() + 1)
+                -- self.vehicle.ad.stateModule:setLoopsDone(self.vehicle.ad.stateModule:getLoopsDone() + 1)
             end
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask loopsDone %s", tostring(self.vehicle.ad.stateModule:getLoopsDone()))
         else
