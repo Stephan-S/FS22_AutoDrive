@@ -426,7 +426,7 @@ function ADSpecialDrivingModule:reverseToPoint(dt, maxSpeed)
         self.dFactor = 6.7 --self.vehicle.ad.stateModule:getFieldSpeedLimit() * 0.1 --10
     end
 
-    local targetAngleToTrailer = math.clamp(-40, (p * self.pFactor) + (self.i * self.iFactor) + (d * self.dFactor), 40)
+    local targetAngleToTrailer = MathUtil.clamp((p * self.pFactor) + (self.i * self.iFactor) + (d * self.dFactor), -40, 40)
     local targetDiff = self.angleToTrailer - targetAngleToTrailer
     local offsetX = -targetDiff * 5
     local offsetZ = -20
@@ -440,7 +440,7 @@ function ADSpecialDrivingModule:reverseToPoint(dt, maxSpeed)
     --print("p: " .. p * self.pFactor .. " i: " .. (self.i * self.iFactor) .. " d: " .. (d * self.dFactor))
     --print("targetAngleToTrailer: " .. targetAngleToTrailer .. " targetDiff: " .. targetDiff .. "  offsetX" .. offsetX)
 
-    local speed = 5 + (6 * math.clamp(0, (5 / math.max(self.steeringAngle, math.abs(self.angleToTrailer))), 1))
+    local speed = 5 + (6 * MathUtil.clamp((5 / math.max(self.steeringAngle, math.abs(self.angleToTrailer))), 0, 1))
     local acc = 0.4
 
     if vehicleIsTruck then
