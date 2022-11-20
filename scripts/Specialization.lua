@@ -1569,13 +1569,14 @@ function AutoDrive:getIsVehicleControlledByPlayer(superFunc)
 end
 
 function AutoDrive:getActiveFarm(superFunc)
-    local actualFarmID = self.ad.stateModule:getActualFarmId()
-    if self.ad and self.ad.stateModule and self.ad.stateModule:isActive() and actualFarmID > FarmManager.SPECTATOR_FARM_ID then
-        -- return farmID only for valid farms, not spectator farm
-        return actualFarmID
-    else
-        return superFunc(self)
+    if self.ad and self.ad.stateModule and self.ad.stateModule:isActive() then
+        local actualFarmID = self.ad.stateModule:getActualFarmId()
+        if actualFarmID > FarmManager.SPECTATOR_FARM_ID then
+            -- return farmID only for valid farms, not spectator farm
+            return actualFarmID
+        end
     end
+    return superFunc(self)
 end
 
 function AutoDrive:generateUTurn(left)
