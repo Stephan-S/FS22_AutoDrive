@@ -181,7 +181,7 @@ function ADTrailerModule:update(dt)
     -- self:handleTrailerReversing()
 
     self.lastFillLevel = self.fillLevel
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end %s", tostring(self.lastFillLevel))
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end lastFillLevel %.1f", self.lastFillLevel)
 end
 
 function ADTrailerModule:handleTrailerCovers()
@@ -198,7 +198,7 @@ function ADTrailerModule:updateStates()
         self.lastFillLevel = self.fillLevel
     end
     self.blocked = self.lastFillLevel <= self.fillLevel
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateStates start self.isLoading %s self.isUnloading %s self.lastFillLevel %s self.fillLevel %s self.blocked %s", tostring(self.isLoading), tostring(self.isUnloading), tostring(self.lastFillLevel), tostring(self.fillLevel), tostring(self.blocked))
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateStates start self.isLoading %s self.isUnloading %s self.lastFillLevel %.1f self.fillLevel %.1f self.blocked %s", tostring(self.isLoading), tostring(self.isUnloading), self.lastFillLevel, self.fillLevel, tostring(self.blocked))
     for _, trailer in pairs(self.trailers) do
         if trailer.getFillUnits ~= nil then
             self.fillUnits = self.fillUnits + #trailer:getFillUnits()
@@ -350,7 +350,6 @@ function ADTrailerModule:updateLoad(dt)
             if fillTrigger ~= nil then
                 -- no further actions required, monitoring via fill level - see load from source without trigger
                 self.currentTrigger = fillTrigger.currentTrigger
-                self.foundSuitableTrigger = true    -- loading trigger was found
                 table.insert(self.currentTriggersSeen, self.currentTrigger)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad overload fillTrigger found -> load already started")
             end
@@ -358,10 +357,10 @@ function ADTrailerModule:updateLoad(dt)
 
         -- check for load from source without trigger
         if self.lastFillLevel < self.fillLevel then
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad load from source without trigger...")
             fillFound = true
             self.isLoading = true
             self.trigger = self                 -- need a trigger to not search again
-            self.foundSuitableTrigger = true    -- loading trigger was found
             -- update load delay timer
             self.loadDelayTimer:timer(false, ADTrailerModule.LOAD_DELAY_TIME)
         end
