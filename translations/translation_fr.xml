@@ -302,9 +302,7 @@
 
 		<text name="button_delete_all" 							text="Effacer tout" />
 		<text name="button_reset_selected" 					    text="Effacer la sélection" />
-		
-		<text name="button_delete_all" 							text="Effacer tout" />
-		<text name="button_reset_selected" 					    text="Effacement sélectionné" />		
+	
 		<text name="AD_task_pathfinding"						text="Planifier le parcours" />
 		<text name="AD_task_catch_up_with_combine"				text="Rattraper la moissonneuse-batteuse" />
 		<text name="AD_task_clearcrop"							text="Destruction de la culture" />

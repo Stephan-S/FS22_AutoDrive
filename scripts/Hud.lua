@@ -139,6 +139,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	self.gapWidth, self.gapHeight = getNormalizedScreenValues(uiScale * gapSize, uiScale * gapSize)
 	self.iconWidth, self.iconHeight = getNormalizedScreenValues(uiScale * iconSize, uiScale * iconSize)
 	self.listItemWidth, self.listItemHeight = getNormalizedScreenValues(uiScale * listItemSize, uiScale * listItemSize)
+
 	self.posX = MathUtil.clamp(hudX, 0, 1 - self.width)
 	self.posY = MathUtil.clamp(hudY, 2 * self.gapHeight, 1 - (self.height + 3 * self.gapHeight + self.headerHeight))
 
