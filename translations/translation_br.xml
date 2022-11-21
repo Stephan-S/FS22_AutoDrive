@@ -119,7 +119,7 @@
 		<text name="gui_ad_unloadFillLevel_tooltip"				text="Descarregar neste n´vel de enchimento." />
 		<text name="gui_ad_findDriver"							text="Procurar motorista" />
 		<text name="gui_ad_findDriver_tooltip"					text="Pesquisar por motoristas próximos (Ignorar destino)" />
-		<text name="gui_ad_gui_scale"							text="Gui dimensionamento para AutoDrive HUD" />
+		<text name="gui_ad_gui_scale"							text="Gui dimensionar AutoDrive HUD" />
 		<text name="gui_ad_gui_scale_tooltip"					text="Deixe o padrão para usar nas configurações de dimensionamento do jogo" />
 		<text name="gui_ad_notifications"						text="Notificações" />
 		<text name="gui_ad_notifications_text_1"				text="Disativada" />
@@ -168,6 +168,8 @@
 		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Sim - Use luzes de aviso ao carregar ou descarregar em um trigger" />
 		<text name="gui_ad_worklightsWhenSilo"					text="Luz de aviso quando em um Silo" />
 		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Sim - Use luzes de trabalho quando estiver em um silo" />
+		<text name="gui_ad_hazardLightReverse"					text="Luz de alerta" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Sim - Use luz de aviso em marcha ré" />
 		<text name="gui_ad_activeUnloading"						text="Descarga ativa" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Descarregue colheitadeiras enquanto dirige." />
 		<text name="gui_ad_restrictToField"						text="Restringir o pathfinder ao campo" />
@@ -215,11 +217,11 @@
 		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Sync multiplos destinos" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Vários motoristas usando a mesma pasta para vários destinos sincronizarão os próximos destinos" />
-		<text name="gui_ad_enableParkAtJobFinished"				text="Estacionar quando o trabalho for finalizado" />
+		<text name="gui_ad_enableParkAtJobFinished"				text="Estacionar após trabalho finalizado" />
 		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Disponível apenas nos Modos Coleta e Entrega, Entrega: Se o Trabalho for concluído, a posição de estacionamento armazenada do veículo / acessório será conduzida. No servidor disponível apenas para estacionamento de veículos!" />
 		<text name="gui_ad_autoTipSide"                         text="Lado automático" />
 		<text name="gui_ad_autoTipSide_tooltip"                 text="Sim - AutoDrive seleciona o lado automaticamente / Não - o lado já selecionado será usado" />
-		<text name="gui_ad_autoTrailerCover"                    text="Coberturas Automáticas para as carretas" />
+		<text name="gui_ad_autoTrailerCover"                    text="Cobertura Automática da carreta" />
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Sim - o AutoDrive abrem e fecham as coberturas das carretas quando necessário / Não - as coberturas das carretas não serão abertas ou fechadas pelo AutoDrive" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Manobra de giro para frente" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Sim - motoristas tentam planejar um caminho à frente para se adaptar às manobras de 90° da colheitadeira. / Não - Motoristas irão manobrar antes de virar" />
@@ -292,6 +294,8 @@
 		<text name="ad_color_currentConnection" 			    text="12 linha próximo caminho" />
 		<text name="ad_color_closestLine" 			            text="13 linha do veículo para o mais próximo waypoint" />
 		<text name="ad_color_editorHeightLine" 			        text="14 linha do waypoint de superfície para o veículo acima" />
+		<text name="ad_color_previewOk" 			            text="15 Visualização da curva OK, nenhuma colisão" />
+		<text name="ad_color_previewNotOk" 			            text="16 Visualização da curva não OK, com colisão" />
 
 		<text name="button_delete_all" 							text="Deletar Todos" />
 		<text name="button_reset_selected" 					    text="Redefinir selecionado" />
@@ -328,15 +332,16 @@
 		<text name = "gui_CPAD_simple"							text = "simples"/>
 		<text name = "gui_CPAD_full"							text = "completo"/>		
 		<text name = "gui_ad_combineCPADHudMouse"				text = "colheitadeira CP/AD Botões"/>
-    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "desligado: padrão / simples: CP: sec mouse ação > mouse ligado + desligado, AD: Alternar Hud > ambos os huds ligado + desligado / completo: tão simples, mas os huds alternam em etapas únicas / Requerido: Desative o botão direito do mouse no HUD nas configurações do CP"/>
+ 		<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "desligado: padrão / simples: CP: sec mouse ação > mouse ligado + desligado, AD: Alternar Hud > ambos os huds ligado + desligado / completo: tão simples, mas os huds alternam em etapas únicas / Requerido: Desative o botão direito do mouse no HUD nas configurações do CP"/>
+
 		<text name = "gui_ad_editorTip_1"						text = "Simples clique esquerdo do mouse:"/>
 		<text name = "gui_ad_editorTip_2"						text = "Apenas mouse: Selecione 1. ponto"/>
-		<text name = "gui_ad_editorTip_3"						text = "LCTRL = Crar nó"/>
+		<text name = "gui_ad_editorTip_3"						text = "LCTRL = Criar nó"/>
 		<text name = "gui_ad_editorTip_4"						text = "LALT = Excluir nó"/>
 		<text name = "gui_ad_editorTip_5"						text = "LSHIFT = Alternar ponto como lateral da estrada"/>
 		<text name = "gui_ad_editorTip_6"						text = "Clicar no segundo nó:"/>
 		<text name = "gui_ad_editorTip_7"						text = "Alternar conexão"/>
-		<text name = "gui_ad_editorTip_8"						text = "RSHIFT = Criar estrada inversa/>
+		<text name = "gui_ad_editorTip_8"						text = "RSHIFT = Criar estrada inversa"/>
 		<text name = "gui_ad_editorTip_9"						text = "1. nó é interseção, segundo é vizinho:"/>
 		<text name = "gui_ad_editorTip_10"						text = "LCTRL: Alternar tipo de segmento (normal/dual)"/>
 		<text name = "gui_ad_editorTip_11"						text = "LSHIFT = Alternar lado da estrada"/>

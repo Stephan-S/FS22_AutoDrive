@@ -162,6 +162,16 @@ function AutoDrive.boxesIntersect(a, b)
 	return true
 end
 
+-- Pumps N' Hoses DLC provides this function, we reuse their function if defined.
+if math.clamp == nil then
+	function math.clamp(value, minValue, maxValue)
+		if minValue ~= nil and value ~= nil and maxValue ~= nil then
+			return math.max(minValue, math.min(maxValue, value))
+		end
+		return value
+	end
+end
+
 function table:contains(value)
 	for _, v in pairs(self) do
 		if v == value then
@@ -715,6 +725,7 @@ function ADVectorUtils.linterp(inMin, inMax, inValue, outMin, outMax)
 	-- normalize input, make min range boundary = 0, nval is between 0..1
 	local imax = inMax - inMin
 	local nval = MathUtil.clamp(inValue - inMin, 0, imax) / imax
+
 	-- normalize output
 	local omax = outMax - outMin
 	local oval = outMin + ( omax * nval )
