@@ -724,7 +724,8 @@ end
 function ADVectorUtils.linterp(inMin, inMax, inValue, outMin, outMax)
 	-- normalize input, make min range boundary = 0, nval is between 0..1
 	local imax = inMax - inMin
-	local nval = math.clamp(inValue - inMin, 0, imax) / imax
+	local nval = MathUtil.clamp(inValue - inMin, 0, imax) / imax
+
 	-- normalize output
 	local omax = outMax - outMin
 	local oval = outMin + ( omax * nval )
@@ -952,7 +953,7 @@ end
 
 function AutoDrive:zoomSmoothly(superFunc, offset)
 	if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid then
-		AutoDrive.splineInterpolationUserCurvature = math.clamp(AutoDrive.splineInterpolationUserCurvature + offset/12, 0.49, 3.5)
+        AutoDrive.splineInterpolationUserCurvature = MathUtil.clamp(AutoDrive.splineInterpolationUserCurvature + offset/12, 0.49, 3.5)
 		return
 	end
 	if not AutoDrive.mouseWheelActive then -- don't zoom camera when mouse wheel is used to scroll targets (thanks to sperrgebiet)
