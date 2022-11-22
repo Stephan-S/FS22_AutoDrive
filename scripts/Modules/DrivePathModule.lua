@@ -251,7 +251,9 @@ function ADDrivePathModule:followWaypoints(dt)
             local currentTask = self.vehicle.ad.taskModule:getActiveTask()
             local isCatchingCombine = currentTask.taskType ~= nil and self.vehicle.ad.taskModule:getActiveTask().taskType == "CatchCombinePipeTask"
             if not isCatchingCombine then
-                self.speedLimit = MathUtil.clamp(self.speedLimit, 8, 2 + self.distanceToTarget)
+                local min_speed = math.min(8, 2 + self.distanceToTarget)
+                local max_speed = math.max(8, 2 + self.distanceToTarget)
+                self.speedLimit = MathUtil.clamp(self.speedLimit, min_speed, max_speed)
             end
         end
 
