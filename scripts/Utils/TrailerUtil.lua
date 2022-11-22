@@ -1,4 +1,4 @@
-function AutoDrive.isUnloadFillLevelReached(object, fillFreeCapacity, fillCapacity)
+function AutoDrive.isUnloadFillLevelReached(object, fillLevel, fillFreeCapacity, fillCapacity)
     if object == nil then
         Logging.error("[AD] AutoDrive.isUnloadFillLevelReached object == nil")
         return  false
@@ -8,7 +8,7 @@ function AutoDrive.isUnloadFillLevelReached(object, fillFreeCapacity, fillCapaci
         Logging.error("[AD] AutoDrive.isUnloadFillLevelReached object %s rootVehicle == nil", tostring(object))
         return  false
     end
-    return (fillFreeCapacity / math.max(fillCapacity, 0.0001)) <= 1 - (AutoDrive.getSetting("unloadFillLevel", rootVehicle) * 0.999)
+    return (fillLevel > 0) and (fillFreeCapacity / math.max(fillCapacity, 0.0001)) <= 1 - (AutoDrive.getSetting("unloadFillLevel", rootVehicle) * 0.999)
 end
 
 -- new, all fill levels, fuel fillTypes only from 2nd unit - to be used mainly for transportation
@@ -51,9 +51,9 @@ function AutoDrive.getAllFillLevels(vehicles)
         fillCapacity = fillCapacity + vehicleFillCapacity
         fillFreeCapacity = fillFreeCapacity + vehicleFillFreeCapacity
     end
-    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillLevel, fillFreeCapacity, fillCapacity)
 
-    AutoDrive.debugPrint(nil, AutoDrive.DC_TRAILERINFO, "AutoDrive.getAllFillLevels end hasAL %s fillLevel %s fillCapacity %s filledToUnload %s fillFreeCapacity %s", tostring(hasAL), tostring(fillLevel), tostring(fillCapacity), tostring(filledToUnload), tostring(fillFreeCapacity))
+    AutoDrive.debugPrint(rootVehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.getAllFillLevels end hasAL %s fillLevel %.1f fillCapacity %.1f filledToUnload %s fillFreeCapacity %.1f", tostring(hasAL), fillLevel, fillCapacity, tostring(filledToUnload), fillFreeCapacity)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
@@ -79,7 +79,7 @@ function AutoDrive.getAllNonFuelFillLevels(vehicles)
         fillCapacity = fillCapacity + vehicleFillCapacity
         fillFreeCapacity = fillFreeCapacity + vehicleFillFreeCapacity
     end
-    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillLevel, fillFreeCapacity, fillCapacity)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
@@ -154,9 +154,9 @@ function AutoDrive.getObjectFillLevels(object)
             end
         end
     end
-    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillLevel, fillFreeCapacity, fillCapacity)
 
-    AutoDrive.debugPrint(object, AutoDrive.DC_TRAILERINFO, "AutoDrive.getObjectFillLevels end fillLevel %s fillCapacity %s filledToUnload %s fillFreeCapacity %s", tostring(fillLevel), tostring(fillCapacity), tostring(filledToUnload), tostring(fillFreeCapacity))
+    AutoDrive.debugPrint(object, AutoDrive.DC_TRAILERINFO, "AutoDrive.getObjectFillLevels end fillLevel %.1f fillCapacity %.1f filledToUnload %s fillFreeCapacity %.1f", fillLevel, fillCapacity, tostring(filledToUnload), fillFreeCapacity)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
@@ -193,7 +193,7 @@ function AutoDrive.getObjectNonFuelFillLevels(object)
             end
         end
     end
-    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillLevel, fillFreeCapacity, fillCapacity)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
@@ -215,9 +215,10 @@ function AutoDrive.getIsFillUnitFull(vehicle, fillUnitIndex)
         _, _, fillUnitFull, _ = AutoDrive:getALObjectFillLevels(vehicle)
     else
         if vehicle.getFillUnitFreeCapacity ~= nil and vehicle.getFillUnitCapacity ~= nil then
+            local fillLevel = vehicle:getFillUnitFillLevel(fillUnitIndex)
             local fillCapacity = vehicle:getFillUnitCapacity(fillUnitIndex)
             local fillFreeCapacity = vehicle:getFillUnitFreeCapacity(fillUnitIndex)
-            fillUnitFull = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+            fillUnitFull = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillLevel, fillFreeCapacity, fillCapacity)
         else
             Logging.error("[AD] AutoDrive.getIsFillUnitFull getFillUnitFreeCapacity %s getFillUnitCapacity %s", tostring(vehicle.getFillUnitFreeCapacity), tostring(vehicle.getFillUnitCapacity))
             fillUnitFull = false
