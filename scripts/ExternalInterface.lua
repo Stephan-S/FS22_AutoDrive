@@ -736,7 +736,7 @@ function AutoDrive:getALObjectFillLevels(object) -- used by getIsFillUnitEmpty, 
         fillFreeCapacity = object:getFillUnitFreeCapacity()
         AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALObjectFillLevels fillCapacity %s fillLevel %s fillFreeCapacity %s", tostring(fillCapacity), tostring(fillLevel), tostring(fillFreeCapacity))
     end
-    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillFreeCapacity, fillCapacity)
+    local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillLevel, fillFreeCapacity, fillCapacity)
     return fillLevel, fillCapacity, filledToUnload, fillFreeCapacity
 end
 
