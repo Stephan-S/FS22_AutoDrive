@@ -250,6 +250,14 @@ function AutoDrive:onPostLoad(savegame)
         self.ad.driveForwardTimer = AutoDriveTON:new()
     end
 
+    if self.ad.typeIsConveyorBelt == nil then
+        if self.type and self.type.name and self.type.name == "conveyorBelt" then
+            self.ad.typeIsConveyorBelt = true
+        else
+            self.ad.typeIsConveyorBelt = false
+        end
+    end
+
     if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         if self.typeName == "combineCutterFruitPreparer" then
             local _, vehicleFillCapacity, _, _ = AutoDrive.getObjectFillLevels(self)
@@ -1561,6 +1569,11 @@ function AutoDrive:getCanMotorRun(superFunc)
 end
 
 function AutoDrive:getIsAIActive(superFunc)
+    if self.ad and self.ad.typeIsConveyorBelt and self.getAttacherVehicle and self:getAttacherVehicle() then
+        -- conveyor belt attached to vehicle - report as not active
+        return false
+    end
+
     return superFunc(self) or (self.ad and self.ad.stateModule and self.ad.stateModule:isActive())
 end
 
