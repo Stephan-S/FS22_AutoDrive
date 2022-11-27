@@ -202,6 +202,8 @@ function AutoDrive:onLoad(savegame)
     self.ad.onRouteToRefuel = false
     self.ad.onRouteToRepair = false
     self.ad.isStoppingWithError = false
+    self.ad.isCpEmpty = false
+    self.ad.isCpFull = false
 
     AutoDrive.resetMouseSelections(self)
 end
@@ -1143,6 +1145,8 @@ function AutoDrive:stopAutoDrive()
             self.ad.taskModule:abortAllTasks()
             self.ad.taskModule:reset()
 
+            self.ad.isCpEmpty = false
+            self.ad.isCpFull = false
             if self.ad.isStoppingWithError == true then
                 self.ad.onRouteToRefuel = false
                 self.ad.onRouteToRepair = false
