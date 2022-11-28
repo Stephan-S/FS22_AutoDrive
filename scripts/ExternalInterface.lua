@@ -501,11 +501,25 @@ end
 
 function AutoDrive:onCpEmpty()
     AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpEmpty start...")
+    local rootVehicle = self.getRootVehicle and self:getRootVehicle()
+    if rootVehicle then
+        if rootVehicle.ad == nil then
+            rootVehicle.ad = {}
+        end
+        rootVehicle.ad.isCpEmpty = true
+    end
     AutoDrive:handleCPFieldWorker(self)
 end
 
 function AutoDrive:onCpFull()
     AutoDrive.debugPrint(self, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:onCpFull start...")
+    local rootVehicle = self.getRootVehicle and self:getRootVehicle()
+    if rootVehicle then
+        if rootVehicle.ad == nil then
+            rootVehicle.ad = {}
+        end
+        rootVehicle.ad.isCpFull = true
+    end
     AutoDrive:handleCPFieldWorker(self)
 end
 

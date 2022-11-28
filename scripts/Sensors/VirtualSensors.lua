@@ -169,7 +169,7 @@ function ADSensor:loadBaseParameters()
         self.dynamicRotation = true
         self.length = vehicle.size.length
         self.width = vehicle.size.width * ADSensor.WIDTH_FACTOR
-        self.collisionMask = AIVehicleUtil.COLLISION_MASK
+        -- self.collisionMask = AIVehicleUtil.COLLISION_MASK
         self.position = ADSensor.POS_FRONT
         self.location = self:getLocationByPosition()
         self.initialized = true

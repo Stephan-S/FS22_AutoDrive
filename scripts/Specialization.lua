@@ -202,6 +202,8 @@ function AutoDrive:onLoad(savegame)
     self.ad.onRouteToRefuel = false
     self.ad.onRouteToRepair = false
     self.ad.isStoppingWithError = false
+    self.ad.isCpEmpty = false
+    self.ad.isCpFull = false
 
     AutoDrive.resetMouseSelections(self)
 end
@@ -248,6 +250,14 @@ function AutoDrive:onPostLoad(savegame)
 
         self.ad.noMovementTimer = AutoDriveTON:new()
         self.ad.driveForwardTimer = AutoDriveTON:new()
+    end
+
+    if self.ad.typeIsConveyorBelt == nil then
+        if self.type and self.type.name and self.type.name == "conveyorBelt" then
+            self.ad.typeIsConveyorBelt = true
+        else
+            self.ad.typeIsConveyorBelt = false
+        end
     end
 
     if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
@@ -1135,6 +1145,8 @@ function AutoDrive:stopAutoDrive()
             self.ad.taskModule:abortAllTasks()
             self.ad.taskModule:reset()
 
+            self.ad.isCpEmpty = false
+            self.ad.isCpFull = false
             if self.ad.isStoppingWithError == true then
                 self.ad.onRouteToRefuel = false
                 self.ad.onRouteToRepair = false
@@ -1561,6 +1573,11 @@ function AutoDrive:getCanMotorRun(superFunc)
 end
 
 function AutoDrive:getIsAIActive(superFunc)
+    if self.ad and self.ad.typeIsConveyorBelt and self.getAttacherVehicle and self:getAttacherVehicle() then
+        -- conveyor belt attached to vehicle - report as not active
+        return false
+    end
+
     return superFunc(self) or (self.ad and self.ad.stateModule and self.ad.stateModule:isActive())
 end
 
@@ -1647,13 +1664,18 @@ function AutoDrive:generateUTurn(left)
         local height = 2.3
         local mask = 0
 
-        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+
+        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
 
         self.ad.uTurn.expectedColliCallbacks = 0
         self.ad.uTurn.colliFound = false

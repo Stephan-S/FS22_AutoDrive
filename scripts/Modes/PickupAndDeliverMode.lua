@@ -92,6 +92,8 @@ function PickupAndDeliverMode:getNextTask(forced)
         end
     end
     local fillLevel, _, filledToUnload = AutoDrive.getAllFillLevels(self.trailers)
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask filledToUnload %s isCpFull %s", tostring(filledToUnload), tostring(self.vehicle.ad.isCpFull))
+    filledToUnload = filledToUnload or self.vehicle.ad.isCpFull
 
     local setPickupTarget = function()
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:setPickupTarget")
@@ -208,6 +210,7 @@ function PickupAndDeliverMode:getNextTask(forced)
         setDeliverTarget()      -- if rotateTargets is set, set the next deliver target
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask STATE_PICKUP UnloadAtDestinationTask... getSecondMarkerName() %s", tostring(self.vehicle.ad.stateModule:getSecondMarkerName()))
         nextTask = UnloadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
+        self.vehicle.ad.isCpFull = false
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask set STATE_DELIVER_TO_NEXT_TARGET")
         self.state = PickupAndDeliverMode.STATE_DELIVER_TO_NEXT_TARGET
     elseif self.state == PickupAndDeliverMode.STATE_EXIT_FIELD then
