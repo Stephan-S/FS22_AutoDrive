@@ -1664,13 +1664,18 @@ function AutoDrive:generateUTurn(left)
         local height = 2.3
         local mask = 0
 
-        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+        -- mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+
+        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
+        mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
 
         self.ad.uTurn.expectedColliCallbacks = 0
         self.ad.uTurn.colliFound = false
