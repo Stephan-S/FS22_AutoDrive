@@ -2053,7 +2053,7 @@ function PathFinderModule:buildMask()
 -- # identifiers
     mask = mask + math.pow(2, ADCollSensor.mask_TREE - 1)
     mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1) -- PFM does not need to drive through PalletUnloadTrigger
     -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER - 1)
     -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER - 1)
     -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL - 1)

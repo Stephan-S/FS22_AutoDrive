@@ -127,7 +127,7 @@ function ADCollSensor:buildMask()
 -- # identifiers
     mask = mask + math.pow(2, ADCollSensor.mask_TREE - 1)
     mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1) -- not enabled due to palett is a vehicle
     -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER - 1)
     -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER - 1)
     -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL - 1)
