@@ -104,6 +104,8 @@
 		<text name="gui_ad_drive"								text="Continuar" />
 		<text name="gui_ad_yes"									text="Sí" />
 		<text name="gui_ad_no"									text="No" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Inicializando" />
 		<text name="ad_bga_waiting"								text="Esperando por remolque/silo" />
 		<text name="ad_bga_active"								text="Activo" />
@@ -147,7 +149,7 @@
 		<text name="gui_ad_ground"								text="Nivel del suelo" />
 		<text name="gui_ad_aboveDriver"							text="Por encima del tractor" />
 		<text name="gui_ad_enableTrafficDetection"				text="Detectar obstáculos" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Detección avanzada de obstáculos, que incluye detección de tráfico IA, señales, vallas, etc." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Detección avanzada de obstáculos, que incluye detección de tráfico IA, señales, vallas, etc. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Ancho de pala (incrementar)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Si el ancho de la pala detectado automáticamente es demasiado pequeño, se puede aumentar con este valor" />
 		<text name="gui_ad_preCallLevel"						text="Nivel para llamar" />

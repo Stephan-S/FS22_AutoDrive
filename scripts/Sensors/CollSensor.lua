@@ -42,13 +42,13 @@ https://gdn.giants-software.com/thread.php?categoryId=22&threadId=9694
 ]]
 
 -- ADCollSensor.collisionMask = 239
--- ADCollSensor.mask_Non_Pushable_1 = 1
--- ADCollSensor.mask_Non_Pushable_2 = 2
--- ADCollSensor.mask_static_world_1 = 3
--- ADCollSensor.mask_static_world_2 = 4
--- ADCollSensor.mask_tractors = 6
--- ADCollSensor.mask_combines = 7
--- ADCollSensor.mask_trailers = 8
+ADCollSensor.mask_Non_Pushable_1 = 1
+ADCollSensor.mask_Non_Pushable_2 = 2
+ADCollSensor.mask_static_world_1 = 3
+ADCollSensor.mask_static_world_2 = 4
+ADCollSensor.mask_tractors = 6
+ADCollSensor.mask_combines = 7
+ADCollSensor.mask_trailers = 8
 -- ADCollSensor.mask_dynamic_objects = 12
 -- ADCollSensor.mask_dynamic_objects_machines = 13
 -- ADCollSensor.mask_trigger_player = 20
@@ -111,6 +111,14 @@ function ADCollSensor:new(vehicle, sensorParameters)
 end
 
 function ADCollSensor:buildMask()
+    if AutoDrive.getSetting("enableTrafficDetection") == 1 then
+        return self:buildMask_FS22()
+    else
+        return self:buildMask_FS19()
+    end
+end
+
+function ADCollSensor:buildMask_FS22()
     local mask = 0
 
 -- ?? 0:
@@ -127,7 +135,7 @@ function ADCollSensor:buildMask()
 -- # identifiers
     mask = mask + math.pow(2, ADCollSensor.mask_TREE - 1)
     mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1) -- not enabled due to palett is a vehicle
+    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1) -- used by PalletUnloadTrigger which seems not used yet
     -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER - 1)
     -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER - 1)
     -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL - 1)
@@ -146,6 +154,24 @@ function ADCollSensor:buildMask()
     -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_ANIMAL - 1)
 -- ?? 29:
     -- mask = mask + math.pow(2, ADCollSensor.mask_FILLABLE - 1)
+
+    return mask
+end
+
+function ADCollSensor:buildMask_FS19()
+    local mask = 0
+
+    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+    --mask = mask + math.pow(2, ADCollSensor.mask_dynamic_objects - 1)
+    --mask = mask + math.pow(2, ADCollSensor.mask_dynamic_objects_machines - 1)
+    --mask = mask + math.pow(2, ADCollSensor.mask_trigger_trafficVehicles - 1)
+    --mask = mask + math.pow(2, ADCollSensor.mask_trigger_dynamic_objects - 1)
 
     return mask
 end

@@ -26,7 +26,7 @@ end
 function ADCollisionDetectionModule:detectObstacle()
 	local box = self.vehicle.ad.sensors.frontSensorDynamic:getBoxShape()
 
-	if AutoDrive.getSetting("enableTrafficDetection") == true then
+	if AutoDrive.getSetting("enableTrafficDetection") >= 1 then
 		if self.vehicle.ad.sensors.frontSensorDynamic:pollInfo() then
 			return true
 		end
