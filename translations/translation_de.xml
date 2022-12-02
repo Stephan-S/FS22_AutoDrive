@@ -112,6 +112,8 @@
 		<text name="gui_ad_drive"								text="Weiterfahren" />
 		<text name="gui_ad_yes"									text="Ja" />
 		<text name="gui_ad_no"									text="Nein" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Initialisieren" />
 		<text name="ad_bga_waiting"								text="Warten auf Abfahrer/Silo" />
 		<text name="ad_bga_active"								text="Aktiv" />
@@ -155,7 +157,7 @@
 		<text name="gui_ad_ground"								text="Bodenhöhe" />
 		<text name="gui_ad_aboveDriver"							text="Über dem Traktor" />
 		<text name="gui_ad_enableTrafficDetection"				text="Kollisionserkennung" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Erweiterte Kollisionserkennung, die auch auf KI-Verkehr, Schilder, Zäune etc. reagiert." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Erweiterte Kollisionserkennung, die auch auf KI-Verkehr, Schilder, Zäune etc. reagiert. Aus, FS 22 oder FS 19 Kollisionen berücksichtigen" />
 		<text name="gui_ad_shovelWidth"							text="Schaufelbreite (Zusatz)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Falls die automatisch erkannte Breite zu klein ist, kann sie hiermit erhöht werden" />
 		<text name="gui_ad_preCallLevel"						text="Früher rufen ab" />

@@ -105,6 +105,8 @@
 		<text name="gui_ad_drive"								text="Следовать к" />
 		<text name="gui_ad_yes"									text="Да" />
 		<text name="gui_ad_no"									text="Нет" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Инициализация" />
 		<text name="ad_bga_waiting"								text="В ожидании прицепа/бункера" />
 		<text name="ad_bga_active"								text="Активно" />
@@ -148,7 +150,7 @@
 		<text name="gui_ad_ground"								text="на уровне земли" />
 		<text name="gui_ad_aboveDriver"							text="над техникой" />
 		<text name="gui_ad_enableTrafficDetection"				text="Обнаружение преград" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Продвинутое определение преград/коллизий, которое также обнаруживает AI-трафик, знаки, заборы и т.д." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Продвинутое определение преград/коллизий, которое также обнаруживает AI-трафик, знаки, заборы и т.д. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Добавочная ширина ковша" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Если автоматически определенная ширина ковша слишком мала, ее можно увеличить с помощью этого значения." />
 		<text name="gui_ad_preCallLevel"						text="Уровень предварительного вызова" />

@@ -106,6 +106,8 @@
 		<text name="gui_ad_drive"								text="Doorrijden" />
 		<text name="gui_ad_yes"									text="Ja" />
 		<text name="gui_ad_no"									text="Nee" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Initialiseren" />
 		<text name="ad_bga_waiting"								text="Wachten op aanhanger/silo" />
 		<text name="ad_bga_active"								text="Actief" />
@@ -149,7 +151,7 @@
 		<text name="gui_ad_ground"								text="Grondniveau" />
 		<text name="gui_ad_aboveDriver"							text="Boven de tractor" />
 		<text name="gui_ad_enableTrafficDetection"				text="Botsingdetectie" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Geavanceerde botsingsdetectie, die ook AI-verkeer, borden, hekken enz. detecteert" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Geavanceerde botsingsdetectie, die ook AI-verkeer, borden, hekken enz. detecteert Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Shovel breedte (Toevoeging)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Als de automatisch gedetecteerde shovel te klein is, kan dat met deze waarde worden verhoogd" />
 		<text name="gui_ad_preCallLevel"						text="Vulniveau eerder oproepen" />

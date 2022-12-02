@@ -104,6 +104,8 @@
 		<text name="gui_ad_drive"								text="Pokračovat" />
 		<text name="gui_ad_yes"									text="Ano" />
 		<text name="gui_ad_no"									text="Ne" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Inicializace" />
 		<text name="ad_bga_waiting"								text="Čekám na odvozce/jámu" />
 		<text name="ad_bga_active"								text="Aktivní" />
@@ -147,7 +149,7 @@
 		<text name="gui_ad_ground"								text="Na úrovni terénu" />
 		<text name="gui_ad_aboveDriver"							text="Nad vozidlem" />
 		<text name="gui_ad_enableTrafficDetection"				text="Detekovat kolize" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Pokročilá detekce překážek. Zahrnuje např. AI-provoz, značky, ploty,  atd." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Pokročilá detekce překážek. Zahrnuje např. AI-provoz, značky, ploty,  atd. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Šířka lžíce" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Pokud není šířka lžíce správně detekována, bude použita tato hodnota" />
 		<text name="gui_ad_preCallLevel"						text="Zavolat odvozce při naplnění" />

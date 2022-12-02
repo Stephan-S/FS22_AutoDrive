@@ -106,6 +106,8 @@
 		<text name="gui_ad_drive"								text="Drive on" />
 		<text name="gui_ad_yes"									text="Yes" />
 		<text name="gui_ad_no"									text="No" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Initializing" />
 		<text name="ad_bga_waiting"								text="Waiting for trailer/silo" />
 		<text name="ad_bga_active"								text="Active" />
@@ -149,7 +151,7 @@
 		<text name="gui_ad_ground"								text="Ground level" />
 		<text name="gui_ad_aboveDriver"							text="Above tractor" />
 		<text name="gui_ad_enableTrafficDetection"				text="Collision detection" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Advanced collision detection, which also detects AI-traffic, signs, fences etc" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Advanced collision detection, which also detects AI-traffic, signs, fences etc. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Shovel width (Addition)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="If automatically detected shovel width is too small, it can be increased with this value" />
 		<text name="gui_ad_preCallLevel"						text="Pre call level" />

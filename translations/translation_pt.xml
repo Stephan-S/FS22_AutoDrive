@@ -104,6 +104,8 @@
 		<text name="gui_ad_drive"								text="Conduza" />
 		<text name="gui_ad_yes"									text="Sim" />
 		<text name="gui_ad_no"									text="Não" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Inicializando" />
 		<text name="ad_bga_waiting"								text="À espera de reboque / silo" />
 		<text name="ad_bga_active"								text="Activo" />
@@ -147,7 +149,7 @@
 		<text name="gui_ad_ground"								text="Nível do solo" />
 		<text name="gui_ad_aboveDriver"							text="Acima do trator" />
 		<text name="gui_ad_enableTrafficDetection"				text="Detecção de colisão" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Detecção avançada de colisões, que também detecta tráfego de IA, sinais, cercas etc." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Detecção avançada de colisões, que também detecta tráfego de IA, sinais, cercas etc. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Largura da pá (adição)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Se a largura da pá detectada automaticamente for muito pequena, ela poderá ser aumentada com esse valor" />
 		<text name="gui_ad_preCallLevel"						text="Nível de pré-chamada" />

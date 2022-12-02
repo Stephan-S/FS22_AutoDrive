@@ -559,8 +559,8 @@ AutoDrive.settings.lineHeight = {
 }
 
 AutoDrive.settings.enableTrafficDetection = {
-    values = {false, true},
-    texts = {"gui_ad_no", "gui_ad_yes"},
+    values = {0, 1, 2},
+    texts = {"gui_ad_no", "gui_ad_FS22", "gui_ad_FS19"},
     default = 1,
     current = 1,
     text = "gui_ad_enableTrafficDetection",

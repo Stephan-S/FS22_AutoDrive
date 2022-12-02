@@ -107,6 +107,8 @@
 		<text name="gui_ad_drive"								text="Jedź dalej" />
 		<text name="gui_ad_yes"									text="Tak" />
 		<text name="gui_ad_no"									text="Nie" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Inicjowanie" />
 		<text name="ad_bga_waiting"								text="Oczekiwanie na przyczepę/silos" />
 		<text name="ad_bga_active"								text="Aktywny" />
@@ -150,7 +152,7 @@
 		<text name="gui_ad_ground"								text="Poziom gruntu" />
 		<text name="gui_ad_aboveDriver"							text="Powyżej ciągnika" />
 		<text name="gui_ad_enableTrafficDetection"				text="Wykrywanie kolizji" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Zaawansowane wykrywanie kolizji, które wykrywa również ruch AI, znaki, ogrodzenia itp" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Zaawansowane wykrywanie kolizji, które wykrywa również ruch AI, znaki, ogrodzenia itp Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Szerokość łychy (dodatek)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Jeżeli automatycznie wykryta szerokość łychy jest zbyt mała, można ją zwiększyć o tą wartość" />
 		<text name="gui_ad_preCallLevel"						text="Wezwij kierowcę przy" />

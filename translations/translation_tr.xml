@@ -104,6 +104,8 @@
         <text name="gui_ad_drive"                                                                           text="Sür"  />
         <text name="gui_ad_yes"                                                                             text="Evet"  />
         <text name="gui_ad_no"                                                                              text="Hayır"  />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
         <text name="ad_bga_init"                                                                            text="Başlatılıyor"  />
         <text name="ad_bga_waiting"                                                                         text="Treyler / silo bekleniyor"  />
         <text name="ad_bga_active"                                                                          text="Aktif"  />
@@ -147,7 +149,7 @@
         <text name="gui_ad_ground"                                                                          text="Zemin kat"  />
         <text name="gui_ad_aboveDriver"                                                                     text="Traktörün üstünde"  />
         <text name="gui_ad_enableTrafficDetection"                                                          text="Çarpışma algılama"  />
-        <text name="gui_ad_enableTrafficDetection_tooltip"                                                  text="Yapay zeka trafiğini, işaretleri, çitleri vb. Algılayan gelişmiş çarpışma algılama"  />
+        <text name="gui_ad_enableTrafficDetection_tooltip"                                                  text="Yapay zeka trafiğini, işaretleri, çitleri vb. Algılayan gelişmiş çarpışma algılama Off, detect FS 22 or FS 19 collision"  />
         <text name="gui_ad_shovelWidth"                                                                     text="Kürek genişliği (Ekleme)"  />
         <text name="gui_ad_shovelWidth_tooltip"                                                             text="Otomatik olarak algılanan kepçe genişliği çok küçükse bu değer ile artırılabilir."  />
         <text name="gui_ad_preCallLevel"                                                                    text="Çağrı öncesi seviyesi"  />

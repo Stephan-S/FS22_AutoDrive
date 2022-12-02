@@ -106,6 +106,8 @@
 		<text name="gui_ad_drive"								text="Continuer" />
 		<text name="gui_ad_yes"									text="Oui" />
 		<text name="gui_ad_no"									text="Non" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Initialisation" />
 		<text name="ad_bga_waiting"								text="En attente de remorque/silo" />
 		<text name="ad_bga_active"								text="Actif" />
@@ -149,7 +151,7 @@
 		<text name="gui_ad_ground"								text="Niveau du sol" />
 		<text name="gui_ad_aboveDriver"							text="Au-dessus du tracteur" />
 		<text name="gui_ad_enableTrafficDetection"				text="Détection de collision" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Permet la détection de collision avancée, qui réagit également au trafic des PNJ, aux panneaux, aux clôtures, etc..." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Permet la détection de collision avancée, qui réagit également au trafic des PNJ, aux panneaux, aux clôtures, etc... Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Largeur du godet (augmentation)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Si la largeur détectée est trop petite, elle peut être augmentée." />
 		<text name="gui_ad_preCallLevel"						text="Appel anticipé pour décharger" />

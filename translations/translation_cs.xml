@@ -106,6 +106,8 @@
 		<text name="gui_ad_drive"								text="继续驾驶" />
 		<text name="gui_ad_yes"									text="是" />
 		<text name="gui_ad_no"									text="否" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="初始化" />
 		<text name="ad_bga_waiting"								text="等待拖车/筒仓" />
 		<text name="ad_bga_active"								text="活跃" />
@@ -149,7 +151,7 @@
 		<text name="gui_ad_ground"								text="地面" />
 		<text name="gui_ad_aboveDriver"							text="拖拉机上方" />
 		<text name="gui_ad_enableTrafficDetection"				text="碰撞检测" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="高级碰撞检测，还可以检测 AI 交通、标志、围栏等。" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="高级碰撞检测，还可以检测 AI 交通、标志、围栏等。 Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="工具宽度（加法）" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="如果自动检测到的工具宽度太小，可以增加这个值" />
 		<text name="gui_ad_preCallLevel"						text="预呼叫级别" />
