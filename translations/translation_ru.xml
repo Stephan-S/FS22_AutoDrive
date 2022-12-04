@@ -3,9 +3,9 @@
 	<translationContributors>Gonimy_Vetrom</translationContributors>
 	<texts>
 		<text name="UNKNOWN"									text="НЕИЗВЕСТНО" />
-		<text name="input_ADToggleHud"							text="AD: Отображение HUD" />
+		<text name="input_ADToggleHud"							text="AD: HUD" />
 		<text name="input_ADToggleHudExtension"					text="AD: Отображать информацию HUD" />
-		<text name="input_ADToggleMouse"						text="AD: Отображение курсора" />
+		<text name="input_ADToggleMouse"						text="AD: Курсор" />
 		<text name="input_ADEnDisable"							text="AD: Вкл/Выкл" />
 		<text name="input_ADSilomode"							text="AD: Изменить режим" />
 		<text name="input_ADPreviousMode"						text="AD: Предыдущий режим" />
@@ -36,7 +36,7 @@
 		<text name="input_ADDebugDeleteDestination"				text="AD: Удалить ближайшую локацию" />
 		<text name="input_ADSelectNextFillType"					text="AD: Выбрать следующую продукцию" />
 		<text name="input_ADSelectPreviousFillType"				text="AD: Выбрать предыдущую продукцию" />
-		<text name="input_ADOpenGUI"							text="AD: Открыть настройки" />
+		<text name="input_ADOpenGUI"							text="AD: Настройки" />
 		<text name="input_ADCallDriver"							text="AD: Вызвать разгружающего водителя" />
 		<text name="input_ADGoToVehicle"						text="AD: Пересесть в прибывшую технику" />
 		<text name="input_ADNameDriver"							text="AD: Назначить водителю имя" />
@@ -88,7 +88,7 @@
 		<text name="gui_ad_collisionHeigth"						text="Высота преград над землёй" />
 		<text name="gui_ad_collisionHeigth_tooltip"				text="Настройка для обнаружения столкновений/преград перед автомобилем. Если во время движения другие транспортные средства не обнаруживаются, постепенно уменьшайте параметр. (По умолчанию 2 м)" />
 		<text name="gui_ad_blinkValue"							text="Указатели поворотов" />
-		<text name="gui_ad_blinkValue_tooltip"					text="Угол поворота рулевого колеса для автовключения сигналов поворота (0 = автовключение поворотников отключено)." />
+		<text name="gui_ad_blinkValue_tooltip"					text="Угол поворота рулевого колеса для автовключения сигналов поворота (0 = автовключение отключено)." />
 		<text name="gui_ad_pipe_offset"							text="Смещение трубы" />
 		<text name="gui_ad_followDistance"						text="Расстояние до комбайна" />
 		<text name="gui_ad_followDistance_tooltip"				text="Расстояние до комбайна при следовании за ним сзади." />
@@ -151,7 +151,7 @@
 		<text name="gui_ad_ground"								text="на уровне земли" />
 		<text name="gui_ad_aboveDriver"							text="над техникой" />
 		<text name="gui_ad_enableTrafficDetection"				text="Обнаружение преград" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Продвинутое определение преград/коллизий, которое также обнаруживает AI-трафик, знаки, заборы и т.д. Off, detect FS 22 or FS 19 collision" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Продвинутое определение преград/коллизий, которое также обнаруживает AI-трафик, знаки, заборы и т.д. Отключено, обнаружение FS 22 или FS 19 столкновение" />
 		<text name="gui_ad_shovelWidth"							text="Добавочная ширина ковша" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Если автоматически определенная ширина ковша слишком мала, ее можно увеличить с помощью этого значения." />
 		<text name="gui_ad_preCallLevel"						text="Уровень предварительного вызова" />
@@ -215,8 +215,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Использовать режим широкого HUD, который также позволяет использовать еще несколько кнопок настройки в HUD." />
 		<text name="gui_ad_playSounds"							text="Звук" />
 		<text name="gui_ad_playSounds_tooltip"					text="Включает звуковые эффекты для щелчков мыши и уведомлений." />
-		<text name="gui_ad_scaleLines"							text="Scale Lines" />
-		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
+		<text name="gui_ad_scaleLines"							text="Размер линий" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Размер толщины линий соединений." />
 		<text name="gui_ad_syncMultiTargets"					text="Синхронизация нескольких локаций" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Если несколько водителей едут в одно и то же место, выбор места назначения синхронизируется." />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Припарковать по завершению" />
@@ -275,7 +275,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Рендеринг" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Дорожная сеть" />
 		<text name="gui_ad_debugChannelBGA"						text="Режим BGA" />
-		<text name="gui_ad_debugChannelTrains"					text="Trains" />
+		<text name="gui_ad_debugChannelTrains"					text="Поезда" />
 		<text name="gui_ad_debugChannelAll" 					text="Все" />
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Уведомления" />
