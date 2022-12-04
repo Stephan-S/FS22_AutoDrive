@@ -109,6 +109,7 @@ source(Utils.getFilename("scripts/Modules/TrailerModule.lua", g_currentModDirect
 source(Utils.getFilename("scripts/Modules/PathFinderModule.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Modules/StateModule.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Modules/RecordingModule.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Modules/TrainModule.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Modes/AbstractMode.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Modes/DriveToMode.lua", g_currentModDirectory))
@@ -165,7 +166,7 @@ function AutoDriveRegister.register()
     end
 
     for vehicleType, typeDef in pairs(g_vehicleTypeManager.types) do
-        if typeDef ~= nil and vehicleType ~= "locomotive" and vehicleType ~= "horse" and (not typeDef.hasADSpec == true) then
+        if typeDef ~= nil and vehicleType ~= "horse" and (not typeDef.hasADSpec == true) then
             if AutoDrive.prerequisitesPresent(typeDef.specializations) then
                 --Logging.info('[AD] Attached to vehicleType "%s"', vehicleType)
                 if typeDef.specializationsByName[AutoDrive.ADSpecName] == nil then
@@ -193,7 +194,7 @@ function AutoDriveRegister.registerVehicleData()
 	end
 
 	for vehicleType, typeDef in pairs(g_vehicleTypeManager.types) do
-		if typeDef ~= nil and vehicleType ~= "locomotive" and vehicleType ~= "horse" and (not typeDef.hasADVDSpec == true) then
+		if typeDef ~= nil and vehicleType ~= "horse" and (not typeDef.hasADVDSpec == true) then
 			if AutoDriveVehicleData.prerequisitesPresent(typeDef.specializations) then
 				if typeDef.specializationsByName[AutoDrive.ADVDSpecName] == nil then
 					g_vehicleTypeManager:addSpecialization(vehicleType, AutoDrive.ADVDSpecName)

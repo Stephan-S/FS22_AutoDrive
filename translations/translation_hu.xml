@@ -104,6 +104,8 @@
 		<text name="gui_ad_drive"								text="Sofőr be" />
 		<text name="gui_ad_yes"									text="Igen" />
 		<text name="gui_ad_no"									text="Nem" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Elindítás" />
 		<text name="ad_bga_waiting"								text="Várakozás pótkocsira" />
 		<text name="ad_bga_active"								text="Aktív" />
@@ -147,7 +149,7 @@
 		<text name="gui_ad_ground"								text="Talajszinten" />
 		<text name="gui_ad_aboveDriver"							text="Traktor felett" />
 		<text name="gui_ad_enableTrafficDetection"				text="Ütközésészlelés" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Fejlett ütközésészlelés, amely észleli a forgalmat, a táblákat, a kerítéseket stb" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Fejlett ütközésészlelés, amely észleli a forgalmat, a táblákat, a kerítéseket stb Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Kanál szélessége" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Ha az automatikusan felismert szélesség túl kicsi, ezzel növelhető" />
 		<text name="gui_ad_preCallLevel"						text="Hívás előtti szint" />
@@ -211,6 +213,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Használjon széles HUD módot, amely lehetővé teszi még néhány beállítási gombot a HUD-ban" />
 		<text name="gui_ad_playSounds"							text="Sound" />
 		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Több cél szinkronizálása" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Több útvonal, amely ugyanazt a mappát használja több célhoz, szinkronizálja a következő célokat" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Parkolás a végén" />
@@ -267,6 +271,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Rendering" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Úthálózat" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Mind" />
 		<text name="gui_ad_notificationHistoryTitle" 			text="Értesítések" />
 

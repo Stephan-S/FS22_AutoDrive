@@ -13,6 +13,9 @@ function StopAndDisableADTask:setUp()
     self.vehicle.ad.specialDrivingModule:stopVehicle()
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
+    if self.vehicle.spec_locomotive then
+        self.vehicle:raiseActive()
+    end
 end
 
 function StopAndDisableADTask:update(dt)
@@ -32,10 +35,6 @@ end
 
 function StopAndDisableADTask:finished()
     self.vehicle.ad.taskModule:setCurrentTaskFinished(self.propagate)
-end
-
-function StopAndDisableADTask:getInfoText()
-    return g_i18n:getText("AD_task_stop_and_disable")
 end
 
 function StopAndDisableADTask:getI18nInfo()

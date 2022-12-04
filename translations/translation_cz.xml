@@ -104,6 +104,8 @@
 		<text name="gui_ad_drive"								text="Pokračovat" />
 		<text name="gui_ad_yes"									text="Ano" />
 		<text name="gui_ad_no"									text="Ne" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Inicializace" />
 		<text name="ad_bga_waiting"								text="Čekám na odvozce/jámu" />
 		<text name="ad_bga_active"								text="Aktivní" />
@@ -147,7 +149,7 @@
 		<text name="gui_ad_ground"								text="Na úrovni terénu" />
 		<text name="gui_ad_aboveDriver"							text="Nad vozidlem" />
 		<text name="gui_ad_enableTrafficDetection"				text="Detekovat kolize" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Pokročilá detekce překážek. Zahrnuje např. AI-provoz, značky, ploty,  atd." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Pokročilá detekce překážek. Zahrnuje např. AI-provoz, značky, ploty,  atd. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Šířka lžíce" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Pokud není šířka lžíce správně detekována, bude použita tato hodnota" />
 		<text name="gui_ad_preCallLevel"						text="Zavolat odvozce při naplnění" />
@@ -213,6 +215,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Použijte široký režim HUD, který také umožňuje několik dalších tlačítek pro nastavení v HUD" />
 		<text name="gui_ad_playSounds"							text="Zvuk" />
 		<text name="gui_ad_playSounds_tooltip"					text="Umožňuje zvukové efekty pro kliknutí myší a upozornění" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizujte více cílů" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Více řidičů používá stejnou složku s více cíly a budou  sychronizovány s dalšími cíly" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkovat po dokončení práce" />
@@ -272,6 +276,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Vykreslování" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Silniční síť" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Všechno" />
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Oznámení" />

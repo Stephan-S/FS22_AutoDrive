@@ -12,7 +12,10 @@ function DriveToDestinationTask:new(vehicle, destinationID)
 end
 
 function DriveToDestinationTask:setUp()
-    if ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        self.state = DriveToDestinationTask.STATE_DRIVING
+        self.vehicle.ad.trainModule:setPathTo(self.destinationID)
+    elseif ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = DriveToDestinationTask.STATE_PATHPLANNING
         self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.destinationID)
     else
@@ -56,15 +59,6 @@ end
 
 function DriveToDestinationTask:finished(propagate)
     self.vehicle.ad.taskModule:setCurrentTaskFinished(propagate)
-end
-
-function DriveToDestinationTask:getInfoText()
-    if self.state == DriveToDestinationTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        return g_i18n:getText("AD_task_pathfinding") .. string.format(" %d / %d ", actualState, maxStates)
-    else
-        return g_i18n:getText("AD_task_drive_to_destination")
-    end
 end
 
 function DriveToDestinationTask:getI18nInfo()

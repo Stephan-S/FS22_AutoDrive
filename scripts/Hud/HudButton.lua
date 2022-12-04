@@ -252,9 +252,7 @@ function ADHudButton:act(vehicle, posX, posY, isDown, isUp, button)
         end
 
         if button == 1 and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
-            local storedVehicle = nil
             ADInputManager:onInputCall(vehicle, self.primaryAction)
-            SpecializationUtil.raiseEvent(vehicle, "onUpdate", 16, false, false, false)
             return true
         elseif (button == 3 or button == 2) and isUp and not AutoDrive.leftLSHIFTmodifierKeyPressed then
             ADInputManager:onInputCall(vehicle, self.secondaryAction)

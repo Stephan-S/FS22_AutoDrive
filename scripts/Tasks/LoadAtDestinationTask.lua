@@ -15,7 +15,10 @@ function LoadAtDestinationTask:new(vehicle, destinationID)
 end
 
 function LoadAtDestinationTask:setUp()
-    if ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        self.state = LoadAtDestinationTask.STATE_DRIVING
+        self.vehicle.ad.trainModule:setPathTo(self.destinationID)
+    elseif ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = LoadAtDestinationTask.STATE_PATHPLANNING
         --if self.vehicle.ad.restartCP == true then
             --if self.vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD then

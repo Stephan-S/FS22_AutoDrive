@@ -251,7 +251,9 @@ function AutoDrive.cycleEditMode()
                 ADGraphManager:deleteColorSelectionWayPoints()
             end
             if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
-                vehicle.ad.stateModule:disableCreationMode()
+                if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+                    vehicle.ad.stateModule:disableCreationMode()
+                end
             end
         end
     end
@@ -266,7 +268,9 @@ function AutoDrive.cycleEditorShowMode()
         else
             AutoDrive.setEditorMode(AutoDrive.EDITOR_OFF)
             if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
-                vehicle.ad.stateModule:disableCreationMode()
+                if not AutoDrive.experimentalFeatures.RecordWhileNotInVehicle then
+                    vehicle.ad.stateModule:disableCreationMode()
+                end
             end
         end
     end
@@ -347,10 +351,12 @@ function AutoDrive.foldAllImplements(vehicle)
                 local toggledFoldDirection = implement:getToggledFoldDirection()
                 -- local ret = Foldable.actionControllerFoldEvent(implement, -1)
                 if implement.getIsFoldAllowed and toggledFoldDirection and implement:getIsFoldAllowed(toggledFoldDirection) and implement.setFoldState then
-                    implement:setFoldState(toggledFoldDirection)
+                    implement:setFoldState(toggledFoldDirection, false)
                 end
             end
         end
+        -- combine handle ladder separate when enter or leave combine
+        AutoDrive.foldLadder(implement)
     end
 end
 
@@ -378,14 +384,46 @@ function AutoDrive.getAllImplementsFolded(vehicle)
             if spec ~= nil then
                 ret = ret and AutoDrive.isVehicleFolded(implement)
             end
+            -- combine handle ladder separate when enter or leave combine
+            ret = ret and AutoDrive.isLadderFolded(implement)
+        end
+    end
+    return ret
+end
+
+function AutoDrive.foldLadder(vehicle)
+    local spec = vehicle.spec_combine
+    if spec ~= nil then
+        local ladder = spec.ladder
+        if ladder and ladder.animName and ladder.foldDirection and vehicle.getAnimationTime then
+            if not vehicle:getIsAnimationPlaying(ladder.animName) then
+                vehicle:playAnimation(ladder.animName, -ladder.foldDirection, vehicle:getAnimationTime(ladder.animName), true)
+            end
+        end
+    end
+end
+
+function AutoDrive.isLadderFolded(vehicle)
+    local ret = true
+    local spec = vehicle.spec_combine
+    if spec then
+        local ladder = spec.ladder
+        if ladder and ladder.animName and vehicle.getAnimationTime then
+            local foldAnimTime = vehicle:getAnimationTime(ladder.animName)
+            if foldAnimTime then
+                if ladder.foldDirection == 1 then
+                    ret = ret and (foldAnimTime < 0.01)
+                else
+                    ret = ret and (foldAnimTime >= 1)
+                end
+            end
         end
     end
     return ret
 end
 
 function AutoDrive.isVehicleFolded(vehicle)
-    local spec
-    spec = vehicle.spec_foldable
+    local spec = vehicle.spec_foldable
     if spec ~= nil and #spec.foldingParts > 0 then
         return spec.turnOnFoldDirection == -1 and spec.foldAnimTime >= 0.99 or spec.turnOnFoldDirection == 1 and spec.foldAnimTime <= 0.01
     end
@@ -465,6 +503,16 @@ function AutoDrive:getIsEntered(vehicle)
         end
     end
     return user ~= nil
+end
+
+function AutoDrive:getAIFrameFarmId()
+    local actualFarmId = nil
+    if AutoDrive.aiFrameOpen and AutoDrive.aiFrameVehicle and AutoDrive.aiFrameVehicle.ad and AutoDrive.aiFrameVehicle.ad.stateModule then
+        if g_currentMission and g_currentMission.player and g_currentMission.player.farmId and g_currentMission.player.farmId > 0 then
+            actualFarmId = g_currentMission.player.farmId
+        end
+    end
+    return actualFarmId
 end
 
 function AutoDrive:getColorKeyNames()

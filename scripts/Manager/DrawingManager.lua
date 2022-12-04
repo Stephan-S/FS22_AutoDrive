@@ -348,7 +348,8 @@ function ADDrawingManager:drawLine(id, task)
 
     setTranslation(id, task.sx, task.sy + self.yOffset, task.sz)
 
-    setScale(id, 1, 1, distToNextPoint)
+    local scaleLines = AutoDrive.getSetting("scaleLines") or 1
+    setScale(id, scaleLines, scaleLines, distToNextPoint)
 
     -- Set the direction of the line
     setRotation(id, rotX, rotY, 0)
@@ -386,6 +387,9 @@ function ADDrawingManager:drawArrow(id, task)
 
     setTranslation(id, x, y + self.yOffset, z)
 
+    local scaleLines = AutoDrive.getSetting("scaleLines") or 1
+    setScale(id, scaleLines, scaleLines, scaleLines)
+
     -- Set the direction of the arrow
     setRotation(id, rotX, rotY, 0)
 
@@ -409,6 +413,8 @@ end
 
 function ADDrawingManager:drawCross(id, task)
     setTranslation(id, task.x, task.y + self.yOffset, task.z)
+    local scaleLines = AutoDrive.getSetting("scaleLines") or 1
+    setScale(id, scaleLines, scaleLines, scaleLines)
     setVisibility(id, true)
 end
 

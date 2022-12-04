@@ -106,6 +106,8 @@
 		<text name="gui_ad_drive"								text="Следовать к" />
 		<text name="gui_ad_yes"									text="Да" />
 		<text name="gui_ad_no"									text="Нет" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Инициализация" />
 		<text name="ad_bga_waiting"								text="В ожидании прицепа/бункера" />
 		<text name="ad_bga_active"								text="Активно" />
@@ -149,7 +151,7 @@
 		<text name="gui_ad_ground"								text="на уровне земли" />
 		<text name="gui_ad_aboveDriver"							text="над техникой" />
 		<text name="gui_ad_enableTrafficDetection"				text="Обнаружение преград" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Продвинутое определение преград/коллизий, которое также обнаруживает AI-трафик, знаки, заборы и т.д." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Продвинутое определение преград/коллизий, которое также обнаруживает AI-трафик, знаки, заборы и т.д. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Добавочная ширина ковша" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Если автоматически определенная ширина ковша слишком мала, ее можно увеличить с помощью этого значения." />
 		<text name="gui_ad_preCallLevel"						text="Уровень предварительного вызова" />
@@ -213,6 +215,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Использовать режим широкого HUD, который также позволяет использовать еще несколько кнопок настройки в HUD." />
 		<text name="gui_ad_playSounds"							text="Звук" />
 		<text name="gui_ad_playSounds_tooltip"					text="Включает звуковые эффекты для щелчков мыши и уведомлений." />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Синхронизация нескольких локаций" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Если несколько водителей едут в одно и то же место, выбор места назначения синхронизируется." />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Припарковать по завершению" />
@@ -271,6 +275,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Рендеринг" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Дорожная сеть" />
 		<text name="gui_ad_debugChannelBGA"						text="Режим BGA" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Все" />
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Уведомления" />

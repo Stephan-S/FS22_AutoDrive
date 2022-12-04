@@ -104,6 +104,8 @@
         <text name="gui_ad_drive"                                                                           text="Sür"  />
         <text name="gui_ad_yes"                                                                             text="Evet"  />
         <text name="gui_ad_no"                                                                              text="Hayır"  />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
         <text name="ad_bga_init"                                                                            text="Başlatılıyor"  />
         <text name="ad_bga_waiting"                                                                         text="Treyler / silo bekleniyor"  />
         <text name="ad_bga_active"                                                                          text="Aktif"  />
@@ -147,7 +149,7 @@
         <text name="gui_ad_ground"                                                                          text="Zemin kat"  />
         <text name="gui_ad_aboveDriver"                                                                     text="Traktörün üstünde"  />
         <text name="gui_ad_enableTrafficDetection"                                                          text="Çarpışma algılama"  />
-        <text name="gui_ad_enableTrafficDetection_tooltip"                                                  text="Yapay zeka trafiğini, işaretleri, çitleri vb. Algılayan gelişmiş çarpışma algılama"  />
+        <text name="gui_ad_enableTrafficDetection_tooltip"                                                  text="Yapay zeka trafiğini, işaretleri, çitleri vb. Algılayan gelişmiş çarpışma algılama Off, detect FS 22 or FS 19 collision"  />
         <text name="gui_ad_shovelWidth"                                                                     text="Kürek genişliği (Ekleme)"  />
         <text name="gui_ad_shovelWidth_tooltip"                                                             text="Otomatik olarak algılanan kepçe genişliği çok küçükse bu değer ile artırılabilir."  />
         <text name="gui_ad_preCallLevel"                                                                    text="Çağrı öncesi seviyesi"  />
@@ -211,6 +213,8 @@
         <text name="gui_ad_wideHUD_tooltip"                                                                 text="HUD'da birkaç ayar düğmesine daha izin veren geniş HUD modunu kullanın"  />
         <text name="gui_ad_playSounds"							                                            text="Sound" />
 		<text name="gui_ad_playSounds_tooltip"					                                            text="Enables the sound effects for mouse clicks and notifications" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
         <text name="gui_ad_syncMultiTargets"                                                                text="Birden çok hedefi senkronize et"  />
         <text name="gui_ad_syncMultiTargets_tooltip"                                                        text="Birden çok hedef için aynı klasörü kullanan birden çok sürücü, sonraki hedefleri senkronize edecek"  />
         <text name="gui_ad_enableParkAtJobFinished"                                                         text="Park işi tamamlandı"  />
@@ -270,6 +274,7 @@
         <text name="gui_ad_debugChannelRender"                                                              text="İşleme"  />
         <text name="gui_ad_debugChannelRoadNetwork"                                                         text="Karayolu ağı"  />
 		<text name="gui_ad_debugChannelBGA"						                                                      text="BGA Mode" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
         <text name="gui_ad_debugChannelAll"                                                                 text="Herşey"  />
                                                                                                             
         <text name="gui_ad_notificationHistoryTitle"                                                        text="Bildirimler"  />
