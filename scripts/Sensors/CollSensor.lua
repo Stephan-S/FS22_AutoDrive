@@ -119,41 +119,16 @@ function ADCollSensor:buildMask()
 end
 
 function ADCollSensor:buildMask_FS22()
-    local mask = 0
-
--- ?? 0:
--- # main collisions
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
--- 2: "STATIC_WORLD_WITHOUT_DELTA: Deprecated in FS22: Do not use it anymore!",
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_AI_BLOCKING - 1)
--- 6: "TRACTOR: Deprecated in FS22: Do not use it anymore!",
--- 7: "COMBINE: Deprecated in FS22: Do not use it anymore!",
-    mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN_DELTA - 1)
--- # identifiers
-    mask = mask + math.pow(2, ADCollSensor.mask_TREE - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1) -- used by PalletUnloadTrigger which seems not used yet
-    -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL - 1)
--- ?? 17:
-    -- mask = mask + math.pow(2, ADCollSensor.mask_AI_DRIVABLE - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_GROUND_TIP_BLOCKING - 1)
--- # triggers
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_PLAYER - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_VEHICLE - 1)
--- 22: "TRIGGER_COMBINE: Deprecated in FS22: Do not use it anymore!",
--- 23: "TRIGGER_FILLABLE: Deprecated in FS22: Do not use it anymore!",
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_DYNAMIC_OBJECT - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_TRAFFIC_VEHICLE_BLOCKING - 1)
--- 26: "TRIGGER_CUTTER: Deprecated in FS22: Do not use it anymore!",
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_FORK - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_ANIMAL - 1)
--- ?? 29:
-    -- mask = mask + math.pow(2, ADCollSensor.mask_FILLABLE - 1)
+    local mask = CollisionFlag.STATIC_WORLD; -- Collision with terrain, terrainHeight and static objects (bit 2)	
+	
+	mask = mask + CollisionFlag.STATIC_OBJECTS; -- Collision with static objects (bit 3)
+	mask = mask + CollisionFlag.STATIC_OBJECT; -- A static object (bit 4)
+	mask = mask + CollisionFlag.AI_BLOCKING; -- Blocks the AI (bit 5)
+	mask = mask + CollisionFlag.TERRAIN; -- Collision with terrain (bit 8)
+	mask = mask + CollisionFlag.TERRAIN_DELTA; -- Collision with terrain delta (bit 9)
+	mask = mask + CollisionFlag.TREE; -- A tree (bit 11)
+	mask = mask + CollisionFlag.DYNAMIC_OBJECT; -- A dynamic object (bit 12)
+	mask = mask + CollisionFlag.VEHICLE; -- A vehicle (bit 13)
 
     return mask
 end
