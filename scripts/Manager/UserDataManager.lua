@@ -153,8 +153,8 @@ end
 
 function ADUserDataManager:applyUserSettings(hudX, hudY, settings)
     Logging.info("[AD] ADUserDataManager: apply user settings")
-    AutoDrive.Hud:createHudAt(hudX, hudY)
     for sn, sv in pairs(settings) do
         AutoDrive.setSettingState(sn, sv)
     end
+    AutoDrive.Hud:createHudAt(hudX, hudY)
 end

@@ -281,11 +281,6 @@ function AutoDrive:onPostLoad(savegame)
     self.ad.sToolTip = ""
     self.ad.destinationFilterText = ""
 
-    if AutoDrive.showingHud ~= nil then
-        self.ad.showingHud = AutoDrive.showingHud
-    else
-        self.ad.showingHud = true
-    end
     self.ad.showingMouse = false
 
     self.ad.lastMouseState = false
@@ -523,14 +518,8 @@ function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
 end
 
 function AutoDrive:onDraw()
-    if self.ad.showingHud ~= AutoDrive.Hud.showHud then
-        AutoDrive.Hud:toggleHud(self)
-    end
-
-    if AutoDrive.Hud ~= nil then
-        if AutoDrive.Hud.showHud == true then
-            AutoDrive.Hud:drawHud(self)
-        end
+    if AutoDrive.getSetting("showHUD") then
+        AutoDrive.Hud:drawHud(self)
     end
 
     if AutoDrive.getSetting("showNextPath") == true then
@@ -1121,13 +1110,13 @@ function AutoDrive:stopAutoDrive()
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
             end
 
-                if self.ad.onRouteToPark then 
-                    SpecializationUtil.raiseEvent(self, "onAutoDriveParked")
-                end
+            if self.ad.onRouteToPark then 
+                SpecializationUtil.raiseEvent(self, "onAutoDriveParked")
+            end
 
-                if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
-                    self.ad.onRouteToPark = false
-                end
+            if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
+                self.ad.onRouteToPark = false
+            end
 
             if not self.spec_locomotive then
                 if self.ad.sensors ~= nil then

@@ -900,6 +900,18 @@ AutoDrive.settings.wideHUD = {
     isUserSpecific = true
 }
 
+AutoDrive.settings.showHUD = {
+    values = {false, true},
+    texts = {"gui_ad_no", "gui_ad_yes"},
+    default = 1,
+    current = 1,
+    text = "",
+    tooltip = "",
+    translate = false,
+    isVehicleSpecific = false,
+    isUserSpecific = true
+}
+
 AutoDrive.settings.EditorMode = {
     values = {1, 2, 3, 4},
     texts = {"EDITOR_OFF", "EDITOR_ON", "EDITOR_EXTENDED", "EDITOR_SHOW"},
