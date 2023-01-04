@@ -614,7 +614,8 @@ function ADTrailerModule:lookForPossibleUnloadTrigger(trailer)
         local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
         if triggerX ~= nil then
             if distanceToTarget ~= nil and
-                (distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") 
+                -- (distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") 
+                (trigger.bunkerSiloArea == nil
                 or (trigger.bunkerSiloArea ~= nil and distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH))
                 or (trigger.baleTrigger ~= nil and distanceToTarget < math.max(AutoDrive.getSetting("maxTriggerDistance"), 25))
                 )
