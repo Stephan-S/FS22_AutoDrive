@@ -282,48 +282,36 @@ end
 
 -- returns only suitable fuel triggers according to required fuel types
 function ADTriggerManager.getRefuelTriggers(vehicle, ignoreFillLevel)
-
-
     local refuelTriggers = {}
     local refuelFillTypes = AutoDrive.getRequiredRefuels(vehicle, ignoreFillLevel)
     if #refuelFillTypes > 0 then
 
         for _, trigger in pairs(ADTriggerManager.getLoadTriggers()) do
-            --loadTriggers
-            -- vanilla LoadingStation
             local fillLevels = {}
-            if trigger.source ~= nil and trigger.source.getAllFillLevels ~= nil then
+
+            if trigger.source and trigger.source.getAllFillLevels then
                 fillLevels, _ = trigger.source:getAllFillLevels(vehicle:getOwnerFarmId())
             end
-            -- GC trigger
-            local gcFillLevels = {}
-            if trigger.source ~= nil and trigger.source.getAllProvidedFillLevels ~= nil then
-                gcFillLevels, _ = trigger.source:getAllProvidedFillLevels(vehicle:getOwnerFarmId(), trigger.managerId)
-            end
-            if table.count(fillLevels) == 0 and table.count(gcFillLevels) == 0 and trigger.source ~= nil and trigger.source.gcId ~= nil and trigger.source.fillLevels ~= nil then
-                for index, fillLevel in pairs(trigger.source.fillLevels) do
-                    if fillLevel ~= nil and fillLevel[1] ~= nil then
-                        fillLevels[index] = fillLevel[1]
-                    end
-                end
-            end
 
-            if #refuelFillTypes > 0 then
+            if table.count(fillLevels) > 0 then
+                local hasFill = false
                 for _, refuelFillType in pairs(refuelFillTypes) do
-                    local hasFill = (fillLevels[refuelFillType] ~= nil and fillLevels[refuelFillType] > 0) or (gcFillLevels[refuelFillType] ~= nil and gcFillLevels[refuelFillType] > 0)
-
-                    local isVehicleTrigger = true
-                    if AutoDrive.experimentalFeatures.RefuelOnlyAtValidStations == true then
-                        isVehicleTrigger = trigger.triggerNode and CollisionFlag.getHasFlagSet(trigger.triggerNode, CollisionFlag.TRIGGER_VEHICLE)
-                        AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADTriggerManager.getRefuelTriggers hasFill %s isVehicleTrigger %s", tostring(hasFill), tostring(isVehicleTrigger))
-                        if isVehicleTrigger then
-                            local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
-                            AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADTriggerManager.getRefuelTriggers Pos: %s,%s", tostring(triggerX), tostring(triggerZ))
+                    if trigger.fillTypes and trigger.fillTypes[refuelFillType] then
+                        hasFill = hasFill or (fillLevels[refuelFillType] and fillLevels[refuelFillType] > 0)
+                        if hasFill then
+                            local isVehicleTrigger = true
+                            if AutoDrive.experimentalFeatures.RefuelOnlyAtValidStations == true then
+                                isVehicleTrigger = trigger.triggerNode and CollisionFlag.getHasFlagSet(trigger.triggerNode, CollisionFlag.TRIGGER_VEHICLE)
+                                AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADTriggerManager.getRefuelTriggers hasFill %s isVehicleTrigger %s", tostring(hasFill), tostring(isVehicleTrigger))
+                                if isVehicleTrigger then
+                                    local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
+                                    AutoDrive.debugPrint(vehicle, AutoDrive.DC_VEHICLEINFO, "ADTriggerManager.getRefuelTriggers Pos: %s,%s", tostring(triggerX), tostring(triggerZ))
+                                end
+                            end
+                            if isVehicleTrigger and not table.contains(refuelTriggers, trigger) then
+                                table.insert(refuelTriggers, trigger)
+                            end
                         end
-                    end
-
-                    if isVehicleTrigger and hasFill and not table.contains(refuelTriggers, trigger) then
-                        table.insert(refuelTriggers, trigger)
                     end
                 end
             end

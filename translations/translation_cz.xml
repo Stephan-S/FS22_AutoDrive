@@ -307,7 +307,7 @@
 		<text name="AD_task_catch_up_with_combine"				text="Párování s kombajnem" />
 		<text name="AD_task_clearcrop"							text="Odstranění plodin" />
 		<text name="AD_task_drive_to_destination"				text="Jedu do místa určení" />
-		<text name="AD_task_drive_to_vehicle"					text="Jedu k vybranímu vozidlu" />
+		<text name="AD_task_drive_to_vehicle"					text="Jedu k vybranému vozidlu" />
 		<text name="AD_task_drive_to_combine_pipe"				text="Jedu ke komínu kombajnu" />
 		<text name="AD_task_unloading_combine"					text="Vykládám kombajn" />
 		<text name="AD_task_reversing_from_combine"				text="Couvám od kombajnu" />

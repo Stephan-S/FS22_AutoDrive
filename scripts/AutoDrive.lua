@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.9"
+AutoDrive.version = "2.0.1.0-RC"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -290,11 +290,8 @@ function AutoDrive:drawBaseMission()
 		AutoDrive.drawNetworkOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
             if AutoDrive.aiFrameVehicle.ad and AutoDrive.aiFrameVehicle.ad.stateModule then
-                if AutoDrive.aiFrameVehicle.ad.showingHud ~= AutoDrive.Hud.showHud then
-                    AutoDrive.Hud:toggleHud(AutoDrive.aiFrameVehicle)
-                end
                 if AutoDrive.Hud ~= nil then
-                    if AutoDrive.Hud.showHud == true then
+                    if AutoDrive.getSetting("showHUD") then
                         AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
                     end
                 end
@@ -573,8 +570,11 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 
 	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
-        if vehicle ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then
-            AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+        if vehicle and vehicle.ad and vehicle.ad.stateModule then
+            if AutoDrive.getSetting("showHUD") then
+                -- pass event to vehicle with active HUD
+                AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+            end
 		end
 
 		ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
@@ -640,11 +640,9 @@ function AutoDrive:update(dt)
 		AutoDrive.debugDrawBoundingBoxForVehicles()
 	end
 
-	if AutoDrive.Hud ~= nil then
-		if AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen then
-			AutoDrive.Hud:update(dt)
-		end
-	end
+    if AutoDrive.getSetting("showHUD") then
+        AutoDrive.Hud:update(dt)
+    end
 
 	if g_server ~= nil then
 		ADHarvestManager:update(dt)
