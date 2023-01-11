@@ -1,6 +1,5 @@
 HandleHarvesterTurnTask = ADInheritsFrom(AbstractTask)
 
-
 HandleHarvesterTurnTask.STATE_INITIAL_REVERSING = 1
 HandleHarvesterTurnTask.STATE_GENERATE_U_TURN = 2
 HandleHarvesterTurnTask.STATE_EXECUTE_U_TURN = 3
@@ -10,7 +9,6 @@ HandleHarvesterTurnTask.STATE_FINISHED = 6
 
 HandleHarvesterTurnTask.STATE_GENERATE_TURN = 10
 HandleHarvesterTurnTask.STATE_EXECUTE_TURN = 11
-
 
 HandleHarvesterTurnTask.MAX_INITIAL_REVERSING_DISTANCE = 18
 
@@ -66,7 +64,7 @@ function HandleHarvesterTurnTask:new(vehicle, combine)
     }
 
     o.currentTurn = nil
-    
+
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "HandleHarvesterTurnTask  - turnleft: " .. tostring(turnLeft) .. " angle: " .. o.turnParameters.angle)
     return o
 end
@@ -83,7 +81,7 @@ function HandleHarvesterTurnTask:reset()
 end
 
 function HandleHarvesterTurnTask:update(dt)
-    if self.aborting then        
+    if self.aborting then
         self:finished(ADTaskModule.DONT_PROPAGATE)
         self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:setToWaitForCall(true)
         return
@@ -92,7 +90,7 @@ function HandleHarvesterTurnTask:update(dt)
         self:finished()
         return
     end
-    local x, y, z = getWorldTranslation(self.vehicle.components[1].node)   
+    local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
 
     if self.state == HandleHarvesterTurnTask.STATE_GENERATE_TURN then
         if self.currentTurn == nil then
@@ -101,7 +99,7 @@ function HandleHarvesterTurnTask:update(dt)
         if self.currentTurn ~= nil and self.currentTurn:update() then
             local points = self.currentTurn:getWayPoints()
             if points ~= nil and #points > 0 then
-                self:cleanPoints(points)       
+                self:cleanPoints(points)
                 local finished, foundCollision = self:doCollisionCheck(points)
                 if finished then
                     if foundCollision then
@@ -174,7 +172,7 @@ function HandleHarvesterTurnTask:tryNextTurn()
     if not self.currentTurn.checkValidity(self.turnParameters) then
         self.currentTurn = nil
     end
-            
+
     self.lastCollisionCheckIndex = nil
     self.expectedColliCallbacks = 0
     self.colliFound = false
@@ -199,7 +197,7 @@ function HandleHarvesterTurnTask:getUturnOffsetValues(left)
     local offsetTurn = (radius*2) > (AutoDrive.getFrontToolWidth(self.combine) + 2)
     if offsetTurn then
         local offset = (radius*2) - AutoDrive.getFrontToolWidth(self.combine)
-        
+
         local offsetX = offset
         local offsetZ = 5 + ((offset - 3)/1.5) * 1
         if left then
@@ -215,7 +213,7 @@ function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, l
     local radius = AutoDrive.getDriverRadius(self.vehicle)
     local vehX, vehY, vehZ = getWorldTranslation(self.vehicle.components[1].node)
     local resolution = 20
-    
+
     local offsetX, offsetZ = self:getUturnOffsetValues(left)
     if offsetValues ~= nil then
         offsetX, offsetZ = offsetValues[1], offsetValues[2]
@@ -231,10 +229,10 @@ function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, l
 
         AutoDrive.splineInterpolationUserCurvature = 5
         local splinePoints = AutoDrive:createSplineWithControlPoints(startPos, p0, endPoint, p3)
-        AutoDrive.splineInterpolation = { 
-            valid = false 
+        AutoDrive.splineInterpolation = {
+            valid = false
         }
-    
+
         if splinePoints ~= nil and #splinePoints > 2 then
             for _, wp in pairs(splinePoints) do
                 wp.isForward = true
@@ -258,14 +256,14 @@ function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, l
             end
             point.y = AutoDrive.raycastHeight or point.y
             point.isForward = true
-            
+
             table.insert(points, point)
         end
     else
         for i = 3, (resolution + 1) do
             local circlePoint = {   x = math.cos((i-1) * math.pi / resolution) * radius - radius,
                                     y = math.sin((i-1) * math.pi / resolution) * radius }
-                                    
+
             local point = { x = startPos.x + circlePoint.x * startDirX.x + circlePoint.y * startDirZ.x, y=vehY, z = startPos.z + circlePoint.x * startDirX.z + circlePoint.y * startDirZ.z}
             local rayCastResult = AutoDrive:getTerrainHeightAtWorldPos(point.x, point.z)
             point.y = rayCastResult or point.y
@@ -275,10 +273,10 @@ function HandleHarvesterTurnTask:generateUTurn(startPos, startDirX, startDirZ, l
             end
             point.y = AutoDrive.raycastHeight or point.y
             point.isForward = true
-            
+
             table.insert(points, point)
         end
-    end        
+    end
 
     return points
 end
@@ -320,10 +318,10 @@ function HandleHarvesterTurnTask:generateReverseToCombineSection()
     if not AutoDrive.combineIsTurning(self.combine) then
         local chasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, -(sideChaseTermX + self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeSlopeCorrection()), sideChaseTermZ - 2)
         local chasePosFar = AutoDrive.createWayPointRelativeToVehicle(self.combine, -(sideChaseTermX + self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeSlopeCorrection()), sideChaseTermZ - 2 - 20)
-            
+
         if self.turnParameters.targetLeft then --left
             chasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, sideChaseTermX + self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeSlopeCorrection(), sideChaseTermZ - 2)
-            chasePosFar = AutoDrive.createWayPointRelativeToVehicle(self.combine, sideChaseTermX + self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeSlopeCorrection(), sideChaseTermZ - 2 - 20)        
+            chasePosFar = AutoDrive.createWayPointRelativeToVehicle(self.combine, sideChaseTermX + self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeSlopeCorrection(), sideChaseTermZ - 2 - 20)
         end
 
         chasePos.isReverse = true
@@ -351,7 +349,7 @@ function HandleHarvesterTurnTask:generateReverseToCombineSection()
                 chasePosFar =    {  x = harvesterTargetPosition.x + self.turnParameters.targetDir.x.x * sideChaseTermX + self.turnParameters.targetDir.z.x * (sideChaseTermZ - farPosZ),
                                     z = harvesterTargetPosition.z + self.turnParameters.targetDir.x.z * sideChaseTermX + self.turnParameters.targetDir.z.z * (sideChaseTermZ - farPosZ) }
             end
-            
+
             chasePos.y = AutoDrive:getTerrainHeightAtWorldPos(chasePos.x, chasePos.z)
             chasePosFar.y = AutoDrive:getTerrainHeightAtWorldPos(chasePosFar.x, chasePosFar.z)
 
@@ -379,20 +377,7 @@ function HandleHarvesterTurnTask:doCollisionCheck(waypoints)
     --- Coll check:
     local widthX = self.vehicle.size.width / 1.75
     local height = 2.3
-    local mask = 0
-
-    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
-
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
+    local mask = AutoDrive.collisionMaskTerrain
 
     for i, wp in pairs(waypoints) do
         if i > self.lastCollisionCheckIndex and i <= (#waypoints - 1) and self.expectedColliCallbacks == 0 then
@@ -405,7 +390,7 @@ function HandleHarvesterTurnTask:doCollisionCheck(waypoints)
 
             local angleX = -MathUtil.getYRotationFromDirection(deltaY, length*2)
 
-            local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallback", self, mask, true, true, true)         
+            local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallback", self, mask, true, true, true)
             if shapes > 0 then
                 self.expectedColliCallbacks = self.expectedColliCallbacks + 1
                 --print("Expecting collisionTestCallbacks: " .. self.expectedColliCallbacks)
@@ -448,7 +433,7 @@ function HandleHarvesterTurnTask:getHarvesterEndTurnPosition()
                 local segments = spec.lastTurnStrategy.turnSegments
                 if segments[#segments] ~= nil then
                     if segments[#segments].endPoint ~= nil then
-                        local endPoint = segments[#segments].endPoint                        
+                        local endPoint = segments[#segments].endPoint
                         local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
                         return {x = endPoint[1], y = endPoint[2], z = endPoint[3]}
                     end
@@ -461,5 +446,5 @@ end
 
 function HandleHarvesterTurnTask:getI18nInfo()
     local text = "$l10n_AD_task_catch_up_with_combine;"
-    return text 
+    return text
 end

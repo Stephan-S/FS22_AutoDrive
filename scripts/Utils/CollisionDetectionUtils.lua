@@ -36,7 +36,7 @@ end
 
 function AutoDrive.checkForVehiclePathInBox(boundingBox, minTurnRadius, searchingVehicle, currentVec)
     for _, otherVehicle in pairs(g_currentMission.vehicles) do
-        if otherVehicle ~= nil and otherVehicle ~= searchingVehicle and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then                            
+        if otherVehicle ~= nil and otherVehicle ~= searchingVehicle and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then
             if minTurnRadius ~= nil and otherVehicle.ad ~= nil and otherVehicle.ad.drivePathModule ~= nil and otherVehicle.ad.stateModule:isActive() then
                 local otherWPs, otherCurrentWp = otherVehicle.ad.drivePathModule:getWayPoints()
                 local lastWp = nil
@@ -189,27 +189,8 @@ function ADDimensionSensor:new(vehicle)
     return o
 end
 
-function ADDimensionSensor:getMask()
-    local mask = 0
-
-    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
-
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
-
-    return mask
-end
-
 function ADDimensionSensor:getRealVehicleDimensions()
-    self.mask = self:getMask()
+    self.mask = AutoDrive.collisionMaskSplines
     self.collisionHits = 0
     self.selfHits = 0
     local measureRange = math.max(self.vehicle.size.width + 1, self.vehicle.size.length + 1)
