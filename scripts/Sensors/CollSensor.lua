@@ -173,7 +173,7 @@ function ADCollSensor.getMaskTerrain()
     -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_ANIMAL)
 -- ?? 29:
     -- mask = mask + math.pow(2, ADCollSensor.mask_FILLABLE)
-
+    
     return mask
 end
 
