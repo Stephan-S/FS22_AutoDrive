@@ -86,145 +86,93 @@ function ADTriggerManager.checkForTriggerProximity(vehicle, distanceToTarget)
 end
 ]]
 
+function ADTriggerManager.addItems(items)
+    if items == nil then
+        return
+    end
+    if table.count(items) > 0 then
+        for _, item in pairs(items) do
+            local spec = nil
+            local loadingStation = nil
+            local unloadingStation = nil
+
+-- Loading
+            loadingStation = (item.spec_silo and item.spec_silo.loadingStation)
+            or (item.spec_husbandry and item.spec_husbandry.loadingStation)
+            or (item.spec_manureHeap and item.spec_manureHeap.loadingStation)
+            or (item.spec_buyingStation and item.spec_buyingStation.buyingStation)
+            or (item.spec_chargingStation and item.spec_chargingStation.buyingStation)
+            or (item.spec_productionPoint and item.spec_productionPoint.productionPoint and item.spec_productionPoint.productionPoint.loadingStation)
+            or item.loadingStation
+
+            if loadingStation and loadingStation.loadTriggers then
+                for _, loadTrigger in pairs(loadingStation.loadTriggers) do
+                    if not table.contains(ADTriggerManager.siloTriggers, loadTrigger) then
+                        table.insert(ADTriggerManager.siloTriggers, loadTrigger)
+                    end
+                end
+            end
+
+            if item.spec_chargingStation and item.spec_chargingStation.loadTrigger then
+                table.insert(ADTriggerManager.siloTriggers, loadTrigger)
+            end
+
+-- Unloading
+            unloadingStation = (item.spec_silo and item.spec_silo.unloadingStation)
+            or (item.spec_husbandry and item.spec_husbandry.unloadingStation)
+            or (item.spec_sellingStation and item.spec_sellingStation.sellingStation)
+            or (item.spec_productionPoint and item.spec_productionPoint.productionPoint and item.spec_productionPoint.productionPoint.unloadingStation)
+            or item.unloadingStation
+
+            if unloadingStation and unloadingStation.unloadTriggers then
+                for _, unloadTrigger in pairs(unloadingStation.unloadTriggers) do
+                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
+                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
+                    end
+                end
+            end
+            if item.spec_bunkerSilo then
+                if not table.contains(ADTriggerManager.tipTriggers, item) then
+                    table.insert(ADTriggerManager.tipTriggers, item)
+                end
+            end
+
+-- Repair
+            if item.spec_workshop and item.spec_workshop.sellingPoint then
+                if item.spec_workshop.sellingPoint.sellTriggerNode then
+                    table.insert(ADTriggerManager.repairTriggers, {node=item.spec_workshop.sellingPoint.sellTriggerNode, owner=item.ownerFarmId })
+                end
+            end
+
+        end
+    end
+end
+
 function ADTriggerManager.loadAllTriggers()
     ADTriggerManager.searchedForTriggers = true
     ADTriggerManager.tipTriggers = {}
     ADTriggerManager.siloTriggers = {}
     ADTriggerManager.repairTriggers = {}
-    for _, ownedItem in pairs(g_currentMission.ownedItems) do
-        if ownedItem.storeItem ~= nil then
-            if ownedItem.storeItem.categoryName == "SILOS" then
-                for _, item in pairs(ownedItem.items) do
-                    if item.spec_bunkerSilo ~= nil then
-                        if not table.contains(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo) then
-                            table.insert(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo)
-                        end
-                    end
 
-                    if item.loadingStation ~= nil then
-                        for _, loadTrigger in pairs(item.loadingStation.loadTriggers) do
-                            if not table.contains(ADTriggerManager.siloTriggers, loadTrigger) then
-                                table.insert(ADTriggerManager.siloTriggers, loadTrigger)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        for _, item in pairs(ownedItem.items) do
-            if item.spec_workshop ~= nil and  item.spec_workshop.sellingPoint ~= nil then
-                if item.spec_workshop.sellingPoint.sellTriggerNode ~= nil then
-                    table.insert(ADTriggerManager.repairTriggers, {node=item.spec_workshop.sellingPoint.sellTriggerNode, owner=item.ownerFarmId })
-                end
-            end
-
-            if item.unloadTriggers then
-                for _, unloadTrigger in pairs(item.unloadTriggers) do
-                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                    end
-                end
-            end
-
-            if item.unloadingStation and item.unloadingStation.unloadTriggers then
-                for _, unloadTrigger in pairs(item.unloadingStation.unloadTriggers) do
-                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                    end
-                end
-            end
-
-            if item.spec_silo and item.spec_silo.unloadingStation and item.spec_silo.unloadingStation.unloadTriggers then
-                for _, unloadTrigger in pairs(item.spec_silo.unloadingStation.unloadTriggers) do
-                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                    end
-                end
-            end
-
-            if item.spec_husbandry and item.spec_husbandry.unloadingStation and item.spec_husbandry.unloadingStation.unloadTriggers then
-                for _, unloadTrigger in pairs(item.spec_husbandry.unloadingStation.unloadTriggers) do
-                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                    end
-                end
-            end
-
-            if item.spec_sellingStation and item.spec_sellingStation.sellingStation and item.spec_sellingStation.sellingStation.unloadTriggers then
-                for _, unloadTrigger in pairs(item.spec_sellingStation.sellingStation.unloadTriggers) do
-                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                    end
-                end
-            end
-        end
+    if g_currentMission.placeableSystem.placeables ~= nil then
+        ADTriggerManager.addItems(g_currentMission.placeableSystem.placeables)
     end
 
     if g_currentMission.placeables ~= nil then
-        for _, placeable in pairs(g_currentMission.placeables) do
-            if placeable.sellingStation ~= nil then
-                for _, unloadTrigger in pairs(placeable.sellingStation.unloadTriggers) do
-                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                    end
-                end
-            end
+        ADTriggerManager.addItems(g_currentMission.placeables)
+    end
 
-            if placeable.unloadingStation ~= nil then
-                for _, unloadTrigger in pairs(placeable.unloadingStation.unloadTriggers) do
-                    if not table.contains(ADTriggerManager.tipTriggers, unloadTrigger) then
-                        table.insert(ADTriggerManager.tipTriggers, unloadTrigger)
-                    end
-                end
-            end
+    if g_currentMission.placeableSystem.bunkerSilos ~= nil then
+        ADTriggerManager.addItems(g_currentMission.placeableSystem.bunkerSilos)
+    end
 
-            if placeable.modulesById ~= nil then
-                for i = 1, #placeable.modulesById do
-                    local myModule = placeable.modulesById[i]
-                    if myModule.unloadPlace ~= nil then
-                        if not table.contains(ADTriggerManager.tipTriggers, myModule.unloadPlace) then
-                            table.insert(ADTriggerManager.tipTriggers, myModule.unloadPlace)
-                        end
-                    end
+    if g_currentMission.bunkerSilos ~= nil then
+        ADTriggerManager.addItems(g_currentMission.bunkerSilos)
+    end
 
-                    if myModule.feedingTrough ~= nil then
-                        if not table.contains(ADTriggerManager.tipTriggers, myModule.feedingTrough) then
-                            table.insert(ADTriggerManager.tipTriggers, myModule.feedingTrough)
-                        end
-                    end
-
-                    if myModule.loadPlace ~= nil then
-                        if not table.contains(ADTriggerManager.siloTriggers, myModule.loadPlace) then
-                            table.insert(ADTriggerManager.siloTriggers, myModule.loadPlace)
-                        end
-                    end
-                end
-            end
-
-            if placeable.buyingStation ~= nil then
-                for _, loadTrigger in pairs(placeable.buyingStation.loadTriggers) do
-                    if not table.contains(ADTriggerManager.siloTriggers, loadTrigger) then
-                        table.insert(ADTriggerManager.siloTriggers, loadTrigger)
-                    end
-                end
-            end
-
-            if placeable.loadingStation ~= nil then
-                for _, loadTrigger in pairs(placeable.loadingStation.loadTriggers) do
-                    if not table.contains(ADTriggerManager.siloTriggers, loadTrigger) then
-                        table.insert(ADTriggerManager.siloTriggers, loadTrigger)
-                    end
-                end
-            end
-
-            if placeable.bunkerSilos ~= nil then
-                for _, bunker in pairs(placeable.bunkerSilos) do
-                    if not table.contains(ADTriggerManager.tipTriggers, bunker) then
-                        table.insert(ADTriggerManager.tipTriggers, bunker)
-                    end
-                end
-            end
+    if g_currentMission.ownedItems ~= nil then
+        for _, ownedItem in pairs(g_currentMission.ownedItems) do
+            ADTriggerManager.addItems(ownedItem.items)
         end
     end
 
@@ -235,23 +183,14 @@ function ADTriggerManager.loadAllTriggers()
                     table.insert(ADTriggerManager.siloTriggers, object)
                 end
             end
-
             if object.exactFillRootNode ~= nil then
-                table.insert(ADTriggerManager.tipTriggers, object)
+                if not table.contains(ADTriggerManager.tipTriggers, object) then
+                    table.insert(ADTriggerManager.tipTriggers, object)
+                end
 			end
         end
     end
 
-    if g_currentMission.bunkerSilos ~= nil then
-        for _, trigger in pairs(g_currentMission.bunkerSilos) do
-            if trigger.bunkerSilo then
-                if not table.contains(ADTriggerManager.tipTriggers, trigger) then
-                    table.insert(ADTriggerManager.tipTriggers, trigger)
-                end
-            end
-        end
-    end
-    
     for _, trigger in pairs(ADTriggerManager.siloTriggers) do
         if trigger.stoppedTimer == nil then
             trigger.stoppedTimer = AutoDriveTON:new()
@@ -394,7 +333,7 @@ end
 
 function ADTriggerManager.getTriggerPos(trigger)
     local x, y, z = 0, 0, 0
-    if trigger.triggerNode ~= nil and g_currentMission.nodeToObject[trigger.triggerNode] ~= nil and entityExists(trigger.triggerNode) then 
+    if trigger.triggerNode ~= nil and g_currentMission.nodeToObject[trigger.triggerNode] ~= nil and entityExists(trigger.triggerNode) then
         x, y, z = getWorldTranslation(trigger.triggerNode)
     end
     if trigger.exactFillRootNode ~= nil and g_currentMission.nodeToObject[trigger.exactFillRootNode] ~= nil and entityExists(trigger.exactFillRootNode) then
@@ -440,8 +379,8 @@ function ADTriggerManager.triggerSupportsFillType(trigger, fillType)
         if trigger ~= nil and trigger.getIsFillTypeSupported then
             return trigger:getIsFillTypeSupported(fillType)
         end
-    end  
-    return false  
+    end
+    return false
 end
 
 function ADTriggerManager.getAllTriggersForFillType(fillType)
@@ -493,10 +432,10 @@ function ADTriggerManager:getBestPickupLocationFor(vehicle, trailer, fillType)
 	for _, loadingStation in pairs(g_currentMission.storageSystem:getLoadingStations()) do
 		if g_currentMission.accessHandler:canFarmAccess(farmId, loadingStation) then			
             local aifillTypes = loadingStation:getAISupportedFillTypes()
-			if aifillTypes[fillType] and loadingStation:getFillLevel(fillType, farmId) > 0 then        
+			if aifillTypes[fillType] and loadingStation:getFillLevel(fillType, farmId) > 0 then
                 if loadingStation.getAITargetPositionAndDirection ~= nil then
                     x, z, xDir, zDir = loadingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
-                    
+
                     table.insert(validLoadingStations, loadingStation)
                 end
 
@@ -528,7 +467,7 @@ function ADTriggerManager:getMarkerAtStation(sellingStation, vehicle, maxTrigger
     local closest = -1
     if sellingStation ~= nil then
         local x, z, xDir, zDir = 0,0,0,0
-        
+
         if sellingStation.getAITargetPositionAndDirection ~= nil and sellingStation:getAITargetPositionAndDirection(FillType.UNKNOWN) ~= nil then
             x, z, xDir, zDir = sellingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
         elseif sellingStation.unloadTriggers ~= nil and #sellingStation.unloadTriggers > 0 then
@@ -653,7 +592,7 @@ function AutoDrive:getClosestRepairTrigger(vehicle)
         --First look for suitable marker
         for mapMarkerID, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
             local dis = MathUtil.vector2Length(ADGraphManager:getWayPointById(mapMarker.id).x - triggerX, ADGraphManager:getWayPointById(mapMarker.id).z - triggerZ)
-            if dis < distance and dis < maxDistance then            
+            if dis < distance and dis < maxDistance then
                 closest = mapMarker.id
                 distance = dis
             end
@@ -669,8 +608,8 @@ function AutoDrive:getClosestRepairTrigger(vehicle)
         distance = math.huge
         closest = nil
     end
-    
-    if #ownedRepairMarkers > 0 then 
+
+    if #ownedRepairMarkers > 0 then
         repairMarkers = ownedRepairMarkers
     end
 

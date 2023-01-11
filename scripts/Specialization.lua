@@ -1,13 +1,13 @@
 function AutoDrive.prerequisitesPresent(specializations)
-    return (SpecializationUtil.hasSpecialization(AIVehicle, specializations) 
-    and SpecializationUtil.hasSpecialization(Motorized, specializations) 
-    and SpecializationUtil.hasSpecialization(Drivable, specializations) 
+    return (SpecializationUtil.hasSpecialization(AIVehicle, specializations)
+    and SpecializationUtil.hasSpecialization(Motorized, specializations)
+    and SpecializationUtil.hasSpecialization(Drivable, specializations)
     and SpecializationUtil.hasSpecialization(Enterable, specializations)
     )
     or
 -- locomotive
     (
-    SpecializationUtil.hasSpecialization(SplineVehicle, specializations) 
+    SpecializationUtil.hasSpecialization(SplineVehicle, specializations)
     and SpecializationUtil.hasSpecialization(Drivable, specializations)
     )
 end
@@ -56,7 +56,7 @@ function AutoDrive.registerOverwrittenFunctions(vehicleType)
 
     -- Disables click to switch, if the user clicks on the hud or the editor mode is active.
     -- see ExternalInterface.lua
-    if vehicleType.functions["enterVehicleRaycastClickToSwitch"] ~= nil then 
+    if vehicleType.functions["enterVehicleRaycastClickToSwitch"] ~= nil then
         SpecializationUtil.registerOverwrittenFunction(vehicleType, "enterVehicleRaycastClickToSwitch", AutoDrive.enterVehicleRaycastClickToSwitch)
     end
 end
@@ -77,7 +77,7 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "onDrawPreviews", AutoDrive.onDrawPreviews)
     SpecializationUtil.registerFunction(vehicleType, "updateClosestWayPoint", AutoDrive.updateClosestWayPoint)
     SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
-    SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)    
+    SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)
     SpecializationUtil.registerFunction(vehicleType, "getCanAdTakeControl", AutoDrive.getCanAdTakeControl) -- see ExternalInterface.lua
 end
 
@@ -122,7 +122,6 @@ function AutoDrive.initSpecialization()
     schema:register(XMLValueType.FLOAT, "vehicle.AutoDrive#followDistance", "Follow distance for harveste unloading", 1)
     schema:setXMLSpecializationType()
 
-    
     local schemaSavegame = Vehicle.xmlSchemaSavegame
 
     for settingName, setting in pairs(AutoDrive.settings) do
@@ -130,7 +129,7 @@ function AutoDrive.initSpecialization()
             schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#" .. settingName, setting.text, setting.default)
         end
     end
-    
+
     schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#groups", "groups")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#mode", "mode")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#firstMarker", "firstMarker")
@@ -145,7 +144,7 @@ function AutoDrive.initSpecialization()
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#parkDestination", "parkDestination")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#bunkerUnloadType", "bunkerUnloadType")
     schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticUnloadTarget", "automaticUnloadTarget")
-    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticPickupTarget", "automaticPickupTarget")   
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#automaticPickupTarget", "automaticPickupTarget")
 end
 
 function AutoDrive:onPreLoad(savegame)
@@ -245,7 +244,7 @@ function AutoDrive:onPostLoad(savegame)
                         end
                     end
                 end
-            end            
+            end
         end
 
         self.ad.noMovementTimer = AutoDriveTON:new()
@@ -483,7 +482,7 @@ function AutoDrive:saveToXMLFile(xmlFile, key, usedModNames)
         return
     end
     local adKey = string.gsub(key, "FS22_AutoDrive.AutoDrive", "AutoDrive")
-    
+
     --if not xmlFile:hasProperty(key) then
         --xmlFile:setValue(adKey, {})
         --return
@@ -537,7 +536,7 @@ function AutoDrive:onDraw()
         if AutoDrive.splineInterpolation ~= nil and AutoDrive.splineInterpolation.valid then
             self:onDrawPreviews()
         end
-    end    
+    end
 
     if AutoDrive.experimentalFeatures.redLinePosition and AutoDrive.getDebugChannelIsSet(AutoDrive.DC_VEHICLEINFO) and self.ad.frontNodeGizmo ~= nil then
         self.ad.frontNodeGizmo:createWithNode(self.ad.frontNode, getName(self.ad.frontNode), false)
@@ -634,7 +633,7 @@ function AutoDrive.drawTripod(node, offset)
     ADDrawingManager:addLineTask(nodeX + offset.x, nodeY + offset.y, nodeZ + offset.z, targetX + offset.x, targetY + offset.y, targetZ + offset.z, 0, 0, 1)
 end
 
-function AutoDrive:onDrawPreviews()    
+function AutoDrive:onDrawPreviews()
     --if AutoDrive:checkForCollisionOnSpline() then
     local lastHeight = AutoDrive.splineInterpolation.startNode.y
     local lastWp = AutoDrive.splineInterpolation.startNode
@@ -645,7 +644,7 @@ function AutoDrive:onDrawPreviews()
             if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
                 wp.y = lastHeight
             end	
-            
+
             if collisionFree then
                 ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, unpack(AutoDrive.currentColors.ad_color_previewOk))
                 ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
@@ -719,7 +718,6 @@ function AutoDrive:onPostDetachImplement(implementIndex)
         AutoDrive.Hud.lastUIScale = 0
     end
 end
-
 
 function AutoDrive:onEnterVehicle(isControlling)
     if AutoDrive:hasAL(self) then
@@ -799,7 +797,6 @@ function AutoDrive:onDrawEditorMode()
                     and not AutoDrive.leftCTRLmodifierKeyPressed
                     and not AutoDrive.leftALTmodifierKeyPressed
                     and not AutoDrive.rightSHIFTmodifierKeyPressed
-
 
     --Draw close destinations
     for _, marker in pairs(ADGraphManager:getMapMarkers()) do
@@ -900,15 +897,15 @@ function AutoDrive:onDrawEditorMode()
                 -- if a section is active, skip these connections, they are drawn below
                 local skipSectionDraw = false
                 if self.ad.sectionWayPoints ~= nil and #self.ad.sectionWayPoints > 2 then
-                    if 
-                        table.contains(self.ad.sectionWayPoints, point.id) 
-                        and table.contains(self.ad.sectionWayPoints, neighbor) 
-                        and (previewDirection or previewSubPrio) 
+                    if
+                        table.contains(self.ad.sectionWayPoints, point.id)
+                        and table.contains(self.ad.sectionWayPoints, neighbor)
+                        and (previewDirection or previewSubPrio)
                         then
                         skipSectionDraw = true
                     end
                 end
-                
+
                 table.insert(outPointsSeen, neighbor)
                 local target = ADGraphManager:getWayPointById(neighbor)
                 local targetIsSubPrio = ADGraphManager:getIsPointSubPrio(neighbor)
@@ -1033,7 +1030,7 @@ function AutoDrive:startAutoDrive()
             AutoDrive.getAllVehicleDimensions(self, true)
             if self.spec_aiVehicle ~= nil then
                 if self.getAINeedsTrafficCollisionBox ~= nil then
-                    if self:getAINeedsTrafficCollisionBox() then                    
+                    if self:getAINeedsTrafficCollisionBox() then
                         if AIFieldWorker.TRAFFIC_COLLISION ~= nil and AIFieldWorker.TRAFFIC_COLLISION ~= 0 then
                             self.spec_aiVehicle.aiTrafficCollision = AIFieldWorker.TRAFFIC_COLLISION
                         end
@@ -1044,7 +1041,6 @@ function AutoDrive:startAutoDrive()
                 end
             end
 
-            
             -- g_currentMission:farmStats(self:getOwnerFarmId()):updateStats("driversHired", 1)
 
             if self.ad.currentHelper == nil or self.ad.stateModule:getCurrentHelperIndex() <= 0 then
@@ -1110,11 +1106,11 @@ function AutoDrive:stopAutoDrive()
                 self:setCruiseControlState(Drivable.CRUISECONTROL_STATE_OFF)
             end
 
-            if self.ad.onRouteToPark then 
+            if self.ad.onRouteToPark then
                 SpecializationUtil.raiseEvent(self, "onAutoDriveParked")
             end
 
-            if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and 
+            if not AutoDrive:getIsEntered(self) and not self.ad.isStoppingWithError then --self.ad.onRouteToPark and
                 self.ad.onRouteToPark = false
             end
 
@@ -1269,7 +1265,6 @@ function AutoDrive:onStopAutoDrive(isPassingToCP, isStartingAIVE)
         end
         self.ad.currentHelper = nil
         self.ad.stateModule:setCurrentHelperIndex(0)
-
 
         if self.spec_motorized.motor ~= nil then
             self.spec_motorized.motor:setGearShiftMode(self.spec_motorized.gearShiftMode)
@@ -1595,7 +1590,7 @@ function AutoDrive:generateUTurn(left)
     if not self.ad.uTurn.inProgress then
         self.ad.uTurn.doneChecking = false
         self.ad.uTurn.inProgress = true
-        
+
         local radius = AutoDrive.getDriverRadius(self, true)
         local vehX, vehY, vehZ = getWorldTranslation(self.components[1].node)
         local resolution = 20
@@ -1615,7 +1610,7 @@ function AutoDrive:generateUTurn(left)
                     dummy = dummy + i
                 end
                 point.y = AutoDrive.raycastHeight or point.y
-                
+
                 table.insert(points, point)
             end
             local worldX, _, worldZ = localToWorld(self.components[1].node, 2*radius, 0, -1)
@@ -1637,7 +1632,7 @@ function AutoDrive:generateUTurn(left)
                     dummy = dummy + i
                 end
                 point.y = AutoDrive.raycastHeight or point.y
-                
+
                 table.insert(points, point)
             end
             local worldX, _, worldZ = localToWorld(self.components[1].node, -2*radius, 0, -1)
@@ -1651,25 +1646,13 @@ function AutoDrive:generateUTurn(left)
         --- Coll check:
         local widthX = self.size.width / 1.75
         local height = 2.3
-        local mask = 0
 
-        -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
-        -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
-        -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
-        -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-        -- mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
-        -- mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
-        -- mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
-
-        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
-        mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
+        local mask = AutoDrive.collisionMaskTerrain
 
         self.ad.uTurn.expectedColliCallbacks = 0
         self.ad.uTurn.colliFound = false
         self.ad.uTurn.points = points
-        
+
         for i, wp in pairs(points) do
             if i > 1 and i < (#points - 1) then
                 local wpLast = points[i - 1]
@@ -1681,7 +1664,7 @@ function AutoDrive:generateUTurn(left)
 
                 local angleX = -MathUtil.getYRotationFromDirection(deltaY, length*2)
 
-                local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallback", self, mask, true, true, true)         
+                local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallback", self, mask, true, true, true)
                 if shapes > 0 then
                     self.ad.uTurn.expectedColliCallbacks = self.ad.uTurn.expectedColliCallbacks + 1
                 end
@@ -1709,15 +1692,15 @@ function AutoDrive:generateUTurn(left)
                 ADDrawingManager:addArrowTask(self.ad.uTurn.points[i-1].x, self.ad.uTurn.points[i-1].y, self.ad.uTurn.points[i-1].z, p.x, p.y, p.z, ADDrawingManager.arrows.position.middle, unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection))
             end
         end
-        
+
         if self.ad.uTurn.doneChecking then
             self.ad.uTurn.inProgress = false
         end
     end
-    
+
     -- Coll check with large box
     --local centerX, centerY, centerZ = localToWorld(vehicle.components[1].node, radius, 0, radius/2)
-    --local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallbackIgnore", nil, mask, true, true, true)    
+    --local shapes = overlapBox(centerX, centerY+3, centerZ, angleX, angleRad, 0, widthX, height, length, "collisionTestCallbackIgnore", nil, mask, true, true, true)
 end
 
 function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
@@ -1730,7 +1713,7 @@ function AutoDrive:collisionTestCallback(transformId, x, y, z, distance)
         else
             self.ad.uTurn.colliFound = true
         end
-    
+
         if self.ad.uTurn.inProgress and (self.ad.uTurn.expectedColliCallbacks == 0 or self.ad.uTurn.colliFound) then
             self.ad.uTurn.doneChecking = true
         end

@@ -92,7 +92,6 @@ AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 -- add this to measured size of vehicles
 AutoDrive.DIMENSION_ADDITION = 0.2
 
-
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
 	ad_color_dualConnection = {0, 0, 1, 1},
@@ -190,6 +189,11 @@ function AutoDrive:loadMap(name)
 			end
 		end
 	end
+
+    -- calculate the collision masks only once
+    AutoDrive.collisionMaskFS19 = ADCollSensor.getMaskFS19()
+    AutoDrive.collisionMaskTerrain = ADCollSensor.getMaskTerrain()
+    AutoDrive.collisionMaskSplines = ADCollSensor.getMaskSplines()
 
 	ADGraphManager:load()
 
@@ -391,7 +395,7 @@ function AutoDrive.drawNetworkOnMap()
 
 	local dx, dz, dx2D, dy2D, width, rotation, r, g, b
 
-	local isSubPrio = function(pointToTest) 
+	local isSubPrio = function(pointToTest)
         return bitAND(pointToTest.flags, AutoDrive.FLAG_SUBPRIO) > 0
     end
 
@@ -688,7 +692,7 @@ function AutoDrive:FarmStats_loadFromXMLFile(xmlFileName, key)
 
 	key = key .. ".statistics"
 	-- self.statistics["driversTraveledDistance"].total = Utils.getNoNil(getXMLFloat(xmlFile, key .. ".driversTraveledDistance"), 0)
-    
+
 	-- self.statistics["driversTraveledDistance"].total = xmlFile:getFloat(key .. ".driversTraveledDistance", 0)
 end
 
