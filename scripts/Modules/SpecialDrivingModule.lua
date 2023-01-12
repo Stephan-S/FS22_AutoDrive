@@ -61,6 +61,10 @@ function ADSpecialDrivingModule:isStoppingVehicle()
 end
 
 function ADSpecialDrivingModule:stopAndHoldVehicle(dt)
+    if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
+        self.vehicle.ad.trainModule:stopAndHoldVehicle(dt)
+        return
+    end
     local finalSpeed = 0
     local acc = -0.6
     local allowedToDrive = false
@@ -246,7 +250,7 @@ function ADSpecialDrivingModule:handleReverseDriving(dt)
 
             local inBunkerSilo = AutoDrive.isVehicleInBunkerSiloArea(self.vehicle)
 
-            if not inBunkerSilo and (AutoDrive.getSetting("enableTrafficDetection") == true) and self.vehicle.ad.collisionDetectionModule:checkReverseCollision() then
+            if not inBunkerSilo and (AutoDrive.getSetting("enableTrafficDetection") >= 1) and self.vehicle.ad.collisionDetectionModule:checkReverseCollision() then
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "ADSpecialDrivingModule:handleReverseDriving self:stopAndHoldVehicle inBunkerSilo %s self.vehicle.ad.collisionDetectionModule:checkReverseCollision() %s self.currentWayPointIndex %s ", tostring(inBunkerSilo), tostring(self.vehicle.ad.collisionDetectionModule:checkReverseCollision()), tostring(self.currentWayPointIndex))
                 self:stopAndHoldVehicle(dt)
             else
@@ -422,7 +426,7 @@ function ADSpecialDrivingModule:reverseToPoint(dt, maxSpeed)
         self.dFactor = 6.7 --self.vehicle.ad.stateModule:getFieldSpeedLimit() * 0.1 --10
     end
 
-    local targetAngleToTrailer = math.clamp(-40, (p * self.pFactor) + (self.i * self.iFactor) + (d * self.dFactor), 40)
+    local targetAngleToTrailer = MathUtil.clamp((p * self.pFactor) + (self.i * self.iFactor) + (d * self.dFactor), -40, 40)
     local targetDiff = self.angleToTrailer - targetAngleToTrailer
     local offsetX = -targetDiff * 5
     local offsetZ = -20
@@ -436,7 +440,7 @@ function ADSpecialDrivingModule:reverseToPoint(dt, maxSpeed)
     --print("p: " .. p * self.pFactor .. " i: " .. (self.i * self.iFactor) .. " d: " .. (d * self.dFactor))
     --print("targetAngleToTrailer: " .. targetAngleToTrailer .. " targetDiff: " .. targetDiff .. "  offsetX" .. offsetX)
 
-    local speed = 5 + (6 * math.clamp(0, (5 / math.max(self.steeringAngle, math.abs(self.angleToTrailer))), 1))
+    local speed = 5 + (6 * MathUtil.clamp((5 / math.max(self.steeringAngle, math.abs(self.angleToTrailer))), 0, 1))
     local acc = 0.4
 
     if vehicleIsTruck then

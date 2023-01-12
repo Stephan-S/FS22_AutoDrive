@@ -169,7 +169,7 @@ function ADSensor:loadBaseParameters()
         self.dynamicRotation = true
         self.length = vehicle.size.length
         self.width = vehicle.size.width * ADSensor.WIDTH_FACTOR
-        self.collisionMask = AIVehicleUtil.COLLISION_MASK
+        -- self.collisionMask = AIVehicleUtil.COLLISION_MASK
         self.position = ADSensor.POS_FRONT
         self.location = self:getLocationByPosition()
         self.initialized = true
@@ -268,9 +268,9 @@ function ADSensor:getBoxShape()
     self.location = self:getLocationByPosition()
     local lookAheadDistance = self.length
     if self.dynamicLength then
-        lookAheadDistance = math.clamp(0.13, vehicle.lastSpeedReal * 3600 / 40, 1) * 15.5
+        lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 / 40, 0.13, 1) * 15.5
         if self.position == ADSensor.POS_REAR then
-            lookAheadDistance = math.clamp(0.02, vehicle.lastSpeedReal * 3600 / 40, 1) * 15.5
+            lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 / 40, 0.02, 1) * 15.5
         end
     end
 

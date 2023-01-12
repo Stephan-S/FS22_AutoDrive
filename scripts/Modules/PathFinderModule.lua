@@ -97,23 +97,23 @@ PathFinderModule.PP_CELL_Z = 9
 PathFinderModule.GRID_SIZE_FACTOR = 0.5
 PathFinderModule.GRID_SIZE_FACTOR_SECOND_UNLOADER = 1.1
 
-PathFinderModule.mask_Non_Pushable_1 = 1
-PathFinderModule.mask_Non_Pushable_2 = 2
-PathFinderModule.mask_static_world_1 = 3
-PathFinderModule.mask_static_world_2 = 4
-PathFinderModule.mask_tractors = 6
-PathFinderModule.mask_combines = 7
-PathFinderModule.mask_trailers = 8
-PathFinderModule.mask_dynamic_objects = 12
-PathFinderModule.mask_dynamic_objects_machines = 13
-PathFinderModule.mask_trigger_player = 20
-PathFinderModule.mask_trigger_tractor = 21
-PathFinderModule.mask_trigger_combines = 22
-PathFinderModule.mask_trigger_fillables = 23
-PathFinderModule.mask_trigger_dynamic_objects = 24
-PathFinderModule.mask_trigger_trafficVehicles = 25
-PathFinderModule.mask_trigger_cutters = 26
-PathFinderModule.mask_kinematic_objects_wo_coll = 30
+-- PathFinderModule.mask_Non_Pushable_1 = 1
+-- PathFinderModule.mask_Non_Pushable_2 = 2
+-- PathFinderModule.mask_static_world_1 = 3
+-- PathFinderModule.mask_static_world_2 = 4
+-- PathFinderModule.mask_tractors = 6
+-- PathFinderModule.mask_combines = 7
+-- PathFinderModule.mask_trailers = 8
+-- PathFinderModule.mask_dynamic_objects = 12
+-- PathFinderModule.mask_dynamic_objects_machines = 13
+-- PathFinderModule.mask_trigger_player = 20
+-- PathFinderModule.mask_trigger_tractor = 21
+-- PathFinderModule.mask_trigger_combines = 22
+-- PathFinderModule.mask_trigger_fillables = 23
+-- PathFinderModule.mask_trigger_dynamic_objects = 24
+-- PathFinderModule.mask_trigger_trafficVehicles = 25
+-- PathFinderModule.mask_trigger_cutters = 26
+-- PathFinderModule.mask_kinematic_objects_wo_coll = 30
 
 PathFinderModule.PP_MAX_EAGER_LOOKAHEAD_STEPS = 1
 
@@ -2039,17 +2039,39 @@ end
 function PathFinderModule:buildMask()
     local mask = 0
 
-    mask = mask + math.pow(2, PathFinderModule.mask_Non_Pushable_1 - 1)
-    mask = mask + math.pow(2, PathFinderModule.mask_Non_Pushable_2 - 1)
-    mask = mask + math.pow(2, PathFinderModule.mask_static_world_1 - 1)
-    mask = mask + math.pow(2, PathFinderModule.mask_static_world_2 - 1)
-    mask = mask + math.pow(2, PathFinderModule.mask_tractors - 1)
-    mask = mask + math.pow(2, PathFinderModule.mask_combines - 1)
-    mask = mask + math.pow(2, PathFinderModule.mask_trailers - 1)
-    --mask = mask + math.pow(2, PathFinderModule.mask_dynamic_objects - 1)
-    --mask = mask + math.pow(2, PathFinderModule.mask_dynamic_objects_machines - 1)
-    --mask = mask + math.pow(2, PathFinderModule.mask_trigger_trafficVehicles - 1)
-    --mask = mask + math.pow(2, PathFinderModule.mask_trigger_dynamic_objects - 1)
+-- ?? 0:
+-- # main collisions
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
+-- 2: "STATIC_WORLD_WITHOUT_DELTA: Deprecated in FS22: Do not use it anymore!",
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_AI_BLOCKING - 1)
+-- 6: "TRACTOR: Deprecated in FS22: Do not use it anymore!",
+-- 7: "COMBINE: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN_DELTA - 1)
+-- # identifiers
+    mask = mask + math.pow(2, ADCollSensor.mask_TREE - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1) -- PFM does not need to drive through PalletUnloadTrigger
+    -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL - 1)
+-- ?? 17:
+    -- mask = mask + math.pow(2, ADCollSensor.mask_AI_DRIVABLE - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_GROUND_TIP_BLOCKING - 1)
+-- # triggers
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_PLAYER - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_VEHICLE - 1)
+-- 22: "TRIGGER_COMBINE: Deprecated in FS22: Do not use it anymore!",
+-- 23: "TRIGGER_FILLABLE: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_DYNAMIC_OBJECT - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_TRAFFIC_VEHICLE_BLOCKING - 1)
+-- 26: "TRIGGER_CUTTER: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_FORK - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_ANIMAL - 1)
+-- ?? 29:
+    -- mask = mask + math.pow(2, ADCollSensor.mask_FILLABLE - 1)
 
     return mask
 end
@@ -2062,4 +2084,3 @@ function PathFinderModule.debugVehicleMsg(vehicle, msg, ...)
         end
     end
 end
-

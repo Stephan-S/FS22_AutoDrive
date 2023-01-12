@@ -559,8 +559,8 @@ AutoDrive.settings.lineHeight = {
 }
 
 AutoDrive.settings.enableTrafficDetection = {
-    values = {false, true},
-    texts = {"gui_ad_no", "gui_ad_yes"},
+    values = {0, 1, 2},
+    texts = {"gui_ad_no", "gui_ad_FS22", "gui_ad_FS19"},
     default = 1,
     current = 1,
     text = "gui_ad_enableTrafficDetection",
@@ -1009,6 +1009,18 @@ AutoDrive.settings.useHazardLightReverse = {
     tooltip = "gui_ad_hazardLightReverse_tooltip",
     translate = true,
     isVehicleSpecific = true
+}
+
+AutoDrive.settings.scaleLines = {
+    values = {0.5, 1, 2, 3, 4, 5, 6, 10},
+    texts = {"50%", "100%", "200%", "300%", "400%", "500%", "600%", "1000%"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_scaleLines",
+    tooltip = "gui_ad_scaleLines_tooltip",
+    translate = false,
+    isVehicleSpecific = false,
+    isUserSpecific = true
 }
 
 function AutoDrive.getSetting(settingName, vehicle)

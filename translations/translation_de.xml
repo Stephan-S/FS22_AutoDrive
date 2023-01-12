@@ -112,6 +112,8 @@
 		<text name="gui_ad_drive"								text="Weiterfahren" />
 		<text name="gui_ad_yes"									text="Ja" />
 		<text name="gui_ad_no"									text="Nein" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Initialisieren" />
 		<text name="ad_bga_waiting"								text="Warten auf Abfahrer/Silo" />
 		<text name="ad_bga_active"								text="Aktiv" />
@@ -155,7 +157,7 @@
 		<text name="gui_ad_ground"								text="Bodenhöhe" />
 		<text name="gui_ad_aboveDriver"							text="Über dem Traktor" />
 		<text name="gui_ad_enableTrafficDetection"				text="Kollisionserkennung" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Erweiterte Kollisionserkennung, die auch auf KI-Verkehr, Schilder, Zäune etc. reagiert." />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Erweiterte Kollisionserkennung, die auch auf KI-Verkehr, Schilder, Zäune etc. reagiert. Aus, FS 22 oder FS 19 Kollisionen berücksichtigen" />
 		<text name="gui_ad_shovelWidth"							text="Schaufelbreite (Zusatz)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="Falls die automatisch erkannte Breite zu klein ist, kann sie hiermit erhöht werden" />
 		<text name="gui_ad_preCallLevel"						text="Früher rufen ab" />
@@ -219,6 +221,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Nutze breites HUD. Erlaubt dadurch auch zusätzliche Buttons." />
 		<text name="gui_ad_playSounds"							text="Sound" />
 		<text name="gui_ad_playSounds_tooltip"					text="Schaltet die Soundeffekte an, die bei Mausklicks und Benachrichtigungen genuttz werden" />
+		<text name="gui_ad_scaleLines"							text="Linien Skalierung" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Skaliert die Stärke der Verbindungslinien" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronisiere 'Mehrere Ziele'" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Wenn mehrere Fahrer die selben Ziele anfahren, wird die Zielauswahl synchronisiert." />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Am Ende Parken" />
@@ -278,6 +282,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Rendering" />
 		<text name="gui_ad_debugChannelRoadNetwork"				text="Streckennetz" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA Modus" />
+		<text name="gui_ad_debugChannelTrains"					text="Züge" />
 		<text name="gui_ad_debugChannelAll" 					text="Alles" />
 		
 		<text name="gui_ad_notificationHistoryTitle" 			text="Benachrichtigungen" />

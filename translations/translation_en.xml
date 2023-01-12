@@ -106,6 +106,8 @@
 		<text name="gui_ad_drive"								text="Drive on" />
 		<text name="gui_ad_yes"									text="Yes" />
 		<text name="gui_ad_no"									text="No" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
 		<text name="ad_bga_init"								text="Initializing" />
 		<text name="ad_bga_waiting"								text="Waiting for trailer/silo" />
 		<text name="ad_bga_active"								text="Active" />
@@ -149,7 +151,7 @@
 		<text name="gui_ad_ground"								text="Ground level" />
 		<text name="gui_ad_aboveDriver"							text="Above tractor" />
 		<text name="gui_ad_enableTrafficDetection"				text="Collision detection" />
-		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Advanced collision detection, which also detects AI-traffic, signs, fences etc" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="Advanced collision detection, which also detects AI-traffic, signs, fences etc. Off, detect FS 22 or FS 19 collision" />
 		<text name="gui_ad_shovelWidth"							text="Shovel width (Addition)" />
 		<text name="gui_ad_shovelWidth_tooltip"					text="If automatically detected shovel width is too small, it can be increased with this value" />
 		<text name="gui_ad_preCallLevel"						text="Pre call level" />
@@ -213,6 +215,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Use wide HUD mode, which also allows a few more setting buttons in the HUD" />
 		<text name="gui_ad_playSounds"							text="Sound" />
 		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
+		<text name="gui_ad_scaleLines"							text="Scale Lines" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
 		<text name="gui_ad_syncMultiTargets"					text="Sync multiple targets" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Multiple drivers using the same folder for multiple targets will synchronize next targets" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Park at Job finished" />
@@ -271,6 +275,7 @@
 		<text name="gui_ad_debugChannelRender" 					text="Rendering" />
 		<text name="gui_ad_debugChannelRoadNetwork"	 			text="Road network" />
 		<text name="gui_ad_debugChannelBGA"						text="BGA Mode" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
 		<text name="gui_ad_debugChannelAll" 					text="Everything" />
 
 		<text name="gui_ad_notificationHistoryTitle" 			text="Notifications" />

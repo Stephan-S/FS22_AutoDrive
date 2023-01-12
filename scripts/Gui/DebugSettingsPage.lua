@@ -311,6 +311,24 @@ function ADDebugSettingsPage:onCreateAutoDriveText12(box)
     end
 end
 
+function ADDebugSettingsPage:onCreateAutoDriveText13(box)
+    if self.storedKey13 == nil then
+        self.storedKey13 = box.text
+    end
+    if self.storedKey13 ~= nil then
+
+        local hasText = self.storedKey13 ~= nil and self.storedKey13 ~= ""
+        if hasText then
+            local text = self.storedKey13
+            if text:sub(1,6) == "$l10n_" then
+                text = text:sub(7)
+            end
+            text = g_i18n:getText(text)
+            box:setTextInternal(text, false, true)
+        end
+    end
+end
+
 function ADDebugSettingsPage:copyAttributes(src)
 	ADDebugSettingsPage:superClass().copyAttributes(self, src)
     self.storedHeaderKey = src.storedHeaderKey
@@ -326,4 +344,5 @@ function ADDebugSettingsPage:copyAttributes(src)
     self.storedKey10 = src.storedKey10
     self.storedKey11 = src.storedKey11
     self.storedKey12 = src.storedKey12
+    self.storedKey13 = src.storedKey13
 end

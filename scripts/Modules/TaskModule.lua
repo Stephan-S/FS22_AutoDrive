@@ -45,7 +45,9 @@ function ADTaskModule:setCurrentTaskFinished(stoppedFlag)
 
     self.activeTask = nil
 
-    self:RefuelIfNeeded()
+    if not self.vehicle.spec_locomotive then
+        self:RefuelIfNeeded()
+    end
 
     -- No refuel needed or no refuel trigger available
     if self.activeTask == nil then
@@ -93,8 +95,10 @@ function ADTaskModule:update(dt)
             self:onTaskInfoChange(taskInfo)
         end
     else
-        self:RefuelIfNeeded()
-        self:RepairIfNeeded()
+        if not self.vehicle.spec_locomotive then
+            self:RefuelIfNeeded()
+            self:RepairIfNeeded()
+        end
     
         -- No refuel needed or no refuel trigger available
         if self.activeTask == nil then
@@ -125,6 +129,9 @@ function ADTaskModule:RefuelIfNeeded()
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADTaskModule:RefuelIfNeeded hasToRefuel")
         local refuelDestinationMarkerID = ADTriggerManager.getClosestRefuelDestination(self.vehicle, self.vehicle.ad.onRouteToRefuel)
         if refuelDestinationMarkerID ~= nil then
+            ADHarvestManager:unregisterAsUnloader(self.vehicle)
+            self.followingUnloader = nil
+            self.combine = nil
             self.activeTask = RefuelTask:new(self.vehicle, ADGraphManager:getMapMarkerById(refuelDestinationMarkerID).id)
         else
             self.vehicle.ad.isStoppingWithError = true
@@ -155,6 +162,9 @@ function ADTaskModule:RepairIfNeeded()
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "ADTaskModule:RepairIfNeeded hasToRepair")
         local repairDestinationMarkerNodeID = AutoDrive:getClosestRepairTrigger(self.vehicle)
         if repairDestinationMarkerNodeID ~= nil then
+            ADHarvestManager:unregisterAsUnloader(self.vehicle)
+            self.followingUnloader = nil
+            self.combine = nil
             self.activeTask = RepairTask:new(self.vehicle, repairDestinationMarkerNodeID.marker)
         else
             --self.vehicle.ad.isStoppingWithError = true

@@ -16,7 +16,10 @@ function AutoDrive.checkForVehiclesInBox(boundingBox, excludedVehicles)
                 end
             end
         end
-
+        if otherVehicle.spec_conveyorBelt and otherVehicle.spec_motorized and otherVehicle.getIsMotorStarted and otherVehicle:getIsMotorStarted() then
+            -- ignore operating conveyor belts
+            isExcluded = true
+        end
         if (not isExcluded) and otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then
             local x, _, z = getWorldTranslation(otherVehicle.components[1].node)
             local distance = MathUtil.vector2Length(boundingBox[1].x - x, boundingBox[1].z - z)
@@ -189,13 +192,19 @@ end
 function ADDimensionSensor:getMask()
     local mask = 0
 
-    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
+
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
+
     return mask
 end
 
