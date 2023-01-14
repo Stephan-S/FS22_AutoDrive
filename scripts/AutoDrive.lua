@@ -723,5 +723,3 @@ function AutoDrive:FarmStats_getStatisticData(superFunc)
 	end
 	return Utils.getNoNil(self.statisticData, {})
 end
-
-addModEventListener(AutoDrive)
