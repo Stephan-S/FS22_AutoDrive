@@ -11,6 +11,7 @@ function UnloadAtDestinationTask:new(vehicle, destinationID)
     o.isContinued = false
     o.waitForALUnloadTimer = AutoDriveTON:new()
     o.waitForALUnload = false
+    o.isReverseTriggerReached = false
     o.trailers = nil
     return o
 end
@@ -37,6 +38,7 @@ function UnloadAtDestinationTask:setUp()
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
     self.waitForALUnload = false
+    self.isReverseTriggerReached = false
 end
 
 function UnloadAtDestinationTask:update(dt)
@@ -125,12 +127,17 @@ function UnloadAtDestinationTask:update(dt)
                     self.vehicle.ad.drivePathModule:update(dt)
                 else
                     --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtDestinationTask:update isActiveAtTrigger stopVehicle")
+                    self.isReverseTriggerReached = self.vehicle.ad.drivePathModule:getIsReversing()
                     self.vehicle.ad.specialDrivingModule:stopVehicle()
                     self.vehicle.ad.specialDrivingModule:update(dt)
                 end
             else
                 --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "UnloadAtDestinationTask:update isActiveAtTrigger drivePathModule:update")
-                self.vehicle.ad.drivePathModule:update(dt)
+                if self.isReverseTriggerReached then
+                    self:finished()
+                else
+                    self.vehicle.ad.drivePathModule:update(dt)
+                end
             end
         end
     else -- UnloadAtDestinationTask.STATE_WAIT_FOR_AL_UNLOAD
