@@ -554,7 +554,14 @@ function AutoDrive.getDistanceToTargetPosition(vehicle)
     if destination == nil then
         return math.huge
     end
-    return MathUtil.vector2Length(x - destination.x, z - destination.z)
+
+    local distance = MathUtil.vector2Length(x - destination.x, z - destination.z)
+    if rootVehicle and rootVehicle.ad and rootVehicle.ad.drivePathModule and rootVehicle.ad.drivePathModule:getIsReversing() then
+        -- if revers driving sub the train length as the vehicle is the last position on the move to target
+        local trainLength = AutoDrive.getTractorTrainLength(rootVehicle, true)
+        distance = distance - trainLength
+    end
+    return distance
 end
 
 function AutoDrive.getDistanceToUnloadPosition(vehicle)
