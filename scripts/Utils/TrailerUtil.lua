@@ -897,12 +897,12 @@ function AutoDrive.getWaterTrailerInWater(vehicle, trailers)
         for _, trailer in pairs(trailers) do
             local spec = trailer.spec_waterTrailer
             if spec ~= nil and spec.waterFillNode ~= nil then
-                local isNearWater = vehicle.isInWater
+                local isInWater = trailer.isInWater
                 local fillUnits = trailer:getFillUnits()
                 for i = 1, #fillUnits do
                     local isNotFilled = not AutoDrive.getIsFillUnitFull(trailer, i)
                     local allowedFillType = vehicle.ad.stateModule:getFillType() == FillType.WATER
-                    if isNearWater and isNotFilled and allowedFillType then
+                    if isInWater and isNotFilled and allowedFillType then
                         return trailer
                     end
                 end
