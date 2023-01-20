@@ -249,11 +249,9 @@ function AutoDrive.getIsFillUnitEmpty(vehicle, fillUnitIndex)
     return fillUnitEmpty
 end
 
--- reworked, TODO: check all other trigger sources
+-- reworked, removed old GC and other stuff
 function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTypes, fillUnit)
     if fillTrigger ~= nil then
-        local typesMatch = false
-        local selectedFillType = vehicle.ad.stateModule:getFillType() or FillType.UNKNOWN
         local fillUnits = workTool:getFillUnits()
 
         local fillTypesToCheck = {}
@@ -273,71 +271,25 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
         -- does the trigger and the fillUnit match the selectedFilltype or do they ignore it ?
         for i = 1, #fillUnits do
             if fillUnit == nil or i == fillUnit then
-                local selectedFillTypeIsNotInMyFillUnit = true
-                local matchInThisUnit = false
                 for index, _ in pairs(workTool:getFillUnitSupportedFillTypes(i)) do
-                    --loadTriggers
-                    -- standard silo
-                    if fillTrigger.source ~= nil and fillTrigger.source.supportedFillTypes ~= nil and fillTrigger.source.supportedFillTypes[index] then
-                        typesMatch = true
-                        matchInThisUnit = true
-                    end
-                    if fillTrigger.source ~= nil and fillTrigger.source.aiSupportedFillTypes ~= nil and fillTrigger.source.aiSupportedFillTypes[index] then
-                        typesMatch = true
-                        matchInThisUnit = true
-                    end
-                    
-                    --fillTriggers
-                    if fillTrigger.sourceObject ~= nil then -- TODO: still available in FS22 ???
-                        local fillTypes = fillTrigger.sourceObject:getFillUnitSupportedFillTypes(1)
-                        if fillTypes[index] then
-                            typesMatch = true
-                            matchInThisUnit = true
-                        end
-                    end
-
                     for _, allowedFillType in pairs(fillTypesToCheck) do
-                        if index == allowedFillType and allowedFillType ~= FillType.UNKNOWN then
-                            selectedFillTypeIsNotInMyFillUnit = false
+                        if index == allowedFillType and index ~= FillType.UNKNOWN then
+                            --loadTriggers
+                            if fillTrigger.fillTypes and fillTrigger.fillTypes[allowedFillType] then
+                                return true
+                            end
+
+                            --fillTriggers
+                            if fillTrigger.sourceObject and fillTrigger.sourceObject.getFillUnitSupportedFillTypes then
+                                local fillTypes = fillTrigger.sourceObject:getFillUnitSupportedFillTypes(1)
+                                if fillTypes[allowedFillType] then
+                                    return true
+                                end
+                            end
                         end
                     end
                 end
-                
-                if matchInThisUnit and selectedFillTypeIsNotInMyFillUnit then
-                    return false
-                end
             end
-        end
-
-        if typesMatch then
-            for _, allowedFillType in pairs(fillTypesToCheck) do
-                if allowedFillType == FillType.UNKNOWN then
-                    return false
-                end
-            end
-
-            local isFillType = false
-            for _, allowedFillType in pairs(fillTypesToCheck) do
-                if fillTrigger.source then
-                    for _, sourceStorage in pairs(fillTrigger.source.sourceStorages) do
-                        if (sourceStorage.fillTypes ~= nil and sourceStorage.fillTypes[allowedFillType]) or 
-                            (sourceStorage.fillLevels ~= nil and sourceStorage.fillLevels[allowedFillType]) then
-                            return true
-                        end    
-                    end
-                    
-                    if fillTrigger.source ~= nil and fillTrigger.source.supportedFillTypes ~= nil and fillTrigger.source.supportedFillTypes[allowedFillType] then
-                        return true
-                    end
-                    if fillTrigger.source ~= nil and fillTrigger.source.aiSupportedFillTypes ~= nil and fillTrigger.source.aiSupportedFillTypes[allowedFillType] then
-                        return true
-                    end
-                elseif fillTrigger.sourceObject ~= nil then
-                    local fillType = fillTrigger.sourceObject:getFillUnitFillType(1)
-                    isFillType = (fillType == selectedFillType)
-                end
-            end
-            return isFillType
         end
     end
     return false
