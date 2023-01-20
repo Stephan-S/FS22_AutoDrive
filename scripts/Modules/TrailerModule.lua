@@ -179,9 +179,8 @@ function ADTrailerModule:update(dt)
     self:handleTrailerCovers()
 
     -- self:handleTrailerReversing()
-
     self.lastFillLevel = self.fillLevel
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end lastFillLevel %.1f", self.lastFillLevel)
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end lastFillLevel %s", tostring(self.lastFillLevel))
 end
 
 function ADTrailerModule:handleTrailerCovers()
