@@ -612,14 +612,8 @@ function ADTrailerModule:lookForPossibleUnloadTrigger(trailer)
     for _, trigger in pairs(ADTriggerManager.getUnloadTriggers()) do
         local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
         if triggerX ~= nil then
-            if distanceToTarget ~= nil and
-                -- (distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") 
-                (trigger.bunkerSiloArea == nil
-                or (trigger.bunkerSiloArea ~= nil and distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH))
-                or (trigger.baleTrigger ~= nil and distanceToTarget < math.max(AutoDrive.getSetting("maxTriggerDistance"), 25))
-                )
-                then
-                if trigger.baleTrigger then
+            if distanceToTarget < math.huge then
+                if trigger.baleTrigger and distanceToTarget < math.max(AutoDrive.getSetting("maxTriggerDistance"), 25) then
                     -- bale trigger
                     local distanceToUnloadTrigger = MathUtil.vector2Length(triggerX - trailerX, triggerZ - trailerZ)
                     if distanceToUnloadTrigger < 50 and self:isBaleUnloadAllowed(trigger, trailer) ~= nil then
@@ -627,7 +621,7 @@ function ADTrailerModule:lookForPossibleUnloadTrigger(trailer)
                         self.siloTrigger = trigger
                         return trigger
                     end
-                elseif trigger.bunkerSiloArea == nil then
+                elseif trigger.bunkerSiloArea == nil and distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") then
                     -- silo trigger
                     if trailer.getCanDischargeToObject and trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) and trailer.getDischargeState ~= nil then
                         if (trailer:getDischargeState() == Dischargeable.DISCHARGE_STATE_OFF and trailer.spec_pipe == nil) or (trailer.spec_pipe ~= nil and trailer.spec_pipe.currentState >= 2) then
@@ -635,8 +629,8 @@ function ADTrailerModule:lookForPossibleUnloadTrigger(trailer)
                             return trigger
                         end
                     end
-                else
-                    -- assume bunker silo
+                elseif trigger.bunkerSiloArea ~= nil and distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH) then
+                    -- bunker silo
                     if AutoDrive.isTrailerInBunkerSiloArea(trailer, trigger) then
                         self.bunkerTrigger = trigger
                         return trigger
