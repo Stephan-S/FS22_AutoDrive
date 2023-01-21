@@ -15,77 +15,6 @@ end
 function ADTriggerManager:update(dt)
 end
 
--- not used
---[[
-function ADTriggerManager.checkForTriggerProximity(vehicle, distanceToTarget)
-    local shouldLoad = vehicle.ad.stateModule:getCurrentMode():shouldLoadOnTrigger()
-    local shouldUnload = vehicle.ad.stateModule:getCurrentMode():shouldUnloadAtTrigger()
-    if (not shouldUnload) and (not shouldLoad) or distanceToTarget == nil then
-        return false
-    end
-
-    local x, y, z = getWorldTranslation(vehicle.components[1].node)
-    local allFillables, _ = AutoDrive.getAllUnits(vehicle)
-
-    local totalMass = vehicle:getTotalMass(false)
-    local massFactor = math.max(1, math.min(3, (totalMass + 20) / 30))
-    if vehicle.lastSpeedReal * 3600 < 15 then
-        massFactor = 1
-    end
-    local speedFactor = math.max(0.5, math.min(4, (((vehicle.lastSpeedReal * 3600) + 10) / 20.0)))
-    local distanceToSlowDownAt = 15 * speedFactor * massFactor
-
-    if vehicle.ad.trailerModule:isActiveAtTrigger() then
-        return true
-    end
-
-    if shouldLoad then
-        for _, trigger in pairs(ADTriggerManager.siloTriggers) do
-            local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
-            if triggerX ~= nil then
-                local distance = MathUtil.vector2Length(triggerX - x, triggerZ - z)
-
-                if distance < distanceToSlowDownAt and distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") then
-                    local hasRequiredFillType = false
-                    local allowedFillTypes = {vehicle.ad.stateModule:getFillType()}
-                    local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(vehicle.ad.stateModule:getFillType())
-
-                    if fillTypeName == 'SEEDS' or fillTypeName == 'FERTILIZER' or fillTypeName == 'LIQUIDFERTILIZER' then
-                        -- seeds, fertilizer, liquidfertilizer
-                        allowedFillTypes = {}
-                        table.insert(allowedFillTypes, g_fillTypeManager:getFillTypeIndexByName('SEEDS'))
-                        table.insert(allowedFillTypes, g_fillTypeManager:getFillTypeIndexByName('FERTILIZER'))
-                        table.insert(allowedFillTypes, g_fillTypeManager:getFillTypeIndexByName('LIQUIDFERTILIZER'))
-                    end
-
-                    for _, trailer in pairs(allFillables) do
-                        hasRequiredFillType = hasRequiredFillType or AutoDrive.fillTypesMatch(vehicle, trigger, trailer, allowedFillTypes)
-                    end
-
-                    if hasRequiredFillType then
-                        return true
-                    end
-                end
-            end
-        end
-    end
-
-    if shouldUnload then
-        for _, trigger in pairs(ADTriggerManager.tipTriggers) do
-            local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
-            if triggerX ~= nil then
-                local distance = MathUtil.vector2Length(triggerX - x, triggerZ - z)
-                if distance < distanceToSlowDownAt and (distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") or (trigger.bunkerSiloArea ~= nil and distanceToTarget < 300)) then
-                    return true
-                end
-            end
-        end
-    end
-
-    return false
-end
-]]
-
 function ADTriggerManager.addItems(items)
     if items == nil then
         return
@@ -269,14 +198,15 @@ function ADTriggerManager.getClosestRefuelTrigger(vehicle, ignoreFillLevel)
 
     for _, refuelTrigger in pairs(refuelTriggers) do
         local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(refuelTrigger)
-        local distance = MathUtil.vector2Length(triggerX - x, triggerZ - z)
+        if triggerX then
+            local distance = MathUtil.vector2Length(triggerX - x, triggerZ - z)
 
-        if distance < closestDistance then
-            closestDistance = distance
-            closestRefuelTrigger = refuelTrigger
+            if distance < closestDistance then
+                closestDistance = distance
+                closestRefuelTrigger = refuelTrigger
+            end
         end
     end
-
     return closestRefuelTrigger
 end
 
@@ -288,9 +218,11 @@ function ADTriggerManager.getRefuelDestinations(vehicle, ignoreFillLevel)
     for mapMarkerID, mapMarker in pairs(ADGraphManager:getMapMarkers()) do
         for _, refuelTrigger in pairs(refuelTriggers) do
             local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(refuelTrigger)
-            local distance = MathUtil.vector2Length(triggerX - ADGraphManager:getWayPointById(mapMarker.id).x, triggerZ - ADGraphManager:getWayPointById(mapMarker.id).z)
-            if distance < AutoDrive.MAX_REFUEL_TRIGGER_DISTANCE then
-                table.insert(refuelDestinations, {mapMarkerID = mapMarkerID, refuelTrigger = refuelTrigger, distance = distance})
+            if triggerX then
+                local distance = MathUtil.vector2Length(triggerX - ADGraphManager:getWayPointById(mapMarker.id).x, triggerZ - ADGraphManager:getWayPointById(mapMarker.id).z)
+                if distance < AutoDrive.MAX_REFUEL_TRIGGER_DISTANCE then
+                    table.insert(refuelDestinations, {mapMarkerID = mapMarkerID, refuelTrigger = refuelTrigger, distance = distance})
+                end
             end
         end
     end
@@ -345,7 +277,7 @@ function ADTriggerManager.getTriggerPos(trigger)
             x, y, z = getWorldTranslation(node)
         end
     end
-    if trigger.interactionTriggerNode ~= nil and g_currentMission.nodeToObject[trigger.interactionTriggerNode] ~= nil and entityExists(trigger.interactionTriggerNode) then
+    if trigger.bunkerSiloArea and trigger.interactionTriggerNode ~= nil and g_currentMission.nodeToObject[trigger.interactionTriggerNode] ~= nil and entityExists(trigger.interactionTriggerNode) then
         x, y, z = getWorldTranslation(trigger.interactionTriggerNode)
     end
     return x, y, z
