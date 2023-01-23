@@ -61,8 +61,8 @@ function ADTriggerManager.addItems(items)
                 end
             end
             if item.spec_bunkerSilo then
-                if not table.contains(ADTriggerManager.tipTriggers, item) then
-                    table.insert(ADTriggerManager.tipTriggers, item)
+                if not table.contains(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo) then
+                    table.insert(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo)
                 end
             end
 
