@@ -43,7 +43,9 @@ function ADTriggerManager.addItems(items)
             end
 
             if item.spec_chargingStation and item.spec_chargingStation.loadTrigger then
-                table.insert(ADTriggerManager.siloTriggers, loadTrigger)
+                if not table.contains(ADTriggerManager.siloTriggers, item.spec_chargingStation.loadTrigger) then
+                    table.insert(ADTriggerManager.siloTriggers, item.spec_chargingStation.loadTrigger)
+                end
             end
 
 -- Unloading
@@ -60,6 +62,13 @@ function ADTriggerManager.addItems(items)
                     end
                 end
             end
+
+            if item.spec_husbandryFood and item.spec_husbandryFood.feedingTrough then
+                if not table.contains(ADTriggerManager.tipTriggers, item.spec_husbandryFood.feedingTrough) then
+                    table.insert(ADTriggerManager.tipTriggers, item.spec_husbandryFood.feedingTrough)
+                end
+            end
+
             if item.spec_bunkerSilo then
                 if not table.contains(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo) then
                     table.insert(ADTriggerManager.tipTriggers, item.spec_bunkerSilo.bunkerSilo)
@@ -105,6 +114,7 @@ function ADTriggerManager.loadAllTriggers()
         end
     end
 
+    -- lump sum whatever is not catched before
     if g_currentMission.nodeToObject ~= nil then
         for _, object in pairs(g_currentMission.nodeToObject) do
             if object.triggerNode ~= nil then
@@ -277,6 +287,12 @@ function ADTriggerManager.getTriggerPos(trigger)
             x, y, z = getWorldTranslation(node)
         end
     end
+    if trigger.woodTrigger ~= nil then
+        local node = trigger.woodTrigger.triggerNode
+        if node ~= nil and g_currentMission.nodeToObject[node] ~= nil and entityExists(node) then
+            x, y, z = getWorldTranslation(node)
+        end
+    end
     if trigger.bunkerSiloArea and trigger.interactionTriggerNode ~= nil and g_currentMission.nodeToObject[trigger.interactionTriggerNode] ~= nil and entityExists(trigger.interactionTriggerNode) then
         x, y, z = getWorldTranslation(trigger.interactionTriggerNode)
     end
@@ -362,7 +378,7 @@ function ADTriggerManager:getBestPickupLocationFor(vehicle, trailer, fillType)
     local closestDistance = math.huge
 
 	for _, loadingStation in pairs(g_currentMission.storageSystem:getLoadingStations()) do
-		if g_currentMission.accessHandler:canFarmAccess(farmId, loadingStation) then			
+		if g_currentMission.accessHandler:canFarmAccess(farmId, loadingStation) then
             local aifillTypes = loadingStation:getAISupportedFillTypes()
 			if aifillTypes[fillType] and loadingStation:getFillLevel(fillType, farmId) > 0 then
                 if loadingStation.getAITargetPositionAndDirection ~= nil then
