@@ -27,8 +27,6 @@ function ADTrailerModule:reset()
     self.bunkerTrailer = nil
     self.startedUnloadingAtTrigger = false
     self.trigger = nil
-    self.currentTrigger = nil
-    self.currentTriggersSeen = {}
     self.isLoadingToFillUnitIndex = nil
     self.isLoadingToTrailer = nil
     self.foundSuitableTrigger = false
@@ -341,14 +339,11 @@ function ADTrailerModule:updateLoad(dt)
             return
         end
 
-        -- overload from liquid trailers, containers etc.
-        if not table.contains(self.currentTriggersSeen, self.currentTrigger) then
-            -- use table to enable filling at multiple fill objects
+        if not self.isLoading then
+            -- try overload from liquid trailers, containers etc.
             local fillTrigger = AutoDrive.startFillTrigger(self.trailers)
             if fillTrigger ~= nil then
                 -- no further actions required, monitoring via fill level - see load from source without trigger
-                self.currentTrigger = fillTrigger.currentTrigger
-                table.insert(self.currentTriggersSeen, self.currentTrigger)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad overload fillTrigger found -> load already started")
             end
         end
@@ -399,7 +394,6 @@ function ADTrailerModule:updateLoad(dt)
         if fillUnitFull or (self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger.spec_waterTrailer ~= nil and self.trigger.spec_waterTrailer.isFilling ~= nil and not self.trigger.spec_waterTrailer.isFilling) or (self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger == self and self.loadDelayTimer:done() and self.lastFillLevel >= self.fillLevel) then
             self.isLoading = false
             self.trigger = nil
-            self.currentTrigger = nil
             self.isLoadingToFillUnitIndex = 0
             self.isLoadingToTrailer = nil
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad fillUnitFull %s", tostring(fillUnitFull))
