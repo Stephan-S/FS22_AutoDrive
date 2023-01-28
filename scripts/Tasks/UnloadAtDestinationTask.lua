@@ -162,9 +162,7 @@ function UnloadAtDestinationTask:abort()
 end
 
 function UnloadAtDestinationTask:continue()
-    if self.vehicle.ad.trailerModule:isActiveAtTrigger() then
-        self.vehicle.ad.trailerModule:stopUnloading()
-    end
+    self.vehicle.ad.trailerModule:stopUnloading()
     self.isContinued = true
 end
 

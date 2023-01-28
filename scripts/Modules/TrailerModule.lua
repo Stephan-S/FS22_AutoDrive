@@ -16,6 +16,9 @@ function ADTrailerModule:new(vehicle)
 end
 
 function ADTrailerModule:reset()
+    if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+        self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+    end
     self.isLoading = false
     self.isUnloading = false
     self.currentBaleLoader = nil
@@ -25,7 +28,6 @@ function ADTrailerModule:reset()
     self.siloTrigger = nil
     self.bunkerTrigger = nil
     self.bunkerTrailer = nil
-    self.startedUnloadingAtTrigger = false
     self.trigger = nil
     self.isLoadingToFillUnitIndex = nil
     self.isLoadingToTrailer = nil
@@ -70,6 +72,8 @@ function ADTrailerModule:reset()
     self.actualDistanceToUnloadTrigger = math.huge
     self.oldDistanceToUnloadTrigger = math.huge
     self.baleTriggerStart = nil
+    self.lastUnloadRotateTrigger = nil
+    self.unloadRotate = false
 end
 
 function ADTrailerModule:isActiveAtTrigger()
@@ -216,9 +220,9 @@ function ADTrailerModule:updateStates()
             end
         end
     end
-
-    if self.isUnloading then
-        self.startedUnloadingAtTrigger = true
+    self.unloadRotate = (AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders")
+    if not self.unloadRotate then
+        self.lastUnloadRotateTrigger = nil
     end
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateStates end self.isLoading %s self.isUnloading %s self.fillUnits %s self.blocked %s", tostring(self.isLoading), tostring(self.isUnloading), tostring(self.fillUnits), tostring(self.blocked))
 end
@@ -449,16 +453,16 @@ function ADTrailerModule:stopUnloading()
     if self.unloadDelayTimer ~= nil then
         self.unloadDelayTimer:timer(false)      -- clear timer
     end
-    self.startedUnloadingAtTrigger = false
+    self.lastUnloadRotateTrigger = nil
 end
 
 function ADTrailerModule:updateUnload(dt)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload ")
     AutoDrive.setAugerPipeOpen(self.trailers,  AutoDrive.getDistanceToUnloadPosition(self.vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
-    if not self.isUnloading then
+
+    if not self.isUnloading and not (self.lastUnloadRotateTrigger) then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload not self.isUnloading")
         -- Check if we can unload at some trigger
-        -- if not self.startedUnloadingAtTrigger or self.fillUnits > 1 then
             for _, trailer in pairs(self.trailers) do
                 local unloadTrigger = self:lookForPossibleUnloadTrigger(trailer)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload not self.isUnloading unloadTrigger %s", tostring(unloadTrigger))
@@ -482,7 +486,6 @@ function ADTrailerModule:updateUnload(dt)
                     end
                 end
             end
-        -- end
     else
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload Monitor unloading")
         local fillUnitEmpty = AutoDrive.getIsFillUnitEmpty(self.isUnloadingWithTrailer, self.isUnloadingWithFillUnit)
@@ -492,20 +495,29 @@ function ADTrailerModule:updateUnload(dt)
         if self.unloadDelayTimer:done() then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload Monitor unloading unloadDelayTimer:done areAllTrailersClosed %s", tostring(allTrailersClosed))
             self.unloadRetryTimer:timer(self.isUnloading, ADTrailerModule.UNLOAD_RETRY_TIME, dt)
-            if allTrailersClosed and (fillUnitEmpty or ((AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders"))) then
+
+            if allTrailersClosed and (fillUnitEmpty or self.unloadRotate) then
+            -- all trailers closed and empty or rotate
                 self.unloadDelayTimer:timer(false)      -- clear timer
                 self.isUnloading = false
                 self.unloadingToBunkerSilo = false
+                if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+                    self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+                end
             elseif allTrailersClosed and self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.spec_pipe ~= nil then
                 -- unload auger wagon to another trailer
                 self.unloadDelayTimer:timer(false)      -- clear timer
                 self.isUnloading = false
             elseif self.unloadRetryTimer:done() and self.isUnloadingWithTrailer ~= nil and self.unloadingToBunkerSilo == false then
-                self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
+                if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+                    self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
+                end
                 self.unloadRetryTimer:timer(false)      -- clear timer
             elseif not (self.vehicle.ad.drivePathModule:getIsReversing()) and self.unloadingToBunkerSilo and self.stuckInBunkerTimer:done() then
                 -- stuck in silo bunker
-                self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+                if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+                    self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+                end
                 self.unloadDelayTimer:timer(false)      -- clear timer
                 self.isUnloading = false
                 self.unloadingToBunkerSilo = false
@@ -701,6 +713,12 @@ function ADTrailerModule:startUnloadingIntoTrigger(trailer, trigger)
         -- tip trigger
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "Start unloading - fillUnitIndex: %s", tostring(trailer:getCurrentDischargeNode().fillUnitIndex))
         trailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
+
+        if self.unloadRotate then
+            -- keep the already served unload trigger
+            self.lastUnloadRotateTrigger = trigger
+        end
+
         self.isUnloading = true
         self.isUnloadingWithTrailer = trailer
         self.isUnloadingWithFillUnit = trailer:getCurrentDischargeNode().fillUnitIndex
