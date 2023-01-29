@@ -201,7 +201,7 @@ function PickupAndDeliverMode:getNextTask(forced)
         else
             -- if loops are finished - drive to park destination and stop AD
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask DriveToDestinationTask...")
-            nextTask = ParkTask:new(self.vehicle, self.vehicle.ad.stateModule:getFirstMarker().id)
+            nextTask = ParkTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask set STATE_PARK")
             self.state = PickupAndDeliverMode.STATE_PARK
         end

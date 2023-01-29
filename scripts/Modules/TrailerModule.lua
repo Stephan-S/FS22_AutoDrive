@@ -16,20 +16,19 @@ function ADTrailerModule:new(vehicle)
 end
 
 function ADTrailerModule:reset()
+    if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+        self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+    end
     self.isLoading = false
     self.isUnloading = false
     self.currentBaleLoader = nil
     self.isUnloadingWithTrailer = nil
     self.isUnloadingWithFillUnit = nil
-    self.bunkerStartFillLevel = nil
     self.unloadingToBunkerSilo = false
     self.siloTrigger = nil
     self.bunkerTrigger = nil
     self.bunkerTrailer = nil
-    self.startedUnloadingAtTrigger = false
     self.trigger = nil
-    self.currentTrigger = nil
-    self.currentTriggersSeen = {}
     self.isLoadingToFillUnitIndex = nil
     self.isLoadingToTrailer = nil
     self.foundSuitableTrigger = false
@@ -58,7 +57,7 @@ function ADTrailerModule:reset()
         self.stuckInBunkerTimer = AutoDriveTON:new()
     else
         self.stuckInBunkerTimer:timer(false)      -- clear timer
-    end    
+    end
     self:clearTrailerUnloadTimers()
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
@@ -73,6 +72,8 @@ function ADTrailerModule:reset()
     self.actualDistanceToUnloadTrigger = math.huge
     self.oldDistanceToUnloadTrigger = math.huge
     self.baleTriggerStart = nil
+    self.lastUnloadRotateTrigger = nil
+    self.unloadRotate = false
 end
 
 function ADTrailerModule:isActiveAtTrigger()
@@ -106,7 +107,7 @@ function ADTrailerModule:getBunkerSiloSpeed()
             local dischargeNodeX, dischargeNodeY, dischargeNodeZ = getWorldTranslation(dischargeNode.node)
             local rx, _, rz = localDirectionToWorld(trailer.components[1].node, 0, 0, 1)
             local normalVector = {x = -rz, z = rx}
-            
+
             --                                                                                  vecW
             local x1, z1 = trigger.bunkerSiloArea.sx, trigger.bunkerSiloArea.sz --              1 ---- 2
             --local x2, z2 = trigger.bunkerSiloArea.wx, trigger.bunkerSiloArea.wz--     vecH    | ---- |
@@ -115,12 +116,12 @@ function ADTrailerModule:getBunkerSiloSpeed()
 
             local vecH = {x = (x3 - x1), z = (z3 - z1)}
             local vecHLength = MathUtil.vector2Length(vecH.x, vecH.z)
-            
+
             local hitX, hitZ, insideBunker, positive = AutoDrive.segmentIntersects(x1, z1, x3, z3, dischargeNodeX, dischargeNodeZ, dischargeNodeX + 50 * normalVector.x, dischargeNodeZ + 50 * normalVector.z)
-            
+
             --ADDrawingManager:addLineTask(dischargeNodeX, dischargeNodeY + 3, dischargeNodeZ , dischargeNodeX + 50 * normalVector.x,dischargeNodeY + 3, dischargeNodeZ + 50 * normalVector.z, 1, 0, 0)
             --ADDrawingManager:addLineTask(x1, dischargeNodeY + 3, z1 , x3, dischargeNodeY + 3, z3, 1, 0, 0)
-            
+
             if hitX ~= 0 and hitZ ~= 0 then
                 --ADDrawingManager:addLineTask(x1, dischargeNodeY + 5, z1 , hitX, dischargeNodeY + 5, hitZ, 0, 0, 1)
                 local remainingDistance = vecHLength
@@ -179,9 +180,8 @@ function ADTrailerModule:update(dt)
     self:handleTrailerCovers()
 
     -- self:handleTrailerReversing()
-
     self.lastFillLevel = self.fillLevel
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end lastFillLevel %.1f", self.lastFillLevel)
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end lastFillLevel %s", tostring(self.lastFillLevel))
 end
 
 function ADTrailerModule:handleTrailerCovers()
@@ -192,7 +192,7 @@ end
 
 function ADTrailerModule:updateStates()
     self.fillLevel, _, self.filledToUnload, _ = AutoDrive.getAllFillLevels(self.trailers)
-    
+
     self.fillUnits = 0
     if self.lastFillLevel == nil then
         self.lastFillLevel = self.fillLevel
@@ -211,18 +211,18 @@ function ADTrailerModule:updateStates()
 
         --- Searches for bale loaders.
         if trailer.spec_baleLoader then
-            if not self.currentBaleLoader then 
+            if not self.currentBaleLoader then
                 local fillLevelPercentage = trailer:getFillUnitFillLevelPercentage(trailer.spec_baleLoader.fillUnitIndex)
-                if fillLevelPercentage > 0.01 then 
+                if fillLevelPercentage > 0.01 then
 -- AutoDrive.debugMsg(trailer, "ADTrailerModule:updateStates self.currentBaleLoader = trailer %s", tostring(trailer))
                     self.currentBaleLoader = trailer
                 end
             end
         end
     end
-
-    if self.isUnloading then
-        self.startedUnloadingAtTrigger = true
+    self.unloadRotate = (AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders")
+    if not self.unloadRotate then
+        self.lastUnloadRotateTrigger = nil
     end
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateStates end self.isLoading %s self.isUnloading %s self.fillUnits %s self.blocked %s", tostring(self.isLoading), tostring(self.isUnloading), tostring(self.fillUnits), tostring(self.blocked))
 end
@@ -256,12 +256,12 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
                     trailer.ad.lastBlockedState = false
                     trailer.ad.targetBlockedState = false
                 end
-    
+
                 trailer.ad.targetBlockedState = blockTrailers
-    
+
                 if trailer.ad.rotLimitBackup == nil then
                     trailer.ad.rotLimitBackup = {}
-                                
+
                     if trailer.componentJoints[1].rotLimit == nil or
                     trailer.componentJoints[1].rotLimit[2] == nil then
                         trailer.ad.rotLimitBackup[1] = 0
@@ -280,9 +280,9 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
                         trailer.ad.lastBlockedState = trailer.ad.targetBlockedState;
                     end
                 end
-            end            
+            end
         end
-    end    
+    end
 end
 
 function ADTrailerModule:updateLoad(dt)
@@ -305,12 +305,12 @@ function ADTrailerModule:updateLoad(dt)
     end
 
     -- update retry timer
-    self.loadRetryTimer:timer(true, ADTrailerModule.LOAD_RETRY_TIME, dt) 
+    self.loadRetryTimer:timer(true, ADTrailerModule.LOAD_RETRY_TIME, dt)
     -- update load delay timer
-    self.loadDelayTimer:timer(self.lastFillLevel >= self.fillLevel and self.trigger == self, ADTrailerModule.LOAD_DELAY_TIME, dt) 
+    self.loadDelayTimer:timer(self.lastFillLevel >= self.fillLevel and self.trigger == self, ADTrailerModule.LOAD_DELAY_TIME, dt)
 
     if self.trigger == nil and not fillUnitFull then
-    
+
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad search for load self.trigger %s", tostring(self.trigger))
 
         -- look for triggers with requested fill type
@@ -343,14 +343,11 @@ function ADTrailerModule:updateLoad(dt)
             return
         end
 
-        -- overload from liquid trailers, containers etc.
-        if not table.contains(self.currentTriggersSeen, self.currentTrigger) then
-            -- use table to enable filling at multiple fill objects
+        if not self.isLoading then
+            -- try overload from liquid trailers, containers etc.
             local fillTrigger = AutoDrive.startFillTrigger(self.trailers)
             if fillTrigger ~= nil then
                 -- no further actions required, monitoring via fill level - see load from source without trigger
-                self.currentTrigger = fillTrigger.currentTrigger
-                table.insert(self.currentTriggersSeen, self.currentTrigger)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad overload fillTrigger found -> load already started")
             end
         end
@@ -401,7 +398,6 @@ function ADTrailerModule:updateLoad(dt)
         if fillUnitFull or (self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger.spec_waterTrailer ~= nil and self.trigger.spec_waterTrailer.isFilling ~= nil and not self.trigger.spec_waterTrailer.isFilling) or (self.trigger ~= nil and self.trigger.stoppedTimer == nil and self.trigger == self and self.loadDelayTimer:done() and self.lastFillLevel >= self.fillLevel) then
             self.isLoading = false
             self.trigger = nil
-            self.currentTrigger = nil
             self.isLoadingToFillUnitIndex = 0
             self.isLoadingToTrailer = nil
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad fillUnitFull %s", tostring(fillUnitFull))
@@ -457,16 +453,16 @@ function ADTrailerModule:stopUnloading()
     if self.unloadDelayTimer ~= nil then
         self.unloadDelayTimer:timer(false)      -- clear timer
     end
-    self.startedUnloadingAtTrigger = false
+    self.lastUnloadRotateTrigger = nil
 end
 
 function ADTrailerModule:updateUnload(dt)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload ")
     AutoDrive.setAugerPipeOpen(self.trailers,  AutoDrive.getDistanceToUnloadPosition(self.vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
-    if not self.isUnloading then
+
+    if not self.isUnloading and not (self.lastUnloadRotateTrigger) then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload not self.isUnloading")
         -- Check if we can unload at some trigger
-        -- if not self.startedUnloadingAtTrigger or self.fillUnits > 1 then
             for _, trailer in pairs(self.trailers) do
                 local unloadTrigger = self:lookForPossibleUnloadTrigger(trailer)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload not self.isUnloading unloadTrigger %s", tostring(unloadTrigger))
@@ -474,7 +470,7 @@ function ADTrailerModule:updateUnload(dt)
                     if trailer.unloadDelayTimer == nil then
                         trailer.unloadDelayTimer = AutoDriveTON:new()
                     end
-                    trailer.unloadDelayTimer:timer(unloadTrigger ~= nil, 500, dt)
+                    trailer.unloadDelayTimer:timer(unloadTrigger ~= nil, 250, dt)
                     if unloadTrigger ~= nil and (trailer.unloadDelayTimer:done() or unloadTrigger.bunkerSiloArea ~= nil) then
                         trailer.unloadDelayTimer:timer(false)       -- clear timer
                         self:startUnloadingIntoTrigger(trailer, unloadTrigger)
@@ -490,7 +486,6 @@ function ADTrailerModule:updateUnload(dt)
                     end
                 end
             end
-        -- end
     else
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload Monitor unloading")
         local fillUnitEmpty = AutoDrive.getIsFillUnitEmpty(self.isUnloadingWithTrailer, self.isUnloadingWithFillUnit)
@@ -500,23 +495,29 @@ function ADTrailerModule:updateUnload(dt)
         if self.unloadDelayTimer:done() then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload Monitor unloading unloadDelayTimer:done areAllTrailersClosed %s", tostring(allTrailersClosed))
             self.unloadRetryTimer:timer(self.isUnloading, ADTrailerModule.UNLOAD_RETRY_TIME, dt)
-            if allTrailersClosed and (fillUnitEmpty or ((AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders"))) then
+
+            if allTrailersClosed and (fillUnitEmpty or self.unloadRotate) then
+            -- all trailers closed and empty or rotate
                 self.unloadDelayTimer:timer(false)      -- clear timer
                 self.isUnloading = false
                 self.unloadingToBunkerSilo = false
+                if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+                    self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+                end
             elseif allTrailersClosed and self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.spec_pipe ~= nil then
                 -- unload auger wagon to another trailer
                 self.unloadDelayTimer:timer(false)      -- clear timer
                 self.isUnloading = false
-            elseif fillUnitEmpty then
-                self.unloadDelayTimer:timer(false)      -- clear timer
-                self.unloadingToBunkerSilo = false
             elseif self.unloadRetryTimer:done() and self.isUnloadingWithTrailer ~= nil and self.unloadingToBunkerSilo == false then
-                self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
+                if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+                    self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
+                end
                 self.unloadRetryTimer:timer(false)      -- clear timer
             elseif not (self.vehicle.ad.drivePathModule:getIsReversing()) and self.unloadingToBunkerSilo and self.stuckInBunkerTimer:done() then
                 -- stuck in silo bunker
-                self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+                if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
+                    self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+                end
                 self.unloadDelayTimer:timer(false)      -- clear timer
                 self.isUnloading = false
                 self.unloadingToBunkerSilo = false
@@ -594,7 +595,7 @@ function ADTrailerModule:startLoadingAtTrigger(trigger, fillType, fillUnitIndex,
         self.isLoadingToTrailer = trailer
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:startLoadingAtTrigger self.trigger %s", tostring(self.trigger))
     end
-    
+
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:startLoadingAtTrigger end")
 end
 
@@ -607,40 +608,46 @@ function ADTrailerModule:lookForPossibleUnloadTrigger(trailer)
         return nil
     end
 
+    -- local distanceToTarget = AutoDrive.getDistanceToUnloadPosition(self.vehicle)
     local distanceToTarget = AutoDrive.getDistanceToUnloadPosition(trailer)
-    local trailerX, trailerY, trailerZ = getWorldTranslation(trailer.components[1].node)
 
-    for _, trigger in pairs(ADTriggerManager.getUnloadTriggers()) do
-        local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
-        if triggerX ~= nil then
-            if distanceToTarget ~= nil and
-                -- (distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") 
-                (trigger.bunkerSiloArea == nil
-                or (trigger.bunkerSiloArea ~= nil and distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH))
-                or (trigger.baleTrigger ~= nil and distanceToTarget < math.max(AutoDrive.getSetting("maxTriggerDistance"), 25))
-                )
+    if distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") then
+        -- silo trigger - found by CanDischargeToObject, no need to loop through all triggers
+        if trailer.getCanDischargeToObject and trailer.getCurrentDischargeNode and trailer.getDischargeState then
+            if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then
+                if (trailer:getDischargeState() == Dischargeable.DISCHARGE_STATE_OFF and trailer.spec_pipe == nil)
+                    or (trailer.spec_pipe ~= nil and trailer.spec_pipe.currentState >= 2)
                 then
-                if trigger.baleTrigger then
-                    -- bale trigger
-                    local distanceToUnloadTrigger = MathUtil.vector2Length(triggerX - trailerX, triggerZ - trailerZ)
-                    if distanceToUnloadTrigger < 50 and self:isBaleUnloadAllowed(trigger, trailer) ~= nil then
-                        -- consider only nearby trigger
-                        self.siloTrigger = trigger
-                        return trigger
-                    end
-                elseif trigger.bunkerSiloArea == nil then
-                    -- silo trigger
-                    if trailer.getCanDischargeToObject and trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) and trailer.getDischargeState ~= nil then
-                        if (trailer:getDischargeState() == Dischargeable.DISCHARGE_STATE_OFF and trailer.spec_pipe == nil) or (trailer.spec_pipe ~= nil and trailer.spec_pipe.currentState >= 2) then
+                    local trigger = {}
+                    self.siloTrigger = trigger
+                    return trigger
+                end
+            end
+        end
+    end
+
+    local trailerX, trailerY, trailerZ = getWorldTranslation(trailer.components[1].node)
+    local isInBaleTriggerRange = distanceToTarget < math.max(AutoDrive.getSetting("maxTriggerDistance"), 25)
+    local isInBunkerSiloRange = distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH)
+    if distanceToTarget < math.huge then
+        for _, trigger in pairs(ADTriggerManager.getUnloadTriggers()) do
+            if trigger.baleTrigger or trigger.bunkerSiloArea ~= nil then
+                local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
+                if triggerX ~= nil then
+                    if trigger.baleTrigger and isInBaleTriggerRange then
+                        -- bale trigger
+                        local distanceToUnloadTrigger = MathUtil.vector2Length(triggerX - trailerX, triggerZ - trailerZ)
+                        if distanceToUnloadTrigger < 50 and self:isBaleUnloadAllowed(trigger, trailer) ~= nil then
+                            -- consider only nearby trigger
                             self.siloTrigger = trigger
                             return trigger
                         end
-                    end
-                else
-                    -- assume bunker silo
-                    if AutoDrive.isTrailerInBunkerSiloArea(trailer, trigger) then
-                        self.bunkerTrigger = trigger
-                        return trigger
+                    elseif trigger.bunkerSiloArea ~= nil and isInBunkerSiloRange then
+                        -- bunker silo
+                        if AutoDrive.isTrailerInBunkerSiloArea(trailer, trigger) then
+                            self.bunkerTrigger = trigger
+                            return trigger
+                        end
                     end
                 end
             end
@@ -672,7 +679,7 @@ function ADTrailerModule:startUnloadingIntoTrigger(trailer, trigger)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:startUnloadingIntoTrigger start")
 
     if trailer.spec_baleLoader and trigger.baleTrigger then
-
+        -- bale trigger
         local trailerX, trailerY, trailerZ = getWorldTranslation(trailer.components[1].node)
         local triggerX, _, triggerZ = ADTriggerManager.getTriggerPos(trigger)
         if triggerX ~= nil then
@@ -687,7 +694,7 @@ function ADTrailerModule:startUnloadingIntoTrigger(trailer, trigger)
                 local distance = MathUtil.vector2Length(self.baleTriggerStart.x - trailerX, self.baleTriggerStart.z - trailerZ)
                 if distance >= (trailer.size.length / 2) then
                     -- move 1 / 2 length of trailer forward to hit the trigger with the back of the trailer
-                    if trailer.startAutomaticBaleUnloading then 
+                    if trailer.startAutomaticBaleUnloading then
                         local spec = trailer.spec_baleLoader
 
                         if spec.emptyState == BaleLoader.EMPTY_NONE then
@@ -703,19 +710,24 @@ function ADTrailerModule:startUnloadingIntoTrigger(trailer, trigger)
         self.oldDistanceToUnloadTrigger = self.actualDistanceToUnloadTrigger
 
     elseif trigger.bunkerSiloArea == nil then
+        -- tip trigger
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "Start unloading - fillUnitIndex: %s", tostring(trailer:getCurrentDischargeNode().fillUnitIndex))
         trailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
+
+        if self.unloadRotate then
+            -- keep the already served unload trigger
+            self.lastUnloadRotateTrigger = trigger
+        end
+
         self.isUnloading = true
         self.isUnloadingWithTrailer = trailer
         self.isUnloadingWithFillUnit = trailer:getCurrentDischargeNode().fillUnitIndex
-    else
+    elseif trigger.bunkerSiloArea ~= nil then
+        -- bunker silo
         if (not self.vehicle.ad.drivePathModule:getIsReversing() and not (self.vehicle.lastSpeedReal * 3600 < 1)) -- forward through bunker silo
             or (self.vehicle.ad.drivePathModule:getIsReversing() and self.vehicle:getLastSpeed() < 1) then -- reverse into bunker silo
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "Start unloading into bunkersilo - fillUnitIndex: %s", tostring(trailer:getCurrentDischargeNode().fillUnitIndex))
             trailer:setDischargeState(Dischargeable.DISCHARGE_STATE_GROUND)
-            --if self.unloadingToBunkerSilo == false then
-                self.bunkerStartFillLevel = self.fillLevel
-            --end 
             self.isUnloading = true
             self.unloadingToBunkerSilo = true
             self.bunkerTrailer = trailer

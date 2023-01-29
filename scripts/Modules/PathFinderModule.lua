@@ -1818,7 +1818,7 @@ function PathFinderModule:smoothResultingPPPath_Refined()
                     length = MathUtil.vector3Length(worldPos.x - worldPosPrevious.x, worldPos.y - worldPosPrevious.y, worldPos.z - worldPosPrevious.z)
                     local angleBetween = math.atan(math.abs(worldPos.y - worldPosPrevious.y) / length)
 
-                    if (angleBetween * 1.25) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
+                    if (angleBetween) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
                         hasCollision = true
 
                         if hasCollision then
@@ -1989,7 +1989,7 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
         end
     end
 
-    if (angleBetween * 1.25) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
+    if (angleBetween) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
         if self.vehicle ~= nil and self.vehicle.ad ~= nil and self.vehicle.ad.debug ~= nil and AutoDrive.debugVehicleMsg ~= nil then
             PathFinderModule.debugVehicleMsg(self.vehicle,
                 string.format("PFM checkSlopeAngle (angleBetween * 1.25) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD  x,z %d %d",
@@ -2000,7 +2000,7 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
         end
     end
 
-    if (angleBetweenCenter * 1.25) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
+    if (angleBetweenCenter) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
         if self.vehicle ~= nil and self.vehicle.ad ~= nil and self.vehicle.ad.debug ~= nil and AutoDrive.debugVehicleMsg ~= nil then
             PathFinderModule.debugVehicleMsg(self.vehicle,
                 string.format("PFM checkSlopeAngle (angleBetweenCenter * 1.25) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD  x,z %d %d",
@@ -2011,7 +2011,7 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
         end
     end
 
-    if belowGroundLevel or (angleBetween * 1.25) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD or (angleBetweenCenter * 1.25) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
+    if belowGroundLevel or (angleBetween) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD or (angleBetweenCenter) > AITurnStrategy.SLOPE_DETECTION_THRESHOLD then
         return true
     end
     return false
