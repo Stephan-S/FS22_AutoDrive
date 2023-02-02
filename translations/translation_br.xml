@@ -104,6 +104,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="Use pastas para estruturar destinos" />
 		<text name="gui_ad_wait"								text="Espera" />
 		<text name="gui_ad_drive"								text="Motorista a caminho" />
+		<text name="gui_ad_off"									text="Off" />
 		<text name="gui_ad_yes"									text="Sim" />
 		<text name="gui_ad_no"									text="Não" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -240,6 +241,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="AutoDrive deve criar uma rede de rotas a partir dos dados de tráfego e auxiliares no mapa?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Nenhuma colheitadeira com o mesmo destino encontrado" />
 		<text name="gui_ad_noUnloaderAvailable"					text="Nenhum motorista com o mesmo destino disponível" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
 
 		<text name="gui_ad_settingsPage_title"					text="AutoDrive - Configurações" />
 		<text name="gui_ad_userSettingsPage_title"				text="AutoDrive - Configurações Usuário" />

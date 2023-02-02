@@ -102,6 +102,7 @@
         <text name="gui_ad_useFolders_tooltip"          	text="Usa Le cartelle per le destinazioni edifici" />
         <text name="gui_ad_wait"                		text="Attendi" />
         <text name="gui_ad_drive"               		text="Continua" />
+		<text name="gui_ad_off"									text="Off" />
         <text name="gui_ad_yes"                 		text="Si" />
         <text name="gui_ad_no"                  		text="No" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -240,7 +241,9 @@
         <text name="gui_ad_scanConfirmationText"                text="AutoDrive deve generare una rete di percorsi a partire dai dati del traffico e degli aiutanti sulla mappa?" />
         <text name="gui_ad_noHarvesterAvailable"        	text="Nessuna mietitrice con lo stesso obiettivo trovata" />
         <text name="gui_ad_noUnloaderAvailable"         	text="Nessun autista con lo stesso obiettivo disponibile" />
-        
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
+
         <text name="gui_ad_settingsPage_title"          	text="Impostazioni" />
         <text name="gui_ad_userSettingsPage_title"      	text="Impostazioni Utente" />
         <text name="gui_ad_vehicleSettingsPage_title"       	text="Impostazioni Veicolo" />
