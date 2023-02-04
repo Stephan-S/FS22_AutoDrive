@@ -44,7 +44,8 @@ function ADSettingsPage:onCreateAutoDriveSetting(element)
     for i = 1, #setting.texts, 1 do
         if setting.translate == true then
             local text = g_i18n:getText(setting.texts[i])
-            if string.find(text, "Missing") then
+            local missingText = "Missing"
+            if text:sub(1, string.len(missingText)) == missingText then
                 labels[i] = setting.texts[i]
             else
                 labels[i] = text
