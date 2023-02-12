@@ -537,6 +537,41 @@ function CombineUnloaderMode:getSideChaseOffsetX_new()
     return sideChaseTermX + pipeOffset
 end
 
+function CombineUnloaderMode:getPipeChaseWayPoint(offsetX, offsetZ)
+    local wayPoint = {x = 0, y = 0, z = 0}
+    local trailer = g_currentMission.nodeToObject[self.targetFillNode]
+    if trailer == nil then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint trailer == nil")
+        trailer = self.vehicle
+    end
+    local _, trailerDistY, _ = worldToLocal(trailer.components[1].node, getWorldTranslation(self.targetFillNode))
+    local dischargeNode = AutoDrive.getDischargeNode(self.combine)
+    if dischargeNode == nil then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint dischargeNode == nil")
+        dischargeNode = self.combine.components[1].node
+    end
+    local combinePipeRootNode = AutoDrive.getPipeRoot(self.combine)
+    if combinePipeRootNode == nil then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint combinePipeRootNode == nil")
+        combinePipeRootNode = self.combine.components[1].node
+    end
+    local targetX, targetY, targetZ = getWorldTranslation(dischargeNode)
+    local _, combineDistY, _ = worldToLocal(combinePipeRootNode, targetX, targetY, targetZ)
+    local diffY = combineDistY - trailerDistY -- distance discharge to fill point
+    local pipeSide = self.pipeSide
+    if pipeSide == 0 then
+        pipeSide = 1
+    end
+    local pipeOffset = AutoDrive.getSetting("pipeOffset", self.vehicle)
+    worldOffsetX1, worldOffsetY1, worldOffsetZ1 = localDirectionToWorld(dischargeNode, 0, -diffY, 0)
+    worldOffsetX2, worldOffsetY2, worldOffsetZ2 = localDirectionToWorld(combinePipeRootNode, (offsetX or 0) + (pipeSide * pipeOffset), 0, (offsetZ or 0))
+    wayPoint.x = targetX + worldOffsetX1 + worldOffsetX2
+    wayPoint.y = targetY + worldOffsetY1 + worldOffsetY2
+    wayPoint.z = targetZ + worldOffsetZ1 + worldOffsetZ2
+
+    return wayPoint
+end
+
 function CombineUnloaderMode:getDynamicSideChaseOffsetZ()
     local nodeX, nodeY, nodeZ = getWorldTranslation(AutoDrive.getDischargeNode(self.combine))
     local _, _, pipeZOffsetToCombine = worldToLocal(self.combine.components[1].node, nodeX, nodeY, nodeZ)
@@ -721,8 +756,9 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
 
         if AutoDrive.useNewPipeOffsets and AutoDrive.isPipeOut(self.combine) then
             local sideOffsetZ = self:getDynamicSideChaseOffsetZ_fromDischargeNode(planningPhase)
-            local sideOffsetX = self.pipeSide * self:getSideChaseOffsetX_new()
-            sideChasePos = AutoDrive.createWayPointRelativeToDischargeNode(self.combine, sideOffsetX, sideOffsetZ)
+            -- local sideOffsetX = self.pipeSide * self:getSideChaseOffsetX_new()
+            -- sideChasePos = AutoDrive.createWayPointRelativeToDischargeNode(self.combine, sideOffsetX, sideOffsetZ)
+            sideChasePos = self:getPipeChaseWayPoint(0, sideOffsetZ)
             angleToSideChaseSide = self:getAngleToChasePos(sideChasePos)
         end
 
