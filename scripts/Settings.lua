@@ -244,8 +244,8 @@ AutoDrive.settings.pipeOffset = {
         "4.75 m",
         "5.0 m"
     },
-    default = 52,
-    current = 52,
+    default = 41,
+    current = 41,
     text = "gui_ad_pipe_offset",
     tooltip = "gui_ad_pipe_offset",
     translate = false,
