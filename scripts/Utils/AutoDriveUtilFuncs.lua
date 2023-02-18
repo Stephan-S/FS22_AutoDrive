@@ -295,7 +295,7 @@ function AutoDrive.getVehicleLeadingEdge(vehicle)
     for _, implement in pairs(implements) do
         local implementX, implementY, implementZ = getWorldTranslation(implement.components[1].node)
         local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
-        if diffZ > 0 and implement.size.length ~= nil then                    
+        if diffZ > 0 and implement.size.length ~= nil then
             leadingEdge = math.max(leadingEdge, diffZ + (implement.size.length / 2) - (vehicle.size.length / 2))
         end
     end
@@ -304,9 +304,9 @@ end
 
 function AutoDrive.getAllImplements(vehicle, includeVehicle)
     local allImp = {}
-    
+
     if vehicle ~= nil and vehicle.getAttachedImplements and #vehicle:getAttachedImplements() > 0 then
-        
+
         local function addAllAttached(obj)
             if obj.getAttachedImplements ~= nil then
                 for _, imp in pairs(obj:getAttachedImplements()) do
@@ -337,25 +337,24 @@ function AutoDrive.foldAllImplements(vehicle)
                 spec:doStateChange(BaleLoader.CHANGE_BUTTON_WORK_TRANSPORT)
             end
         end
-
         spec = implement.spec_plow
         if spec then
             if spec.getIsPlowRotationAllowed and spec:getIsPlowRotationAllowed() and spec.rotationMax ~= false then
                 spec:setRotationMax(false)
             end
         end
-    end
-    for _, implement in pairs(implements) do
-        local spec = implement.spec_foldable
-        if spec ~= nil and implement.getToggledFoldDirection then
-            if implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection then
-                local toggledFoldDirection = implement:getToggledFoldDirection()
-                -- local ret = Foldable.actionControllerFoldEvent(implement, -1)
-                if implement.getIsFoldAllowed and toggledFoldDirection and implement:getIsFoldAllowed(toggledFoldDirection) and implement.setFoldState then
-                    implement:setFoldState(toggledFoldDirection, false)
+        spec = implement.spec_foldable
+        if spec and not AutoDrive.isVehicleFolded(implement) then
+            if spec ~= nil and implement.getToggledFoldDirection then
+                if implement:getToggledFoldDirection() ~= spec.turnOnFoldDirection then
+                    local toggledFoldDirection = implement:getToggledFoldDirection()
+                    if implement.getIsFoldAllowed and toggledFoldDirection and implement:getIsFoldAllowed(toggledFoldDirection) and implement.setFoldState then
+                        implement:setFoldState(toggledFoldDirection, false)
+                    end
                 end
             end
         end
+        AutoDrive.closeCurtain(implement)
         -- combine handle ladder separate when enter or leave combine
         AutoDrive.foldLadder(implement)
     end
@@ -367,9 +366,11 @@ function AutoDrive.getAllImplementsFolded(vehicle)
     local spec
     for _, implement in pairs(implements) do
         -- check if all is set to transport position
-        if implement.getIsAIReadyToDrive then
+        if not implement.spec_aiDrivable and implement.getIsAIReadyToDrive then
+            -- spec_aiDrivable might cause infinite loop
             ret = ret and implement:getIsAIReadyToDrive()
         end
+
         spec = implement.spec_baleLoader
         if spec then
             -- bale loader
@@ -377,24 +378,34 @@ function AutoDrive.getAllImplementsFolded(vehicle)
             ret = ret and not implement:getIsBaleLoaderFoldingPlaying()
             ret = ret and spec.emptyState == BaleLoader.EMPTY_NONE
         end
-    end
 
-    if ret then
-        for _, implement in pairs(implements) do
-            local spec = implement.spec_foldable
-            if spec ~= nil then
-                ret = ret and AutoDrive.isVehicleFolded(implement)
-            end
-            -- combine handle ladder separate when enter or leave combine
-            ret = ret and AutoDrive.isLadderFolded(implement)
+        spec = implement.spec_foldable
+        if spec then
+            ret = ret and AutoDrive.isVehicleFolded(implement)
         end
+
+        spec = implement.spec_pipe
+        if spec and spec.hasMovablePipe then
+            ret = ret and spec.currentState == 1
+        end
+
+        spec = implement.spec_plow
+        if spec then
+            ret = ret and not spec.rotationMax
+            ret = ret and not (spec.rotationPart.turnAnimation and implement:getIsAnimationPlaying(spec.rotationPart.turnAnimation))
+        end
+
+        ret = ret and AutoDrive.isCurtainClosed(implement)
+
+        -- combine handle ladder separate when enter or leave combine
+        ret = ret and AutoDrive.isLadderFolded(implement)
     end
     return ret
 end
 
 function AutoDrive.foldLadder(vehicle)
     local spec = vehicle.spec_combine
-    if spec ~= nil then
+    if spec and not AutoDrive.isLadderFolded(vehicle) then
         local ladder = spec.ladder
         if ladder and ladder.animName and ladder.foldDirection and vehicle.getAnimationTime then
             if not vehicle:getIsAnimationPlaying(ladder.animName) then
@@ -416,6 +427,36 @@ function AutoDrive.isLadderFolded(vehicle)
                     ret = ret and (foldAnimTime < 0.01)
                 else
                     ret = ret and (foldAnimTime >= 1)
+                end
+            end
+        end
+    end
+    return ret
+end
+
+function AutoDrive.closeCurtain(vehicle)
+    local spec = vehicle.spec_trailer
+    if spec and not AutoDrive.isCurtainClosed(vehicle) then
+        local spec = vehicle.spec_trailer
+        if spec then
+            local tipSide = spec.tipSides[spec.preferedTipSideIndex]
+            if not vehicle:getIsAnimationPlaying(tipSide.animation.name) then
+                vehicle:playAnimation(tipSide.animation.name, tipSide.animation.closeSpeedScale, vehicle:getAnimationTime(tipSide.animation.name), true)
+            end
+        end
+    end
+end
+
+function AutoDrive.isCurtainClosed(vehicle)
+    local ret = true
+    local spec = vehicle.spec_trailer
+    if spec then
+        local tipSide = spec.tipSides[spec.preferedTipSideIndex]
+        if tipSide and tipSide.manualTipToggle then
+            if tipSide.animation and tipSide.animation.closeSpeedScale then
+                if vehicle.getAnimationDuration and vehicle:getAnimationDuration(tipSide.animation.name) > 1 then
+                    local animationTime = vehicle:getAnimationTime(tipSide.animation.name)
+                    ret = animationTime <= 0.01
                 end
             end
         end
@@ -464,7 +505,7 @@ function AutoDrive.setActualParkDestination(vehicle)
                         -- formatting
                         messageText = string.format(messageText, messageArg)
                         ADMessagesManager:addMessage(vehicle, ADMessagesManager.messageTypes.INFO, messageText, 5000)
-                        
+
                     elseif AutoDrive.isInExtendedEditorMode() and not AutoDrive.leftCTRLmodifierKeyPressed and AutoDrive.leftALTmodifierKeyPressed then
                         -- delete park destination
                         if vehicle.advd ~= nil then
@@ -661,7 +702,7 @@ function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
     if implement ~= nil and implement.spec_attachable ~= nil and implement.spec_attachable.attacherJoint ~= nil and implement.spec_attachable.attacherJoint.jointType ~= nil then
         for i, name in ipairs(AutoDrive.implementsAllowedForReverseDriving) do
             local key = "JOINTTYPE_"..string.upper(name)
-            
+
             if AttacherJoints[key] ~= nil and AttacherJoints[key] == implement.spec_attachable.attacherJoint.jointType then
                 -- Logging.info("[AD] isImplementAllowedForReverseDriving implement allowed %s ", tostring(key))
                 return true
@@ -669,8 +710,8 @@ function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
         end
     end
 
-    if implement ~= nil and implement.spec_attachable ~= nil 
-        and AttacherJoints.JOINTTYPE_IMPLEMENT == implement.spec_attachable.attacherJoint.jointType 
+    if implement ~= nil and implement.spec_attachable ~= nil
+        and AttacherJoints.JOINTTYPE_IMPLEMENT == implement.spec_attachable.attacherJoint.jointType
     then
         local breakforce = implement.spec_attachable:getBrakeForce()
         -- Logging.info("[AD] isImplementAllowedForReverseDriving implement breakforce %s ", tostring(breakforce))
@@ -681,8 +722,8 @@ function AutoDrive.isImplementAllowedForReverseDriving(vehicle,implement)
         end
     end
 
-    if implement ~= nil and implement.spec_attachable ~= nil 
-        and AttacherJoints.JOINTTYPE_SEMITRAILER == implement.spec_attachable.attacherJoint.jointType 
+    if implement ~= nil and implement.spec_attachable ~= nil
+        and AttacherJoints.JOINTTYPE_SEMITRAILER == implement.spec_attachable.attacherJoint.jointType
     then
         local implementX, implementY, implementZ = getWorldTranslation(implement.components[1].node)
         local _, _, diffZ = worldToLocal(vehicle.components[1].node, implementX, implementY, implementZ)
