@@ -233,6 +233,7 @@ end
 
 function AutoDrive.setEditorMode(editorMode)
     AutoDrive.setSettingState("EditorMode", editorMode)
+    ADUserDataManager:sendToServer()
 end
 
 function AutoDrive.cycleEditMode()
