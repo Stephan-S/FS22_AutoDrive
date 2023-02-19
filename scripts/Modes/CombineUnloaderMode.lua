@@ -563,8 +563,8 @@ function CombineUnloaderMode:getPipeChaseWayPoint(offsetX, offsetZ)
         pipeSide = 1
     end
     local pipeOffset = AutoDrive.getSetting("pipeOffset", self.vehicle)
-    worldOffsetX1, worldOffsetY1, worldOffsetZ1 = localDirectionToWorld(dischargeNode, 0, -diffY, 0)
-    worldOffsetX2, worldOffsetY2, worldOffsetZ2 = localDirectionToWorld(combinePipeRootNode, (offsetX or 0) + (pipeSide * pipeOffset), 0, (offsetZ or 0))
+    local worldOffsetX1, worldOffsetY1, worldOffsetZ1 = localDirectionToWorld(dischargeNode, 0, -diffY, 0)
+    local worldOffsetX2, worldOffsetY2, worldOffsetZ2 = localDirectionToWorld(combinePipeRootNode, (offsetX or 0) + (pipeSide * pipeOffset), 0, (offsetZ or 0))
     wayPoint.x = targetX + worldOffsetX1 + worldOffsetX2
     wayPoint.y = targetY + worldOffsetY1 + worldOffsetY2
     wayPoint.z = targetZ + worldOffsetZ1 + worldOffsetZ2
