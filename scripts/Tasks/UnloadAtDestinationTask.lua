@@ -3,6 +3,8 @@ UnloadAtDestinationTask = ADInheritsFrom(AbstractTask)
 UnloadAtDestinationTask.STATE_PATHPLANNING = 1
 UnloadAtDestinationTask.STATE_DRIVING = 2
 UnloadAtDestinationTask.STATE_WAIT_FOR_AL_UNLOAD = 3
+UnloadAtDestinationTask.WAIT_FOR_BALE_UNLOAD = 20000
+UnloadAtDestinationTask.BALE_UNLOAD_DISTANCE = 5
 
 function UnloadAtDestinationTask:new(vehicle, destinationID)
     local o = UnloadAtDestinationTask:create()
@@ -11,6 +13,7 @@ function UnloadAtDestinationTask:new(vehicle, destinationID)
     o.isContinued = false
     o.waitForALUnloadTimer = AutoDriveTON:new()
     o.waitForALUnload = false
+    o.waitForBaleUnloadTimer = AutoDriveTON:new()
     o.isReverseTriggerReached = false
     o.trailers = nil
     return o
@@ -38,6 +41,16 @@ function UnloadAtDestinationTask:setUp()
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
     self.waitForALUnload = false
+    self.waitForBaleUnload = false
+    self.baleTrailer = nil
+    for _, trailer in pairs(self.trailers) do
+        local spec = trailer.spec_baleLoader
+        if spec and trailer.startAutomaticBaleUnloading then
+            self.baleTrailer = trailer
+            break
+        end
+    end
+    self.baleUnloadForwardsTarget = nil
     self.isReverseTriggerReached = false
 end
 
@@ -48,7 +61,7 @@ function UnloadAtDestinationTask:update(dt)
             self.wayPoints = self.vehicle.ad.pathFinderModule:getPath()
             if self.wayPoints == nil or #self.wayPoints == 0 then
                 if self.vehicle.ad.pathFinderModule:isTargetBlocked() then
-                    -- If the selected field exit isn't reachable, try the closest one                    
+                    -- If the selected field exit isn't reachable, try the closest one                  
                     self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.vehicle.ad.stateModule:getSecondWayPoint())
                 elseif self.vehicle.ad.pathFinderModule:timedOut() or self.vehicle.ad.pathFinderModule:isBlocked() then
                     -- Add some delay to give the situation some room to clear itself
@@ -105,6 +118,14 @@ function UnloadAtDestinationTask:update(dt)
                             self.state = UnloadAtDestinationTask.STATE_WAIT_FOR_AL_UNLOAD
                         end
                         AutoDrive:unloadALAll(self.vehicle)
+                    elseif self.baleTrailer and self.baleTrailer.startAutomaticBaleUnloading then
+                        -- bale unload
+                        local spec = self.baleTrailer.spec_baleLoader
+                        if spec.emptyState == BaleLoader.EMPTY_NONE then
+                            self.waitForBaleUnload = true
+                            self.baleTrailer:startAutomaticBaleUnloading()
+                            self.state = UnloadAtDestinationTask.STATE_WAIT_FOR_AL_UNLOAD
+                        end
                     end
                 end
             else
@@ -142,7 +163,7 @@ function UnloadAtDestinationTask:update(dt)
         end
     else -- UnloadAtDestinationTask.STATE_WAIT_FOR_AL_UNLOAD
         local waitForALUnloadTime = AutoDrive.getSetting("ALUnloadWaitTime", self.vehicle)
-        if (waitForALUnloadTime >= 0 and self.waitForALUnloadTimer:timer(self.waitForALUnload, waitForALUnloadTime, dt)) or self.isContinued then
+        if self.waitForALUnload and (waitForALUnloadTime >= 0 and self.waitForALUnloadTimer:timer(self.waitForALUnload, waitForALUnloadTime, dt)) or self.isContinued then
             -- used to wait for AutoLoader to unload
             self.waitForALUnloadTimer:timer(false)
             AutoDrive.setAugerPipeOpen(self.trailers, false)
@@ -155,6 +176,15 @@ function UnloadAtDestinationTask:update(dt)
             self.vehicle.ad.specialDrivingModule:update(dt)
             return
         end
+        if self.waitForBaleUnload then
+            if self:isBaleUnloadFinished(dt) then
+                self.waitForBaleUnload = false
+                self:finished()
+            else
+                -- avoid further actions
+                return
+            end
+        end
     end
 end
 
@@ -162,12 +192,50 @@ function UnloadAtDestinationTask:abort()
 end
 
 function UnloadAtDestinationTask:continue()
-    self.vehicle.ad.trailerModule:stopUnloading()
-    self.isContinued = true
+    if not self.waitForBaleUnload then
+        self.vehicle.ad.trailerModule:stopUnloading()
+        self.isContinued = true
+    end
 end
 
 function UnloadAtDestinationTask:finished()
     self.vehicle.ad.taskModule:setCurrentTaskFinished()
+end
+
+function UnloadAtDestinationTask:isBaleUnloadFinished(dt)
+    if self.baleTrailer and self.baleTrailer.getIsAutomaticBaleUnloadingInProgress then
+        local unloading = self.baleTrailer:getIsAutomaticBaleUnloadingInProgress()
+        if self.baleUnloadForwardsTarget == nil then
+            local x, y, z = localToWorld(self.vehicle.components[1].node, 0, 0 , UnloadAtDestinationTask.BALE_UNLOAD_DISTANCE)
+            self.baleUnloadForwardsTarget = {x=x, y=y, z=z}
+        end
+        if self.waitForBaleUnloadTimer:timer(true, UnloadAtDestinationTask.WAIT_FOR_BALE_UNLOAD, dt) then
+            -- wait for pusher
+            local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+            local distance = MathUtil.vector2Length(x - self.baleUnloadForwardsTarget.x, z - self.baleUnloadForwardsTarget.z)
+            if distance >= 1 then
+                -- move some meters
+                self.vehicle.ad.specialDrivingModule:driveToPoint(dt, self.baleUnloadForwardsTarget, 1, false, 0.5, 1)
+                return false
+            end
+        end
+        if not unloading then
+            local spec = self.baleTrailer.spec_baleLoader
+            -- as long as Giants is not able to synchronize their machines, there will be strange appearances
+            if spec and not spec.isInWorkPosition then
+                self.baleTrailer:doStateChange(BaleLoader.CHANGE_BUTTON_WORK_TRANSPORT)
+                return false
+            end
+            if spec and spec.isInWorkPosition then
+                self.baleTrailer:doStateChange(BaleLoader.CHANGE_BUTTON_WORK_TRANSPORT)
+                return true
+            end
+        end
+        self.vehicle.ad.specialDrivingModule:stopVehicle()
+        self.vehicle.ad.specialDrivingModule:update(dt)
+        return false
+    end
+    return true
 end
 
 function UnloadAtDestinationTask:getI18nInfo()
