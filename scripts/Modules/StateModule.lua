@@ -73,6 +73,22 @@ function ADStateModule:reset()
     self.actualFarmId = 0
 end
 
+function ADStateModule:selectedFillTypesFromString(fillTypesString)
+    local fillTypes = {}
+    if fillTypesString ~= nil then
+        for _, fillTypeStr in pairs(fillTypesString:split(",")) do
+            local fillType = tonumber(fillTypeStr)
+            if fillType ~= nil then
+                table.insert(fillTypes, fillType)
+            end
+       end
+    end
+    if self.fillType ~= nil and not table.contains(fillTypes, self.fillType) then
+        table.insert(fillTypes, self.fillType)
+    end
+    return fillTypes
+end
+
 function ADStateModule:readFromXMLFile(xmlFile, key)
     if not xmlFile:hasProperty(key) then
         return
@@ -105,6 +121,11 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     if fillType ~= nil then
         self.fillType = fillType
         self.selectedFillTypes = {self.fillType}
+    end
+
+    local selectedFillTypes = xmlFile:getValue(key .. "#selectedFillTypes")
+    if selectedFillTypes ~= nil then
+        self.selectedFillTypes = self:selectedFillTypesFromString(selectedFillTypes)
     end
 
     local loopCounter = xmlFile:getValue(key .. "#loopCounter")
@@ -158,6 +179,17 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     -- end
 end
 
+function ADStateModule:selectedFillTypesToString(fillTypes)
+    local s = ""
+    for idx, fillType in ipairs(fillTypes) do
+        if idx > 1 then
+            s = s .. ","
+        end
+        s = s .. tostring(fillType)
+    end
+    return s
+end
+
 function ADStateModule:saveToXMLFile(xmlFile, key)    
     xmlFile:setValue(key .. "#mode", self.mode)
     if self.firstMarker ~= nil then
@@ -167,6 +199,7 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
         xmlFile:setValue(key .. "#secondMarker", self.secondMarker.markerIndex)
     end
     xmlFile:setValue(key .. "#fillType", self.fillType)
+    xmlFile:setValue(key .. "#selectedFillTypes", self:selectedFillTypesToString(self.selectedFillTypes))
     xmlFile:setValue(key .. "#loopCounter", self.loopCounter)
     xmlFile:setValue(key .. "#speedLimit", self.speedLimit)
     xmlFile:setValue(key .. "#fieldSpeedLimit", self.fieldSpeedLimit)
@@ -185,6 +218,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
+    streamWriteString(streamId, self:selectedFillTypesToString(self.selectedFillTypes))
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -215,7 +249,7 @@ function ADStateModule:readStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
-    self.selectedFillTypes = {self.fillType}
+    self.selectedFillTypes = self:selectedFillTypesFromString(streamReadString(streamId))
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -248,6 +282,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
+    streamWriteString(streamId, self:selectedFillTypesToString(self.selectedFillTypes))
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -278,7 +313,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
-    self.selectedFillTypes = {self.fillType}
+    self.selectedFillTypes = self:selectedFillTypesFromString(streamReadString(streamId))
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -833,7 +868,6 @@ function ADStateModule:toggleFillTypeSelection(fillType)
             end
         else
             table.insert(self.selectedFillTypes, fillType)
-            table.sort(self.selectedFillTypes)
         end
         self:raiseDirtyFlag()
     end

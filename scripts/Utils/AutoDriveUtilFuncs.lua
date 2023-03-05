@@ -598,7 +598,7 @@ function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
                     if dischargeableUnit.object and dischargeableUnit.object.getFillUnitSupportedFillTypes ~= nil then
                         if dischargeableUnit.fillUnitIndex and dischargeableUnit.fillUnitIndex > 0 then
                             for fillType, supported in pairs(dischargeableUnit.object:getFillUnitSupportedFillTypes(dischargeableUnit.fillUnitIndex)) do
-                                if supported then
+                                if supported and not table.contains(supportedFillTypes, fillType) then
                                     table.insert(supportedFillTypes, fillType)
                                 end
                             end
