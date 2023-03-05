@@ -181,7 +181,7 @@ function ADTrailerModule:update(dt)
     -- self:handleTrailerReversing()
 
     self.lastFillLevel = self.fillLevel
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end lastFillLevel %.1f", self.lastFillLevel)
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:update end lastFillLevel %.1f", self.lastFillLevel or -1.0)
 end
 
 function ADTrailerModule:handleTrailerCovers()
@@ -325,6 +325,8 @@ function ADTrailerModule:updateLoad(dt)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad Try loading at trigger now pair.fillUnitIndex %s", tostring(pair.fillUnitIndex))
                 fillFound = true
                 -- start loading
+
+                self.vehicle.ad.stateModule:selectPreferredFillTypeFromFillLevels(pair.fillLevels)
                 self:tryLoadingAtTrigger(pair.trailer, pair.trigger, pair.fillUnitIndex)
                 self.foundSuitableTrigger = true    -- loading trigger was found
                 return

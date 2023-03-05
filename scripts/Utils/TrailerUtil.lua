@@ -262,9 +262,8 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
         else
             if vehicle.ad.stateModule:getFillType() == nil or vehicle.ad.stateModule:getFillType() == FillType.UNKNOWN then
                 return false
-            else
-                table.insert(fillTypesToCheck, vehicle.ad.stateModule:getFillType())
             end
+            fillTypesToCheck = vehicle.ad.stateModule:getSelectedFillTypes()
         end
 
         -- go through the single fillUnits and check:
@@ -763,7 +762,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                     if distance <= maxTriggerDistance then
                         AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs distance %s", tostring(distance))
                         vehicle.ad.debugTrigger = trigger
-                        local allowedFillTypes = {vehicle.ad.stateModule:getFillType()}
+                        local allowedFillTypes = vehicle.ad.stateModule:getSelectedFillTypes()
 
                         -- seeds, fertilizer, liquidfertilizer should always be loaded if in trigger available
                         if #fillUnits > 1 then
@@ -786,8 +785,10 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
 
                         local hasRequiredFillType = false
                         for i = 1, #fillUnits do
-                            local hasFill = trigger.hasInfiniteCapacity 
+                            local hasFill = trigger.hasInfiniteCapacity
                             local isFillAllowed = false
+                            local availableFillLevels = {}
+
                             hasRequiredFillType = AutoDrive.fillTypesMatch(vehicle, trigger, trailer, allowedFillTypes, i)
                             local isNotFilled = trailer:getFillUnitFreeCapacity(i) > 0.1
 
@@ -795,11 +796,18 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
 
                             for _, allowedFillType in pairs(allowedFillTypes) do
                                 if trailer:getFillUnitSupportsFillType(i, allowedFillType) and trailer:getFillUnitAllowsFillType(i, allowedFillType) then
-                                    isFillAllowed = isFillAllowed or (fillLevels[allowedFillType] ~= nil)
-                                    hasFill = hasFill or (fillLevels[allowedFillType] ~= nil and fillLevels[allowedFillType] > 0)
+                                    if fillLevels[allowedFillType] ~= nil then
+                                        isFillAllowed = true
+                                        if trigger.hasInfiniteCapacity then
+                                            availableFillLevels[allowedFillType] = -1
+                                        elseif fillLevels[allowedFillType] ~= nil and fillLevels[allowedFillType] > 0 then
+                                            hasFill = true
+                                            availableFillLevels[allowedFillType] = fillLevels[allowedFillType]
+                                        end
+                                    end
                                 end
                             end
-                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs isFillAllowed %s hasFill %s", tostring(isFillAllowed), tostring(hasFill))
+                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs isFillAllowed %s hasFill %s #availableFillLevels %s", tostring(isFillAllowed), tostring(hasFill), #availableFillLevels)
 
                             local trailerIsInRange = AutoDrive.trailerIsInTriggerList(trailer, trigger, i)
                             if trailer.inRangeTimers == nil then
@@ -817,7 +825,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
 
                             if timerDone and hasRequiredFillType and isNotFilled and isFillAllowed then
                                 AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs timerDone %s trigger %s fillUnitIndex %s", tostring(timerDone), tostring(trigger), tostring(i))
-                                local pair = {trailer = trailer, trigger = trigger, fillUnitIndex = i, hasFill = hasFill}
+                                local pair = {trailer = trailer, trigger = trigger, fillUnitIndex = i, hasFill = hasFill, fillLevels = availableFillLevels}
                                 table.insert(trailerTriggerPairs, pair)
                             end
                         end

@@ -30,6 +30,7 @@ function ADStateModule:reset()
     self.creationMode = ADStateModule.CREATE_OFF
 
     self.fillType = FillType.UNKNOWN
+    self.selectedFillTypes = {}
     self.loopCounter = 0
     self.loopsDone = 0
 
@@ -103,6 +104,7 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     local fillType = xmlFile:getValue(key .. "#fillType")
     if fillType ~= nil then
         self.fillType = fillType
+        self.selectedFillTypes = {self.fillType}
     end
 
     local loopCounter = xmlFile:getValue(key .. "#loopCounter")
@@ -213,6 +215,7 @@ function ADStateModule:readStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
+    self.selectedFillTypes = {self.fillType}
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -275,6 +278,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
+    self.selectedFillTypes = {self.fillType}
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -806,11 +810,80 @@ function ADStateModule:getFillType()
     return self.fillType
 end
 
+function ADStateModule:getSelectedFillTypes()
+    return self.selectedFillTypes
+end
+
 function ADStateModule:setFillType(fillType)
     if fillType > 0 and self.fillType ~= fillType then
         self.fillType = fillType
+        if not table.contains(self.selectedFillTypes, fillType) then
+            self.selectedFillTypes = {fillType}
+        end
         self:raiseDirtyFlag()
     end
+end
+
+function ADStateModule:toggleFillTypeSelection(fillType)
+    if fillType > 0 then
+        if table.contains(self.selectedFillTypes, fillType) then
+            table.removeValue(self.selectedFillTypes, fillType)
+            if self.fillType == fillType and #self.selectedFillTypes > 0 then
+                self.fillType = self.selectedFillTypes[1]
+            end
+        else
+            table.insert(self.selectedFillTypes, fillType)
+            table.sort(self.selectedFillTypes)
+        end
+        self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:toggleAllFillTypeSelections()
+    if #self.selectedFillTypes <= 1 then
+        self.selectedFillTypes = {unpack(AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(self.vehicle))}
+    else
+        self.selectedFillTypes = {self.fillType}
+    end
+    self:raiseDirtyFlag()
+end
+
+function ADStateModule:getPreferredFillTypeFromFillLevels(fillLevels)
+    local fillLevelList = {}  -- get a list of fill levels
+    for _, fillLevel in pairs(fillLevels) do
+        table.insert(fillLevelList, fillLevel)
+    end
+    table.sort(fillLevelList)  -- sort it
+    local requiredFillLevel = fillLevelList[#fillLevelList]
+    local idx = table.indexOf(self.selectedFillTypes, self.fillType)  -- starting point
+    local loopsLeft = #self.selectedFillTypes
+    if idx == nil or requiredFillLevel == nil then
+        return nil
+    end
+    if requiredFillLevel == -1 then
+        -- infinite trigger - skip the current filltype
+        idx = idx + 1
+    end
+    while true do
+        local fillType = self.selectedFillTypes[idx]
+        if fillLevels[fillType] == requiredFillLevel then
+            return fillType
+        end
+
+        idx = idx + 1
+        if self.selectedFillTypes[idx] == nil then
+            idx = 1  -- loop to start
+        end
+        loopsLeft = loopsLeft - 1
+        if loopsLeft <= 0 then
+            break
+        end
+    end
+    return nil
+end
+
+function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
+    self.fillType = self:getPreferredFillTypeFromFillLevels(fillLevels)
 end
 
 function ADStateModule:nextFillType()
