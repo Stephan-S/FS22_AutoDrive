@@ -628,7 +628,7 @@ function ADPullDownList:act(vehicle, posX, posY, isDown, isUp, button)
             elseif self.state == ADPullDownList.STATE_EXPANDED and self.type == ADPullDownList.TYPE_FILLTYPE and AutoDrive.leftALTmodifierKeyPressed then
                 local value = self:getHoverEntryReturnValue(vehicle)
                 if value ~= nil then
-                    AutoDriveHudInputEventEvent:sendToggleAllFillTypeSelectionsEvent(vehicle)
+                    AutoDriveHudInputEventEvent:sendToggleAllFillTypeSelectionsEvent(vehicle, value)
                 end
             elseif self.state == ADPullDownList.STATE_EXPANDED and self.type ~= ADPullDownList.TYPE_FILLTYPE and AutoDrive.isEditorModeEnabled() and AutoDrive.getSetting("useFolders") and self.dragged ~= nil and self.startedDraggingTimer > 200 then
                 -- drag element to hitElement

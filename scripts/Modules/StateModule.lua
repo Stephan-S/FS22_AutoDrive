@@ -73,22 +73,6 @@ function ADStateModule:reset()
     self.actualFarmId = 0
 end
 
-function ADStateModule:selectedFillTypesFromString(fillTypesString)
-    local fillTypes = {}
-    if fillTypesString ~= nil then
-        for _, fillTypeStr in pairs(fillTypesString:split(",")) do
-            local fillType = tonumber(fillTypeStr)
-            if fillType ~= nil then
-                table.insert(fillTypes, fillType)
-            end
-       end
-    end
-    if self.fillType ~= nil and not table.contains(fillTypes, self.fillType) then
-        table.insert(fillTypes, self.fillType)
-    end
-    return fillTypes
-end
-
 function ADStateModule:readFromXMLFile(xmlFile, key)
     if not xmlFile:hasProperty(key) then
         return
@@ -120,12 +104,13 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     local fillType = xmlFile:getValue(key .. "#fillType")
     if fillType ~= nil then
         self.fillType = fillType
-        self.selectedFillTypes = {self.fillType}
     end
 
     local selectedFillTypes = xmlFile:getValue(key .. "#selectedFillTypes")
     if selectedFillTypes ~= nil then
-        self.selectedFillTypes = self:selectedFillTypesFromString(selectedFillTypes)
+        self.selectedFillTypes = AutoDrive.stringToNumberList(selectedFillTypes)
+    else
+        self.selectedFillTypes = {self.fillType}
     end
 
     local loopCounter = xmlFile:getValue(key .. "#loopCounter")
@@ -179,17 +164,6 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     -- end
 end
 
-function ADStateModule:selectedFillTypesToString(fillTypes)
-    local s = ""
-    for idx, fillType in ipairs(fillTypes) do
-        if idx > 1 then
-            s = s .. ","
-        end
-        s = s .. tostring(fillType)
-    end
-    return s
-end
-
 function ADStateModule:saveToXMLFile(xmlFile, key)    
     xmlFile:setValue(key .. "#mode", self.mode)
     if self.firstMarker ~= nil then
@@ -199,7 +173,7 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
         xmlFile:setValue(key .. "#secondMarker", self.secondMarker.markerIndex)
     end
     xmlFile:setValue(key .. "#fillType", self.fillType)
-    xmlFile:setValue(key .. "#selectedFillTypes", self:selectedFillTypesToString(self.selectedFillTypes))
+    xmlFile:setValue(key .. "#selectedFillTypes", table.concat(self.selectedFillTypes, ','))
     xmlFile:setValue(key .. "#loopCounter", self.loopCounter)
     xmlFile:setValue(key .. "#speedLimit", self.speedLimit)
     xmlFile:setValue(key .. "#fieldSpeedLimit", self.fieldSpeedLimit)
@@ -218,7 +192,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
-    streamWriteString(streamId, self:selectedFillTypesToString(self.selectedFillTypes))
+    AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -249,7 +223,7 @@ function ADStateModule:readStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
-    self.selectedFillTypes = self:selectedFillTypesFromString(streamReadString(streamId))
+    self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -282,7 +256,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
-    streamWriteString(streamId, self:selectedFillTypesToString(self.selectedFillTypes))
+    AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -313,7 +287,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
-    self.selectedFillTypes = self:selectedFillTypesFromString(streamReadString(streamId))
+    self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -864,6 +838,7 @@ function ADStateModule:toggleFillTypeSelection(fillType)
         if table.contains(self.selectedFillTypes, fillType) then
             table.removeValue(self.selectedFillTypes, fillType)
             if self.fillType == fillType and #self.selectedFillTypes > 0 then
+                -- the deselected filltype was the active filltype -> select the first remaining item
                 self.fillType = self.selectedFillTypes[1]
             end
         else
@@ -873,11 +848,14 @@ function ADStateModule:toggleFillTypeSelection(fillType)
     end
 end
 
-function ADStateModule:toggleAllFillTypeSelections()
+function ADStateModule:toggleAllFillTypeSelections(fillType)
     if #self.selectedFillTypes <= 1 then
+        -- only one item selected -> select all
         self.selectedFillTypes = {unpack(AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(self.vehicle))}
     else
-        self.selectedFillTypes = {self.fillType}
+        -- more than one item selected -> clear selection and only select the given item
+        self.selectedFillTypes = {fillType}
+        self.fillType = fillType
     end
     self:raiseDirtyFlag()
 end

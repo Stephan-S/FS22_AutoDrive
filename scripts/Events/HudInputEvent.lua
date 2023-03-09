@@ -61,7 +61,7 @@ function AutoDriveHudInputEventEvent:run(connection)
         end
 
         if self.eventType == self.TYPE_TOGGLE_ALL_FILLTYPE_SELECTIONS then
-            self.vehicle.ad.stateModule:toggleAllFillTypeSelections()
+            self.vehicle.ad.stateModule:toggleAllFillTypeSelections(self.value)
         end
     end
 end
@@ -94,9 +94,9 @@ function AutoDriveHudInputEventEvent:sendToggleFillTypeSelectionEvent(vehicle, f
     end
 end
 
-function AutoDriveHudInputEventEvent:sendToggleAllFillTypeSelectionsEvent(vehicle)
+function AutoDriveHudInputEventEvent:sendToggleAllFillTypeSelectionsEvent(vehicle, fillTypeId)
     if g_client ~= nil then
         -- Client have to send to server
-        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent.new(vehicle, self.TYPE_TOGGLE_ALL_FILLTYPE_SELECTIONS, nil))
+        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent.new(vehicle, self.TYPE_TOGGLE_ALL_FILLTYPE_SELECTIONS, fillTypeId))
     end
 end
