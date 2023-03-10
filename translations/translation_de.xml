@@ -110,6 +110,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="Zielpunkte in Ordner sortieren" />
 		<text name="gui_ad_wait"								text="Warten" />
 		<text name="gui_ad_drive"								text="Weiterfahren" />
+		<text name="gui_ad_off"									text="Aus" />
 		<text name="gui_ad_yes"									text="Ja" />
 		<text name="gui_ad_no"									text="Nein" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -246,6 +247,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="Soll AutoDrive aus den Verkehrs- und Helferdaten der Karte ein Wegenetz erzeugen?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Kein Ernter mit gleichem Ziel" />
 		<text name="gui_ad_noUnloaderAvailable"					text="Kein freier Fahrer mit gleichem Ziel" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Fahrzeitanzeigen" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="Für externe mods: Zeit-Intervall zur Berechnung der Restfahrzeit. Bei Performanceproblemen erhöhen oder deaktivieren." />
 
 		<text name="gui_ad_settingsPage_title"					text="Einstellungen - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Benutzereinstellungen - AutoDrive" />

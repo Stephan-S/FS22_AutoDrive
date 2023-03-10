@@ -244,8 +244,8 @@ AutoDrive.settings.pipeOffset = {
         "4.75 m",
         "5.0 m"
     },
-    default = 52,
-    current = 52,
+    default = 41,
+    current = 41,
     text = "gui_ad_pipe_offset",
     tooltip = "gui_ad_pipe_offset",
     translate = false,
@@ -1033,6 +1033,18 @@ AutoDrive.settings.scaleLines = {
     translate = false,
     isVehicleSpecific = false,
     isUserSpecific = true
+}
+
+AutoDrive.settings.remainingDriveTimeInterval = {
+    values = {0, 1, 3, 5, 10, 20, 30, 60},
+    texts = {"gui_ad_off", "1s", "3s", "5s", "10s", "20s", "30s", "60s"},
+    default = 5,
+    current = 5,
+    text = "gui_ad_remainingDriveTimeInterval",
+    tooltip = "gui_ad_remainingDriveTimeInterval_tooltip",
+    translate = true,
+    isVehicleSpecific = false,
+    isUserSpecific = false
 }
 
 function AutoDrive.getSetting(settingName, vehicle)

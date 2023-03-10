@@ -79,6 +79,7 @@ function AutoDrive.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "collisionTestCallback", AutoDrive.collisionTestCallback)
     SpecializationUtil.registerFunction(vehicleType, "generateUTurn", AutoDrive.generateUTurn)
     SpecializationUtil.registerFunction(vehicleType, "getCanAdTakeControl", AutoDrive.getCanAdTakeControl) -- see ExternalInterface.lua
+    SpecializationUtil.registerFunction(vehicleType, "adGetRemainingDriveTime", AutoDrive.adGetRemainingDriveTime)
 end
 
 function AutoDrive.registerEvents(vehicleType)
@@ -643,7 +644,7 @@ function AutoDrive:onDrawPreviews()
         if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
             if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
                 wp.y = lastHeight
-            end	
+            end
 
             if collisionFree then
                 ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, unpack(AutoDrive.currentColors.ad_color_previewOk))
@@ -1340,6 +1341,13 @@ function AutoDrive.passToExternalMod(vehicle)
             end
         end
     end
+end
+
+function AutoDrive:adGetRemainingDriveTime()
+    if not self.spec_locomotive and self.ad and self.ad.stateModule and self.ad.stateModule:isActive() then
+        return self.ad.stateModule:adGetRemainingDriveTime()
+    end
+    return 0
 end
 
 function AutoDrive:updateWayPointsDistance()

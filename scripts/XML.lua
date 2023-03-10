@@ -291,7 +291,7 @@ function AutoDrive.saveToXML(xmlFile)
 	end
 
 	for feature, enabled in pairs(AutoDrive.experimentalFeatures) do
-        if not feature == "RecordWhileNotInVehicle" then
+        if not (feature == "RecordWhileNotInVehicle") then
             setXMLBool(xmlFile, "AutoDrive.experimentalFeatures." .. feature .. "#enabled", enabled)
         end
 	end
