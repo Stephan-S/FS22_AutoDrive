@@ -849,15 +849,23 @@ function ADStateModule:toggleFillTypeSelection(fillType)
 end
 
 function ADStateModule:toggleAllFillTypeSelections(fillType)
-    if #self.selectedFillTypes <= 1 then
-        -- only one item selected -> select all
-        self.selectedFillTypes = {unpack(AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(self.vehicle))}
-    else
-        -- more than one item selected -> clear selection and only select the given item
-        self.selectedFillTypes = {fillType}
-        self.fillType = fillType
+    if fillType > 0 then
+        local supportedFillTypes = AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(self.vehicle)
+        if supportedFillTypes and #supportedFillTypes > 0 then
+            for _, selected in pairs(supportedFillTypes) do
+                if not table.contains(self.selectedFillTypes, selected) then
+                    -- at least one supported fillType not yet selected. Select all
+                    self.selectedFillTypes = supportedFillTypes
+                    self:raiseDirtyFlag()
+                    return
+                end
+            end
+            -- all fillTypes selected - clear selection and only select the given item
+            self.selectedFillTypes = {fillType}
+            self.fillType = fillType
+            self:raiseDirtyFlag()
+        end
     end
-    self:raiseDirtyFlag()
 end
 
 function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
