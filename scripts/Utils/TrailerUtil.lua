@@ -807,7 +807,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
                                     end
                                 end
                             end
-                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs isFillAllowed %s hasFill %s #availableFillLevels %s", tostring(isFillAllowed), tostring(hasFill), #availableFillLevels)
+                            AutoDrive.debugPrint(trailer, AutoDrive.DC_TRAILERINFO, "AutoDrive.getTriggerAndTrailerPairs isFillAllowed %s hasFill %s", tostring(isFillAllowed), tostring(hasFill))
 
                             local trailerIsInRange = AutoDrive.trailerIsInTriggerList(trailer, trigger, i)
                             if trailer.inRangeTimers == nil then
