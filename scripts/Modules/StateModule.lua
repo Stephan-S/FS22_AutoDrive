@@ -860,7 +860,7 @@ function ADStateModule:toggleAllFillTypeSelections(fillType)
     self:raiseDirtyFlag()
 end
 
-function ADStateModule:getPreferredFillTypeFromFillLevels(fillLevels)
+function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
     local fillLevelList = {}  -- get a list of fill levels
     for _, fillLevel in pairs(fillLevels) do
         table.insert(fillLevelList, fillLevel)
@@ -870,7 +870,7 @@ function ADStateModule:getPreferredFillTypeFromFillLevels(fillLevels)
     local idx = table.indexOf(self.selectedFillTypes, self.fillType)  -- starting point
     local loopsLeft = #self.selectedFillTypes
     if idx == nil or requiredFillLevel == nil then
-        return nil
+        return
     end
     if requiredFillLevel == -1 then
         -- infinite trigger - skip the current filltype
@@ -879,7 +879,8 @@ function ADStateModule:getPreferredFillTypeFromFillLevels(fillLevels)
     while true do
         local fillType = self.selectedFillTypes[idx]
         if fillLevels[fillType] == requiredFillLevel then
-            return fillType
+            self.fillType = fillType
+            break
         end
 
         idx = idx + 1
@@ -891,11 +892,6 @@ function ADStateModule:getPreferredFillTypeFromFillLevels(fillLevels)
             break
         end
     end
-    return nil
-end
-
-function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
-    self.fillType = self:getPreferredFillTypeFromFillLevels(fillLevels)
 end
 
 function ADStateModule:nextFillType()
