@@ -150,7 +150,7 @@
         <text name="gui_ad_ground"              		text="Livello del suolo" />
         <text name="gui_ad_aboveDriver"             		text="Sopra il veicolo" />
         <text name="gui_ad_enableTrafficDetection"      	text="Rileva collisioni" />
-        <text name="gui_ad_enableTrafficDetection_tooltip"  	text="Rilevamento di collisioni avanzato, che rileva anche traffico AI, segnali stradali, recinzioni ecc Off, detect FS 22 or FS 19 collision" />
+        <text name="gui_ad_enableTrafficDetection_tooltip"  	text="Rilevamento di collisioni avanzato, che rileva anche traffico AI, segnali stradali, recinzioni ecc. Se Disattivato, rileva la collisione standard di FS 22 o FS 19" />
         <text name="gui_ad_shovelWidth"             		text="Larghezza della pala (aggiunta)" />
         <text name="gui_ad_shovelWidth_tooltip"         	text="Se la larghezza della pala rilevata automaticamente è troppo piccola, può essere aumentata con questo valore" />
         <text name="gui_ad_preCallLevel"            		text="Anticipa chiamata per scarico" />
