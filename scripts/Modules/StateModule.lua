@@ -869,6 +869,10 @@ function ADStateModule:toggleAllFillTypeSelections(fillType)
 end
 
 function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
+    if #self.selectedFillTypes == 0 then
+        return self.fillType
+    end
+
     local fillLevelList = {}  -- get a list of fill levels
     for _, fillLevel in pairs(fillLevels) do
         table.insert(fillLevelList, fillLevel)
@@ -881,8 +885,8 @@ function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
         return
     end
     if requiredFillLevel == -1 then
-        -- infinite trigger - skip the current filltype
-        idx = idx + 1
+        -- infinite trigger (all fill levels are -1) - pick the next available filltype
+        idx = (idx % #self.selectedFillTypes) + 1
     end
     while true do
         local fillType = self.selectedFillTypes[idx]
@@ -891,10 +895,7 @@ function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
             break
         end
 
-        idx = idx + 1
-        if self.selectedFillTypes[idx] == nil then
-            idx = 1  -- loop to start
-        end
+        idx = (idx % #self.selectedFillTypes) + 1
         loopsLeft = loopsLeft - 1
         if loopsLeft <= 0 then
             break
