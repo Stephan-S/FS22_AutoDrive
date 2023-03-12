@@ -870,7 +870,7 @@ end
 
 function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
     if #self.selectedFillTypes == 0 then
-        return self.fillType
+        return
     end
 
     local fillLevelList = {}  -- get a list of fill levels
