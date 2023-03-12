@@ -163,7 +163,7 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, usedSplines, s
 				end
 			end
 		end
-        
+
 		local posX, posY, posZ = getSplinePosition(spline, 1)
 		local targetId = AutoDrive:getSplineEndConnection(spline)
 		if targetId >= 0 then			
@@ -267,7 +267,7 @@ function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
 					local dist = ADGraphManager:getDistanceBetweenNodes(startNode.id, endNode.id)
 
 					if angle < maxAngle and angle2 < 85 and angle3 < 85 and dist < maxDist then
-                        
+
                         local existingPath = ADPathCalculator:GetPath(endNode.id, startNode.id, {})
                         if (existingPath == nil or #existingPath == 0 or #existingPath > 40) then
                             self.splineInterpolation = nil
@@ -283,11 +283,11 @@ function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
                                                 wp.y = lastHeight
                                             end			
                                             ADGraphManager:recordWayPoint(wp.x, wp.y, wp.z, true, false, false, lastId, AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION)
-                                            lastId = ADGraphManager:getWayPointsCount()                                            
+                                            lastId = ADGraphManager:getWayPointsCount()
 											lastHeight = wp.y
                                         end
                                     end
-    
+
                                     local wp = ADGraphManager:getWayPointById(lastId)
                                     ADGraphManager:toggleConnectionBetween(wp, startNode, false)
                                 end
@@ -309,20 +309,7 @@ end
 function AutoDrive:checkForCollisionOnSpline()
 	local widthX = 1.8
 	local height = 2.3
-    local mask = 0
-
-    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
-
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1)
+    local mask = AutoDrive.collisionMaskSplines
 
 	for wpId, wp in pairs(self.splineInterpolation.waypoints) do
 		if wpId > 1 and wpId < (#self.splineInterpolation.waypoints - 1) then

@@ -105,6 +105,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="Użyj folderów, aby uporządkować miejsca docelowe" />
 		<text name="gui_ad_wait"								text="Czekaj" />
 		<text name="gui_ad_drive"								text="Jedź dalej" />
+		<text name="gui_ad_off"									text="Off" />
 		<text name="gui_ad_yes"									text="Tak" />
 		<text name="gui_ad_no"									text="Nie" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -241,6 +242,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="Czy AutoDrive powinien generować sieć tras na podstawie danych o ruchu drogowym i pomocnikach na mapie?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Nie znaleziono kombajnu dla tego samego celu" />
 		<text name="gui_ad_noUnloaderAvailable"					text="Brak kierowcy dla tego samego celu" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
 
 		<text name="gui_ad_settingsPage_title"					text="Ustawienia - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Ustawienia użytkownika - AutoDrive" />

@@ -83,10 +83,6 @@ function AutoDrive.readFromXML(xmlFile)
 		return
 	end
 
-	AutoDrive.HudX = Utils.getNoNil(getXMLFloat(xmlFile, "AutoDrive.HudX"), AutoDrive.HudX)
-	AutoDrive.HudY = Utils.getNoNil(getXMLFloat(xmlFile, "AutoDrive.HudY"), AutoDrive.HudY)
-	AutoDrive.showingHud = Utils.getNoNil(getXMLBool(xmlFile, "AutoDrive.HudShow"), AutoDrive.showingHud)
-
 	AutoDrive.currentDebugChannelMask = getXMLInt(xmlFile, "AutoDrive.currentDebugChannelMask") or 0
 
 	for settingName, setting in pairs(AutoDrive.settings) do
@@ -283,10 +279,6 @@ function AutoDrive.saveToXML(xmlFile)
 	setXMLString(xmlFile, "AutoDrive.version", AutoDrive.version)
 	setXMLString(xmlFile, "AutoDrive.MapName", AutoDrive.loadedMap)
 
-	-- setXMLFloat(xmlFile, "AutoDrive.HudX", AutoDrive.HudX)
-	-- setXMLFloat(xmlFile, "AutoDrive.HudY", AutoDrive.HudY)
-	-- setXMLBool(xmlFile, "AutoDrive.HudShow", AutoDrive.Hud.showHud)
-
 	setXMLInt(xmlFile, "AutoDrive.currentDebugChannelMask", AutoDrive.currentDebugChannelMask)
 
 	for settingName, setting in pairs(AutoDrive.settings) do
@@ -299,7 +291,7 @@ function AutoDrive.saveToXML(xmlFile)
 	end
 
 	for feature, enabled in pairs(AutoDrive.experimentalFeatures) do
-        if not feature == "RecordWhileNotInVehicle" then
+        if not (feature == "RecordWhileNotInVehicle") then
             setXMLBool(xmlFile, "AutoDrive.experimentalFeatures." .. feature .. "#enabled", enabled)
         end
 	end

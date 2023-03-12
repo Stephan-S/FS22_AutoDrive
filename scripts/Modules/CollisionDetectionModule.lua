@@ -28,7 +28,24 @@ function ADCollisionDetectionModule:detectObstacle()
 
 	if AutoDrive.getSetting("enableTrafficDetection") >= 1 then
 		if self.vehicle.ad.sensors.frontSensorDynamic:pollInfo() then
-			return true
+            local frontSensorDynamicInBunkerArea = false
+            local sensorLocation = self.vehicle.ad.sensors.frontSensorDynamic:getLocationByPosition()
+            local vehX, vehY, vehZ = getWorldTranslation(self.vehicle.components[1].node)
+            local worldOffsetX, worldOffsetY, worldOffsetZ = localDirectionToWorld(self.vehicle.components[1].node, sensorLocation.x, 0, sensorLocation.z)
+            for _, trigger in pairs(ADTriggerManager.getUnloadTriggers()) do
+                if trigger and trigger.bunkerSiloArea ~= nil then
+                    local x1, z1 = trigger.bunkerSiloArea.sx, trigger.bunkerSiloArea.sz
+                    local x2, z2 = trigger.bunkerSiloArea.wx, trigger.bunkerSiloArea.wz
+                    local x3, z3 = trigger.bunkerSiloArea.hx, trigger.bunkerSiloArea.hz
+                    if MathUtil.hasRectangleLineIntersection2D(x1, z1, x2 - x1, z2 - z1, x3 - x1, z3 - z1, vehX + worldOffsetX, vehZ + worldOffsetZ, 0, 1) then
+                        frontSensorDynamicInBunkerArea = true
+                        break
+                    end
+                end
+            end
+            if (not frontSensorDynamicInBunkerArea) then
+                return true
+            end
 		end
 	end
 
@@ -49,14 +66,14 @@ end
 function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 	local wayPoints, currentWayPoint = self.vehicle.ad.drivePathModule:getWayPoints()
 	if self.vehicle.ad.stateModule:isActive() and wayPoints ~= nil and self.vehicle.ad.drivePathModule:isOnRoadNetwork() then
-		if ((g_updateLoopIndex + self.vehicle.id) % AutoDrive.PERF_FRAMES == 0) then			
+		if ((g_updateLoopIndex + self.vehicle.id) % AutoDrive.PERF_FRAMES == 0) then
 			self.trafficVehicle = nil
 			local idToCheck = 3
 			local alreadyOnDualRoute = false
 			if wayPoints[currentWayPoint - 1] ~= nil and wayPoints[currentWayPoint] ~= nil then
 				alreadyOnDualRoute = ADGraphManager:isDualRoad(wayPoints[currentWayPoint - 1], wayPoints[currentWayPoint])
 			end
-			
+
 			if wayPoints[currentWayPoint + idToCheck] ~= nil and wayPoints[currentWayPoint + idToCheck + 1] ~= nil and not alreadyOnDualRoute then
 				local dualRoute = ADGraphManager:isDualRoad(wayPoints[currentWayPoint + idToCheck], wayPoints[currentWayPoint + idToCheck + 1])
 
@@ -81,7 +98,7 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 
 				if #dualRoutePoints > 0 then
 					for _, other in pairs(g_currentMission.vehicles) do
-						if other ~= self.vehicle and other.ad ~= nil and other.ad.stateModule ~= nil and other.ad.stateModule:isActive() and other.ad.drivePathModule:isOnRoadNetwork() then					
+						if other ~= self.vehicle and other.ad ~= nil and other.ad.stateModule ~= nil and other.ad.stateModule:isActive() and other.ad.drivePathModule:isOnRoadNetwork() then
 							local onSameRoute = false
 							local sameDirection = false
 							local window = 4
@@ -109,7 +126,7 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 								end
 								i = i + 1
 							end
-							
+
 							if onSameRoute == true and other.ad.collisionDetectionModule:getDetectedVehicle() == nil and (sameDirection == false) then
 								self.trafficVehicle = other
 								return true
@@ -174,7 +191,7 @@ function ADCollisionDetectionModule:detectTrafficOnUpcomingReverseSection()
 								i = i + 1
 							end
 
-							if onSameRoute == true then							
+							if onSameRoute == true then
 								--print(self.vehicle.ad.stateModule:getName() .. " - detected reverse section ahead - another vehicle on it")
 								self.trafficVehicle = other
 								self.lastReverseCheck = true
@@ -187,7 +204,7 @@ function ADCollisionDetectionModule:detectTrafficOnUpcomingReverseSection()
 			return self.lastReverseCheck
 		end
 	end
-	
+
 	--print(self.vehicle.ad.stateModule:getName() .. " - all clear")
 	return false
 end
@@ -199,7 +216,7 @@ end
 function ADCollisionDetectionModule:checkReverseCollision()
     local trailers, trailerCount = AutoDrive.getAllUnits(self.vehicle)
     local mostBackImplement = AutoDrive.getMostBackImplementOf(self.vehicle)
-    
+
     local trailer = nil
     if trailerCount > 1 and self.vehicle.trailer ~= nil and self.vehicle.trailer ~= self.vehicle then
         -- vehicle.trailer is the controlable reverse attachable

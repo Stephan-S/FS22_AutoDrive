@@ -76,7 +76,7 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     if not xmlFile:hasProperty(key) then
         return
     end
-    
+
     local mode = xmlFile:getValue(key .. "#mode")
     --local mode = getXMLInt(xmlFile, key .. "#mode")
     if mode ~= nil then
@@ -156,7 +156,7 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
     -- end
 end
 
-function ADStateModule:saveToXMLFile(xmlFile, key)    
+function ADStateModule:saveToXMLFile(xmlFile, key)
     xmlFile:setValue(key .. "#mode", self.mode)
     if self.firstMarker ~= nil then
         xmlFile:setValue(key .. "#firstMarker", self.firstMarker.markerIndex)
@@ -172,8 +172,8 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
     xmlFile:setValue(key .. "#lastActive", self.active)
     xmlFile:setValue(key .. "#AIVElastActive", false)
     xmlFile:setValue(key .. "#bunkerUnloadType", self.bunkerUnloadType)
-    -- xmlFile:setValue(key .. "#automaticUnloadTarget", self.automaticUnloadTarget)    
-    -- xmlFile:setValue(key .. "#automaticPickupTarget", self.automaticPickupTarget)    
+    -- xmlFile:setValue(key .. "#automaticUnloadTarget", self.automaticUnloadTarget)
+    -- xmlFile:setValue(key .. "#automaticPickupTarget", self.automaticPickupTarget)
 end
 
 function ADStateModule:writeStream(streamId)
@@ -200,8 +200,8 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
-    streamWriteBool(streamId, self.harversterPairingOk)    
-    streamWriteUInt8(streamId, self.currentHelperIndex)    
+    streamWriteBool(streamId, self.harversterPairingOk)
+    streamWriteUInt8(streamId, self.currentHelperIndex)
     streamWriteUInt8(streamId, self.playerFarmId)
     streamWriteUInt8(streamId, self.actualFarmId)
 end
@@ -230,7 +230,7 @@ function ADStateModule:readStream(streamId)
     self.bunkerUnloadType = streamReadUIntN(streamId, 3)
     self.automaticUnloadTarget = streamReadBool(streamId)
     self.automaticPickupTarget = streamReadBool(streamId)
-    self.harversterPairingOk = streamReadBool(streamId)    
+    self.harversterPairingOk = streamReadBool(streamId)
     self.currentHelperIndex = streamReadUInt8(streamId)
     self.playerFarmId = streamReadUInt8(streamId)
     self.actualFarmId = streamReadUInt8(streamId)
@@ -262,7 +262,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self.bunkerUnloadType, 3)
     streamWriteBool(streamId, self.automaticUnloadTarget)
     streamWriteBool(streamId, self.automaticPickupTarget)
-    streamWriteBool(streamId, self.harversterPairingOk)    
+    streamWriteBool(streamId, self.harversterPairingOk)
     streamWriteUInt8(streamId, self.currentHelperIndex)
     streamWriteUInt8(streamId, self.playerFarmId)
     streamWriteUInt8(streamId, self.actualFarmId)
@@ -301,17 +301,21 @@ function ADStateModule:readUpdateStream(streamId)
 end
 
 function ADStateModule:update(dt)
-	if self.active == true and g_server ~= nil then
+    if self.active == true and g_server ~= nil then
         -- remaining drive time shall be calculated only if AD driving and only on server
-		self.calculateRemainingDriveTimeInterval = self.calculateRemainingDriveTimeInterval + dt
-		if self.calculateRemainingDriveTimeInterval > ADStateModule.CALCULATE_REMAINING_DRIVETIME_INTERVAL then
-			self.calculateRemainingDriveTimeInterval = 0
-			if AutoDrive:getIsEntered(self.vehicle) then
-				-- performance: calculation only useful if vehicle is entered by any user
-				self:calculateRemainingDriveTime()
-			end
-		end
-	end
+        self.calculateRemainingDriveTimeInterval = self.calculateRemainingDriveTimeInterval + dt
+        if AutoDrive:getIsEntered(self.vehicle) and (self.calculateRemainingDriveTimeInterval > ADStateModule.CALCULATE_REMAINING_DRIVETIME_INTERVAL) then
+            -- performance: calculation if vehicle is entered by any user
+            self.calculateRemainingDriveTimeInterval = 0
+            self:calculateRemainingDriveTime()
+        end
+        local remainingDriveTimeInterval = AutoDrive.getSetting("remainingDriveTimeInterval")
+        if remainingDriveTimeInterval > 0 and self.calculateRemainingDriveTimeInterval > (remainingDriveTimeInterval * 1000) then
+            -- performance: calculation for external mods
+            self.calculateRemainingDriveTimeInterval = 0
+            self:calculateRemainingDriveTime()
+        end
+    end
 
     if self.parkDestination ~= -1 then
         -- transfer park destination to vehicle data as all park destinations are in vehicle data now
@@ -320,7 +324,7 @@ function ADStateModule:update(dt)
             self.parkDestination = -1
         end
     end
-    
+
     if g_server ~= nil then
         if self.vehicle.ad.isCombine or (self:getMode() == AutoDrive.MODE_UNLOAD and self.active) then
             if self.vehicle.ad.isCombine then
@@ -1039,8 +1043,19 @@ function ADStateModule:calculateRemainingDriveTime()
 end
 
 function ADStateModule:getRemainingDriveTime()
+    -- AD internal use
 	return self.remainingDriveTime
 end
+
+function ADStateModule:adGetRemainingDriveTime()
+    -- for external mods
+    if AutoDrive.getSetting("remainingDriveTimeInterval") > 0 then
+        return self.remainingDriveTime
+    else
+        return 0
+    end
+end
+
 
 function ADStateModule:nextBunkerUnloadType()
     if self.bunkerUnloadType < ADStateModule.BUNKER_UNLOAD_TRAILER then

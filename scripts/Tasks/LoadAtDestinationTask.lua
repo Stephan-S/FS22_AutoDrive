@@ -11,6 +11,7 @@ function LoadAtDestinationTask:new(vehicle, destinationID)
     o.destinationID = destinationID
     o.trailers = nil
     o.waitForALLoadTimer = AutoDriveTON:new()
+    o.isReverseTriggerReached = false
     return o
 end
 
@@ -40,6 +41,7 @@ function LoadAtDestinationTask:setUp()
     end
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
+    self.isReverseTriggerReached = false
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:setUp end self.state %s", tostring(self.state))
 end
 
@@ -125,11 +127,16 @@ function LoadAtDestinationTask:update(dt)
             end
             if self.vehicle.ad.trailerModule:isActiveAtTrigger() then
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update 2 isActiveAtTrigger -> specialDrivingModule:stopVehicle")
+                self.isReverseTriggerReached = self.vehicle.ad.drivePathModule:getIsReversing()
                 self.vehicle.ad.specialDrivingModule:stopVehicle()
                 self.vehicle.ad.specialDrivingModule:update(dt)
             else
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update not isActiveAtTrigger -> drivePathModule:update")
-                self.vehicle.ad.drivePathModule:update(dt)
+                if self.isReverseTriggerReached then
+                    self:finished()
+                else
+                    self.vehicle.ad.drivePathModule:update(dt)
+                end
             end
         end
     end

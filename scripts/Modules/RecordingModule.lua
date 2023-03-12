@@ -115,7 +115,7 @@ function ADRecordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgno
         if self.isRecordingReverse then
             minDistanceToLastWayPoint = (MathUtil.vector2Length(reverseX - self.lastWp.x, reverseZ - self.lastWp.z) > 1)
         else
-            if not self.isDual and not self.isSubPrio then
+            if not self.isDual then
                 minDistanceToLastWayPoint = (MathUtil.vector2Length(vehicleX - self.lastWp.x, vehicleZ - self.lastWp.z) > 1)
             else
                 minDistanceToLastWayPoint = false
