@@ -14,11 +14,12 @@ end
 
 function ParkTask:setUp()
     self.vehicle.ad.onRouteToPark = false
+    local targetParkParkDestination = nil
 
     if AutoDrive.getSetting("enableParkAtJobFinished", self.vehicle) then
         local actualParkDestination = self.vehicle.ad.stateModule:getParkDestinationAtJobFinished()
         if actualParkDestination >= 1 and ADGraphManager:getMapMarkerById(actualParkDestination) ~= nil then
-            self.destinationID = ADGraphManager:getMapMarkerById(actualParkDestination).id
+            targetParkParkDestination = ADGraphManager:getMapMarkerById(actualParkDestination).id
             self.actualParkDestinationName = ADGraphManager:getMapMarkerById(actualParkDestination).name
             self.vehicle.ad.onRouteToPark = true
         else
@@ -26,15 +27,21 @@ function ParkTask:setUp()
         end
     end
 
+    if (self.destinationID == targetParkParkDestination) or (targetParkParkDestination == nil) then
+        -- park destination reached or not available - do not drive to it
+        self:finished()
+        return
+    end
+
     if self.vehicle.spec_locomotive and self.vehicle.ad and self.vehicle.ad.trainModule then
         self.state = ParkTask.STATE_DRIVING
-        self.vehicle.ad.trainModule:setPathTo(self.destinationID)
+        self.vehicle.ad.trainModule:setPathTo(targetParkParkDestination)
     elseif ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = ParkTask.STATE_PATHPLANNING
-        self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.destinationID)
+        self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(targetParkParkDestination)
     else
         self.state = ParkTask.STATE_DRIVING
-        self.vehicle.ad.drivePathModule:setPathTo(self.destinationID)
+        self.vehicle.ad.drivePathModule:setPathTo(targetParkParkDestination)
     end
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)

@@ -102,6 +102,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="Umožní používání adresářů pro lepší orientaci v cílech tras" />
 		<text name="gui_ad_wait"								text="Čekat" />
 		<text name="gui_ad_drive"								text="Pokračovat" />
+		<text name="gui_ad_off"									text="Off" />
 		<text name="gui_ad_yes"									text="Ano" />
 		<text name="gui_ad_no"									text="Ne" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -240,7 +241,9 @@
 		<text name="gui_ad_scanConfirmationText"                text="Měla by aplikace AutoDrive generovat síť tras z dopravních a pomocných dat na mapě?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Nebyl nalezen žádný kombajn se stejným cílem" />
 		<text name="gui_ad_noUnloaderAvailable"					text="Není k dispozici žádný odvozce se stejným cílem" />
-		
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
+
 		<text name="gui_ad_settingsPage_title"					text="Nastavení - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Uživatelské nastavení - AutoDrive" />
 		<text name="gui_ad_vehicleSettingsPage_title"			text="Nastavení vozidla - AutoDrive" />

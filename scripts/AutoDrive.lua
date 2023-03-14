@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.0.9"
+AutoDrive.version = "2.0.1.0"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -91,7 +91,6 @@ AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 
 -- add this to measured size of vehicles
 AutoDrive.DIMENSION_ADDITION = 0.2
-
 
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
@@ -190,6 +189,11 @@ function AutoDrive:loadMap(name)
 			end
 		end
 	end
+
+    -- calculate the collision masks only once
+    AutoDrive.collisionMaskFS19 = ADCollSensor.getMaskFS19()
+    AutoDrive.collisionMaskTerrain = ADCollSensor.getMaskTerrain()
+    AutoDrive.collisionMaskSplines = ADCollSensor.getMaskSplines()
 
 	ADGraphManager:load()
 
@@ -290,11 +294,8 @@ function AutoDrive:drawBaseMission()
 		AutoDrive.drawNetworkOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
             if AutoDrive.aiFrameVehicle.ad and AutoDrive.aiFrameVehicle.ad.stateModule then
-                if AutoDrive.aiFrameVehicle.ad.showingHud ~= AutoDrive.Hud.showHud then
-                    AutoDrive.Hud:toggleHud(AutoDrive.aiFrameVehicle)
-                end
                 if AutoDrive.Hud ~= nil then
-                    if AutoDrive.Hud.showHud == true then
+                    if AutoDrive.getSetting("showHUD") then
                         AutoDrive.Hud:drawHud(AutoDrive.aiFrameVehicle)
                     end
                 end
@@ -394,7 +395,7 @@ function AutoDrive.drawNetworkOnMap()
 
 	local dx, dz, dx2D, dy2D, width, rotation, r, g, b
 
-	local isSubPrio = function(pointToTest) 
+	local isSubPrio = function(pointToTest)
         return bitAND(pointToTest.flags, AutoDrive.FLAG_SUBPRIO) > 0
     end
 
@@ -573,8 +574,11 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 
 	if (isDown or AutoDrive.lastButtonDown == button) or button == 0 or button > 3 then
-        if vehicle ~= nil and (AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen) then
-            AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+        if vehicle and vehicle.ad and vehicle.ad.stateModule then
+            if AutoDrive.getSetting("showHUD") then
+                -- pass event to vehicle with active HUD
+                AutoDrive.Hud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
+            end
 		end
 
 		ADMessagesManager:mouseEvent(posX, posY, isDown, isUp, button)
@@ -640,11 +644,9 @@ function AutoDrive:update(dt)
 		AutoDrive.debugDrawBoundingBoxForVehicles()
 	end
 
-	if AutoDrive.Hud ~= nil then
-		if AutoDrive.Hud.showHud == true or AutoDrive.aiFrameOpen then
-			AutoDrive.Hud:update(dt)
-		end
-	end
+    if AutoDrive.getSetting("showHUD") then
+        AutoDrive.Hud:update(dt)
+    end
 
 	if g_server ~= nil then
 		ADHarvestManager:update(dt)
@@ -690,7 +692,7 @@ function AutoDrive:FarmStats_loadFromXMLFile(xmlFileName, key)
 
 	key = key .. ".statistics"
 	-- self.statistics["driversTraveledDistance"].total = Utils.getNoNil(getXMLFloat(xmlFile, key .. ".driversTraveledDistance"), 0)
-    
+
 	-- self.statistics["driversTraveledDistance"].total = xmlFile:getFloat(key .. ".driversTraveledDistance", 0)
 end
 
@@ -721,5 +723,3 @@ function AutoDrive:FarmStats_getStatisticData(superFunc)
 	end
 	return Utils.getNoNil(self.statisticData, {})
 end
-
-addModEventListener(AutoDrive)

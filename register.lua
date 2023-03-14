@@ -146,10 +146,6 @@ source(Utils.getFilename("scripts/Tasks/Turns/ForwardOffsetTurn.lua", g_currentM
 AutoDriveRegister = {}
 AutoDriveRegister.version = g_modManager:getModByName(g_currentModName).version
 
-if AutoDrive.currentModName == nil then
-    AutoDrive.currentModName = g_currentModName
-end
-
 if AutoDrive.ADSpecName == nil then
     AutoDrive.ADSpecName = g_currentModName .. ".AutoDrive"
 end
@@ -262,11 +258,46 @@ function AutoDriveLoadedMission(mission, superFunc, node)
 	end
 end
 
-Mission00.loadMission00Finished = Utils.overwrittenFunction(Mission00.loadMission00Finished, AutoDriveLoadedMission)
-TypeManager.validateTypes = Utils.prependedFunction(TypeManager.validateTypes, AutoDriveValidateVehicleTypes)
+local function check()
+    if AutoDrive == nil then
+        Logging.error("[AD] AutoDriveRegister.check Unable to add specialization 'AutoDrive'")
+        return
+    end
 
-addModEventListener(AutoDriveRegister)
+	local mods = g_modManager:getActiveMods()
+	local foundMod = false
 
--- first iteration to register AD to vehicle types
-AutoDriveRegister.register()
-AutoDriveRegister.registerVehicleData()
+    if mods then
+        for _, activemod in pairs(mods) do
+            if activemod.title == "AutoDrive" then
+                foundMod = true
+                break
+            end
+        end
+    end
+
+    if g_currentModName then
+        if g_currentModName == "FS22_AutoDrive" and foundMod then
+            if AutoDrive.currentModName == nil then
+                AutoDrive.currentModName = g_currentModName
+
+                -- Mission00.loadMission00Finished = Utils.overwrittenFunction(Mission00.loadMission00Finished, AutoDriveLoadedMission)
+                TypeManager.validateTypes = Utils.prependedFunction(TypeManager.validateTypes, AutoDriveValidateVehicleTypes)
+                addModEventListener(AutoDriveRegister)
+                addModEventListener(AutoDrive)
+                -- first iteration to register AD to vehicle types
+                AutoDriveRegister.register()
+                AutoDriveRegister.registerVehicleData()
+            end
+        else
+            Logging.error("[AD] ERROR: AutoDriveRegister.check g_currentModName %s", tostring(g_currentModName))
+
+            g_gui:showInfoDialog({
+                text = "AutoDrive: Wrong mod file name / Falscher Dateiname " .. g_currentModName .. " <--> FS22_AutoDrive or mod corrupt / oder Mod defekt",
+            })
+            return
+        end
+    end
+end
+
+check()

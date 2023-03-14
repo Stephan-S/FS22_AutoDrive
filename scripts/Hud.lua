@@ -83,7 +83,7 @@ function AutoDriveHud:loadHud()
 		self.width, self.height = getNormalizedScreenValues((numButtons * (gapSize + buttonSize) + gapSize) * uiScale, ((numButtonRows * (gapSize + buttonSize)) + (3 * (gapSize + iconSize)) + 30) * uiScale)
 		self.gapWidth, self.gapHeight = getNormalizedScreenValues(uiScale * gapSize, uiScale * gapSize)
 		self.posX = 1 - self.width - self.gapWidth
-		self.posY = 0.285926
+		self.posY = 0.31
 		AutoDrive.HudX = self.posX
 		AutoDrive.HudY = self.posY
 	else
@@ -94,7 +94,6 @@ function AutoDriveHud:loadHud()
 	self.isShowingTips = false
 	self.stateHud = 0
 	self.statesHud = 0
-	self.showHud = false
 end
 
 function AutoDriveHud:createHudAt(hudX, hudY)
@@ -151,7 +150,7 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 
 	self.Speed = "50"
 	self.Target = "Not Ready"
-	self.showHud = true
+    -- AutoDrive.setSettingState("showHUD", 2)
 	self.stateHud = 0
 	self.statesHud = 0
 
@@ -396,58 +395,26 @@ function AutoDriveHud:toggleHudExtension(vehicle)
 end
 
 function AutoDriveHud:toggleHud(vehicle)
-	if self.statesHud > 0 then
-		if self.stateHud == 0 then
-			-- show both
-			self.showHud = true
-			vehicle.ad.showingHud = true
-			if self.statesHud == 2 then
-				self.stateHud = 1
-			else
-				self.stateHud = 3
-			end
-		elseif self.stateHud == 1 then
-			-- show AD hud
-			self.showHud = true
-			vehicle.ad.showingHud = true
-			g_inputBinding:setShowMouseCursor(true)
-			self.stateHud = 2
-		elseif self.stateHud == 2 then
-			-- show CP hud
-			self.showHud = false
-			vehicle.ad.showingHud = false
-			self.stateHud = 3
-		elseif self.stateHud == 3 then
-			-- close both
-			self.showHud = false
-			vehicle.ad.showingHud = false
-            if g_gui.currentGui == nil then
-                g_inputBinding:setShowMouseCursor(false)
-            end
-			self.stateHud = 0
-		end
-	else
-		if self.showHud == false then
-			self.showHud = true
-			vehicle.ad.showingHud = true
-		else
-			self.showHud = false
-			vehicle.ad.showingHud = false
-            if g_gui.currentGui == nil then
-                g_inputBinding:setShowMouseCursor(false)
-            end
-		end
-	end
-
-	AutoDrive.showingHud = self.showHud
+    if not AutoDrive.getSetting("showHUD") then
+        AutoDrive.setSettingState("showHUD", 2)
+    else
+        AutoDrive.setSettingState("showHUD", 1)
+    end
 end
 
 function AutoDriveHud:isMouseOverHud( x, y)
 	--- Checks if a hud element was hit.
-    if AutoDrive.Hud and AutoDrive.Hud.hudElements then
-        for i= 1,#AutoDrive.Hud.hudElements do 
-            if AutoDrive.Hud.hudElements[i]:hit(x, y, 0) then 
-                return true
+    local focusVehicle = AutoDrive.getADFocusVehicle()
+	if focusVehicle ~= nil then
+        if focusVehicle.ad and focusVehicle.ad.stateModule then
+            if AutoDrive.getSetting("showHUD") then
+                if AutoDrive.Hud and AutoDrive.Hud.hudElements then
+                    for i= 1,#AutoDrive.Hud.hudElements do 
+                        if AutoDrive.Hud.hudElements[i]:hit(x, y, 0) then 
+                            return true
+                        end
+                    end
+                end
             end
         end
     end

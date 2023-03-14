@@ -104,6 +104,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="Trier les destinations dans des dossiers." />
 		<text name="gui_ad_wait"								text="Attente" />
 		<text name="gui_ad_drive"								text="Continuer" />
+		<text name="gui_ad_off"									text="Off" />
 		<text name="gui_ad_yes"									text="Oui" />
 		<text name="gui_ad_no"									text="Non" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -242,6 +243,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="AutoDrive doit-il créer un réseau routier à partir des données de trafic et d'assistance de la carte ?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Aucune moissoneuse avec la même destination détectée" />
 		<text name="gui_ad_noUnloaderAvailable"					text="Aucun chauffeur avec la même destination disponible" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
 
 		<text name="gui_ad_settingsPage_title"					text="Paramètres - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Paramètres utilisateur - AutoDrive" />

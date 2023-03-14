@@ -56,14 +56,11 @@ function ADUserDataManager:loadFromXml()
                 uIndex = uIndex + 1
             end
 
-            if g_currentMission.userManager.getUserByConnection then
-                local user = g_currentMission.userManager:getUserByConnection(connection)
-                if user == nil then
-                    -- no client, use a single player user
-                    local uniqueId = ADUserDataManager.SinglePlayer
-                    if self.users[uniqueId] ~= nil then
-                        self:applyUserSettings((self.users[uniqueId].hudX or 0.5), (self.users[uniqueId].hudY or 0.5), self.users[uniqueId].settings)
-                    end
+            if not g_currentMission.missionDynamicInfo.isMultiplayer then
+                -- no client, use a single player user
+                local uniqueId = ADUserDataManager.SinglePlayer
+                if self.users[uniqueId] ~= nil then
+                    self:applyUserSettings((self.users[uniqueId].hudX or 0.5), (self.users[uniqueId].hudY or 0.5), self.users[uniqueId].settings)
                 end
             end
             Logging.info("[AD] ADUserDataManager: loaded data for %d users", userCount)
@@ -75,6 +72,7 @@ end
 function ADUserDataManager:userConnected(connection)
     local userId = self:getUserIdByConnection(connection)
     if userId ~= nil and self.users[userId] == nil then
+        -- new user - use current settings (default)
         self.users[userId] = {}
         self.users[userId].hudX = AutoDrive.HudX or 0.5
         self.users[userId].hudY = AutoDrive.HudY or 0.5
@@ -90,20 +88,17 @@ function ADUserDataManager:saveToXml()
     local file = g_currentMission.missionInfo.savegameDirectory .. "/AutoDriveUsersData.xml"
     local xmlFile = createXMLFile("AutoDriveUsersData_XML_temp", file, "AutoDriveUsersData")
 
-    if g_currentMission.userManager.getUserByConnection then
-        local user = g_currentMission.userManager:getUserByConnection(connection)
-        if user == nil then
-            -- no client, create a single player user ID
-            local uniqueId = ADUserDataManager.SinglePlayer
+    if not g_currentMission.missionDynamicInfo.isMultiplayer then
+        -- no client, create a single player user ID
+        local uniqueId = ADUserDataManager.SinglePlayer
 
-            -- single player, so use the current data
-            self.users[uniqueId] = {}
-            self.users[uniqueId].hudX = AutoDrive.HudX or 0.5
-            self.users[uniqueId].hudY = AutoDrive.HudY or 0.5
-            self.users[uniqueId].settings = {}
-            for _, sn in pairs(self.userSettingNames) do
-                self.users[uniqueId].settings[sn] = AutoDrive.getSettingState(sn)
-            end
+        -- single player, so use the current data
+        self.users[uniqueId] = {}
+        self.users[uniqueId].hudX = AutoDrive.HudX or 0.5
+        self.users[uniqueId].hudY = AutoDrive.HudY or 0.5
+        self.users[uniqueId].settings = {}
+        for _, sn in pairs(self.userSettingNames) do
+            self.users[uniqueId].settings[sn] = AutoDrive.getSettingState(sn)
         end
     end
 
@@ -153,8 +148,8 @@ end
 
 function ADUserDataManager:applyUserSettings(hudX, hudY, settings)
     Logging.info("[AD] ADUserDataManager: apply user settings")
-    AutoDrive.Hud:createHudAt(hudX, hudY)
     for sn, sv in pairs(settings) do
         AutoDrive.setSettingState(sn, sv)
     end
+    AutoDrive.Hud:createHudAt(hudX, hudY)
 end

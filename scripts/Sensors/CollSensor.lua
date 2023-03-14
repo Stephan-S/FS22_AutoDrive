@@ -60,7 +60,6 @@ ADCollSensor.mask_trailers = 8
 -- ADCollSensor.mask_trigger_cutters = 26
 -- ADCollSensor.mask_kinematic_objects_wo_coll = 30
 
-
 -- ?? 0:
 -- # main collisions
 ADCollSensor.mask_STATIC_WORLD = 1
@@ -105,67 +104,29 @@ function ADCollSensor:new(vehicle, sensorParameters)
     o.timeOut = AutoDriveTON:new()
     o.vehicle = vehicle; --test collbox and coll bits mode
 
-    o.mask = ADCollSensor:buildMask()
+    o.mask = 0
 
     return o
 end
 
-function ADCollSensor:buildMask()
+function ADCollSensor:getMask()
     if AutoDrive.getSetting("enableTrafficDetection") == 1 then
-        return self:buildMask_FS22()
+        return AutoDrive.collisionMaskTerrain
+    elseif AutoDrive.getSetting("enableTrafficDetection") == 2 then
+        return AutoDrive.collisionMaskFS19
     else
-        return self:buildMask_FS19()
+        return 0
     end
 end
 
-function ADCollSensor:buildMask_FS22()
-    local mask = 0
-
--- ?? 0:
--- # main collisions
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD - 1)
--- 2: "STATIC_WORLD_WITHOUT_DELTA: Deprecated in FS22: Do not use it anymore!",
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_AI_BLOCKING - 1)
--- 6: "TRACTOR: Deprecated in FS22: Do not use it anymore!",
--- 7: "COMBINE: Deprecated in FS22: Do not use it anymore!",
-    mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN_DELTA - 1)
--- # identifiers
-    mask = mask + math.pow(2, ADCollSensor.mask_TREE - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE - 1) -- used by PalletUnloadTrigger which seems not used yet
-    -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL - 1)
--- ?? 17:
-    -- mask = mask + math.pow(2, ADCollSensor.mask_AI_DRIVABLE - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_GROUND_TIP_BLOCKING - 1)
--- # triggers
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_PLAYER - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_VEHICLE - 1)
--- 22: "TRIGGER_COMBINE: Deprecated in FS22: Do not use it anymore!",
--- 23: "TRIGGER_FILLABLE: Deprecated in FS22: Do not use it anymore!",
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_DYNAMIC_OBJECT - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_TRAFFIC_VEHICLE_BLOCKING - 1)
--- 26: "TRIGGER_CUTTER: Deprecated in FS22: Do not use it anymore!",
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_FORK - 1)
-    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_ANIMAL - 1)
--- ?? 29:
-    -- mask = mask + math.pow(2, ADCollSensor.mask_FILLABLE - 1)
-
-    return mask
-end
-
-function ADCollSensor:buildMask_FS19()
+function ADCollSensor.getMaskFS19()
     local mask = 0
 
     mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_1 - 1)
     mask = mask + math.pow(2, ADCollSensor.mask_Non_Pushable_2 - 1)
     mask = mask + math.pow(2, ADCollSensor.mask_static_world_1 - 1)
     mask = mask + math.pow(2, ADCollSensor.mask_static_world_2 - 1)
-    mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1)
+    mask = mask + math.pow(2, ADCollSensor.mask_tractors - 1) -- same as ADCollSensor.mask_AI_BLOCKING
     mask = mask + math.pow(2, ADCollSensor.mask_combines - 1)
     mask = mask + math.pow(2, ADCollSensor.mask_trailers - 1)
     --mask = mask + math.pow(2, ADCollSensor.mask_dynamic_objects - 1)
@@ -176,8 +137,88 @@ function ADCollSensor:buildMask_FS19()
     return mask
 end
 
+function ADCollSensor.getMaskTerrain()
+    local mask = 0
+
+-- ?? 0:
+-- # main collisions
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD)
+-- 2: "STATIC_WORLD_WITHOUT_DELTA: Deprecated in FS22: Do not use it anymore!",
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS)
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT)
+    mask = mask + math.pow(2, ADCollSensor.mask_AI_BLOCKING)
+-- 6: "TRACTOR: Deprecated in FS22: Do not use it anymore!",
+-- 7: "COMBINE: Deprecated in FS22: Do not use it anymore!",
+    mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN)
+    mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN_DELTA)
+-- # identifiers
+    mask = mask + math.pow(2, ADCollSensor.mask_TREE)
+    mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT)
+    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE) -- used by PalletUnloadTrigger which seems not used yet
+    -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL)
+-- ?? 17:
+    -- mask = mask + math.pow(2, ADCollSensor.mask_AI_DRIVABLE)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_GROUND_TIP_BLOCKING)
+-- # triggers
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_PLAYER)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_VEHICLE)
+-- 22: "TRIGGER_COMBINE: Deprecated in FS22: Do not use it anymore!",
+-- 23: "TRIGGER_FILLABLE: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_DYNAMIC_OBJECT)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_TRAFFIC_VEHICLE_BLOCKING)
+-- 26: "TRIGGER_CUTTER: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_FORK)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_ANIMAL)
+-- ?? 29:
+    -- mask = mask + math.pow(2, ADCollSensor.mask_FILLABLE)
+    
+    return mask
+end
+
+function ADCollSensor.getMaskSplines()
+    local mask = 0
+
+-- ?? 0:
+-- # main collisions
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_WORLD)
+-- 2: "STATIC_WORLD_WITHOUT_DELTA: Deprecated in FS22: Do not use it anymore!",
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECTS)
+    mask = mask + math.pow(2, ADCollSensor.mask_STATIC_OBJECT)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_AI_BLOCKING)
+-- 6: "TRACTOR: Deprecated in FS22: Do not use it anymore!",
+-- 7: "COMBINE: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TERRAIN_DELTA)
+-- # identifiers
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TREE)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_DYNAMIC_OBJECT)
+    mask = mask + math.pow(2, ADCollSensor.mask_VEHICLE) -- used by PalletUnloadTrigger which seems not used yet
+    -- mask = mask + math.pow(2, ADCollSensor.mask_PLAYER)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_BLOCKED_BY_PLAYER)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_ANIMAL)
+-- ?? 17:
+    -- mask = mask + math.pow(2, ADCollSensor.mask_AI_DRIVABLE)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_GROUND_TIP_BLOCKING)
+-- # triggers
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_PLAYER)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_VEHICLE)
+-- 22: "TRIGGER_COMBINE: Deprecated in FS22: Do not use it anymore!",
+-- 23: "TRIGGER_FILLABLE: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_DYNAMIC_OBJECT)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_TRAFFIC_VEHICLE_BLOCKING)
+-- 26: "TRIGGER_CUTTER: Deprecated in FS22: Do not use it anymore!",
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_FORK)
+    -- mask = mask + math.pow(2, ADCollSensor.mask_TRIGGER_ANIMAL)
+-- ?? 29:
+    -- mask = mask + math.pow(2, ADCollSensor.mask_FILLABLE)
+
+    return mask
+end
+
 function ADCollSensor:onUpdate(dt)
-    self.mask = self:buildMask()
+    self.mask = self:getMask()
     local box = self:getBoxShape()
     if self.collisionHits == 0 or self.timeOut:timer(true, 20000, dt) then
         self.timeOut:timer(false)
@@ -194,8 +235,8 @@ function ADCollSensor:onUpdate(dt)
         if self.collisionHits > 0 then
             overlapBox(box.x, box.y, box.z, box.rx, box.ry, 0, box.size[1], box.size[2], box.size[3], "collisionTestCallback", self, self.mask, true, true, true)
         end
-    end 
-    
+    end
+
     self:onDrawDebug(box)
 end
 
@@ -203,6 +244,15 @@ function ADCollSensor:collisionTestCallback(transformId)
     self.collisionHits = math.max(0, self.collisionHits - 1)
     local unloadDriver = ADHarvestManager:getAssignedUnloader(self.vehicle)
     local collisionObject = g_currentMission.nodeToObject[transformId]
+
+    if collisionObject == nil then
+        -- let try if parent is a object
+        local parent = getParent(transformId)
+        if parent then
+            collisionObject = g_currentMission.nodeToObject[parent]
+        end
+    end
+
     if collisionObject ~= nil then
         if collisionObject ~= self and collisionObject ~= self.vehicle and not AutoDrive:checkIsConnected(self.vehicle:getRootVehicle(), collisionObject) then
             if unloadDriver == nil or (collisionObject ~= unloadDriver and (not AutoDrive:checkIsConnected(unloadDriver:getRootVehicle(), collisionObject))) then

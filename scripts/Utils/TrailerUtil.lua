@@ -46,7 +46,7 @@ function AutoDrive.getAllFillLevels(vehicles)
                 vehicleFillLevel, vehicleFillCapacity, _, vehicleFillFreeCapacity = AutoDrive.getObjectFillLevels(vehicle)
             -- end
         end
-        
+
         fillLevel    = fillLevel    + vehicleFillLevel
         fillCapacity = fillCapacity + vehicleFillCapacity
         fillFreeCapacity = fillFreeCapacity + vehicleFillFreeCapacity
@@ -249,11 +249,9 @@ function AutoDrive.getIsFillUnitEmpty(vehicle, fillUnitIndex)
     return fillUnitEmpty
 end
 
--- reworked, TODO: check all other trigger sources
+-- reworked, removed old GC and other stuff
 function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTypes, fillUnit)
     if fillTrigger ~= nil then
-        local typesMatch = false
-        local selectedFillType = vehicle.ad.stateModule:getFillType() or FillType.UNKNOWN
         local fillUnits = workTool:getFillUnits()
 
         local fillTypesToCheck = {}
@@ -272,71 +270,25 @@ function AutoDrive.fillTypesMatch(vehicle, fillTrigger, workTool, allowedFillTyp
         -- does the trigger and the fillUnit match the selectedFilltype or do they ignore it ?
         for i = 1, #fillUnits do
             if fillUnit == nil or i == fillUnit then
-                local selectedFillTypeIsNotInMyFillUnit = true
-                local matchInThisUnit = false
                 for index, _ in pairs(workTool:getFillUnitSupportedFillTypes(i)) do
-                    --loadTriggers
-                    -- standard silo
-                    if fillTrigger.source ~= nil and fillTrigger.source.supportedFillTypes ~= nil and fillTrigger.source.supportedFillTypes[index] then
-                        typesMatch = true
-                        matchInThisUnit = true
-                    end
-                    if fillTrigger.source ~= nil and fillTrigger.source.aiSupportedFillTypes ~= nil and fillTrigger.source.aiSupportedFillTypes[index] then
-                        typesMatch = true
-                        matchInThisUnit = true
-                    end
-                    
-                    --fillTriggers
-                    if fillTrigger.sourceObject ~= nil then -- TODO: still available in FS22 ???
-                        local fillTypes = fillTrigger.sourceObject:getFillUnitSupportedFillTypes(1)
-                        if fillTypes[index] then
-                            typesMatch = true
-                            matchInThisUnit = true
-                        end
-                    end
-
                     for _, allowedFillType in pairs(fillTypesToCheck) do
-                        if index == allowedFillType and allowedFillType ~= FillType.UNKNOWN then
-                            selectedFillTypeIsNotInMyFillUnit = false
+                        if index == allowedFillType and index ~= FillType.UNKNOWN then
+                            --loadTriggers
+                            if fillTrigger.fillTypes and fillTrigger.fillTypes[allowedFillType] then
+                                return true
+                            end
+
+                            --fillTriggers
+                            if fillTrigger.sourceObject and fillTrigger.sourceObject.getFillUnitSupportedFillTypes then
+                                local fillTypes = fillTrigger.sourceObject:getFillUnitSupportedFillTypes(1)
+                                if fillTypes[allowedFillType] then
+                                    return true
+                                end
+                            end
                         end
                     end
                 end
-                
-                if matchInThisUnit and selectedFillTypeIsNotInMyFillUnit then
-                    return false
-                end
             end
-        end
-
-        if typesMatch then
-            for _, allowedFillType in pairs(fillTypesToCheck) do
-                if allowedFillType == FillType.UNKNOWN then
-                    return false
-                end
-            end
-
-            local isFillType = false
-            for _, allowedFillType in pairs(fillTypesToCheck) do
-                if fillTrigger.source then
-                    for _, sourceStorage in pairs(fillTrigger.source.sourceStorages) do
-                        if (sourceStorage.fillTypes ~= nil and sourceStorage.fillTypes[allowedFillType]) or 
-                            (sourceStorage.fillLevels ~= nil and sourceStorage.fillLevels[allowedFillType]) then
-                            return true
-                        end    
-                    end
-                    
-                    if fillTrigger.source ~= nil and fillTrigger.source.supportedFillTypes ~= nil and fillTrigger.source.supportedFillTypes[allowedFillType] then
-                        return true
-                    end
-                    if fillTrigger.source ~= nil and fillTrigger.source.aiSupportedFillTypes ~= nil and fillTrigger.source.aiSupportedFillTypes[allowedFillType] then
-                        return true
-                    end
-                elseif fillTrigger.sourceObject ~= nil then
-                    local fillType = fillTrigger.sourceObject:getFillUnitFillType(1)
-                    isFillType = (fillType == selectedFillType)
-                end
-            end
-            return isFillType
         end
     end
     return false
@@ -553,7 +505,14 @@ function AutoDrive.getDistanceToTargetPosition(vehicle)
     if destination == nil then
         return math.huge
     end
-    return MathUtil.vector2Length(x - destination.x, z - destination.z)
+
+    local distance = MathUtil.vector2Length(x - destination.x, z - destination.z)
+    if rootVehicle and rootVehicle.ad and rootVehicle.ad.drivePathModule and rootVehicle.ad.drivePathModule:getIsReversing() then
+        -- if revers driving sub the train length as the vehicle is the last position on the move to target
+        local trainLength = AutoDrive.getTractorTrainLength(rootVehicle, true)
+        distance = distance - trainLength
+    end
+    return distance
 end
 
 function AutoDrive.getDistanceToUnloadPosition(vehicle)
@@ -750,7 +709,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
     local trailerTriggerPairs = {}
     -- local trailers, _ = AutoDrive.getTrailersOf(vehicle, false)
     local trailers, _ = AutoDrive.getAllUnits(vehicle)
-    local maxTriggerDistance = AutoDrive.getSetting("maxTriggerDistance") 
+    local maxTriggerDistance = AutoDrive.getSetting("maxTriggerDistance")
     for _, trailer in ipairs(trailers) do
         if trailer.getFillUnits ~= nil then
             local fillUnits = trailer:getFillUnits()
@@ -840,7 +799,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
 end
 
 function AutoDrive.trailerIsInTriggerList(trailer, trigger, fillUnitIndex)
-    
+
     if trigger ~= nil and trigger.fillableObjects ~= nil then
         for _, fillableObject in pairs(trigger.fillableObjects) do
             if fillableObject == trailer or (fillableObject.object ~= nil and fillableObject.object == trailer and fillableObject.fillUnitIndex == fillUnitIndex) then
@@ -849,7 +808,7 @@ function AutoDrive.trailerIsInTriggerList(trailer, trigger, fillUnitIndex)
             end
         end
     end
-    
+
     local activatable = true
     if trigger.getIsActivatable ~= nil then
         activatable = trigger:getIsActivatable(trailer)
@@ -898,12 +857,12 @@ function AutoDrive.getWaterTrailerInWater(vehicle, trailers)
         for _, trailer in pairs(trailers) do
             local spec = trailer.spec_waterTrailer
             if spec ~= nil and spec.waterFillNode ~= nil then
-                local isNearWater = vehicle.isInWater
+                local isInWater = trailer.isInWater
                 local fillUnits = trailer:getFillUnits()
                 for i = 1, #fillUnits do
                     local isNotFilled = not AutoDrive.getIsFillUnitFull(trailer, i)
                     local allowedFillType = vehicle.ad.stateModule:getFillType() == FillType.WATER
-                    if isNearWater and isNotFilled and allowedFillType then
+                    if isInWater and isNotFilled and allowedFillType then
                         return trailer
                     end
                 end
@@ -919,14 +878,24 @@ function AutoDrive.startFillTrigger(trailers)
         return ret
     end
     for _, trailer in pairs(trailers) do
+        local rootVehicle = trailer:getRootVehicle()
         local spec = trailer.spec_fillUnit
-        if spec ~= nil and spec.fillTrigger ~= nil and spec.fillTrigger.triggers ~= nil and #spec.fillTrigger.triggers >0 then
-            if not spec.fillTrigger.isFilling then
-                AutoDrive.debugPrint(vehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.startFillTrigger currentTrigger %s #triggers %s", tostring(spec.fillTrigger.currentTrigger), tostring(#spec.fillTrigger.triggers))
-                spec:setFillUnitIsFilling(true)
-            end
-            if spec.fillTrigger.isFilling ~= nil and spec.fillTrigger.currentTrigger ~= nil then
-                return spec.fillTrigger
+        if spec and spec.fillTrigger and spec.fillTrigger.triggers and #spec.fillTrigger.triggers >0 then
+            for _, trigger in ipairs(spec.fillTrigger.triggers) do
+                local fillType = trigger:getCurrentFillType()
+                if fillType == rootVehicle.ad.stateModule:getFillType() then
+                    if trigger:getIsActivatable(rootVehicle) then
+                        if not spec.fillTrigger.isFilling then
+                            AutoDrive.debugPrint(rootVehicle, AutoDrive.DC_TRAILERINFO, "AutoDrive.startFillTrigger currentTrigger %s #triggers %s", tostring(spec.fillTrigger.currentTrigger), tostring(#spec.fillTrigger.triggers))
+                            spec:setFillUnitIsFilling(true)
+                        end
+                        if spec.fillTrigger.isFilling and spec.fillTrigger.currentTrigger ~= nil then
+                            ret = spec.fillTrigger
+                        end
+                    end
+                else
+                    AutoDrive.debugPrint(rootVehicle, AutoDrive.DC_TRAILERINFO, "ERROR: AutoDrive.startFillTrigger fillTypes missmatch")
+                end
             end
         end
     end
@@ -956,7 +925,7 @@ end
 
 function AutoDrive.isBaleUnloading(trailer)
     local spec = trailer.spec_baleLoader
-    if spec then 
+    if spec then
         if spec.emptyState ~= BaleLoader.EMPTY_NONE then
            return true
         end
@@ -1029,7 +998,7 @@ function AutoDrive.setValidSupportedFillType(vehicle, excludedImplementIndex)
     local excludedVehicles = nil
     -- try to find AL fillType
     local trailers, _ = AutoDrive.getAllUnits(vehicle)
-    
+
     -- get all vehicles attached to the excludedImplementIndex
     if excludedImplementIndex and vehicle.getAttachedImplements ~= nil then
         local attachedImplements = vehicle:getAttachedImplements()

@@ -104,6 +104,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="使用文件夹来构建目的地" />
 		<text name="gui_ad_wait"								text="等待" />
 		<text name="gui_ad_drive"								text="继续驾驶" />
+		<text name="gui_ad_off"									text="Off" />
 		<text name="gui_ad_yes"									text="是" />
 		<text name="gui_ad_no"									text="否" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -242,6 +243,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="AutoDrive 是否应该根据地图上的交通和辅助数据生成路线网络？" />
 		<text name="gui_ad_noHarvesterAvailable"				text="未找到具有相同目标的收割机" />
 		<text name="gui_ad_noUnloaderAvailable"					text="没有可用的相同目标司机" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
 
 		<text name="gui_ad_settingsPage_title"					text="设置 - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="用户设置 - AutoDrive" />

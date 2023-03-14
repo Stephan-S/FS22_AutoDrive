@@ -104,6 +104,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="Use folders to structure destinations" />
 		<text name="gui_ad_wait"								text="Wait" />
 		<text name="gui_ad_drive"								text="Drive on" />
+		<text name="gui_ad_off"									text="Off" />
 		<text name="gui_ad_yes"									text="Yes" />
 		<text name="gui_ad_no"									text="No" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -240,6 +241,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="Should AutoDrive generate a route network from the traffic and helper data on the map?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
 		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
 
 		<text name="gui_ad_settingsPage_title"					text="Settings - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="User Settings - AutoDrive" />
