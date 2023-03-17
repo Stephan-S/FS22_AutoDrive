@@ -490,6 +490,9 @@ function ADTrailerModule:updateUnload(dt)
                 if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
                     self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
                 end
+            elseif fillUnitEmpty and self.unloadingToBunkerSilo then
+                self.unloadDelayTimer:timer(false)      -- clear timer
+                self.unloadingToBunkerSilo = false
             elseif allTrailersClosed and self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.spec_pipe ~= nil then
                 -- unload auger wagon to another trailer
                 self.unloadDelayTimer:timer(false)      -- clear timer
