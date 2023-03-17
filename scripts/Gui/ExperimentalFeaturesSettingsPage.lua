@@ -14,7 +14,6 @@ ADExperimentalFeaturesSettingsPage.CONTROLS = {"settingsContainer", "headerIcon"
 function ADExperimentalFeaturesSettingsPage:new(target)
     local element = TabbedMenuFrameElement.new(target, ADExperimentalFeaturesSettingsPage_mt)
     element.returnScreenName = ""
-    element.experimentalFeaturesElements = {}
     element:registerControls(ADExperimentalFeaturesSettingsPage.CONTROLS)
     return element
 end
@@ -42,7 +41,6 @@ function ADExperimentalFeaturesSettingsPage:onCreate()
             cloned:setState(stateNumber)
             -- focusId has to be unique, but is copied by clone element, so generate and assign a new unique focusId
             cloned.focusId = "adFocus_" .. featureName
-            table.insert(self.experimentalFeaturesElements, cloned)
         end
         self.cloneElement:delete()
     end
@@ -78,7 +76,7 @@ function ADExperimentalFeaturesSettingsPage:getMainElementPosition()
 end
 
 function ADExperimentalFeaturesSettingsPage:updateElementsState()
-    for _, element in pairs(self.experimentalFeaturesElements) do
+    for _, element in pairs(self.boxLayout.elements) do
         local stateNumber = 1
         if AutoDrive.experimentalFeatures[element.name] then
             stateNumber = 2
