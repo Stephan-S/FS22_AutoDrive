@@ -25,11 +25,7 @@ function ADFieldSensor:onUpdate(dt)
         local densityBits = getDensityAtWorldPos(groundTypeMapId, corner.x, y, corner.z)
         local densityType = bitAND(bitShiftRight(densityBits, groundTypeFirstChannel), 2^groundTypeNumChannels - 1)
 
-        if AutoDrive.experimentalFeatures.detectGrasField == true then
-            onField = onField and (densityType ~= 0)
-        else
-            onField = onField and (densityType ~= g_currentMission.grassValue and densityType ~= 0)
-        end
+        onField = onField and (densityType ~= 0)
     end
 
     self:setTriggered(onField)
