@@ -151,6 +151,10 @@ function AutoDrive.getObjectFillLevels(object)
                 updateFillLevels(fillUnitIndex)
             elseif object.spec_baleLoader and object.spec_baleLoader.fillUnitIndex and object.spec_baleLoader.fillUnitIndex > 0 and object.spec_baleLoader.fillUnitIndex == fillUnitIndex then
                 updateFillLevels(fillUnitIndex)
+            elseif spec_dischargeable and spec_dischargeable.dischargeNodes and #spec_dischargeable.dischargeNodes == 0 then
+                if object.getFillUnitCapacity and object:getFillUnitCapacity(fillUnitIndex) > 0 then
+                    updateFillLevels(fillUnitIndex)
+                end
             end
         end
     end
