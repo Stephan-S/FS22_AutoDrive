@@ -6,6 +6,7 @@ ADSensor.TYPE_COLLISION = 1
 ADSensor.TYPE_FRUIT = 2
 ADSensor.TYPE_TRIGGER = 3
 ADSensor.TYPE_FIELDBORDER = 4
+ADSensor.TYPE_SWATH = 5
 
 ADSensor.POS_FRONT = 1
 ADSensor.POS_REAR = 2
@@ -154,6 +155,7 @@ function ADSensor:init(vehicle, sensorType, sensorParameters)
     self.sensorParameters = sensorParameters
     self.enabled = false
     self.triggered = false
+    self.triggerType = 0
     self.initialized = false
     self.drawDebug = false
     self.executionDelay = 0
@@ -418,6 +420,9 @@ function ADSensor:onDrawDebug(box)
             AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[2].x, corners[2].y, corners[2].z, red, green, blue) -- right
             AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[3].x, corners[3].y, corners[3].z, red, green, blue) -- bottom
             if isTriggered and self.sensorType == ADSensor.TYPE_FRUIT then
+                if self.triggerType == ADSensor.TYPE_SWATH then
+                    AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[4].x, corners[4].y, corners[4].z, red, green, blue)
+                end
                 AutoDriveDM:addLineTask(corners[3].x, corners[3].y, corners[3].z, corners[2].x, corners[2].y, corners[2].z, 0, green, blue)
             end
             if isTriggered and self.sensorType == ADSensor.TYPE_FIELDBORDER then
@@ -478,6 +483,14 @@ function ADSensor:setTriggered(triggered)
         self.triggered = true
     else
         self.triggered = false
+    end
+end
+
+function ADSensor:setTriggerType(triggerType)
+    if triggerType ~= nil then
+        self.triggerType = triggerType
+    else
+        self.triggerType = 0
     end
 end
 
