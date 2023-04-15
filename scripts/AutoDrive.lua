@@ -289,7 +289,7 @@ function AutoDrive:refreshContextInputAIFrame()
 end
 
 function AutoDrive:drawBaseMission()
-	if AutoDrive.aiFrameOpen then		
+	if AutoDrive.aiFrameOpen then
 		AutoDrive:drawRouteOnMap()
 		AutoDrive.drawNetworkOnMap()
 		if AutoDrive.aiFrameVehicle ~= nil then
@@ -355,20 +355,20 @@ function AutoDrive.drawRouteOnMap()
 				if lastWp ~= nil and index >= currentWp then
 					local startX, startY, _, _ = AutoDrive.getScreenPosFromWorldPos(lastWp.x, lastWp.z)
 					local endX, endY, _, _ = AutoDrive.getScreenPosFromWorldPos(wp.x, wp.z)
-								
+
 					if startX and startY and endX and endY then
 						dx2D = endX - startX;
 						dy2D = ( endY - startY ) / g_screenAspectRatio;
 						width = MathUtil.vector2Length(dx2D, dy2D);
-			
+
 						dx = wp.x - lastWp.x;
 						dz = wp.z - lastWp.z;
 						rotation = MathUtil.getYRotationFromDirection(dx, dz) - math.pi * 0.5;
-			
+
 						local lineThickness = 2 / g_screenHeight
 						setOverlayColor( AutoDrive.courseOverlayId, 0.3, 0.5, 0.56, 1)
 						setOverlayRotation( AutoDrive.courseOverlayId, rotation, 0, 0)
-						
+
 						renderOverlay( AutoDrive.courseOverlayId, startX, startY, width, lineThickness )
 					end
 					setOverlayRotation( AutoDrive.courseOverlayId, 0, 0, 0 ) -- reset overlay rotation
@@ -407,34 +407,34 @@ function AutoDrive.drawNetworkOnMap()
 					local outNode = network[outNodeId]
 					local startX, startY, _, _ = AutoDrive.getScreenPosFromWorldPos(node.x, node.z)
 					local endX, endY, _, _ = AutoDrive.getScreenPosFromWorldPos(outNode.x, outNode.z)
-								
+
 					if startX and startY and endX and endY then
 						dx2D = endX - startX;
 						dy2D = ( endY - startY ) / g_screenAspectRatio;
 						width = MathUtil.vector2Length(dx2D, dy2D);
-			
+
 						dx = outNode.x - node.x;
 						dz = outNode.z - node.z;
 						rotation = MathUtil.getYRotationFromDirection(dx, dz) - math.pi * 0.5;
-			
+
 						local lineThickness = 2 / g_screenHeight
 						local r, g, b, a = unpack(AutoDrive.currentColors.ad_color_singleConnection)
-						
+
 						if isSubPrio(outNode) then
 							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioSingleConnection)
 						end
-						
+
 						if ADGraphManager:isDualRoad(node, outNode) then
 							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_dualConnection)
 							if isSubPrio(outNode) then
 								r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioDualConnection)
-							end							
-						elseif ADGraphManager:isReverseRoad(start, target) then							
+							end
+						elseif ADGraphManager:isReverseRoad(start, target) then
 							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_reverseConnection)
 						end
 						setOverlayColor( AutoDrive.courseOverlayId,  r, g, b, a)
 						setOverlayRotation( AutoDrive.courseOverlayId, rotation, 0, 0)
-					
+
 						renderOverlay( AutoDrive.courseOverlayId, startX, startY, width, lineThickness )
 					end
 					setOverlayRotation( AutoDrive.courseOverlayId, 0, 0, 0 ) -- reset overlay rotation
@@ -448,7 +448,7 @@ function AutoDrive.getScreenPosFromWorldPos(worldX, worldZ)
 	local objectX = (worldX + AutoDrive.aiFrame.ingameMapBase.worldCenterOffsetX) / AutoDrive.aiFrame.ingameMapBase.worldSizeX * 0.5 + 0.25
 	local objectZ = (worldZ + AutoDrive.aiFrame.ingameMapBase.worldCenterOffsetZ) / AutoDrive.aiFrame.ingameMapBase.worldSizeZ * 0.5 + 0.25
 	local x, y, _, _ = AutoDrive.aiFrame.ingameMapBase.layout:getMapObjectPosition(objectX, objectZ, 0, 0, 0, true)
-	
+
 	return x, y
 end
 
@@ -557,7 +557,7 @@ end
 function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
     local vehicle = AutoDrive.getADFocusVehicle()
 	local mouseActiveForAutoDrive = (g_gui.currentGui == nil or AutoDrive.aiFrameOpen) and (g_inputBinding:getShowMouseCursor() == true)
-	
+
 	if not mouseActiveForAutoDrive then
 		AutoDrive.lastButtonDown = nil
 		return
@@ -591,7 +591,7 @@ function AutoDrive:mouseEvent(posX, posY, isDown, isUp, button)
 	end
 end
 
-function AutoDrive:update(dt)	
+function AutoDrive:update(dt)
     if AutoDrive.scanDialogState == AutoDrive.SCAN_DIALOG_NONE and ADGraphManager:getWayPointsCount() == 0 then
         if g_server ~= nil and g_dedicatedServer == nil then
             -- open dialog
@@ -657,7 +657,7 @@ function AutoDrive:update(dt)
 	ADTriggerManager:update(dt)
 	ADRoutesManager:update(dt)
 
-	-- AutoDrive.handleTelemetry(dt)	
+	-- AutoDrive.handleTelemetry(dt)
 end
 
 function AutoDrive:draw()
