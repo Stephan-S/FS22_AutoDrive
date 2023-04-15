@@ -189,6 +189,8 @@ function UnloadAtDestinationTask:update(dt)
 end
 
 function UnloadAtDestinationTask:abort()
+    AutoDrive.resetFoldState(self.vehicle)
+    AutoDrive.closeAllCurtains(self.trailers, true) -- close curtain at UAL trailers
 end
 
 function UnloadAtDestinationTask:continue()
@@ -196,9 +198,13 @@ function UnloadAtDestinationTask:continue()
         self.vehicle.ad.trailerModule:stopUnloading()
         self.isContinued = true
     end
+    AutoDrive.resetFoldState(self.vehicle)
+    AutoDrive.closeAllCurtains(self.trailers, true) -- close curtain at UAL trailers
 end
 
 function UnloadAtDestinationTask:finished()
+    AutoDrive.resetFoldState(self.vehicle)
+    AutoDrive.closeAllCurtains(self.trailers, true) -- close curtain at UAL trailers
     self.vehicle.ad.taskModule:setCurrentTaskFinished()
 end
 

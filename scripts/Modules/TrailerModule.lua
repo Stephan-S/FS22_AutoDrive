@@ -186,6 +186,10 @@ function ADTrailerModule:handleTrailerCovers()
     -- open trailer cover if trigger is reachable
     local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, isInRangeToLoadUnloadTarget)
+    if isInRangeToLoadUnloadTarget and self.hasAL then
+        -- open curtains for UAL
+        AutoDrive.openAllCurtains(self.trailers, true) -- open curtain at UAL trailers
+    end
 end
 
 function ADTrailerModule:updateStates()
