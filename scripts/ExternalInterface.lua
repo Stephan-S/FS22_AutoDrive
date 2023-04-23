@@ -611,7 +611,13 @@ function AutoDrive:hasAL(object)
     end
     local ret = false
     ret = ret or (object.spec_aPalletAutoLoader ~= nil and object.spec_aPalletAutoLoader.loadArea ~= nil and object.spec_aPalletAutoLoader.loadArea["baseNode"] ~= nil)
-    ret = ret or (object.spec_universalAutoload ~= nil and object.spec_universalAutoload.isAutoloadEnabled)
+    if (object.spec_universalAutoload ~= nil) then
+        local rootVehicle = object.getRootVehicle and object:getRootVehicle()
+        if rootVehicle and not rootVehicle.spec_locomotive then
+            -- use only bulk trailers of trains for now
+            ret = ret or object.spec_universalAutoload.isAutoloadEnabled
+        end
+    end
     return ret
 end
 
