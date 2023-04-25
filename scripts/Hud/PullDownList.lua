@@ -494,18 +494,19 @@ function ADPullDownList:createSelection_FillType()
 	local vehicle = AutoDrive.getADFocusVehicle()
 
     if vehicle ~= nil then
-        local hasAL = false
         local trailers, _ = AutoDrive.getAllUnits(vehicle)
-        for _, trailer in ipairs(trailers) do
-            hasAL = hasAL or AutoDrive:hasAL(trailer)
-        end
         supportedFillTypes = {}
-        if hasAL then
-            -- AutoLoad
-            for _, trailer in ipairs(trailers) do
-                self.autoLoadFillTypes = AutoDrive:getALFillTypes(trailer)
+        for _, trailer in ipairs(trailers) do
+            if AutoDrive:hasAL(trailer) then
+                local alFillTypes = AutoDrive:getALFillTypes(trailer)
+                if alFillTypes ~= nil and #alFillTypes > 0 then
+                    -- self.autoLoadFillTypes is either nil or it contains items. It is never empty.
+                    self.autoLoadFillTypes = alFillTypes
+                    break
+                end
             end
-        else
+        end
+        if self.autoLoadFillTypes == nil then
             supportedFillTypes = AutoDrive.getValidSupportedFillTypes(vehicle)
         end
     end
@@ -516,7 +517,7 @@ function ADPullDownList:createSelection_FillType()
     local itemListIndex = 1
     local lastIndexReached = false
     self.options[1][itemListIndex] = {displayName = "", returnValue = 0}
-    if self.autoLoadFillTypes ~= nil and #self.autoLoadFillTypes > 0 then
+    if self.autoLoadFillTypes ~= nil then
         -- AutoLoad
         for i = 1, #self.autoLoadFillTypes do
             self.options[1][itemListIndex] = {displayName = self.autoLoadFillTypes[i], returnValue = i}
@@ -583,7 +584,7 @@ function ADPullDownList:getNewState_FillType(vehicle)
     local newState = self.state
     local newSelection = self.selected
     if self.state == ADPullDownList.STATE_COLLAPSED then
-        if self.autoLoadFillTypes ~= nil and #self.autoLoadFillTypes > 0 then
+        if self.autoLoadFillTypes ~= nil then
             -- AutoDrive.debugMsg(vehicle, "ADPullDownList:getNewState_FillType 0 self.text %s", tostring(self.text))
             if vehicle.ad.stateModule:getFillType() <= #self.autoLoadFillTypes then
                 self.text = self.autoLoadFillTypes[vehicle.ad.stateModule:getFillType()]
@@ -621,14 +622,20 @@ function ADPullDownList:act(vehicle, posX, posY, isDown, isUp, button)
         if button == 1 and isUp then
             -- left mouse button
             if self.state == ADPullDownList.STATE_EXPANDED and self.type == ADPullDownList.TYPE_FILLTYPE and AutoDrive.leftCTRLmodifierKeyPressed then
-                local value = self:getHoverEntryReturnValue(vehicle)
-                if value ~= nil then
-                    AutoDriveHudInputEventEvent:sendToggleFillTypeSelectionEvent(vehicle, value)
+                -- left Ctrl click on open filltype list. Toggle item, except for auto-load
+                if self.autoLoadFillTypes == nil then
+                    local value = self:getHoverEntryReturnValue(vehicle)
+                    if value ~= nil then
+                        AutoDriveHudInputEventEvent:sendToggleFillTypeSelectionEvent(vehicle, value)
+                    end
                 end
             elseif self.state == ADPullDownList.STATE_EXPANDED and self.type == ADPullDownList.TYPE_FILLTYPE and AutoDrive.leftALTmodifierKeyPressed then
-                local value = self:getHoverEntryReturnValue(vehicle)
-                if value ~= nil then
-                    AutoDriveHudInputEventEvent:sendToggleAllFillTypeSelectionsEvent(vehicle, value)
+                -- left Alt click on open filltype list. Toggle item, except for auto-load
+                if self.autoLoadFillTypes == nil then
+                    local value = self:getHoverEntryReturnValue(vehicle)
+                    if value ~= nil then
+                        AutoDriveHudInputEventEvent:sendToggleAllFillTypeSelectionsEvent(vehicle, value)
+                    end
                 end
             elseif self.state == ADPullDownList.STATE_EXPANDED and self.type ~= ADPullDownList.TYPE_FILLTYPE and AutoDrive.isEditorModeEnabled() and AutoDrive.getSetting("useFolders") and self.dragged ~= nil and self.startedDraggingTimer > 200 then
                 -- drag element to hitElement
@@ -788,7 +795,7 @@ function ADPullDownList:collapse(vehicle, setItem)
             elseif self.type == ADPullDownList.TYPE_FILLTYPE then
                 -- AutoDrive.debugMsg(vehicle, "ADPullDownList:collapse self.hovered %s selectedEntry.returnValue %s", tostring(self.hovered), tostring(selectedEntry.returnValue))
                 AutoDriveHudInputEventEvent:sendFillTypeEvent(vehicle, selectedEntry.returnValue)
-                if self.autoLoadFillTypes ~= nil and #self.autoLoadFillTypes > 0 then
+                if self.autoLoadFillTypes ~= nil then
                     -- AutoLoad
                     AutoDrive:setALFillType(vehicle, selectedEntry.returnValue)
                 end
