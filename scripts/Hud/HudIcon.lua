@@ -203,6 +203,13 @@ function ADHudIcon:updateIcon(vehicle)
         elseif vehicle.ad.stateModule:getMode() ~= AutoDrive.MODE_BGA then
             newIcon = AutoDrive.directory .. "textures/destination.dds"
         end
+    elseif self.name == "fruitOverlay" then
+        if #vehicle.ad.stateModule:getSelectedFillTypes() > 1 then
+            newIcon = AutoDrive.directory .. "textures/fruit_overlay_3.dds"
+        else
+            newIcon = AutoDrive.directory .. "textures/fruit_overlay_1.dds"
+        end
+
     end
 
     self.image = newIcon
