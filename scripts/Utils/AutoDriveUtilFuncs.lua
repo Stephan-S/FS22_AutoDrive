@@ -459,9 +459,9 @@ end
 function AutoDrive.closeAllCurtains(trailers, onlyUAL)
     if trailers and #trailers > 0 then
         for _, trailer in ipairs(trailers) do
-            if (not onlyUAL) or (onlyUAL and AutoDrive:hasAL(trailer)) then
+            -- if (not onlyUAL) or (onlyUAL and AutoDrive:hasAL(trailer)) then
                 AutoDrive.closeCurtain(trailer)
-            end
+            -- end
         end
     end
 end
@@ -508,7 +508,7 @@ function AutoDrive.isCurtainClosed(vehicle)
     if spec then
         for _, tipSide in pairs(spec.tipSides) do
             if tipSide and tipSide.manualTipToggle and tipSide.animation and tipSide.animation.name then
-                if vehicle.getAnimationDuration and vehicle:getAnimationDuration(tipSide.animation.name) > 1 then
+                if tipSide.animation.closeSpeedScale ~= 0 and vehicle.getAnimationDuration and vehicle:getAnimationDuration(tipSide.animation.name) > 1 then
                     local animationTime = vehicle:getAnimationTime(tipSide.animation.name)
                     ret = ret and animationTime <= 0.01
                 end
