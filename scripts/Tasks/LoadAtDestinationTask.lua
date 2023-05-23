@@ -11,6 +11,7 @@ function LoadAtDestinationTask:new(vehicle, destinationID)
     o.destinationID = destinationID
     o.trailers = nil
     o.waitForALLoadTimer = AutoDriveTON:new()
+    o.activatedUALLoading = false
     o.isReverseTriggerReached = false
     return o
 end
@@ -82,6 +83,12 @@ function LoadAtDestinationTask:update(dt)
                 local waitForALUnloadTime = AutoDrive.getSetting("ALUnloadWaitTime", self.vehicle)
 
                 if self.vehicle.ad.trailerModule:getHasAL() then
+                    -- UAL special handling - loading only possible if vehicle not moving -> self.lastSpeedReal > 0.0005
+                    -- assume no influence on aPalletAutoLoader
+                    if self.vehicle.lastSpeedReal < 0.0005 and not self.activatedUALLoading then
+                        self.activatedUALLoading = true
+                        AutoDrive.activateALTrailers(self.vehicle, self.trailers)
+                    end
                     -- AutoLoad wait time
                     if waitForALUnloadTime > 0 and not self.waitForALLoadTimer:timer(true, waitForALUnloadTime, dt) then
                         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "LoadAtDestinationTask:update wait time for AutoLoad...")
@@ -105,7 +112,6 @@ function LoadAtDestinationTask:update(dt)
                             self.loadRetryTimer:timer(false)      -- clear timer
                             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:update try loading somehow")
                             self.vehicle.ad.trailerModule:update(dt)
-
                             if not self.vehicle.ad.trailerModule:isActiveAtTrigger() then
                                 -- check fill levels only if not still filling something
                                 local _, _, isFull, _ = AutoDrive.getAllFillLevels(self.trailers)
@@ -146,16 +152,22 @@ function LoadAtDestinationTask:continue()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:continue -> trailerModule:stopLoading")
     self.vehicle.ad.trailerModule:stopLoading()
     AutoDrive.deactivateALTrailers(self.vehicle, self.trailers)
+    AutoDrive.resetFoldState(self.vehicle)
+    AutoDrive.closeAllCurtains(self.trailers, true) -- close curtain at UAL trailers
 end
 
 function LoadAtDestinationTask:abort()
     AutoDrive.deactivateALTrailers(self.vehicle, self.trailers)
+    AutoDrive.resetFoldState(self.vehicle)
+    AutoDrive.closeAllCurtains(self.trailers, true) -- close curtain at UAL trailers
 end
 
 function LoadAtDestinationTask:finished()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "LoadAtDestinationTask:finished -> specialDrivingModule:releaseVehicle / setCurrentTaskFinished")
     self.vehicle.ad.specialDrivingModule:releaseVehicle()
     AutoDrive.deactivateALTrailers(self.vehicle, self.trailers)
+    AutoDrive.resetFoldState(self.vehicle)
+    AutoDrive.closeAllCurtains(self.trailers, true) -- close curtain at UAL trailers
     self.vehicle.ad.taskModule:setCurrentTaskFinished()
 end
 

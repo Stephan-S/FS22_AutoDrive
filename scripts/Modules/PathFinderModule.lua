@@ -1121,10 +1121,10 @@ function PathFinderModule:checkForFruitInArea(cell, corners)
         self.fruitToCheck = nil
     end
     if self.fruitToCheck == nil then
-        for i = 1, #g_fruitTypeManager.fruitTypes do
-            if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
-                local fruitType = g_fruitTypeManager.fruitTypes[i].index
-                self:checkForFruitTypeInArea(cell, fruitType, corners)
+        for _, fruitType in pairs(g_fruitTypeManager:getFruitTypes()) do
+            if not (fruitType == g_fruitTypeManager:getFruitTypeByName("MEADOW")) then
+                local fruitTypeIndex = fruitType.index
+                self:checkForFruitTypeInArea(cell, fruitTypeIndex, corners)
             end
             --stop if cell is already restricted and/or fruit type is now known
             if cell.isRestricted ~= false or self.fruitToCheck ~= nil then
@@ -1136,12 +1136,12 @@ function PathFinderModule:checkForFruitInArea(cell, corners)
     end
 end
 
-function PathFinderModule:checkForFruitTypeInArea(cell, fruitType, corners)
+function PathFinderModule:checkForFruitTypeInArea(cell, fruitTypeIndex, corners)
     local fruitValue = 0
-    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitType, corners[1].x, corners[1].z, corners[2].x, corners[2].z, corners[3].x, corners[3].z, true, true)
+    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitTypeIndex, corners[1].x, corners[1].z, corners[2].x, corners[2].z, corners[3].x, corners[3].z, true, true)
 
     if (self.fruitToCheck == nil or self.fruitToCheck < 1) and (fruitValue > 150) then
-        self.fruitToCheck = fruitType
+        self.fruitToCheck = fruitTypeIndex
     end
     local wasRestricted = cell.isRestricted
     cell.isRestricted = cell.isRestricted or (fruitValue > 150)
@@ -1846,14 +1846,14 @@ function PathFinderModule:smoothResultingPPPath_Refined()
 
                     if self.goingToNetwork then
                         -- check for all fruit types
-                        for i = 1, #g_fruitTypeManager.fruitTypes do
-                            if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
-                                local fruitType = g_fruitTypeManager.fruitTypes[i].index
+                        for _, fruitType in pairs(g_fruitTypeManager:getFruitTypes()) do
+                            if not (fruitType == g_fruitTypeManager:getFruitTypeByName("MEADOW")) then
+                                local fruitTypeIndex = fruitType.index
                                 local fruitValue = 0
                                 if self.isSecondChasingVehicle then
-                                    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitType, cornerWideX, cornerWideZ, cornerWide2X, cornerWide2Z, cornerWide4X, cornerWide4Z, true, true)
+                                    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitTypeIndex, cornerWideX, cornerWideZ, cornerWide2X, cornerWide2Z, cornerWide4X, cornerWide4Z, true, true)
                                 else
-                                    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitType, cornerX, cornerZ, corner2X, corner2Z, corner4X, corner4Z, true, true)
+                                    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitTypeIndex, cornerX, cornerZ, corner2X, corner2Z, corner4X, corner4Z, true, true)
                                 end
                                 hasCollision = hasCollision or (fruitValue > 50)
                                 if hasCollision then

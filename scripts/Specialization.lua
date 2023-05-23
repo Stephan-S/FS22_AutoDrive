@@ -1026,8 +1026,7 @@ function AutoDrive:startAutoDrive()
 
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
-            self.ad.foldStartTime = g_time
-
+            AutoDrive.resetFoldState(self)
             AutoDrive.getAllVehicleDimensions(self, true)
             if self.spec_aiVehicle ~= nil then
                 if self.getAINeedsTrafficCollisionBox ~= nil then

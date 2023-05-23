@@ -186,6 +186,10 @@ function ADTrailerModule:handleTrailerCovers()
     -- open trailer cover if trigger is reachable
     local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, isInRangeToLoadUnloadTarget)
+    if isInRangeToLoadUnloadTarget and self.hasAL then
+        -- open curtains for UAL
+        AutoDrive.openAllCurtains(self.trailers, true) -- open curtain at UAL trailers
+    end
 end
 
 function ADTrailerModule:updateStates()
@@ -490,6 +494,9 @@ function ADTrailerModule:updateUnload(dt)
                 if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
                     self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
                 end
+            elseif fillUnitEmpty and self.unloadingToBunkerSilo then
+                self.unloadDelayTimer:timer(false)      -- clear timer
+                self.unloadingToBunkerSilo = false
             elseif allTrailersClosed and self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.spec_pipe ~= nil then
                 -- unload auger wagon to another trailer
                 self.unloadDelayTimer:timer(false)      -- clear timer

@@ -28,6 +28,7 @@ end
 
 function ADUserDataManager:load()
     self.userSettingNames = self:getUserSettingNames()
+    self.isSinglePlayerOrHost = (not g_currentMission.missionDynamicInfo.isMultiplayer) or (g_currentMission.missionDynamicInfo.isMultiplayer and not g_currentMission.missionDynamicInfo.isClient)
 end
 
 function ADUserDataManager:loadFromXml()
@@ -56,7 +57,7 @@ function ADUserDataManager:loadFromXml()
                 uIndex = uIndex + 1
             end
 
-            if not g_currentMission.missionDynamicInfo.isMultiplayer then
+            if self.isSinglePlayerOrHost then
                 -- no client, use a single player user
                 local uniqueId = ADUserDataManager.SinglePlayer
                 if self.users[uniqueId] ~= nil then
@@ -88,7 +89,7 @@ function ADUserDataManager:saveToXml()
     local file = g_currentMission.missionInfo.savegameDirectory .. "/AutoDriveUsersData.xml"
     local xmlFile = createXMLFile("AutoDriveUsersData_XML_temp", file, "AutoDriveUsersData")
 
-    if not g_currentMission.missionDynamicInfo.isMultiplayer then
+    if self.isSinglePlayerOrHost then
         -- no client, create a single player user ID
         local uniqueId = ADUserDataManager.SinglePlayer
 
