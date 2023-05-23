@@ -193,7 +193,8 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 
 	table.insert(self.hudElements, ADPullDownList:new(self.posX + 2 * self.gapWidth + self.buttonWidth, self.row3, self.iconWidth * 6 + self.gapWidth * 5, self.listItemHeight, ADPullDownList.TYPE_UNLOAD, 1))
 	
-	table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row2, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/fruit_overlay_1.dds", 1, "fruitOverlay"))
+	table.insert(self.hudElements, ADHudButton:new(self.posX + self.gapWidth, self.row2, self.iconWidth, self.iconHeight, "input_toggleLoadByFillLevel", nil, nil, nil, "input_ADToggleLoadByFillLevel", 1, true))
+	--table.insert(self.hudElements, ADHudIcon:new(self.posX + self.gapWidth, self.row2, self.iconWidth, self.iconHeight, AutoDrive.directory .. "textures/fruit_overlay_1.dds", 1, "fruitOverlay"))
 
 	table.insert(
 		self.hudElements,

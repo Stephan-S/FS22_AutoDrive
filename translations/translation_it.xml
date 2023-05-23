@@ -55,6 +55,7 @@
         <text name="input_AD_devAction"             		text="AD: Azione dello sviluppatore" />
         <text name="input_ADToggleAutomaticPickupTarget"    	text="AD: Attiva/Disattiva il target di ritiro automatico" />
         <text name="input_ADToggleAutomaticUnloadTarget"    	text="AD: Attiva/Disattiva obiettivo di scaricamento automatico" />
+        <text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
         <text name="hud_avoidFruit"                 		text="AD: Evita raccolto" />
         <text name="hud_startCp"                		text="AD: Avvia CP/AIVE a destinazione" />
         <text name="AD_parkVehicle_noPosSet"            	text="Nessuna destinazione di parcheggio assegnata. Si prega di assegnare l'obiettivo attualmente selezionato con il tasto destro del mouse." />

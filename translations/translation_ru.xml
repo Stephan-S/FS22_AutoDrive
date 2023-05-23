@@ -56,6 +56,7 @@
 		<text name="input_AD_devAction"							text="AD: Действия разработчика" />
 		<text name="input_ADToggleAutomaticPickupTarget"		text="AD: Переключать автоматически цели подбора" />
 		<text name="input_ADToggleAutomaticUnloadTarget"		text="AD: Переключать автоматически цели разгрузки" />
+		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
 		<text name="hud_avoidFruit"								text="AD: Избегать посевов" />
 		<text name="hud_startCp"								text="AD: Запустить CP/AIVE в пункте назначения" />
 		<text name="AD_parkVehicle_noPosSet"					text="Место для парковки не назначено. Чтобы назначить выбранную локацию, как место парковки, нажмите правой кнопкой мыши на этой же кнопке." />

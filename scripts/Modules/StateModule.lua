@@ -31,6 +31,7 @@ function ADStateModule:reset()
 
     self.fillType = FillType.UNKNOWN
     self.selectedFillTypes = {}
+    self.loadByFillLevel = true
     self.loopCounter = 0
     self.loopsDone = 0
 
@@ -113,6 +114,11 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
         self.selectedFillTypes = {self.fillType}
     end
 
+    local loadByFillLevel = xmlFile:getValue(key .. "#loadByFillLevel")
+    if loadByFillLevel ~= nil then
+        self.loadByFillLevel = loadByFillLevel
+    end
+
     local loopCounter = xmlFile:getValue(key .. "#loopCounter")
     if loopCounter ~= nil then
         self.loopCounter = loopCounter
@@ -174,6 +180,7 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
     end
     xmlFile:setValue(key .. "#fillType", self.fillType)
     xmlFile:setValue(key .. "#selectedFillTypes", table.concat(self.selectedFillTypes, ','))
+    xmlFile:setValue(key .. "#loadByFillLevel", self.loadByFillLevel)
     xmlFile:setValue(key .. "#loopCounter", self.loopCounter)
     xmlFile:setValue(key .. "#speedLimit", self.speedLimit)
     xmlFile:setValue(key .. "#fieldSpeedLimit", self.fieldSpeedLimit)
@@ -193,6 +200,7 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
     AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
+    streamWriteBool(streamId, self.loadByFillLevel)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -224,6 +232,7 @@ function ADStateModule:readStream(streamId)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
     self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
+    self.loadByFillLevel = streamReadBool(streamId)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -257,6 +266,7 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
     AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
+    streamWriteBool(streamId, self.loadByFillLevel)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -288,6 +298,7 @@ function ADStateModule:readUpdateStream(streamId)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
     self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
+    self.loadByFillLevel = streamReadBool(streamId)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -872,6 +883,22 @@ function ADStateModule:toggleAllFillTypeSelections(fillType)
     end
 end
 
+
+function ADStateModule:toggleLoadByFillLevel()
+    self.loadByFillLevel = not self.loadByFillLevel
+    self:raiseDirtyFlag()
+end
+
+function ADStateModule:setLoadByFillLevel(enabled)
+    self.loadByFillLevel = enabled
+    self:raiseDirtyFlag()
+end
+
+function ADStateModule:getLoadByFillLevel()
+    return self.loadByFillLevel
+end
+
+
 function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
     if #self.selectedFillTypes == 0 then
         return
@@ -885,16 +912,18 @@ function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
     local requiredFillLevel = fillLevelList[#fillLevelList]
     local idx = table.indexOf(self.selectedFillTypes, self.fillType)  -- starting point
     local loopsLeft = #self.selectedFillTypes
+    local pickNextNonEmpty = requiredFillLevel == -1 or not self.loadByFillLevel
     if idx == nil or requiredFillLevel == nil then
         return
     end
-    if requiredFillLevel == -1 then
-        -- infinite trigger (all fill levels are -1) - pick the next available filltype
+    if pickNextNonEmpty  then
+        -- infinite trigger (all fill levels are -1) or load-by-fill-level diabled: pick the next available filltype
         idx = (idx % #self.selectedFillTypes) + 1
     end
     while true do
         local fillType = self.selectedFillTypes[idx]
-        if fillLevels[fillType] == requiredFillLevel then
+        if fillLevels[fillType] ~= nil and fillLevels[fillType] ~= 0 and (fillLevels[fillType] == requiredFillLevel or pickNextNonEmpty) then
+            -- found suitable filltype
             self.fillType = fillType
             break
         end
