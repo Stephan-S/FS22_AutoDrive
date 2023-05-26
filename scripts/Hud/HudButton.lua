@@ -228,6 +228,17 @@ function ADHudButton:getNewState(vehicle)
         end
     end
 
+    if self.primaryAction == "input_toggleLoadByFillLevel" then
+        self.isVisible = vehicle.ad.stateModule:getMode() == AutoDrive.MODE_LOAD or vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER
+        if #vehicle.ad.stateModule:getSelectedFillTypes() <= 1 then
+            newState = 1
+        elseif vehicle.ad.stateModule:getLoadByFillLevel() then
+            newState = 2
+        else
+            newState = 3
+        end
+    end
+
     return newState
 end
 

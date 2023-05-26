@@ -62,6 +62,7 @@
 		<text name="input_AD_devAction"							text="AD: Entwickler Aktion" />
 		<text name="input_ADToggleAutomaticPickupTarget"        text="AD: Umschalten automatisches Ladeziel" />
 		<text name="input_ADToggleAutomaticUnloadTarget"        text="AD: Umschalten automatisches Entladeziel" />
+		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
 		<text name="hud_avoidFruit"								text="AD: Fruchtumfahrung" />
 		<text name="hud_startCp" 								text="AD: Starte CP / AIVE Fahrer am Zielpunkt" />
 		<text name="AD_parkVehicle_noPosSet"					text="Kein Parkplatz zugewiesen." />

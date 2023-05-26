@@ -316,6 +316,8 @@ function ADTrailerModule:updateLoad(dt)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad Try loading at trigger now pair.fillUnitIndex %s", tostring(pair.fillUnitIndex))
                 fillFound = true
                 -- start loading
+
+                self.vehicle.ad.stateModule:selectPreferredFillTypeFromFillLevels(pair.fillLevels)
                 self:tryLoadingAtTrigger(pair.trailer, pair.trigger, pair.fillUnitIndex)
                 self.foundSuitableTrigger = true    -- loading trigger was found
                 return

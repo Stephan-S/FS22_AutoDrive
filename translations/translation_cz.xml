@@ -55,6 +55,7 @@
 		<text name="input_AD_devAction"                         			text="AD: Vývojářské Akce" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Přepnout cíl automatického vyzvednutí" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Přepnout cíl automatického vyložení" />
+		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
 		<text name="hud_avoidFruit"								text="AD: Nevjíždět do porostu" />
 		<text name="hud_startCp" 								text="AD: Start CP / AIVE v místě určení" />
 		<text name="AD_parkVehicle_noPosSet"					text="Vozidlo nemá parkoviště. Vyberte cíl a stiskněte pravého tlačítka myši." />

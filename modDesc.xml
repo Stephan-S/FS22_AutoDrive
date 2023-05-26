@@ -92,6 +92,7 @@ Différents modes d'utilisation ont été ajoutés depuis les premières version
 		<action name="ADToggleHudExtension" category="VEHICLE" ignoreComboMask="false" />	
 		<action name="ADToggleAutomaticUnloadTarget" category="VEHICLE" ignoreComboMask="false" />
 		<action name="ADToggleAutomaticPickupTarget" category="VEHICLE" ignoreComboMask="false" />
+		<action name="ADToggleLoadByFillLevel" category="VEHICLE" ignoreComboMask="false" />
 		<action name="ADRepairVehicle" category="VEHICLE" ignoreComboMask="false" />		
 	</actions>
 

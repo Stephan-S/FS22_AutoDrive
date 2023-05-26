@@ -104,6 +104,24 @@ function AutoDrive.streamWriteStringOrEmpty(streamId, string)
 	streamWriteString(streamId, string)
 end
 
+function AutoDrive.streamReadUIntNList(streamId, numberOfBits)
+	list = {}
+	local len = streamReadUIntN(streamId, numberOfBits)
+	for i = 1, len do
+		local v = streamReadUIntN(streamId, numberOfBits)
+		table.insert(list, v)
+	end
+	return list
+end
+
+function AutoDrive.streamWriteUIntNList(streamId, list, numberOfBits)
+	list = list or {}
+	streamWriteUIntN(streamId, #list, numberOfBits)
+	for _, v in pairs(list) do
+		streamWriteUIntN(streamId, v, numberOfBits)
+	end
+end
+
 function AutoDrive.boxesIntersect(a, b)
 	local polygons = {a, b}
 	local minA, maxA, minB, maxB
@@ -1172,4 +1190,16 @@ function AutoDrive.playSample(sample, volume, forced)
     if (AutoDrive.getSetting("playSounds") and sample~= nil) or forced then
         playSample(sample, 1, volume, 0, 0, 0)
     end
+end
+
+function AutoDrive.stringToNumberList(text, sep)
+	sep = sep or ','
+	local list = {}
+	for _, v in pairs(text:split(sep)) do
+		local num = tonumber(v)
+		if num ~= nil then
+			table.insert(list, num)
+		end
+	end
+	return list
 end

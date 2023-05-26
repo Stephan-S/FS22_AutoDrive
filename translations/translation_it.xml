@@ -55,6 +55,7 @@
         <text name="input_AD_devAction"             		text="AD: Azione dello sviluppatore" />
         <text name="input_ADToggleAutomaticPickupTarget"    	text="AD: Attiva/Disattiva il target di ritiro automatico" />
         <text name="input_ADToggleAutomaticUnloadTarget"    	text="AD: Attiva/Disattiva obiettivo di scaricamento automatico" />
+        <text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
         <text name="hud_avoidFruit"                 		text="AD: Evita raccolto" />
         <text name="hud_startCp"                		text="AD: Avvia CP/AIVE a destinazione" />
         <text name="AD_parkVehicle_noPosSet"            	text="Nessuna destinazione di parcheggio assegnata. Si prega di assegnare l'obiettivo attualmente selezionato con il tasto destro del mouse." />
@@ -102,7 +103,7 @@
         <text name="gui_ad_useFolders_tooltip"          	text="Usa Le cartelle per le destinazioni edifici" />
         <text name="gui_ad_wait"                		text="Attendi" />
         <text name="gui_ad_drive"               		text="Continua" />
-		<text name="gui_ad_off"									text="Off" />
+		<text name="gui_ad_off"									text="Spento" />
         <text name="gui_ad_yes"                 		text="Si" />
         <text name="gui_ad_no"                  		text="No" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -216,8 +217,8 @@
         <text name="gui_ad_wideHUD_tooltip"             	text="Utilizzare la modalità HUD estersa, che consente anche qualche altro pulsante di impostazione nell'HUD" />
         <text name="gui_ad_playSounds"              		text="Suono" />
         <text name="gui_ad_playSounds_tooltip"          	text="Abilita gli effetti sonori per i clic del mouse e le notifiche" />
-		<text name="gui_ad_scaleLines"							text="Scale Lines" />
-		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
+		<text name="gui_ad_scaleLines"							text="Spessore linee" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Spessore delle linee di connessione" />
         <text name="gui_ad_syncMultiTargets"           		text="Sincronizza obbiettivi multipli" />
         <text name="gui_ad_syncMultiTargets_tooltip"        	text="Più autisti che utilizzano la stessa cartella per più obiettivi sincronizzeranno gli obiettivi successivi" />
         <text name="gui_ad_enableParkAtJobFinished"         	text="Parcheggia a lavoro finito" />
@@ -241,8 +242,8 @@
         <text name="gui_ad_scanConfirmationText"                text="AutoDrive deve generare una rete di percorsi a partire dai dati del traffico e degli aiutanti sulla mappa?" />
         <text name="gui_ad_noHarvesterAvailable"        	text="Nessuna mietitrice con lo stesso obiettivo trovata" />
         <text name="gui_ad_noUnloaderAvailable"         	text="Nessun autista con lo stesso obiettivo disponibile" />
-		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
-		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Tempo di guida rimanente" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="Per mod esterne: Intervallo per calcolare il tempo di guida rimanente. In caso di problemi con le prestazioni aumentare o disattivare." />
 
         <text name="gui_ad_settingsPage_title"          	text="Impostazioni" />
         <text name="gui_ad_userSettingsPage_title"      	text="Impostazioni Utente" />
@@ -279,7 +280,7 @@
         <text name="gui_ad_debugChannelRender"          	text="Rendering" />
         <text name="gui_ad_debugChannelRoadNetwork"         	text="Rete stradale" />
         <text name="gui_ad_debugChannelBGA"             	text="Modalità BGA" />
-		<text name="gui_ad_debugChannelTrains"					text="Trains" />
+		<text name="gui_ad_debugChannelTrains"					text="Treni" />
         <text name="gui_ad_debugChannelAll"             	text="Tutto" />
         
         <text name="gui_ad_notificationHistoryTitle"    text="Notifiche" />
