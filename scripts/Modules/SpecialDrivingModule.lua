@@ -347,7 +347,7 @@ function ADSpecialDrivingModule:getReverseNode()
                 local centerX, centerZ = 0,0
                 local wheelCount = 0
                 for _, wheel in pairs(implement.spec_wheels.wheels) do
-                    hasSynchronizedWheels = hasSynchronizedWheels or wheel.isSynchronized
+                    hasSynchronizedWheels = hasSynchronizedWheels or (wheel.isSynchronized and wheel.name)
                     if wheel.isSynchronized then
                         wheelCount = wheelCount + 1
                         local posX, _, posZ = localToLocal(wheel.node, implement.components[1].node, wheel.positionX, wheel.positionY, wheel.positionZ)
