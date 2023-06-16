@@ -1126,6 +1126,7 @@ function AutoDrive:stopAutoDrive()
                 self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
             end
 
+            self.ad.stateModule:setLoopsDone(0)
             self.ad.stateModule:setActive(false)
 
             self.ad.taskModule:abortAllTasks()
