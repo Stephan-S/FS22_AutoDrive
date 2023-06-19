@@ -22,7 +22,6 @@ end
 function PickupAndDeliverMode:reset()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:reset set STATE_INIT")
     self.state = PickupAndDeliverMode.STATE_INIT
-    self.vehicle.ad.stateModule:setLoopsDone(0)
     self.activeTask = nil
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
