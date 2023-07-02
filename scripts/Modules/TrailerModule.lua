@@ -251,22 +251,20 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
                 trailer.ad.targetBlockedState = blockTrailers
 
                 if trailer.ad.rotLimitBackup == nil then
-                    trailer.ad.rotLimitBackup = {}
-
-                    if trailer.componentJoints[1].rotLimit == nil or
-                    trailer.componentJoints[1].rotLimit[2] == nil then
-                        trailer.ad.rotLimitBackup[1] = 0
-                        trailer.ad.rotLimitBackup[2] = 0
-                    else
-                        trailer.ad.rotLimitBackup[1] = trailer.componentJoints[1].rotLimit[1]
-                        trailer.ad.rotLimitBackup[2] = trailer.componentJoints[1].rotLimit[2]
+                    for index, joint in pairs(trailer.componentJoints) do
+                        if joint.rotLimit[1] == 0 and joint.rotLimit[2] ~= 0 and joint.rotLimit[3] == 0 then
+                            trailer.ad.rotIndex = index
+                            trailer.ad.rotLimitBackup = joint.rotLimit[2]
+                            break
+                        end
                     end
-                else
+                end
+                if trailer.ad.rotIndex then
                     if trailer.ad.lastBlockedState ~= trailer.ad.targetBlockedState then
                         if trailer.ad.targetBlockedState then
-                            trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, 0, 0)
+                            trailer:setComponentJointRotLimit(trailer.componentJoints[trailer.ad.rotIndex], 2, 0, 0)
                         else
-                            trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, -trailer.ad.rotLimitBackup[2], trailer.ad.rotLimitBackup[2])
+                            trailer:setComponentJointRotLimit(trailer.componentJoints[trailer.ad.rotIndex], 2, -trailer.ad.rotLimitBackup, trailer.ad.rotLimitBackup)
                         end
                         trailer.ad.lastBlockedState = trailer.ad.targetBlockedState;
                     end
