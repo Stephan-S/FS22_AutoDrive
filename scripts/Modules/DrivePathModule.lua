@@ -48,6 +48,7 @@ function ADDrivePathModule:reset()
 end
 
 function ADDrivePathModule:setPathTo(wayPointId)
+    self.min_distance = 5 - self:getVehicleSteeringAxleOffset()
     self.wayPoints = ADGraphManager:getPathTo(self.vehicle, wayPointId, self.lastUsedWayPoint)
     local destination = ADGraphManager:getMapMarkerByWayPointId(self:getLastWayPointId())
     self.vehicle.ad.stateModule:setCurrentDestination(destination)
@@ -197,13 +198,42 @@ function ADDrivePathModule:resetIsReversing()
     self.vehicle.ad.specialDrivingModule:reset()
 end
 
+function ADDrivePathModule:getVehicleSteeringAxleOffset()
+    if self.steeringAxleOffset == nil then
+        local spec = self.vehicle.spec_wheels
+    
+        local rotateableWheels = 0
+        local diffXSum, diffZSum = 0, 0
+    
+        for _, wheel in pairs(spec.wheels) do
+            if wheel.rotMax > 0.01 then
+                rotateableWheels = rotateableWheels + 1
+    
+                local xs, ys, zs = getWorldTranslation(wheel.driveNode)
+                local diffX, _, diffZ = worldToLocal(self.vehicle.components[1].node, xs, ys, zs)
+                diffXSum = diffXSum + diffX
+                diffZSum = diffZSum + diffZ
+            end
+        end
+    
+        if rotateableWheels > 0 then
+            self.steeringAxleOffset = (diffZSum) / rotateableWheels
+        else
+            self.steeringAxleOffset = 2
+        end
+    end    
+
+    return self.steeringAxleOffset --localToWorld(self.vehicle.components[1].node, steeringAxleX, steeringAxleY, steeringAxleZ)
+end
+
 function ADDrivePathModule:isCloseToWaypoint()
-    local x, _, z = getWorldTranslation(self.vehicle.components[1].node)
+    local x, _, z = getWorldTranslation(self.vehicle.components[1].node)    
+
     local maxSkipWayPoints = 1
     for i = 0, maxSkipWayPoints do
         if self.wayPoints[self:getCurrentWayPointIndex() + i] ~= nil then
             local distanceToCurrentWp = MathUtil.vector2Length(x - self.wayPoints[self:getCurrentWayPointIndex() + i].x, z - self.wayPoints[self:getCurrentWayPointIndex() + i].z)
-            if distanceToCurrentWp < self.min_distance then --and i == 0
+            if distanceToCurrentWp < self.min_distance  then --and i == 0
                 return true
             end
             -- Check if the angle between vehicle and current wp and current wp to next wp is over 90° - then we should already make the switch
@@ -310,9 +340,7 @@ function ADDrivePathModule:followWaypoints(dt)
             self.acceleration = -math.min(0.6, speedDiff * 0.05)
         end
         
-        --print("Speed: " .. (self.vehicle.lastSpeedReal * 3600) .. "/" .. self.speedLimit .. " acc: " .. self.acceleration .. " maxSpeedDiff: " .. maxSpeedDiff)
-        --print("LAD: " .. self.distanceToLookAhead .. " maxAngle: " .. self.maxAngle .. " maxAngleSpeed: " .. self.maxAngleSpeed)
-        --ADDrawingManager:addLineTask(x, y, z, self.targetX, y, self.targetZ, 1, 0, 0)
+        ADDrawingManager:addLineTask(x, y, z, self.targetX, y, self.targetZ, 1, 0, 0)
         if self.vehicle.startMotor then
             if not self.vehicle:getIsMotorStarted() and self.vehicle:getCanMotorRun() and not self.vehicle.ad.specialDrivingModule:shouldStopMotor() then
                 self.vehicle:startMotor()
@@ -632,15 +660,13 @@ function ADDrivePathModule:getLookAheadTarget()
 
     if self:getNextWayPoint() ~= nil and (self:getNextWayPoint().incoming == nil or #self:getNextWayPoint().incoming > 0) then
         local lookAheadID = 1
-        local lookAheadDistance = AutoDrive.getSetting("lookAheadTurning")
+        local lookAheadDistance = AutoDrive.getSetting("lookAheadTurning") + self.min_distance
         local distanceToCurrentTarget = MathUtil.vector2Length(x - wp_current.x, z - wp_current.z)
 
         local wp_ahead = self.wayPoints[self:getCurrentWayPointIndex() + lookAheadID]
-        local distanceToNextTarget = MathUtil.vector2Length(x - wp_ahead.x, z - wp_ahead.z)
+        local distanceToNextTarget = MathUtil.vector2Length(wp_current.x - wp_ahead.x, wp_current.z - wp_ahead.z)
 
-        if distanceToCurrentTarget < distanceToNextTarget then
-            lookAheadDistance = lookAheadDistance - distanceToCurrentTarget
-        end
+        lookAheadDistance = lookAheadDistance - distanceToCurrentTarget
 
         while lookAheadDistance > distanceToNextTarget do
             lookAheadDistance = lookAheadDistance - distanceToNextTarget
