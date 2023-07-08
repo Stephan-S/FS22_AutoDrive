@@ -48,7 +48,8 @@ function ADDrivePathModule:reset()
 end
 
 function ADDrivePathModule:setPathTo(wayPointId)
-    self.min_distance = 5 - self:getVehicleSteeringAxleOffset()
+    self.min_distance = 2 + self:getVehicleSteeringAxleOffset()
+    print("MinDistance: " .. self.min_distance)
     self.wayPoints = ADGraphManager:getPathTo(self.vehicle, wayPointId, self.lastUsedWayPoint)
     local destination = ADGraphManager:getMapMarkerByWayPointId(self:getLastWayPointId())
     self.vehicle.ad.stateModule:setCurrentDestination(destination)
@@ -203,25 +204,39 @@ function ADDrivePathModule:getVehicleSteeringAxleOffset()
         local spec = self.vehicle.spec_wheels
     
         local rotateableWheels = 0
+        local nonRotateableWheels = 0
         local diffXSum, diffZSum = 0, 0
+        local diffXSumStatic, diffZSumStatic = 0, 0
     
-        for _, wheel in pairs(spec.wheels) do
+        for _, wheel in pairs(spec.wheels) do            
+            local xs, ys, zs = getWorldTranslation(wheel.driveNode)
+            local diffX, _, diffZ = worldToLocal(self.vehicle.components[1].node, xs, ys, zs)
+
             if wheel.rotMax > 0.01 then
-                rotateableWheels = rotateableWheels + 1
-    
-                local xs, ys, zs = getWorldTranslation(wheel.driveNode)
-                local diffX, _, diffZ = worldToLocal(self.vehicle.components[1].node, xs, ys, zs)
+                rotateableWheels = rotateableWheels + 1    
                 diffXSum = diffXSum + diffX
                 diffZSum = diffZSum + diffZ
+            else
+                nonRotateableWheels = nonRotateableWheels + 1    
+                diffXSumStatic = diffXSumStatic + diffX
+                diffZSumStatic = diffZSumStatic + diffZ
             end
         end
     
-        if rotateableWheels > 0 then
-            self.steeringAxleOffset = (diffZSum) / rotateableWheels
+        if rotateableWheels > 0 and nonRotateableWheels > 0 then
+            if (diffZSum > 0) then
+                --Rotateable Wheels are in the front -> offset = 0
+                self.steeringAxleOffset = 0
+            else
+                self.steeringAxleOffset = (diffZSumStatic / nonRotateableWheels) - (diffZSum / rotateableWheels)
+                print("rotateableWheels: " .. rotateableWheels .. " nonRotateableWheels: " .. nonRotateableWheels .. " diffZ: " .. (diffZSum / rotateableWheels) .. " diffZStatic: " .. diffZSumStatic)
+            end            
         else
-            self.steeringAxleOffset = 2
+            self.steeringAxleOffset = 0
         end
-    end    
+    end
+
+    print("getVehicleSteeringAxleOffset: " .. (self.steeringAxleOffset))
 
     return self.steeringAxleOffset --localToWorld(self.vehicle.components[1].node, steeringAxleX, steeringAxleY, steeringAxleZ)
 end
@@ -660,7 +675,8 @@ function ADDrivePathModule:getLookAheadTarget()
 
     if self:getNextWayPoint() ~= nil and (self:getNextWayPoint().incoming == nil or #self:getNextWayPoint().incoming > 0) then
         local lookAheadID = 1
-        local lookAheadDistance = AutoDrive.getSetting("lookAheadTurning") + self.min_distance
+        local lookAheadDistance = AutoDrive.getSetting("lookAheadTurning") + (self:getVehicleSteeringAxleOffset() * 2.5)        
+        print("lookAheadDistance: " .. lookAheadDistance)
         local distanceToCurrentTarget = MathUtil.vector2Length(x - wp_current.x, z - wp_current.z)
 
         local wp_ahead = self.wayPoints[self:getCurrentWayPointIndex() + lookAheadID]
