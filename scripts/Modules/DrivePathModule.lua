@@ -48,8 +48,7 @@ function ADDrivePathModule:reset()
 end
 
 function ADDrivePathModule:setPathTo(wayPointId)
-    self.min_distance = 2 + self:getVehicleSteeringAxleOffset()
-    print("MinDistance: " .. self.min_distance)
+    self.min_distance = 2
     self.wayPoints = ADGraphManager:getPathTo(self.vehicle, wayPointId, self.lastUsedWayPoint)
     local destination = ADGraphManager:getMapMarkerByWayPointId(self:getLastWayPointId())
     self.vehicle.ad.stateModule:setCurrentDestination(destination)
@@ -205,12 +204,28 @@ function ADDrivePathModule:getVehicleSteeringAxleOffset()
     
         local rotateableWheels = 0
         local nonRotateableWheels = 0
+        local negativeRotationWheels = 0
+        local positiveRotationWheels = 0
         local diffXSum, diffZSum = 0, 0
         local diffXSumStatic, diffZSumStatic = 0, 0
+
+        DebugUtil.printTableRecursively(spec.wheels, "---", 0, 4)
     
         for _, wheel in pairs(spec.wheels) do            
             local xs, ys, zs = getWorldTranslation(wheel.driveNode)
             local diffX, _, diffZ = worldToLocal(self.vehicle.components[1].node, xs, ys, zs)
+
+            if wheel.rotSpeed > 0.01 then
+                positiveRotationWheels = positiveRotationWheels + 1
+            elseif wheel.rotSpeed < - 0.01 then
+                negativeRotationWheels = negativeRotationWheels + 1 
+            end
+
+            if positiveRotationWheels > 0 and negativeRotationWheels > 0 then
+                -- Knicklenker => Lenkzentrum ist im Fahrzeugzentrum
+                self.steeringAxleOffset = 0
+                return self.steeringAxleOffset
+            end
 
             if wheel.rotMax > 0.01 then
                 rotateableWheels = rotateableWheels + 1    
@@ -241,8 +256,53 @@ function ADDrivePathModule:getVehicleSteeringAxleOffset()
     return self.steeringAxleOffset --localToWorld(self.vehicle.components[1].node, steeringAxleX, steeringAxleY, steeringAxleZ)
 end
 
+function ADDrivePathModule:getFrontAxleOffset()
+    if self.vehicle.frontAxleOffset == nil then
+        local frontWheel = nil
+        local pairWheel = nil
+        local frontDistance = math.huge
+        local spec = self.vehicle.spec_wheels
+        for _, wheel in pairs(spec.wheels) do
+            local wheelNode = wheel.driveNode
+            local sx, sy, sz = getWorldTranslation(wheelNode)
+            local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, sx, sy, sz)
+            if diffZ > 0 and diffZ < frontDistance and math.abs(frontDistance - diffZ) > 0.5 then
+                frontWheel = wheel
+                frontDistance = diffZ
+            end
+            if diffZ > 0 and (math.abs(frontDistance - diffZ) < 0.2) and wheel ~= frontWheel then
+                pairWheel = wheel
+            end
+        end
+
+        if frontWheel ~= nil and pairWheel ~= nil then
+            local frontWheelX, frontWheelY, frontWheelZ = getWorldTranslation(frontWheel.driveNode)
+            local pairWheelX, pairWheelY, pairWheelZ = getWorldTranslation(pairWheel.driveNode)
+            local axleCenterX = frontWheelX + 0.5 * (pairWheelX - frontWheelX)
+            local axleCenterY = frontWheelY + 0.5 * (pairWheelY - frontWheelY)
+            local axleCenterZ = frontWheelZ + 0.5 * (pairWheelZ - frontWheelZ)
+            local diffX, _, diffZ = worldToLocal(self.vehicle.components[1].node, axleCenterX, axleCenterY, axleCenterZ)
+            self.frontAxleOffsetX, self.frontAxleOffsetZ = diffX,diffZ
+        else
+            self.frontAxleOffsetX, self.frontAxleOffsetZ = 0,0
+        end      
+        
+        self.vehicle.frontAxleOffset = createTransformGroup("frontAxleOffset");
+        link(self.vehicle.components[1].node, self.vehicle.frontAxleOffset);
+        if self.frontAxleOffsetX ~= nil and self.frontAxleOffsetZ ~= nil then
+            --setTranslation(self.vehicle.frontAxleOffset, self.frontAxleOffsetX, 0, self.frontAxleOffsetZ);
+            setTranslation(self.vehicle.frontAxleOffset, 0, 0, self.vehicle.size.length / 2 - 2);           
+        end
+    end
+
+    return self.vehicle.frontAxleOffset
+end
+
 function ADDrivePathModule:isCloseToWaypoint()
-    local x, _, z = getWorldTranslation(self.vehicle.components[1].node)    
+    local x, _, z = getWorldTranslation(self.vehicle.components[1].node)
+    if self.vehicle.frontAxleOffset then
+        x, _, z = getWorldTranslation(self.vehicle.frontAxleOffset)
+    end
 
     local maxSkipWayPoints = 1
     for i = 0, maxSkipWayPoints do
@@ -271,6 +331,9 @@ end
 
 function ADDrivePathModule:followWaypoints(dt)
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+    if self.vehicle.frontAxleOffset then
+        x, y, z = getWorldTranslation(self.vehicle.frontAxleOffset)
+    end
     local maxSpeedDiff = ADDrivePathModule.MAX_SPEED_DEVIATION
     self.acceleration = 1
     self.distanceToLookAhead = 8
@@ -327,6 +390,11 @@ function ADDrivePathModule:followWaypoints(dt)
         end
     end
 
+    if self.printed == nil then
+        DebugUtil.printTableRecursively(self.vehicle, "---", 0, 2)
+        self.printed = true
+    end
+
     local maxAngle = 60
     if self.vehicle.maxRotation then
         if self.vehicle.maxRotation > (2 * math.pi) then
@@ -337,8 +405,10 @@ function ADDrivePathModule:followWaypoints(dt)
     end
 
     self.targetX, self.targetZ = self:getLookAheadTarget()
-    local lx, lz = AIVehicleUtil.getDriveDirection(self.vehicle.components[1].node, self.targetX, y, self.targetZ)
-
+    local lx, lz = AIVehicleUtil.getDriveDirection(self:getFrontAxleOffset(), self.targetX, y, self.targetZ)
+    local frontX, frontY, frontZ = getWorldTranslation(self:getFrontAxleOffset())    
+    ADDrawingManager:addLineTask(frontX, frontY, frontZ, self.targetX, y, self.targetZ, 1, 1, 0)
+    
     if self.vehicle.ad.collisionDetectionModule:hasDetectedObstable(dt) then
         self.vehicle.ad.specialDrivingModule:stopVehicle((not self:isOnRoadNetwork()), lx, lz)
         self.vehicle.ad.specialDrivingModule:update(dt)
@@ -362,9 +432,11 @@ function ADDrivePathModule:followWaypoints(dt)
             end
         end
         self.vehicle.ad.trailerModule:handleTrailerReversing(false)
+        
         AutoDrive.driveInDirection(self.vehicle, dt, maxAngle, self.acceleration, 0.8, maxAngle, true, true, lx, lz, self.speedLimit, 1)
     end
 end
+
 
 function ADDrivePathModule:handleReachedWayPoint()    
     self.lastUsedWayPoint = self:getCurrentWayPoint()
@@ -663,6 +735,9 @@ function ADDrivePathModule:getLookAheadTarget()
     --start driving to the nextWayPoint when closing in on current waypoint in order to avoid harsh steering angles and oversteering
 
     local x, _, z = getWorldTranslation(self.vehicle.components[1].node)
+    if self.vehicle.frontAxleOffset then
+        x, y, z = getWorldTranslation(self.vehicle.frontAxleOffset)
+    end
     local targetX = x
     local targetZ = z
 
@@ -675,8 +750,7 @@ function ADDrivePathModule:getLookAheadTarget()
 
     if self:getNextWayPoint() ~= nil and (self:getNextWayPoint().incoming == nil or #self:getNextWayPoint().incoming > 0) then
         local lookAheadID = 1
-        local lookAheadDistance = AutoDrive.getSetting("lookAheadTurning") + (self:getVehicleSteeringAxleOffset() * 2.5)        
-        print("lookAheadDistance: " .. lookAheadDistance)
+        local lookAheadDistance = AutoDrive.getSetting("lookAheadTurning")
         local distanceToCurrentTarget = MathUtil.vector2Length(x - wp_current.x, z - wp_current.z)
 
         local wp_ahead = self.wayPoints[self:getCurrentWayPointIndex() + lookAheadID]

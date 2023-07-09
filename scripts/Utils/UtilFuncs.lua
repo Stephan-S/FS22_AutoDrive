@@ -1088,7 +1088,9 @@ function AutoDrive.driveInDirection(self, dt, steeringAngleLimit, acceleration, 
 	self.motor = self:getMotor()
 	self.cruiseControl = {}
 	self.cruiseControl.state = self:getCruiseControlState()
-	AIVehicleUtil.driveInDirection(self, dt, steeringAngleLimit, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)
+	--wheel.steeringAxleRotMax
+	AIVehicleUtil.driveInDirection(self, dt, steeringAngleLimit*0.8, acceleration, slowAcceleration, slowAngleLimit, allowedToDrive, moveForwards, lx, lz, maxSpeed, slowDownFactor)	
+	--AIVehicleUtil.driveToPoint(self, dt, acceleration, allowedToDrive, moveForwards, lx, lz, maxSpeed, false);
 end
 
 function AutoDrive.sign(x)
