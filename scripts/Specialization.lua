@@ -775,51 +775,6 @@ function AutoDrive:onDelete()
     AutoDriveHud:deleteMapHotspot(self)
 end
 
-function AutoDrive:getSteeringAxleLocation()
-    local spec = self.spec_wheels
-    
-    local rotateableWheels = 0
-
-    for _, wheel in pairs(spec.wheels) do
-        if wheel.steeringAxleRotMax then
-            rotateableWheels = rotateableWheels + 1
-        end
-    end
-
-    local wheel1 = nil
-    local wheel2 = nil
-    if rotateableWheels == 2 then
-        for _, wheel in pairs(spec.wheels) do
-            if wheel.steeringAxleRotMax then
-                if wheel1 == nil then
-                    wheel1 = wheel
-                else
-                    wheel2 = wheel
-                end
-            end
-        end
-    end
-    
-    local wheel1Node = wheel1.driveNode
-    local sx1, sy1, sz1 = getWorldTranslation(wheel1Node)
-    local diffX1, diffY1, diffZ1 = worldToLocal(self.vehicle.components[1].node, sx1, sy1, sz1)
-
-    local wheel2Node = wheel2.driveNode
-    local sx2, sy2, sz2 = getWorldTranslation(wheel2Node)
-    local diffX2, diffY2, diffZ2 = worldToLocal(self.vehicle.components[1].node, sx2, sy2, sz2)
-
-    local isFrontWheel = false
-    if diffZ1 > 0 and diffZ2 > 0 then
-        isFrontWheel = true
-    end
-
-    local steeringAxleX = (diffX1 + diffX2) / 2
-    local steeringAxleY = (diffY1 + diffY2) / 2
-    local steeringAxleZ = (diffZ1 + diffZ2) / 2
-
-    return localToWorld(self.vehicle.components[1].node, steeringAxleX, steeringAxleY, steeringAxleZ)
-end
-
 function AutoDrive:onDrawEditorMode()
     local isActive = self.ad.stateModule:isActive()
     local DrawingManager = ADDrawingManager

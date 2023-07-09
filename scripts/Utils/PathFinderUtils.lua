@@ -31,9 +31,9 @@ function AutoDrive.getDriverRadius(vehicle, onlyVehicle)
             if onlyVehicle then
                 minTurnRadius = vehicle.maxTurningRadius
             end
-            if maxToolRadius ~= nil then
-               print("vehicle.maxTurningRadius: " .. vehicle.maxTurningRadius)
-            end
+            --if maxToolRadius ~= nil then
+              --  print("vehicle.maxTurningRadius: " .. vehicle.maxTurningRadius)
+            --end
         end
     end
 
