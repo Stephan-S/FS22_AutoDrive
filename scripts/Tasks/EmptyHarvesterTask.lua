@@ -65,11 +65,9 @@ function EmptyHarvesterTask:update(dt)
             self.vehicle.ad.specialDrivingModule:update(dt)
         end
     elseif self.state == EmptyHarvesterTask.STATE_DRIVING then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "EmptyHarvesterTask:update EmptyHarvesterTask.STATE_DRIVING")
         if self.vehicle.ad.drivePathModule:isTargetReached() then
-            --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "EmptyHarvesterTask:update - next: EmptyHarvesterTask.STATE_UNLOADING 1")
-            self.state = EmptyHarvesterTask.STATE_UNLOADING
-        elseif (AutoDrive.getSetting("preCallLevel", self.combine) > 50 and self.combine.getDischargeState ~= nil and self.combine:getDischargeState() ~= Dischargeable.DISCHARGE_STATE_OFF) then
-            --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "EmptyHarvesterTask:update - next: EmptyHarvesterTask.STATE_UNLOADING 2")
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "EmptyHarvesterTask:update - next: EmptyHarvesterTask.STATE_UNLOADING")
             self.state = EmptyHarvesterTask.STATE_UNLOADING
         else
             self.vehicle.ad.drivePathModule:update(dt)
