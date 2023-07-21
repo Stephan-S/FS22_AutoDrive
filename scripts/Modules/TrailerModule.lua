@@ -186,6 +186,10 @@ function ADTrailerModule:handleTrailerCovers()
     -- open trailer cover if trigger is reachable
     local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, isInRangeToLoadUnloadTarget)
+    if isInRangeToLoadUnloadTarget and self.hasAL then
+        -- open curtains for UAL
+        AutoDrive.openAllCurtains(self.trailers, true) -- open curtain at UAL trailers
+    end
 end
 
 function ADTrailerModule:updateStates()
@@ -247,22 +251,20 @@ function ADTrailerModule:handleTrailerReversing(blockTrailers)
                 trailer.ad.targetBlockedState = blockTrailers
 
                 if trailer.ad.rotLimitBackup == nil then
-                    trailer.ad.rotLimitBackup = {}
-
-                    if trailer.componentJoints[1].rotLimit == nil or
-                    trailer.componentJoints[1].rotLimit[2] == nil then
-                        trailer.ad.rotLimitBackup[1] = 0
-                        trailer.ad.rotLimitBackup[2] = 0
-                    else
-                        trailer.ad.rotLimitBackup[1] = trailer.componentJoints[1].rotLimit[1]
-                        trailer.ad.rotLimitBackup[2] = trailer.componentJoints[1].rotLimit[2]
+                    for index, joint in pairs(trailer.componentJoints) do
+                        if joint.rotLimit[1] == 0 and joint.rotLimit[2] ~= 0 and joint.rotLimit[3] == 0 then
+                            trailer.ad.rotIndex = index
+                            trailer.ad.rotLimitBackup = joint.rotLimit[2]
+                            break
+                        end
                     end
-                else
+                end
+                if trailer.ad.rotIndex then
                     if trailer.ad.lastBlockedState ~= trailer.ad.targetBlockedState then
                         if trailer.ad.targetBlockedState then
-                            trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, 0, 0)
+                            trailer:setComponentJointRotLimit(trailer.componentJoints[trailer.ad.rotIndex], 2, 0, 0)
                         else
-                            trailer:setComponentJointRotLimit(trailer.componentJoints[1], 2, -trailer.ad.rotLimitBackup[2], trailer.ad.rotLimitBackup[2])
+                            trailer:setComponentJointRotLimit(trailer.componentJoints[trailer.ad.rotIndex], 2, -trailer.ad.rotLimitBackup, trailer.ad.rotLimitBackup)
                         end
                         trailer.ad.lastBlockedState = trailer.ad.targetBlockedState;
                     end
@@ -312,6 +314,8 @@ function ADTrailerModule:updateLoad(dt)
                 AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateLoad Try loading at trigger now pair.fillUnitIndex %s", tostring(pair.fillUnitIndex))
                 fillFound = true
                 -- start loading
+
+                self.vehicle.ad.stateModule:selectPreferredFillTypeFromFillLevels(pair.fillLevels)
                 self:tryLoadingAtTrigger(pair.trailer, pair.trigger, pair.fillUnitIndex)
                 self.foundSuitableTrigger = true    -- loading trigger was found
                 return
@@ -490,6 +494,9 @@ function ADTrailerModule:updateUnload(dt)
                 if self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.setDischargeState then
                     self.isUnloadingWithTrailer:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
                 end
+            elseif fillUnitEmpty and self.unloadingToBunkerSilo then
+                self.unloadDelayTimer:timer(false)      -- clear timer
+                self.unloadingToBunkerSilo = false
             elseif allTrailersClosed and self.isUnloadingWithTrailer ~= nil and self.isUnloadingWithTrailer.spec_pipe ~= nil then
                 -- unload auger wagon to another trailer
                 self.unloadDelayTimer:timer(false)      -- clear timer

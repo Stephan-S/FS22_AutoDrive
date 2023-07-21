@@ -136,6 +136,8 @@ function AutoDrive.initSpecialization()
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#firstMarker", "firstMarker")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#secondMarker", "secondMarker")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#fillType", "fillType")
+    schemaSavegame:register(XMLValueType.STRING, "vehicles.vehicle(?).AutoDrive#selectedFillTypes", "selectedFillTypes")
+    schemaSavegame:register(XMLValueType.BOOL, "vehicles.vehicle(?).AutoDrive#loadByFillLevel", "loadByFillLevel")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#loopCounter", "loopCounter")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#speedLimit", "speedLimit")
     schemaSavegame:register(XMLValueType.INT, "vehicles.vehicle(?).AutoDrive#fieldSpeedLimit", "fieldSpeedLimit")
@@ -289,7 +291,7 @@ function AutoDrive:onPostLoad(savegame)
     link(self.components[1].node, self.ad.frontNode)
     setTranslation(self.ad.frontNode, 0, 0, self.size.length / 2 + self.size.lengthOffset + 0.75)
     self.ad.frontNodeGizmo = DebugGizmo.new()
-    self.ad.debug = RingQueue:new()
+    -- self.ad.debug = RingQueue:new()
     local x, y, z = getWorldTranslation(self.components[1].node)
     self.ad.lastDrawPosition = {x = x, z = z}
 
@@ -1023,11 +1025,11 @@ function AutoDrive:startAutoDrive()
     if self.isServer then
         if not self.ad.stateModule:isActive() then
             self.ad.stateModule:setActive(true)
+            self.ad.stateModule:setLoopsDone(0)
 
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
-            self.ad.foldStartTime = g_time
-
+            AutoDrive.resetFoldState(self)
             AutoDrive.getAllVehicleDimensions(self, true)
             if self.spec_aiVehicle ~= nil then
                 if self.getAINeedsTrafficCollisionBox ~= nil then
@@ -1126,6 +1128,7 @@ function AutoDrive:stopAutoDrive()
                 self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
             end
 
+            self.ad.stateModule:setLoopsDone(0)
             self.ad.stateModule:setActive(false)
 
             self.ad.taskModule:abortAllTasks()

@@ -330,6 +330,7 @@ function AutoDrive.foldAllImplements(vehicle)
     local implements = AutoDrive.getAllImplements(vehicle, true)
     local spec
     AutoDrive.setAugerPipeOpen(implements, false) -- close all pipes first
+    AutoDrive.closeAllCurtains(implements, true) -- close curtain at UAL trailers
     for _, implement in pairs(implements) do
         spec = implement.spec_baleLoader
         if spec and spec.doStateChange then
@@ -354,7 +355,6 @@ function AutoDrive.foldAllImplements(vehicle)
                 end
             end
         end
-        AutoDrive.closeCurtain(implement)
         -- combine handle ladder separate when enter or leave combine
         AutoDrive.foldLadder(implement)
     end
@@ -403,6 +403,12 @@ function AutoDrive.getAllImplementsFolded(vehicle)
     return ret
 end
 
+function AutoDrive.resetFoldState(vehicle)
+    if vehicle and vehicle.ad then
+        vehicle.ad.foldStartTime = g_time
+    end
+end
+
 function AutoDrive.foldLadder(vehicle)
     local spec = vehicle.spec_combine
     if spec and not AutoDrive.isLadderFolded(vehicle) then
@@ -435,29 +441,89 @@ function AutoDrive.isLadderFolded(vehicle)
 end
 
 function AutoDrive.closeCurtain(vehicle)
+    local leftDone, rightDone = false, false
     local spec = vehicle.spec_trailer
     if spec and not AutoDrive.isCurtainClosed(vehicle) then
-        local spec = vehicle.spec_trailer
-        if spec then
-            local tipSide = spec.tipSides[spec.preferedTipSideIndex]
-            if not vehicle:getIsAnimationPlaying(tipSide.animation.name) then
-                vehicle:playAnimation(tipSide.animation.name, tipSide.animation.closeSpeedScale, vehicle:getAnimationTime(tipSide.animation.name), true)
+        for _, tipSide in pairs(spec.tipSides) do
+            if tipSide and tipSide.manualTipToggle and tipSide.animation and tipSide.animation.name then
+                if vehicle.getIsAnimationPlaying and vehicle.playAnimation then
+                    if not vehicle:getIsAnimationPlaying(tipSide.animation.name) then
+                        vehicle:playAnimation(tipSide.animation.name, tipSide.animation.closeSpeedScale, vehicle:getAnimationTime(tipSide.animation.name), true)
+                    end
+                end
+            end
+        end
+    end
+end
+
+function AutoDrive.closeAllCurtains(trailers, onlyUAL)
+    if trailers and #trailers > 0 then
+        for _, trailer in ipairs(trailers) do
+            -- if (not onlyUAL) or (onlyUAL and AutoDrive:hasAL(trailer)) then
+                AutoDrive.closeCurtain(trailer)
+            -- end
+        end
+    end
+end
+
+function AutoDrive.openCurtain(vehicle)
+    local leftDone, rightDone = false, false
+    local spec = vehicle.spec_trailer
+    if spec and AutoDrive.isCurtainClosed(vehicle) then
+        for _, tipSide in pairs(spec.tipSides) do
+            if tipSide and tipSide.manualTipToggle and tipSide.animation and tipSide.animation.name then
+                if vehicle.getIsAnimationPlaying and vehicle.playAnimation then
+                    if not leftDone and string.find(tipSide.animation.name, "Left") then
+                        leftDone = true
+                        if not vehicle:getIsAnimationPlaying(tipSide.animation.name) then
+                            vehicle:playAnimation(tipSide.animation.name, tipSide.animation.speedScale, vehicle:getAnimationTime(tipSide.animation.name), true)
+                        end
+                    end
+                    if not rightDone and string.find(tipSide.animation.name, "Right") then
+                        rightDone = true
+                        if not vehicle:getIsAnimationPlaying(tipSide.animation.name) then
+                            vehicle:playAnimation(tipSide.animation.name, tipSide.animation.speedScale, vehicle:getAnimationTime(tipSide.animation.name), true)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+function AutoDrive.openAllCurtains(trailers, onlyUAL)
+    if trailers and #trailers > 0 then
+        for _, trailer in ipairs(trailers) do
+            if (not onlyUAL) or (onlyUAL and AutoDrive:hasAL(trailer)) then
+                AutoDrive.openCurtain(trailer)
             end
         end
     end
 end
 
 function AutoDrive.isCurtainClosed(vehicle)
+    local leftDone, rightDone = false, false
     local ret = true
     local spec = vehicle.spec_trailer
     if spec then
-        local tipSide = spec.tipSides[spec.preferedTipSideIndex]
-        if tipSide and tipSide.manualTipToggle then
-            if tipSide.animation and tipSide.animation.closeSpeedScale then
-                if vehicle.getAnimationDuration and vehicle:getAnimationDuration(tipSide.animation.name) > 1 then
+        for _, tipSide in pairs(spec.tipSides) do
+            if tipSide and tipSide.manualTipToggle and tipSide.animation and tipSide.animation.name then
+                if tipSide.animation.closeSpeedScale ~= 0 and vehicle.getAnimationDuration and vehicle:getAnimationDuration(tipSide.animation.name) > 1 then
                     local animationTime = vehicle:getAnimationTime(tipSide.animation.name)
-                    ret = animationTime <= 0.01
+                    ret = ret and animationTime <= 0.01
                 end
+            end
+        end
+    end
+    return ret
+end
+
+function AutoDrive.getAllCurtainsClosed(trailers, onlyUAL)
+    local ret = true
+    if trailers and #trailers > 0 then
+        for _, trailer in ipairs(trailers) do
+            if (not onlyUAL) or (onlyUAL and AutoDrive:hasAL(trailer)) then
+                ret = ret and AutoDrive.isCurtainClosed(trailer)
             end
         end
     end
@@ -640,7 +706,7 @@ function AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(vehicle)
                     if dischargeableUnit.object and dischargeableUnit.object.getFillUnitSupportedFillTypes ~= nil then
                         if dischargeableUnit.fillUnitIndex and dischargeableUnit.fillUnitIndex > 0 then
                             for fillType, supported in pairs(dischargeableUnit.object:getFillUnitSupportedFillTypes(dischargeableUnit.fillUnitIndex)) do
-                                if supported then
+                                if supported and not table.contains(supportedFillTypes, fillType) then
                                     table.insert(supportedFillTypes, fillType)
                                 end
                             end

@@ -57,6 +57,7 @@
 		<text name="input_AD_open_tipOfTheDay" 					text="AD: Otwórz podpowiedź dnia" />
 		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Wybierz automatycznie cel ładowania" />
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Wybierz automatycznie cel rozładowania" />
+		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
 		<text name="hud_avoidFruit"								text="AD: Unikaj upraw" />
 		<text name="hud_startCp"								text="AD: Uruchom CP / AIVE po dotarciu do celu" />
 		<text name="AD_parkVehicle_noPosSet"					text="Nie przydzielono parkingu." />

@@ -22,7 +22,6 @@ end
 function PickupAndDeliverMode:reset()
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:reset set STATE_INIT")
     self.state = PickupAndDeliverMode.STATE_INIT
-    self.vehicle.ad.stateModule:setLoopsDone(0)
     self.activeTask = nil
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.vehicle.ad.trailerModule:reset()
@@ -243,7 +242,7 @@ function PickupAndDeliverMode:getNextTask(forced)
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask self.state %s NO nextTask assigned !!!", tostring(self.state))
         nextTask = StopAndDisableADTask:new(self.vehicle, ADTaskModule.DONT_PROPAGATE)
         self.state = PickupAndDeliverMode.STATE_FINISHED
-        AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_has_reached; %s", 5000, self.vehicle.ad.stateModule:getName(), self.vehicle.ad.stateModule:getFirstMarkerName())
+        AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_has_reached; %s", 5000, self.vehicle.ad.stateModule:getName(), "???")
     end
 
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask end loopsDone %s self.state %s", tostring(self.vehicle.ad.stateModule:getLoopsDone()), tostring(self.state))

@@ -30,6 +30,8 @@ function ADStateModule:reset()
     self.creationMode = ADStateModule.CREATE_OFF
 
     self.fillType = FillType.UNKNOWN
+    self.selectedFillTypes = {}
+    self.loadByFillLevel = true
     self.loopCounter = 0
     self.loopsDone = 0
 
@@ -105,6 +107,18 @@ function ADStateModule:readFromXMLFile(xmlFile, key)
         self.fillType = fillType
     end
 
+    local selectedFillTypes = xmlFile:getValue(key .. "#selectedFillTypes")
+    if selectedFillTypes ~= nil then
+        self.selectedFillTypes = AutoDrive.stringToNumberList(selectedFillTypes)
+    else
+        self.selectedFillTypes = {self.fillType}
+    end
+
+    local loadByFillLevel = xmlFile:getValue(key .. "#loadByFillLevel")
+    if loadByFillLevel ~= nil then
+        self.loadByFillLevel = loadByFillLevel
+    end
+
     local loopCounter = xmlFile:getValue(key .. "#loopCounter")
     if loopCounter ~= nil then
         self.loopCounter = loopCounter
@@ -165,6 +179,8 @@ function ADStateModule:saveToXMLFile(xmlFile, key)
         xmlFile:setValue(key .. "#secondMarker", self.secondMarker.markerIndex)
     end
     xmlFile:setValue(key .. "#fillType", self.fillType)
+    xmlFile:setValue(key .. "#selectedFillTypes", table.concat(self.selectedFillTypes, ','))
+    xmlFile:setValue(key .. "#loadByFillLevel", self.loadByFillLevel)
     xmlFile:setValue(key .. "#loopCounter", self.loopCounter)
     xmlFile:setValue(key .. "#speedLimit", self.speedLimit)
     xmlFile:setValue(key .. "#fieldSpeedLimit", self.fieldSpeedLimit)
@@ -183,6 +199,8 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
+    AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
+    streamWriteBool(streamId, self.loadByFillLevel)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -213,6 +231,8 @@ function ADStateModule:readStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
+    self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
+    self.loadByFillLevel = streamReadBool(streamId)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -245,6 +265,8 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self:getSecondMarkerId() + 1, 17)
     streamWriteUIntN(streamId, self.creationMode, 3)
     streamWriteUIntN(streamId, self.fillType, 10)
+    AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
+    streamWriteBool(streamId, self.loadByFillLevel)
     streamWriteUIntN(streamId, self.loopCounter, 4)
     streamWriteUIntN(streamId, self.loopsDone, 4)
     streamWriteUIntN(streamId, self.speedLimit, 8)
@@ -275,6 +297,8 @@ function ADStateModule:readUpdateStream(streamId)
     self.secondMarker = ADGraphManager:getMapMarkerById(streamReadUIntN(streamId, 17) - 1)
     self.creationMode = streamReadUIntN(streamId, 3)
     self.fillType = streamReadUIntN(streamId, 10)
+    self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
+    self.loadByFillLevel = streamReadBool(streamId)
     self.loopCounter = streamReadUIntN(streamId, 4)
     self.loopsDone = streamReadUIntN(streamId, 4)
     self.speedLimit = streamReadUIntN(streamId, 8)
@@ -810,10 +834,105 @@ function ADStateModule:getFillType()
     return self.fillType
 end
 
+function ADStateModule:getSelectedFillTypes()
+    return self.selectedFillTypes
+end
+
 function ADStateModule:setFillType(fillType)
     if fillType > 0 and self.fillType ~= fillType then
         self.fillType = fillType
+        if not table.contains(self.selectedFillTypes, fillType) then
+            self.selectedFillTypes = {fillType}
+        end
         self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:toggleFillTypeSelection(fillType)
+    if fillType > 0 then
+        if table.contains(self.selectedFillTypes, fillType) then
+            table.removeValue(self.selectedFillTypes, fillType)
+            if self.fillType == fillType and #self.selectedFillTypes > 0 then
+                -- the deselected filltype was the active filltype -> select the first remaining item
+                self.fillType = self.selectedFillTypes[1]
+            end
+        else
+            table.insert(self.selectedFillTypes, fillType)
+        end
+        self:raiseDirtyFlag()
+    end
+end
+
+function ADStateModule:toggleAllFillTypeSelections(fillType)
+    if fillType > 0 then
+        local supportedFillTypes = AutoDrive.getSupportedFillTypesOfAllUnitsAlphabetically(self.vehicle)
+        if supportedFillTypes and #supportedFillTypes > 0 then
+            for _, selected in pairs(supportedFillTypes) do
+                if not table.contains(self.selectedFillTypes, selected) then
+                    -- at least one supported fillType not yet selected. Select all
+                    self.selectedFillTypes = supportedFillTypes
+                    self:raiseDirtyFlag()
+                    return
+                end
+            end
+            -- all fillTypes selected - clear selection and only select the given item
+            self.selectedFillTypes = {fillType}
+            self.fillType = fillType
+            self:raiseDirtyFlag()
+        end
+    end
+end
+
+
+function ADStateModule:toggleLoadByFillLevel()
+    self.loadByFillLevel = not self.loadByFillLevel
+    self:raiseDirtyFlag()
+end
+
+function ADStateModule:setLoadByFillLevel(enabled)
+    self.loadByFillLevel = enabled
+    self:raiseDirtyFlag()
+end
+
+function ADStateModule:getLoadByFillLevel()
+    return self.loadByFillLevel
+end
+
+
+function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
+    if #self.selectedFillTypes == 0 then
+        return
+    end
+
+    local fillLevelList = {}  -- get a list of fill levels
+    for _, fillLevel in pairs(fillLevels) do
+        table.insert(fillLevelList, fillLevel)
+    end
+    table.sort(fillLevelList)  -- sort it
+    local requiredFillLevel = fillLevelList[#fillLevelList]
+    local idx = table.indexOf(self.selectedFillTypes, self.fillType)  -- starting point
+    local loopsLeft = #self.selectedFillTypes
+    local pickNextNonEmpty = requiredFillLevel == -1 or not self.loadByFillLevel
+    if idx == nil or requiredFillLevel == nil then
+        return
+    end
+    if pickNextNonEmpty  then
+        -- infinite trigger (all fill levels are -1) or load-by-fill-level diabled: pick the next available filltype
+        idx = (idx % #self.selectedFillTypes) + 1
+    end
+    while true do
+        local fillType = self.selectedFillTypes[idx]
+        if fillLevels[fillType] ~= nil and fillLevels[fillType] ~= 0 and (fillLevels[fillType] == requiredFillLevel or pickNextNonEmpty) then
+            -- found suitable filltype
+            self.fillType = fillType
+            break
+        end
+
+        idx = (idx % #self.selectedFillTypes) + 1
+        loopsLeft = loopsLeft - 1
+        if loopsLeft <= 0 then
+            break
+        end
     end
 end
 

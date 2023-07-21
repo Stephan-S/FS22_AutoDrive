@@ -55,6 +55,7 @@ ADInputManager.actionsToInputs = {
     {"ADToggleHudExtension", "input_toggleHudExtension", true, false, true, 1},
     {"ADToggleAutomaticUnloadTarget", "input_toggleAutomaticUnloadTarget", true, true},
     {"ADToggleAutomaticPickupTarget", "input_toggleAutomaticPickupTarget", true, true},
+    {"ADToggleLoadByFillLevel", "input_toggleLoadByFillLevel", true, true},
     {"ADRepairVehicle", "input_repairVehicle", false, true}
 }
 
@@ -488,6 +489,10 @@ end
 
 function ADInputManager:input_toggleAutomaticPickupTarget(vehicle)
     vehicle.ad.stateModule:toggleAutomaticPickupTarget()
+end
+
+function ADInputManager:input_toggleLoadByFillLevel(vehicle)
+    vehicle.ad.stateModule:toggleLoadByFillLevel()
 end
 
 function ADInputManager:input_devAction(vehicle)

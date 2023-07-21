@@ -350,21 +350,3 @@ function AutoDrive.getCornersForAreaRelativeToVehicle(vehicle, xOffset, zOffset,
 
     return corners
 end
-
-function AutoDrive.checkForUnknownFruitInArea(corners)
-    for i = 1, #g_fruitTypeManager.fruitTypes do
-        if i ~= g_fruitTypeManager.nameToIndex["GRASS"] and i ~= g_fruitTypeManager.nameToIndex["DRYGRASS"] and i ~= g_fruitTypeManager.nameToIndex["MEADOW"] then
-            local fruitTypeToCheck = g_fruitTypeManager.fruitTypes[i].index
-            if AutoDrive.checkForFruitTypeInArea(corners, fruitTypeToCheck) then
-                return true, fruitTypeToCheck
-            end
-        end
-    end
-    return false, nil
-end
-
-function AutoDrive.checkForFruitTypeInArea(corners, fruitType)
-    local fruitValue = 0
-    fruitValue, _, _, _ = FSDensityMapUtil.getFruitArea(fruitType, corners[1].x, corners[1].z, corners[2].x, corners[2].z, corners[3].x, corners[3].z, true, true)
-    return (fruitValue > 10)
-end

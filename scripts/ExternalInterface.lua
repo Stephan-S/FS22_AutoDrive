@@ -609,7 +609,16 @@ function AutoDrive:hasAL(object)
     if object == nil then
         return false
     end
-    return object.spec_aPalletAutoLoader ~= nil and object.spec_aPalletAutoLoader.loadArea ~= nil and object.spec_aPalletAutoLoader.loadArea["baseNode"] ~= nil
+    local ret = false
+    ret = ret or (object.spec_aPalletAutoLoader ~= nil and object.spec_aPalletAutoLoader.loadArea ~= nil and object.spec_aPalletAutoLoader.loadArea["baseNode"] ~= nil)
+    if (object.spec_universalAutoload ~= nil) then
+        local rootVehicle = object.getRootVehicle and object:getRootVehicle()
+        if rootVehicle and not rootVehicle.spec_locomotive then
+            -- use only bulk trailers of trains for now
+            ret = ret or object.spec_universalAutoload.isAutoloadEnabled
+        end
+    end
+    return ret
 end
 
 --[[
@@ -623,9 +632,19 @@ function AutoDrive:setALOn(object)
     end
     local spec = object.spec_aPalletAutoLoader
     if spec and object.SetLoadingState then
-        -- set loading state off
+        -- set loading state On
         AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALOn SetLoadingState 2")
         object:SetLoadingState(2)
+    end
+    spec = object.spec_universalAutoload
+    if spec and object.ualStartLoad then
+        local rootVehicle = object.getRootVehicle and object:getRootVehicle()
+        if rootVehicle and rootVehicle.lastSpeedReal < 0.0005 then
+            -- loading not possible during movement
+            -- set loading state On
+            AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALOn ualStartLoad")
+            object:ualStartLoad()
+        end
     end
 end
 
@@ -639,6 +658,12 @@ function AutoDrive:setALOff(object)
         -- set loading state off
         AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALOff SetLoadingState 1")
         object:SetLoadingState(1)
+    end
+    local spec = object.spec_universalAutoload
+    if spec and object.ualStopLoad then
+        -- set loading state off
+        AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALOff ualStopLoad")
+        object:ualStopLoad()
     end
 end
 
@@ -684,32 +709,55 @@ function AutoDrive:unloadAL(object)
     end
     AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL start")
     local rootVehicle = object:getRootVehicle()
-    local unloadPositions = {
-        3,
-        1,
-        4,
-        2
-    }
+    -- spec_aPalletAutoLoader
+    local spec = object.spec_aPalletAutoLoader
+    if spec and object.SetTipside and object.unloadAll then
+        local unloadPositions = {
+            3,
+            1,
+            4,
+            2
+        }
 
-    local unloadPositionSetting = AutoDrive.getSetting("ALUnload", rootVehicle)
-    AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL unloadPositionSetting %s", tostring(unloadPositionSetting))
-    if unloadPositionSetting ~= nil and unloadPositionSetting > 0 then
-        local unloadPosition = unloadPositions[unloadPositionSetting]
-        AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL unloadPosition %s", tostring(unloadPosition))
-        if unloadPosition ~= nil then
-            -- should unload
-            AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL should unload")
-            if object.setAllTensionBeltsActive ~= nil then
-                object:setAllTensionBeltsActive(false, false)
-            end
-            local spec = object.spec_aPalletAutoLoader
-            if spec and object.SetTipside and object.unloadAll then
-                AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL SetTipside unloadPosition %s", tostring(unloadPosition))
-                if unloadPosition > 0 then
-                    object:SetTipside(unloadPosition)
+        local unloadPositionSetting = AutoDrive.getSetting("ALUnload", rootVehicle)
+        AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL spec_aPalletAutoLoader unloadPositionSetting %s", tostring(unloadPositionSetting))
+        if unloadPositionSetting ~= nil and unloadPositionSetting > 0 then
+            local unloadPosition = unloadPositions[unloadPositionSetting]
+            AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL spec_aPalletAutoLoader unloadPosition %s", tostring(unloadPosition))
+            if unloadPosition ~= nil then
+                -- should unload
+                AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL spec_aPalletAutoLoader should unload")
+                if object.setAllTensionBeltsActive ~= nil then
+                    object:setAllTensionBeltsActive(false, false)
                 end
-                -- set loading state off
-                object:unloadAll()
+                if object.SetTipside and object.unloadAll then
+                    AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL spec_aPalletAutoLoader SetTipside unloadPosition %s", tostring(unloadPosition))
+                    if unloadPosition > 0 then
+                        object:SetTipside(unloadPosition)
+                    end
+                    -- set loading state off
+                    object:unloadAll()
+                end
+            end
+        end
+    end
+    -- spec_universalAutoload
+    local spec = object.spec_universalAutoload
+    if spec and object.ualUnload then
+        local unloadPositions = {
+            "center",
+            "left",
+            "behind",
+            "right"
+        }
+        local unloadPositionSetting = AutoDrive.getSetting("ALUnload", rootVehicle)
+        AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL spec_universalAutoload unloadPositionSetting %s", tostring(unloadPositionSetting))
+        if unloadPositionSetting ~= nil and unloadPositionSetting > 0 then
+            local unloadPosition = unloadPositions[unloadPositionSetting]
+            AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:unloadAL spec_universalAutoload unloadPosition %s", tostring(unloadPosition))
+            if unloadPosition ~= nil and string.len(unloadPosition) > 0 then
+                object:ualSetUnloadPosition(unloadPosition)
+                object:ualUnload()
             end
         end
     end
@@ -739,15 +787,20 @@ function AutoDrive:getALObjectFillLevels(object) -- used by getIsFillUnitEmpty, 
         Logging.error("[AD] AutoDrive.getALObjectFillLevels rootVehicle == nil")
         return 0, 0, false, 0
     end
-    AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALObjectFillLevels object.spec_aPalletAutoLoader %s ", tostring(object.spec_aPalletAutoLoader))
+    AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALObjectFillLevels object.spec_aPalletAutoLoader %s object.spec_universalAutoload %s", tostring(object.spec_aPalletAutoLoader), tostring(object.spec_universalAutoload))
     local fillCapacity = 0
     local fillLevel = 0
     local fillFreeCapacity = 0
-    local spec = object.spec_aPalletAutoLoader
-    if spec and AutoDrive:hasAL(object) and object.getFillUnitCapacity and object.getFillUnitFillLevel and object.getFillUnitFreeCapacity then
-        fillCapacity = object:getFillUnitCapacity()
-        fillLevel = object:getFillUnitFillLevel()
-        fillFreeCapacity = object:getFillUnitFreeCapacity()
+    if AutoDrive:hasAL(object) then
+        if object.spec_aPalletAutoLoader and object.getFillUnitCapacity and object.getFillUnitFillLevel and object.getFillUnitFreeCapacity then
+            fillCapacity = object:getFillUnitCapacity()
+            fillLevel = object:getFillUnitFillLevel()
+            fillFreeCapacity = object:getFillUnitFreeCapacity()
+        elseif object.spec_universalAutoload and object.ualGetFillUnitCapacity and object.ualGetFillUnitFillLevel and object.ualGetFillUnitFreeCapacity then
+            fillCapacity = object:ualGetFillUnitCapacity()
+            fillLevel = object:ualGetFillUnitFillLevel()
+            fillFreeCapacity = object:ualGetFillUnitFreeCapacity()
+        end
         AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALObjectFillLevels fillCapacity %s fillLevel %s fillFreeCapacity %s", tostring(fillCapacity), tostring(fillLevel), tostring(fillFreeCapacity))
     end
     local filledToUnload = AutoDrive.isUnloadFillLevelReached(rootVehicle, fillLevel, fillFreeCapacity, fillCapacity)
@@ -760,6 +813,7 @@ function AutoDrive:getALFillTypes(object) -- used by PullDownList, getSupportedF
     end
     local fillTypes = {}
 
+    -- spec_aPalletAutoLoader
     local spec = object.spec_aPalletAutoLoader
     if spec and AutoDrive:hasAL(object) and object.GetAutoloadTypes then
         local autoLoadTypes = object:GetAutoloadTypes()
@@ -771,6 +825,11 @@ function AutoDrive:getALFillTypes(object) -- used by PullDownList, getSupportedF
             end
         end
     end
+    -- spec_universalAutoload
+    local spec = object.spec_universalAutoload
+    if spec and AutoDrive:hasAL(object) then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALCurrentFillType spec_universalAutoload function not supported!")
+    end
     AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALFillTypes #fillTypes %s", tostring(#fillTypes))
     return fillTypes
 end
@@ -780,9 +839,15 @@ function AutoDrive:getALCurrentFillType(object) -- used by onEnterVehicle, onPos
         return nil
     end
 
+    -- spec_aPalletAutoLoader
     local spec = object.spec_aPalletAutoLoader
     if spec and AutoDrive:hasAL(object) and spec.currentautoLoadTypeIndex then
         return spec.currentautoLoadTypeIndex
+    end
+    -- spec_universalAutoload
+    local spec = object.spec_universalAutoload
+    if spec and AutoDrive:hasAL(object) then
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALCurrentFillType spec_universalAutoload function not supported!")
     end
     return nil
 end
@@ -796,12 +861,18 @@ function AutoDrive:setALFillType(vehicle, fillType) -- used by PullDownList
     if trailerCount > 0 then
         for i=1, trailerCount do
             local object = trailers[i]
+            -- spec_aPalletAutoLoader
             local spec = object.spec_aPalletAutoLoader
             if spec and AutoDrive:hasAL(object) and object.SetLoadingState and object.SetAutoloadType then
-                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALFillType fillType %s", tostring(fillType))
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALFillType spec_aPalletAutoLoader fillType %s", tostring(fillType))
                 -- set loading state off
                 object:SetLoadingState(1)
                 object:SetAutoloadType(fillType)
+            end
+            -- spec_universalAutoload
+            local spec = object.spec_universalAutoload
+            if spec and AutoDrive:hasAL(object) then
+                AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:setALFillType spec_universalAutoload function not supported!")
             end
         end
     end
