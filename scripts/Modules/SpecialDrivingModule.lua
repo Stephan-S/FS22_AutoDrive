@@ -391,8 +391,8 @@ function ADSpecialDrivingModule:getReverseNode()
                     reverseNode = implement.ad.reverseNode
                     self.reverseSolo = false
                     self.vehicle.trailer = implement                 
+                    break
                 end
-                break
             end
         end
         count = count + 1
