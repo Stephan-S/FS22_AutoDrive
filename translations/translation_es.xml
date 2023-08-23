@@ -227,14 +227,14 @@
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Sí: AutoDrive abrirá y cerrará las lonas según necesite/No: las lonas no se abrirán ni cerrarán automáticamente" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Maniobra de giro hacia adelante" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Sí: Los descargadores de AutoDrive intentan planificar un camino hacia adelante para adaptarse al giro de 90° de la cosechadora./No - Los descargadores se revertirán antes del giro" />
-		<text name="gui_ad_ALUnload"                            text="Autoload: Posición de descarga" />
+		<text name="gui_ad_ALUnload"                            text="Autocarga: Posición de descarga" />
 		<text name="gui_ad_ALUnload_tooltip"                    text="Apagado: La posición de descarga depende de la configuración del vehículo, no de AutoDrive)" />
 		<text name="gui_ad_AL_off"                              text="No descargar" />
 		<text name="gui_ad_AL_center"                           text="Descargar sobre el vehiculo" />
 		<text name="gui_ad_AL_left"                             text="Descargar a la izquierda" />
 		<text name="gui_ad_AL_behind"                           text="Descargar detrás" />
 		<text name="gui_ad_AL_right"                            text="Descargar a la derecha" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: tiempo de espera después de empezar la descarga" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Autocarga: tiempo de espera después de empezar la descarga" />
 		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Tiempo de espera después de la descarga, antes de continuar conduciendo - útil para el centro de descarga: 0-no espera, espera el tiempo seleccionado" />
 		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Generación de Red de Rutas" />
 		<text name="gui_ad_scanConfirmationText"                text="¿Debe AutoDrive generar una Red de Rutas a partir de los datos de tráfico y ayuda del mapa?" />
@@ -242,7 +242,6 @@
 		<text name="gui_ad_noUnloaderAvailable"					text="No hay descargadero en destino" />
 		<text name="gui_ad_remainingDriveTimeInterval"			text="Tiempo de conducción restante" />
 		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="Para mods externos: Intervalo para calcular el tiempo de conducción restante. En caso de problemas con el aumento de rendimiento o desactivar." />
-
 		<text name="gui_ad_settingsPage_title"					text="Ajustes - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Ajustes de usuario - AutoDrive" />
 		<text name="gui_ad_vehicleSettingsPage_title"			text="Ajustes del vehículo - AutoDrive" />
