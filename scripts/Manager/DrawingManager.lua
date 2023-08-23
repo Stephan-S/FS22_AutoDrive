@@ -87,18 +87,18 @@ function ADDrawingManager.initObject(id)
     return itemId
 end
 
-function ADDrawingManager:addLineTask(sx, sy, sz, ex, ey, ez, r, g, b)
+function ADDrawingManager:addLineTask(sx, sy, sz, ex, ey, ez, scale, r, g, b)
     -- storing task
     local hash = 0
     -- local hash = string.format("l%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.1f", sx, sy, sz, ex, ey, ez, r, g, b, self.yOffset)
-    table.insert(self.lines.tasks, {sx = sx, sy = sy, sz = sz, ex = ex, ey = ey, ez = ez, r = r, g = g, b = b, hash = hash})
+    table.insert(self.lines.tasks, {sx = sx, sy = sy, sz = sz, ex = ex, ey = ey, ez = ez, scale = scale, r = r, g = g, b = b, hash = hash})
 end
 
-function ADDrawingManager:addArrowTask(sx, sy, sz, ex, ey, ez, position, r, g, b)
+function ADDrawingManager:addArrowTask(sx, sy, sz, ex, ey, ez, scale, position, r, g, b)
     -- storing task
     local hash = 0
     -- local hash = string.format("a%.2f%.2f%.2f%.2f%.2f%.2f%d%.2f%.2f%.2f%.1f", sx, sy, sz, ex, ey, ez, position, r, g, b, self.yOffset)
-    table.insert(self.arrows.tasks, {sx = sx, sy = sy, sz = sz, ex = ex, ey = ey, ez = ez, r = r, g = g, b = b, position = position, hash = hash})
+    table.insert(self.arrows.tasks, {sx = sx, sy = sy, sz = sz, ex = ex, ey = ey, ez = ez, scale = scale, r = r, g = g, b = b, position = position, hash = hash})
 end
 
 function ADDrawingManager:addSmallSphereTask(x, y, z, r, g, b)
@@ -115,11 +115,11 @@ function ADDrawingManager:addMarkerTask(x, y, z)
     table.insert(self.markers.tasks, {x = x, y = y, z = z, hash = hash})
 end
 
-function ADDrawingManager:addCrossTask(x, y, z)
+function ADDrawingManager:addCrossTask(x, y, z, scale)
     -- storing task
     local hash = 0
     -- local hash = string.format("c%.2f%.2f%.2f%.1f", x, y, z, self.yOffset)
-    table.insert(self.cross.tasks, {x = x, y = y, z = z, hash = hash})
+    table.insert(self.cross.tasks, {x = x, y = y, z = z, scale = scale, hash = hash})
 end
 
 function ADDrawingManager:addSphereTask(x, y, z, scale, r, g, b, a)
@@ -348,7 +348,7 @@ function ADDrawingManager:drawLine(id, task)
 
     setTranslation(id, task.sx, task.sy + self.yOffset, task.sz)
 
-    local scaleLines = AutoDrive.getSetting("scaleLines") or 1
+    local scaleLines = (AutoDrive.getSetting("scaleLines") or 1) * (task.scale or 1)
     setScale(id, scaleLines, scaleLines, distToNextPoint)
 
     -- Set the direction of the line
@@ -387,7 +387,7 @@ function ADDrawingManager:drawArrow(id, task)
 
     setTranslation(id, x, y + self.yOffset, z)
 
-    local scaleLines = AutoDrive.getSetting("scaleLines") or 1
+    local scaleLines = (AutoDrive.getSetting("scaleLines") or 1) * (task.scale or 1)
     setScale(id, scaleLines, scaleLines, scaleLines)
 
     -- Set the direction of the arrow
@@ -413,7 +413,7 @@ end
 
 function ADDrawingManager:drawCross(id, task)
     setTranslation(id, task.x, task.y + self.yOffset, task.z)
-    local scaleLines = AutoDrive.getSetting("scaleLines") or 1
+    local scaleLines = (AutoDrive.getSetting("scaleLines") or 1) * (task.scale or 1)
     setScale(id, scaleLines, scaleLines, scaleLines)
     setVisibility(id, true)
 end

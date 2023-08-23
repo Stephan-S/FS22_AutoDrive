@@ -103,7 +103,7 @@
 		<text name="gui_ad_useFolders_tooltip"					text="Usar carpetas para estructurar destinos" />
 		<text name="gui_ad_wait"								text="Esperar" />
 		<text name="gui_ad_drive"								text="Continuar" />
-		<text name="gui_ad_off"									text="Off" />
+		<text name="gui_ad_off"									text="Apagado" />
 		<text name="gui_ad_yes"									text="Sí" />
 		<text name="gui_ad_no"									text="No" />
 		<text name="gui_ad_FS22"								text="FS 22" />
@@ -240,9 +240,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="¿Debe AutoDrive generar una Red de Rutas a partir de los datos de tráfico y ayuda del mapa?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="No hay cosechadoras en destino" />
 		<text name="gui_ad_noUnloaderAvailable"					text="No hay descargadero en destino" />
-		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
-		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="Para mods externos: Intervalo para calcular el tiempo de conducción restante. En caso de problemas con el rendimiento, aumentar o desactivar." />
-
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Tiempo de conducción restante" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="Para mods externos: Intervalo para calcular el tiempo de conducción restante. En caso de problemas con el aumento de rendimiento o desactivar." />
 		<text name="gui_ad_settingsPage_title"					text="Ajustes - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Ajustes de usuario - AutoDrive" />
 		<text name="gui_ad_vehicleSettingsPage_title"			text="Ajustes del vehículo - AutoDrive" />
