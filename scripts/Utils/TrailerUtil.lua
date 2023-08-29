@@ -132,7 +132,7 @@ function AutoDrive.getObjectFillLevels(object)
     if AutoDrive:hasAL(object) then
         return AutoDrive:getALObjectFillLevels(object)
     elseif object.getFillUnits ~= nil then
-        for fillUnitIndex, _ in pairs(object:getFillUnits()) do
+        for fillUnitIndex, fillUnit in pairs(object:getFillUnits()) do
 
             local spec_dischargeable = object.spec_dischargeable
             if spec_dischargeable and spec_dischargeable.dischargeNodes and #spec_dischargeable.dischargeNodes > 0 then
@@ -151,7 +151,7 @@ function AutoDrive.getObjectFillLevels(object)
                 updateFillLevels(fillUnitIndex)
             elseif object.spec_baleLoader and object.spec_baleLoader.fillUnitIndex and object.spec_baleLoader.fillUnitIndex > 0 and object.spec_baleLoader.fillUnitIndex == fillUnitIndex then
                 updateFillLevels(fillUnitIndex)
-            elseif spec_dischargeable and spec_dischargeable.dischargeNodes and #spec_dischargeable.dischargeNodes == 0 then
+            elseif spec_dischargeable and fillUnit and fillUnit.exactFillRootNode then
                 if object.getFillUnitCapacity and object:getFillUnitCapacity(fillUnitIndex) > 0 then
                     updateFillLevels(fillUnitIndex)
                 end

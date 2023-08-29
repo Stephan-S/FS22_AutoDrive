@@ -415,18 +415,18 @@ function ADSensor:onDrawDebug(box)
             corners[4].y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, corners[4].x, 1, corners[4].z) + 0.5 -- top left
 
             local AutoDriveDM = ADDrawingManager
-            AutoDriveDM:addLineTask(corners[2].x, corners[2].y, corners[2].z, corners[4].x, corners[4].y, corners[4].z, red, green, blue) -- top
-            AutoDriveDM:addLineTask(corners[3].x, corners[3].y, corners[3].z, corners[4].x, corners[4].y, corners[4].z, red, green, blue) -- left
-            AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[2].x, corners[2].y, corners[2].z, red, green, blue) -- right
-            AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[3].x, corners[3].y, corners[3].z, red, green, blue) -- bottom
+            AutoDriveDM:addLineTask(corners[2].x, corners[2].y, corners[2].z, corners[4].x, corners[4].y, corners[4].z, 1, red, green, blue) -- top
+            AutoDriveDM:addLineTask(corners[3].x, corners[3].y, corners[3].z, corners[4].x, corners[4].y, corners[4].z, 1, red, green, blue) -- left
+            AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[2].x, corners[2].y, corners[2].z, 1, red, green, blue) -- right
+            AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[3].x, corners[3].y, corners[3].z, 1, red, green, blue) -- bottom
             if isTriggered and self.sensorType == ADSensor.TYPE_FRUIT then
                 if self.triggerType == ADSensor.TYPE_SWATH then
-                    AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[4].x, corners[4].y, corners[4].z, red, green, blue)
+                    AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[4].x, corners[4].y, corners[4].z, 1, red, green, blue)
                 end
-                AutoDriveDM:addLineTask(corners[3].x, corners[3].y, corners[3].z, corners[2].x, corners[2].y, corners[2].z, 0, green, blue)
+                AutoDriveDM:addLineTask(corners[3].x, corners[3].y, corners[3].z, corners[2].x, corners[2].y, corners[2].z, 1, 0, green, blue)
             end
             if isTriggered and self.sensorType == ADSensor.TYPE_FIELDBORDER then
-                AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[4].x, corners[4].y, corners[4].z, 0, green, blue)
+                AutoDriveDM:addLineTask(corners[1].x, corners[1].y, corners[1].z, corners[4].x, corners[4].y, corners[4].z, 1, 0, green, blue)
             end
         else
             if isTriggered then

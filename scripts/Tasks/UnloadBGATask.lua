@@ -1476,11 +1476,11 @@ function UnloadBGATask:drawDebug()
     -- line to trailer or trigger
     if self.targetUnloadTrigger ~= nil then
         local triggerX, triggerY, triggerZ = ADTriggerManager.getTriggerPos(self.targetUnloadTrigger)
-        ADDrawingManager:addLineTask(x, y, z, triggerX, triggerY, triggerZ, 0, 1, 0)
+        ADDrawingManager:addLineTask(x, y, z, triggerX, triggerY, triggerZ, 1, 0, 1, 0)
     end
     -- line to current target
     if self.targetPoint ~= nil then
-        ADDrawingManager:addLineTask(x, y, z, self.targetPoint.x, y, self.targetPoint.z, 1, 0, 0)
+        ADDrawingManager:addLineTask(x, y, z, self.targetPoint.x, y, self.targetPoint.z, 1, 1, 0, 0)
     end
     
     -- Bunker size
@@ -1492,9 +1492,9 @@ function UnloadBGATask:drawDebug()
 
         local corners = {{x = x1, z = z1}, {x = x2, z = z2}, {x = x3, z = z3}, {x = x2 + (x3 - x1), z = z2 + (z3 - z1)}}
 
-        ADDrawingManager:addLineTask(corners[1].x, y, corners[1].z, corners[2].x, y, corners[2].z, 1, 0, 0)
-        ADDrawingManager:addLineTask(corners[2].x, y, corners[2].z, corners[3].x, y, corners[3].z, 1, 0, 0)
-        ADDrawingManager:addLineTask(corners[3].x, y, corners[3].z, corners[4].x, y, corners[4].z, 1, 0, 0)
-        ADDrawingManager:addLineTask(corners[4].x, y, corners[4].z, corners[1].x, y, corners[1].z, 1, 0, 0)
+        ADDrawingManager:addLineTask(corners[1].x, y, corners[1].z, corners[2].x, y, corners[2].z, 1, 1, 0, 0)
+        ADDrawingManager:addLineTask(corners[2].x, y, corners[2].z, corners[3].x, y, corners[3].z, 1, 1, 0, 0)
+        ADDrawingManager:addLineTask(corners[3].x, y, corners[3].z, corners[4].x, y, corners[4].z, 1, 1, 0, 0)
+        ADDrawingManager:addLineTask(corners[4].x, y, corners[4].z, corners[1].x, y, corners[1].z, 1, 1, 0, 0)
     end
 end

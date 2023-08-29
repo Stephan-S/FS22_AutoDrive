@@ -1175,12 +1175,12 @@ function PathFinderModule:drawDebugForPF()
     local pointTargetUp = self:gridLocationToWorldLocation(self.targetCell)
     pointTarget.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTarget.x, 1, pointTarget.z) + 3
     pointTargetUp.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTargetUp.x, 1, pointTargetUp.z) + 20
-    AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 0, 0, 1)
+    AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0, 1)
     local pointStart = self:gridLocationToWorldLocation(self.startCell)
     local pointStartUp = self:gridLocationToWorldLocation(self.startCell)
     pointStart.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointStart.x, 1, pointStart.z) + 3
     pointStartUp.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointStartUp.x, 1, pointStartUp.z) + 6
-    AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 0, 0, 1)
+    AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0, 1)
 
     local color_red = 0.1
     local color_green = 0.1
@@ -1211,7 +1211,7 @@ function PathFinderModule:drawDebugForPF()
         for _, corner in pairs(corners) do
             local point_y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, corner.x, 1, corner.z)
             local pointUp_y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, corner.x, 1, corner.z) + 3
-            -- AutoDriveDM:addLineTask(corner.x, point_y, corner.z, corner.x, pointUp_y, corner.z, color_red, color_green, color_blue)
+            -- AutoDriveDM:addLineTask(corner.x, point_y, corner.z, corner.x, pointUp_y, corner.z, 1, color_red, color_green, color_blue)
         end
 
         -- restriction, collision line up
@@ -1237,14 +1237,14 @@ function PathFinderModule:drawDebugForPF()
 --[[
         if cell.isRestricted then
             -- red
-            AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 0)
+            AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0, 0)
         else
             if cell.isOnField then
                 -- blue
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 0, 0, 1)
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 0, 1)
             else
                 -- green
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 0, 1, 0)
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 1, 0)
             end
         end
         local cellIndex = string.format("%d , %d", cell.x, cell.z)
@@ -1253,8 +1253,8 @@ function PathFinderModule:drawDebugForPF()
         if cell.angle then
             local value = string.format("%.1f", math.deg(cell.angle))
             if (not cell.hasCollision) and (not cell.isRestricted) then
-                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 0, 1, 0)
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 0, 0, 1)
+                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 0)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 0, 1)
             end
             Utils.renderTextAtWorldPosition(pointCenter.x + (cell.x % 10), pointCenter.y - 1 + (cell.steps % 10 / 5) + (cell.z % 10 / 5), pointCenter.z, value, getCorrectTextSize(0.013), 0)
         end
@@ -1267,33 +1267,33 @@ function PathFinderModule:drawDebugForPF()
         if cell.isRestricted == true then
             -- any restriction
             if cell.hasFruit == true then
-                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 0, 1, 1)
+                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 1)
                 Utils.renderTextAtWorldPosition(pointCenter.x, pointB.y + 0.4, pointCenter.z, tostring(cell.fruitValue), getCorrectTextSize(0.013), 0)
 
             else
-                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 0)
+                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 0, 0)
             end
         else
-            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 0, 1, 0)
+            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 0)
         end
 
         if cell.hasCollision == true then
             -- ground collision, slope, water
             if cell.hasVehicleCollision then        -- TODO: hasVehicleCollision ???
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 0, 0, 1)
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 0, 0, 1)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 0, 1)
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 0, 1)
             else
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0)
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 0)
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 1, 0)
             end
         else
-            AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 1)
-            AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 1)
+            AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0, 1)
+            AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0, 1)
         end
 
         for i = 0, 10, 1 do
             pointCenter.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointCenter.x, 1, pointCenter.z) + 1 + (i * 0.5)
-            -- AutoDriveDM:addLineTask(pointA.x, pointCenter.y, pointA.z, pointA.x + 0.3, pointCenter.y, pointA.z + 0.3, 1, 1, 1)
+            -- AutoDriveDM:addLineTask(pointA.x, pointCenter.y, pointA.z, pointA.x + 0.3, pointCenter.y, pointA.z + 0.3, 1, 1, 1, 1)
         end
 
 --[[
@@ -1322,26 +1322,26 @@ function PathFinderModule:drawDebugForPF()
         pointCenterUp.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointCenterUp.x, 1, pointCenterUp.z) + 3
 
         if cell.isRestricted == true then
-            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 0)
+            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 0, 0)
             if cell.hasCollision == true then
                 if cell.hasVehicleCollision then        -- TODO: hasVehicleCollision ???
-                    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 0, 0, 1)
-                    AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 0, 0, 1)
+                    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 0, 1)
+                    AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 0, 1)
                 else
-                    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0)
-                    AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0)
+                    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 0)
+                    AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 1, 0)
                 end
             else
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 1)
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 1)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0, 1)
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0, 1)
             end
         else
-            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 0, 1, 0)
+            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 0)
             if cell.hasCollision == true then
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0)
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 0)
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 1, 0)
             else
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 1)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0, 1)
             end
         end
 ]]
@@ -1352,11 +1352,11 @@ function PathFinderModule:drawDebugForPF()
             pointTarget.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTarget.x, 1, pointTarget.z) + 6
             pointTargetUp.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTargetUp.x, 1, pointTargetUp.z) + 10
             if cell.bordercells == 1 then
-                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0)
+                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 1, 0, 0)
             elseif cell.bordercells == 2 then
-                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 0, 1, 0)
+                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 1, 0)
             elseif cell.bordercells > 2 then
-                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 0, 0, 1)
+                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0, 1)
             end
         end
         --[[
@@ -1366,10 +1366,10 @@ function PathFinderModule:drawDebugForPF()
         end
         local corners = self:getCorners(cell, {x=self.vectorX.x * gridFactor, z=self.vectorX.z * gridFactor}, {x=self.vectorZ.x * gridFactor,z=self.vectorZ.z * gridFactor})
         local heightOffset = 1
-        AutoDriveDM:addLineTask(corners[1].x, pointA.y+heightOffset, corners[1].z, corners[2].x, pointA.y+heightOffset, corners[2].z, 0, 1, 0)
-        AutoDriveDM:addLineTask(corners[2].x, pointA.y+heightOffset, corners[2].z, corners[3].x, pointA.y+heightOffset, corners[3].z, 1, 0, 0)
-        AutoDriveDM:addLineTask(corners[3].x, pointA.y+heightOffset, corners[3].z, corners[4].x, pointA.y+heightOffset, corners[4].z, 0, 0, 1)
-        AutoDriveDM:addLineTask(corners[4].x, pointA.y+heightOffset, corners[4].z, corners[1].x, pointA.y+heightOffset, corners[1].z, 1, 0, 1)
+        AutoDriveDM:addLineTask(corners[1].x, pointA.y+heightOffset, corners[1].z, corners[2].x, pointA.y+heightOffset, corners[2].z, 1, 0, 1, 0)
+        AutoDriveDM:addLineTask(corners[2].x, pointA.y+heightOffset, corners[2].z, corners[3].x, pointA.y+heightOffset, corners[3].z, 1, 1, 0, 0)
+        AutoDriveDM:addLineTask(corners[3].x, pointA.y+heightOffset, corners[3].z, corners[4].x, pointA.y+heightOffset, corners[4].z, 1, 0, 0, 1)
+        AutoDriveDM:addLineTask(corners[4].x, pointA.y+heightOffset, corners[4].z, corners[1].x, pointA.y+heightOffset, corners[1].z, 1, 1, 0, 1)
 
         local shapeDefinition = self:getShapeDefByDirectionType(cell)
         local red = 0
@@ -1399,8 +1399,8 @@ function PathFinderModule:drawDebugForPF()
     pointD.z = pointD.z - self.vectorX.z * size + self.vectorZ.z * size
     pointD.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointD.x, 1, pointD.z) + 3
 
-    AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 1)
-    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1)
+    AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 1, 1)
+    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 1)
 
     local pointAB = self:gridLocationToWorldLocation(self.targetCell)
     pointAB.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointAB.x, 1, pointAB.z) + 3
@@ -1409,7 +1409,7 @@ function PathFinderModule:drawDebugForPF()
     pointTargetVector.x = pointTargetVector.x + self.targetVector.x * 10
     pointTargetVector.z = pointTargetVector.z + self.targetVector.z * 10
     pointTargetVector.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTargetVector.x, 1, pointTargetVector.z) + 3
-    AutoDriveDM:addLineTask(pointAB.x, pointAB.y, pointAB.z, pointTargetVector.x, pointTargetVector.y, pointTargetVector.z, 1, 1, 1)
+    AutoDriveDM:addLineTask(pointAB.x, pointAB.y, pointAB.z, pointTargetVector.x, pointTargetVector.y, pointTargetVector.z, 1, 1, 1, 1)
 end
 
 function PathFinderModule:drawDebugForCreatedRoute()
@@ -1439,8 +1439,8 @@ function PathFinderModule:drawDebugForCreatedRoute()
                     z = shape.z - shape.widthZ * math.cos(shape.angleRad) - shape.widthX * math.sin(shape.angleRad)
                 }
 
-                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointC.x, pointC.y, pointC.z, 1, 1, 1)
-                AutoDriveDM:addLineTask(pointB.x, pointB.y, pointB.z, pointD.x, pointD.y, pointD.z, 1, 1, 1)
+                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointC.x, pointC.y, pointC.z, 1, 1, 1, 1)
+                AutoDriveDM:addLineTask(pointB.x, pointB.y, pointB.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 1)
 
                 if cell.incoming ~= nil then
                     local worldPos_cell = self:gridLocationToWorldLocation(cell)
@@ -1471,10 +1471,10 @@ function PathFinderModule:drawDebugForCreatedRoute()
                     local inY = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, worldPos_incoming.x, 1, worldPos_incoming.z) + 1
                     local currentY = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, worldPos_cell.x, 1, worldPos_cell.z) + 1
 
-                    AutoDriveDM:addLineTask(cornerX, inY, cornerZ, corner2X, currentY, corner2Z, 1, 0, 0)
-                    AutoDriveDM:addLineTask(corner2X, currentY, corner2Z, corner3X, currentY, corner3Z, 1, 0, 0)
-                    AutoDriveDM:addLineTask(corner3X, currentY, corner3Z, corner4X, inY, corner4Z, 1, 0, 0)
-                    AutoDriveDM:addLineTask(corner4X, inY, corner4Z, cornerX, inY, cornerZ, 1, 0, 0)
+                    AutoDriveDM:addLineTask(cornerX, inY, cornerZ, corner2X, currentY, corner2Z, 1, 1, 0, 0)
+                    AutoDriveDM:addLineTask(corner2X, currentY, corner2Z, corner3X, currentY, corner3Z, 1, 1, 0, 0)
+                    AutoDriveDM:addLineTask(corner3X, currentY, corner3Z, corner4X, inY, corner4Z, 1, 1, 0, 0)
+                    AutoDriveDM:addLineTask(corner4X, inY, corner4Z, cornerX, inY, cornerZ, 1, 1, 0, 0)
                 end
             end
         end
@@ -1485,7 +1485,7 @@ function PathFinderModule:drawDebugForCreatedRoute()
         if i > 1 then
             local wp = waypoint
             local pfWp = self.wayPoints[i - 1]
-            AutoDriveDM:addLineTask(wp.x, wp.y, wp.z, pfWp.x, pfWp.y, pfWp.z, 0, 1, 1)
+            AutoDriveDM:addLineTask(wp.x, wp.y, wp.z, pfWp.x, pfWp.y, pfWp.z, 1, 0, 1, 1)
         end
     end
 end
