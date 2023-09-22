@@ -304,6 +304,7 @@
         <text name="ad_color_editorHeightLine"      	text="14 Linea dal nodo di superficie a quello sopra il veicolo" />
 		<text name="ad_color_previewOk" 			            text="15 Anteprima svolte Ok, nessuna collisione" />
 		<text name="ad_color_previewNotOk" 			            text="16 Anteprima svolte non ok, ce collisione" />
+		<text name="ad_color_textInputBackground" 			    text="17 Background for inputs of text, targets etc." />
  
         <text name="button_delete_all"      text="Cancella Tutto" />
         <text name="button_reset_selected"  text="Ripristina selezionato" />

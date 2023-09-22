@@ -22,6 +22,11 @@ function ADEnterGroupNameGui:onOpen()
     ADEnterGroupNameGui:superClass().onOpen(self)
     self.textInputElement.blockTime = 0
     self.textInputElement:onFocusActivate()
+    if self.textInputElement.overlay and self.textInputElement.overlay.colorFocused then
+        if AutoDrive.currentColors and AutoDrive.currentColors.ad_color_textInputBackground then
+            self.textInputElement.overlay.colorFocused = AutoDrive.currentColors.ad_color_textInputBackground
+        end
+    end
     self.textInputElement:setText("")
 end
 
