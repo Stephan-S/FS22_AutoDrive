@@ -858,6 +858,10 @@ function ADStateModule:toggleFillTypeSelection(fillType)
             end
         else
             table.insert(self.selectedFillTypes, fillType)
+            if not table.contains(self.selectedFillTypes, self.fillType) then
+                -- selectedFillTypes was empty, select the new fillType
+                self.fillType = fillType
+            end
         end
         self:raiseDirtyFlag()
     end
@@ -910,7 +914,7 @@ function ADStateModule:selectPreferredFillTypeFromFillLevels(fillLevels)
     end
     table.sort(fillLevelList)  -- sort it
     local requiredFillLevel = fillLevelList[#fillLevelList]
-    local idx = table.indexOf(self.selectedFillTypes, self.fillType)  -- starting point
+    local idx = table.indexOf(self.selectedFillTypes, self.fillType) or 0 -- starting point
     local loopsLeft = #self.selectedFillTypes
     local pickNextNonEmpty = requiredFillLevel == -1 or not self.loadByFillLevel
     if idx == nil or requiredFillLevel == nil then
