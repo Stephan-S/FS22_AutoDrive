@@ -22,6 +22,7 @@ source(Utils.getFilename("scripts/TelemetryExport.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Hud/GenericHudElement.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudButton.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Hud/HudCounterButton.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudSettingsButton.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudIcon.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudSpeedmeter.lua", g_currentModDirectory))

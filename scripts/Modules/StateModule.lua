@@ -697,17 +697,29 @@ function ADStateModule:getLoopCounter()
     return self.loopCounter
 end
 
-function ADStateModule:increaseLoopCounter()
-    self.loopCounter = (self.loopCounter + 1) % 10
-    self:raiseDirtyFlag()
-end
-
-function ADStateModule:decreaseLoopCounter()
-    if self.loopCounter > 0 then
-        self.loopCounter = self.loopCounter - 1
+function ADStateModule:changeLoopCounter(increment, fast, wheel)
+    local newCounter = self.loopCounter
+    local delta = fast and 10 or 1
+    if increment then
+        newCounter = newCounter + delta
+        if newCounter >= 100 then
+            if fast or wheel then
+                newCounter = 99
+            else
+                newCounter = newCounter % 100
+            end
+        end
     else
-        self.loopCounter = 9
+        newCounter = newCounter - delta
+        if newCounter < 0 then
+            if fast or wheel then
+                newCounter = 0
+            else
+                newCounter = (newCounter + 100) % 100
+            end
+        end
     end
+    self.loopCounter = newCounter
     self:raiseDirtyFlag()
 end
 
