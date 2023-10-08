@@ -269,12 +269,12 @@ function ADDrivePathModule:followWaypoints(dt)
             self.speedLimit = math.min(self.vehicle.ad.trailerModule:getBunkerSiloSpeed(), self.speedLimit)
             maxSpeedDiff = 1
         else
-            if self.distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH + AutoDrive.getSetting("maxTriggerDistance")) and AutoDrive.isVehicleInBunkerSiloArea(self.vehicle) then
+            if self.distanceToTarget < (AutoDrive.MAX_BUNKERSILO_LENGTH + AutoDrive.getMaxTriggerDistance(self.vehicle)) and AutoDrive.isVehicleInBunkerSiloArea(self.vehicle) then
                 -- vehicle enters drive through bunker silo
                 self.speedLimit = math.min(12, self.speedLimit)
                 maxSpeedDiff = 3
             else
-                local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self.vehicle) and self.distanceToTarget <= AutoDrive.getSetting("maxTriggerDistance")
+                local isInRangeToLoadUnloadTarget = AutoDrive.isInRangeToLoadUnloadTarget(self.vehicle) and self.distanceToTarget <= AutoDrive.getMaxTriggerDistance(self.vehicle)
                 if isInRangeToLoadUnloadTarget == true then
                     self.speedLimit = math.min(5, self.speedLimit)
                 end
