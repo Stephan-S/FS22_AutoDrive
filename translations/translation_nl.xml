@@ -305,6 +305,7 @@
 		<text name="ad_color_editorHeightLine" 			        text="14 lijn van oppervlakte routepunt naar degene boven het voertuig" />
 		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
 		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
+		<text name="ad_color_textInputBackground" 			    text="17 Background for inputs of text, targets etc." />
 
 		<text name="button_delete_all" 							text="Alles verwijderen" />
 		<text name="button_reset_selected" 					    text="Geselecteerde terugzetten" />

@@ -302,6 +302,7 @@
 		<text name="ad_color_editorHeightLine"					text="14 линия от поверхности путевой точки к точке над техникой " />
 		<text name="ad_color_previewOk" 						text="15 предпросмотр кривой OK, нет преград" />
 		<text name="ad_color_previewNotOk" 						text="16 предпросмотр кривой не OK, есть преграды" />
+		<text name="ad_color_textInputBackground" 			    text="17 Background for inputs of text, targets etc." />
 
 		<text name="button_delete_all" 							text="Удалить все" />
 		<text name="button_reset_selected" 						text="Сбросить выбранное" />
