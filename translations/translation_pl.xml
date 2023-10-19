@@ -167,6 +167,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"				text="4 Tryby: Bez zmiany celów / tylko cele odbioru / tylko cele dostarczania / Cele odbioru i dostarczania w folderze są kolejno przełączane (nie w folderze domyślnym) (działa tylko przy wykorzystywaniu folderów)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Maksymalna odległość do triggerów" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Odległość do celów, przy której są wykrywane i aktywowane triggery." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Światła ostrzegawcze" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Używaj świateł ostrzegawczych na drodze." />
 		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />

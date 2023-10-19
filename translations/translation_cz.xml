@@ -166,6 +166,7 @@
 		<text name="gui_ad_distributeToFolder_tooltip"			text="Všechny cíle v jednom adresáři budou použity pro vykládku" />
 		<text name="gui_ad_maxTriggerDistance"					text="Rozsah detekce triggerů" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Rozsah, ve kterém jsou detekovány aktivní triggery (např. osivo a hnojivo)." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Zapnout maják" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Použití majáku na silnici" />
 		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />

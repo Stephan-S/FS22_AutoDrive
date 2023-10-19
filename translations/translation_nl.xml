@@ -168,6 +168,7 @@
 		<text name="gui_ad_distributeToFolder_tooltip"			text="Alle bestemmingen in dezelfde map worden geroteerd als aflever bestemming." />
 		<text name="gui_ad_maxTriggerDistance"					text="Maximale trigger afstand" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Afstand tot aflever/ophaal bestemming waar de trigger wordt gevonden en geactiveerd." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Zwaailichten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Gebruik zwaailampen buiten de velden." />
 		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />

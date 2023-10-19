@@ -165,6 +165,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: A célok nem változnak / csak a felvételi célok / csak a célok kézbesítése / az átvétel és a célok kézbesítése a mappában ciklusosak (nem az alapértelmezett mappával) (csak akkor vehető figyelembe, ha a mappák használata aktív)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Maximális kirakodási távolság" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="A célponttól e távolságig a kirakodás felismerése esetén be- és kirakodás történik" />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Jelző lámpa" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Használjon jelzőfényeket az úton." />
 		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />

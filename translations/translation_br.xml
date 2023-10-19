@@ -166,6 +166,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modos: Sem alteração de destino / apenas destino de Coleta / apenas destino de Entrega / destino de Coleta e Entrega na pasta são ciclados (não com pasta padrão) (considerado apenas se as pastas de uso estiverem ativas)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Maximo disância do trigger" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distância do destino em que os triggers são detectados e ativados." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Luzes piscantes" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Sim - Use luzes de sinalização automáticas fora dos campos / Não - as luzes de sinalização não serão ligadas ou desligadas automaticamente" />
 		<text name="gui_ad_worklightsWhenLoading"				text="Luz de aviso ao carregar/descarregar" />

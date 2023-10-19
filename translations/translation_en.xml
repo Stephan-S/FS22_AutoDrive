@@ -166,6 +166,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: No change of targets / only Pickup Targets / only Deliver Targets / Pickup and Deliver Targets in folder are cycled (not with default folder) (only considered if use folders is active)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Maximum trigger distance" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance to target at which triggers are detected and activated." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Beacon lights" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Yes - Use beacon lights automatic outside of fields / No - beacon lights will not be turned on or off automatically" />
 		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />

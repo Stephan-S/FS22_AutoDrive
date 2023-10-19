@@ -166,6 +166,7 @@
         <text name="gui_ad_distributeToFolder_tooltip"      	text="Tutte le destinazioni nella stessa cartella verranno ruotate come destinazioni di scarico." />
         <text name="gui_ad_maxTriggerDistance"          	text="Distanza massima dal trigger" />
         <text name="gui_ad_maxTriggerDistance_tooltip"      	text="Distanza dall'obiettivo in cui i trigger vengono rilevati e attivati." />
+        <text name="gui_ad_useGlobalSetting"			    text="Use global setting" />
         <text name="gui_ad_useBeaconLights"             	text="Accendi Fari" />
         <text name="gui_ad_useBeaconLights_tooltip"         	text="Usa i fari sulla strada." />
 		<text name="gui_ad_worklightsWhenLoading"				text="Faro da lavoro durante carico/scarico" />
