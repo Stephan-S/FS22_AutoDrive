@@ -216,7 +216,10 @@ function AutoDriveHud:createHudAt(hudX, hudY)
 	self:AddButton("input_continue", nil, nil, nil, "input_AD_continue", 1, true)
 	self:AddButton("input_parkVehicle", "input_setParkDestination", nil, nil, "input_ADParkVehicle", 1, true)
 	if vehicle == nil or vehicle.ad.stateModule:getMode() ~= AutoDrive.MODE_BGA then
-		self:AddButton("input_incLoopCounter", "input_decLoopCounter", nil, nil, "input_ADIncLoopCounter", 1, true)
+		local loopX = self.posX + (self.cols - 2 + self.buttonCollOffset) * self.borderX + (self.cols - 3 + self.buttonCollOffset) * self.buttonWidth
+		local loopY = self.posY + (1) * self.borderY + (0) * self.buttonHeight
+		table.insert(self.hudElements, ADHudCounterButton:new(loopX, loopY, self.buttonWidth, self.buttonHeight, "loop_counter"))
+		self.buttonCounter = self.buttonCounter + 1
 	else
 		self:AddButton("input_bunkerUnloadType", nil, nil, nil, "input_ADbunkerUnloadType", 1, true)
 	end
