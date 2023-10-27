@@ -27,7 +27,7 @@ function PickupAndDeliverMode:reset()
     self.vehicle.ad.trailerModule:reset()
 end
 
-function PickupAndDeliverMode:start()
+function PickupAndDeliverMode:start(user)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:start start self.state %s", tostring(self.state))
 
     if not self.vehicle.ad.stateModule:isActive() then
@@ -39,7 +39,8 @@ function PickupAndDeliverMode:start()
     end
 
     self:reset()
-    self.activeTask = self:getNextTask()
+    local forced = not (user == AutoDrive.USER_PLAYER) -- force target delivery change if not started by player, i.e. CP
+    self.activeTask = self:getNextTask(forced)
     if self.activeTask ~= nil then
         self.vehicle.ad.taskModule:addTask(self.activeTask)
     end

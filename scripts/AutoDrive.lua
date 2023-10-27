@@ -92,6 +92,11 @@ AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 -- add this to measured size of vehicles
 AutoDrive.DIMENSION_ADDITION = 0.2
 
+-- AD invoked by which type of user
+AutoDrive.USER_PLAYER = 1
+AutoDrive.USER_GIANTS = 2
+AutoDrive.USER_CP = 3
+
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
 	ad_color_dualConnection = {0, 0, 1, 1},

@@ -41,7 +41,7 @@ function CombineUnloaderMode:reset()
     AutoDrive.getAllDischargeableUnits(self.vehicle, true) -- force initialisation
 end
 
-function CombineUnloaderMode:start()
+function CombineUnloaderMode:start(user)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:start start self.state %s", tostring(self.state))
     if not self.vehicle.ad.stateModule:isActive() then
         self.vehicle:startAutoDrive()
