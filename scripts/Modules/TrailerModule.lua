@@ -448,7 +448,7 @@ end
 
 function ADTrailerModule:updateUnload(dt)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload ")
-    AutoDrive.setAugerPipeOpen(self.trailers,  AutoDrive.getDistanceToUnloadPosition(self.vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
+    AutoDrive.setAugerPipeOpen(self.trailers,  AutoDrive.getDistanceToUnloadPosition(self.vehicle) <= AutoDrive.getMaxTriggerDistance(self.vehicle))
 
     if not self.isUnloading and not (self.lastUnloadRotateTrigger) then
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_TRAILERINFO, "ADTrailerModule:updateUnload not self.isUnloading")
@@ -604,7 +604,7 @@ function ADTrailerModule:lookForPossibleUnloadTrigger(trailer)
     -- local distanceToTarget = AutoDrive.getDistanceToUnloadPosition(self.vehicle)
     local distanceToTarget = AutoDrive.getDistanceToUnloadPosition(trailer)
 
-    if distanceToTarget < AutoDrive.getSetting("maxTriggerDistance") then
+    if distanceToTarget < AutoDrive.getMaxTriggerDistance(self.vehicle) then
         -- silo trigger - found by CanDischargeToObject, no need to loop through all triggers
         if trailer.getCanDischargeToObject and trailer.getCurrentDischargeNode and trailer.getDischargeState then
             if trailer:getCanDischargeToObject(trailer:getCurrentDischargeNode()) then

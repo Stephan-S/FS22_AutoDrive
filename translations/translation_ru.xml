@@ -166,6 +166,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"				text="4 режима: не менять локации/ только локации Загрузок/ только локации Доставок/ менять циклически в папке локации Загрузок и Доставок (не для стандартных папок) (учитывается при активации 'Использовать папки')." />
 		<text name="gui_ad_maxTriggerDistance"					text="Макс. расстояние триггера" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Расстояние до локации, на котором обнаруживаются и активируются триггеры." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Маячок" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Да - использовать автоматические сигнальные огни за пределами полей / Нет - сигнальные огни не будут включаться или выключаться автоматически." />
 		<text name="gui_ad_worklightsWhenLoading"				text="Рабочий свет при загрузке/разгрузке" />

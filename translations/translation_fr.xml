@@ -166,6 +166,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: Aucune destination / uniquement les points de collecte / uniquement les points de livraison / les points de collecte et livraison sont choisis alternativement depuis un dossier (désactivé dans le dossier par défaut). Possible uniquement si gestion par dossier activée)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Distance maximum du déclencheur" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distance de détection du déclencheur au point de destination pour le chargement/déchargement." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Gyrophares" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Oui - ils seront allumés automatiquement en dehors des champs / Non - pas d'allumage ou extinction automatique" />
 		<text name="gui_ad_worklightsWhenLoading"				text="Feux de travail pendant le chargement/déchargement" />

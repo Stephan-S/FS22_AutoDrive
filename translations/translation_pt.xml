@@ -166,6 +166,7 @@
 		<text name="gui_ad_distributeToFolder_tooltip"			text="Todos os destinos na mesma pasta serão girados como destinos de descarregamento." />
 		<text name="gui_ad_maxTriggerDistance"					text="Distância máxima de gatilho" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distância ao alvo em que os gatilhos são detectados e ativados." />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Pirilampos" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Use pirilampos na estrada." />
 		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
