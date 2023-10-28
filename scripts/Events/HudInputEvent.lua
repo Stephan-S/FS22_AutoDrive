@@ -4,6 +4,10 @@ AutoDriveHudInputEventEvent.TYPE_SECOND_MARKER = 2
 AutoDriveHudInputEventEvent.TYPE_FILLTYPE = 3
 AutoDriveHudInputEventEvent.TYPE_TOGGLE_FILLTYPE_SELECTION = 4
 AutoDriveHudInputEventEvent.TYPE_TOGGLE_ALL_FILLTYPE_SELECTIONS = 5
+AutoDriveHudInputEventEvent.CHANGE_LOOP_COUNTER = 6
+
+
+
 
 AutoDriveHudInputEventEvent_mt = Class(AutoDriveHudInputEventEvent, Event)
 
@@ -63,6 +67,11 @@ function AutoDriveHudInputEventEvent:run(connection)
         if self.eventType == self.TYPE_TOGGLE_ALL_FILLTYPE_SELECTIONS then
             self.vehicle.ad.stateModule:toggleAllFillTypeSelections(self.value)
         end
+
+        if self.eventType == self.CHANGE_LOOP_COUNTER then
+            local increment, fast, wheel = ADHudCounterButton.int_to_flags(self.value)
+            self.vehicle.ad.stateModule:changeLoopCounter(increment, fast, wheel)
+        end
     end
 end
 
@@ -98,5 +107,13 @@ function AutoDriveHudInputEventEvent:sendToggleAllFillTypeSelectionsEvent(vehicl
     if g_client ~= nil then
         -- Client have to send to server
         g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent.new(vehicle, self.TYPE_TOGGLE_ALL_FILLTYPE_SELECTIONS, fillTypeId))
+    end
+end
+
+function AutoDriveHudInputEventEvent:sendChangeLoopCounterEvent(vehicle, increment, fast, wheel)
+    if g_client ~= nil then
+        -- Client have to send to server
+        local value = ADHudCounterButton.flags_to_int(increment, fast, wheel)
+        g_client:getServerConnection():sendEvent(AutoDriveHudInputEventEvent.new(vehicle, self.CHANGE_LOOP_COUNTER, value))
     end
 end

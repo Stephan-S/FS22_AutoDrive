@@ -296,11 +296,11 @@ function ADInputManager:input_start_stop(vehicle, farmId)
 end
 
 function ADInputManager:input_incLoopCounter(vehicle)
-    vehicle.ad.stateModule:increaseLoopCounter()
+    vehicle.ad.stateModule:changeLoopCounter(true)
 end
 
 function ADInputManager:input_decLoopCounter(vehicle)
-    vehicle.ad.stateModule:decreaseLoopCounter()
+    vehicle.ad.stateModule:changeLoopCounter(false)
 end
 
 function ADInputManager:input_setParkDestination(vehicle)

@@ -201,8 +201,8 @@ function ADStateModule:writeStream(streamId)
     streamWriteUIntN(streamId, self.fillType, 10)
     AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
     streamWriteBool(streamId, self.loadByFillLevel)
-    streamWriteUIntN(streamId, self.loopCounter, 4)
-    streamWriteUIntN(streamId, self.loopsDone, 4)
+    streamWriteUIntN(streamId, self.loopCounter, 7)
+    streamWriteUIntN(streamId, self.loopsDone, 7)
     streamWriteUIntN(streamId, self.speedLimit, 8)
     streamWriteUIntN(streamId, self.fieldSpeedLimit, 8)
     streamWriteUIntN(streamId, self.parkDestination + 1, 17)
@@ -233,8 +233,8 @@ function ADStateModule:readStream(streamId)
     self.fillType = streamReadUIntN(streamId, 10)
     self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
     self.loadByFillLevel = streamReadBool(streamId)
-    self.loopCounter = streamReadUIntN(streamId, 4)
-    self.loopsDone = streamReadUIntN(streamId, 4)
+    self.loopCounter = streamReadUIntN(streamId, 7)
+    self.loopsDone = streamReadUIntN(streamId, 7)
     self.speedLimit = streamReadUIntN(streamId, 8)
     self.fieldSpeedLimit = streamReadUIntN(streamId, 8)
     self.parkDestination = streamReadUIntN(streamId, 17) - 1
@@ -267,8 +267,8 @@ function ADStateModule:writeUpdateStream(streamId)
     streamWriteUIntN(streamId, self.fillType, 10)
     AutoDrive.streamWriteUIntNList(streamId, self.selectedFillTypes, 10)
     streamWriteBool(streamId, self.loadByFillLevel)
-    streamWriteUIntN(streamId, self.loopCounter, 4)
-    streamWriteUIntN(streamId, self.loopsDone, 4)
+    streamWriteUIntN(streamId, self.loopCounter, 7)
+    streamWriteUIntN(streamId, self.loopsDone, 7)
     streamWriteUIntN(streamId, self.speedLimit, 8)
     streamWriteUIntN(streamId, self.fieldSpeedLimit, 8)
     streamWriteUIntN(streamId, self.parkDestination + 1, 17)
@@ -299,8 +299,8 @@ function ADStateModule:readUpdateStream(streamId)
     self.fillType = streamReadUIntN(streamId, 10)
     self.selectedFillTypes = AutoDrive.streamReadUIntNList(streamId, 10)
     self.loadByFillLevel = streamReadBool(streamId)
-    self.loopCounter = streamReadUIntN(streamId, 4)
-    self.loopsDone = streamReadUIntN(streamId, 4)
+    self.loopCounter = streamReadUIntN(streamId, 7)
+    self.loopsDone = streamReadUIntN(streamId, 7)
     self.speedLimit = streamReadUIntN(streamId, 8)
     self.fieldSpeedLimit = streamReadUIntN(streamId, 8)
     self.parkDestination = streamReadUIntN(streamId, 17) - 1
@@ -697,17 +697,29 @@ function ADStateModule:getLoopCounter()
     return self.loopCounter
 end
 
-function ADStateModule:increaseLoopCounter()
-    self.loopCounter = (self.loopCounter + 1) % 10
-    self:raiseDirtyFlag()
-end
-
-function ADStateModule:decreaseLoopCounter()
-    if self.loopCounter > 0 then
-        self.loopCounter = self.loopCounter - 1
+function ADStateModule:changeLoopCounter(increment, fast, wheel)
+    local newCounter = self.loopCounter
+    local delta = fast and 10 or 1
+    if increment then
+        newCounter = newCounter + delta
+        if newCounter >= 100 then
+            if fast or wheel then
+                newCounter = 99
+            else
+                newCounter = newCounter % 100
+            end
+        end
     else
-        self.loopCounter = 9
+        newCounter = newCounter - delta
+        if newCounter < 0 then
+            if fast or wheel then
+                newCounter = 0
+            else
+                newCounter = (newCounter + 100) % 100
+            end
+        end
     end
+    self.loopCounter = newCounter
     self:raiseDirtyFlag()
 end
 
