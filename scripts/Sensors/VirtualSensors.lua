@@ -287,6 +287,8 @@ function ADSensor:getBoxShape()
     end
 
     local boxYPos = 2
+    local boxHeight = 0.75
+
     if self.position == ADSensor.POS_FRONT_LEFT or self.position == ADSensor.POS_FRONT_RIGHT then
         boxYPos = 2.25
     end
@@ -299,33 +301,33 @@ function ADSensor:getBoxShape()
     box.size = {}
     box.center = {}
     box.size[1] = self.width * 0.5
-    box.size[2] = 0.75 -- fixed height for now
+    box.size[2] = boxHeight * 0.5
     box.size[3] = lookAheadDistance * 0.5
     box.offset[1] = self.location.x
-    box.offset[2] = boxYPos -- fixed y pos for now
+    box.offset[2] = boxYPos
     box.offset[3] = self.location.z
-    box.center[1] = box.offset[1] + vecZ.x * box.size[3] -- + vecX.x * box.size[1]
-    box.center[2] = boxYPos -- fixed y pos for now
-    box.center[3] = box.offset[3] + vecZ.z * box.size[3] -- + vecX.z * box.size[1]
+    box.center[1] = box.offset[1] + vecZ.x * box.size[3]
+    box.center[2] = box.offset[2] + box.size[2]
+    box.center[3] = box.offset[3] + vecZ.z * box.size[3]
 
     box.topLeft = {}
     box.topLeft[1] = box.center[1] - vecX.x * box.size[1] + vecZ.x * box.size[3]
-    box.topLeft[2] = boxYPos
+    box.topLeft[2] = box.center[2]
     box.topLeft[3] = box.center[3] - vecX.z * box.size[1] + vecZ.z * box.size[3]
 
     box.topRight = {}
     box.topRight[1] = box.center[1] + vecX.x * box.size[1] + vecZ.x * box.size[3]
-    box.topRight[2] = boxYPos
+    box.topRight[2] = box.center[2]
     box.topRight[3] = box.center[3] + vecX.z * box.size[1] + vecZ.z * box.size[3]
 
     box.downRight = {}
     box.downRight[1] = box.center[1] + vecX.x * box.size[1] - vecZ.x * box.size[3]
-    box.downRight[2] = boxYPos
+    box.downRight[2] = box.center[2]
     box.downRight[3] = box.center[3] + vecX.z * box.size[1] - vecZ.z * box.size[3]
 
     box.downLeft = {}
     box.downLeft[1] = box.center[1] - vecX.x * box.size[1] - vecZ.x * box.size[3]
-    box.downLeft[2] = boxYPos
+    box.downLeft[2] = box.center[2]
     box.downLeft[3] = box.center[3] - vecX.z * box.size[1] - vecZ.z * box.size[3]
 
     if self.sideFactor == -1 then
