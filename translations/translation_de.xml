@@ -172,7 +172,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modi: kein Wechsel der Ziele / nur Beladeziele / nur Entladeziele / Be- und Entladeziele im Ordner rotierend wechseln (nicht für Standard-Ordner) (und nur wenn Ordner verwenden aktiv)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Maximaler Siloabstand" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Bis zu dieser Entfernung zum Zielpunkt wird beladen/entladen bei erkanntem Trigger." />
-		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
+		<text name="gui_ad_useGlobalSetting"					text="Globale Einstellung benutzen" />
 		<text name="gui_ad_useBeaconLights"						text="Rundumleuchten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Ja - Außerhalb des Felds automatisch eingeschaltet / Nein - Rundumleuchten werden nicht automatisch ein- oder ausgeschaltet" />
 		<text name="gui_ad_worklightsWhenLoading"				text="Arbeitslicht beim Be- und Entladen" />
