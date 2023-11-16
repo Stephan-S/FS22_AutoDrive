@@ -24,12 +24,10 @@ function ADCollisionDetectionModule:update(dt)
 end
 
 function ADCollisionDetectionModule:detectObstacle()
-	local box = self.vehicle.ad.sensors.frontSensorDynamic:getBoxShape()
-
 	if AutoDrive.getSetting("enableTrafficDetection") >= 1 then
-		if self.vehicle.ad.sensors.frontSensorDynamic:pollInfo() then
+		if self.vehicle.ad.sensors.frontSensorDynamicShort:pollInfo() then
             local frontSensorDynamicInBunkerArea = false
-            local sensorLocation = self.vehicle.ad.sensors.frontSensorDynamic:getLocationByPosition()
+            local sensorLocation = self.vehicle.ad.sensors.frontSensorDynamicShort:getLocationByPosition()
             local vehX, vehY, vehZ = getWorldTranslation(self.vehicle.components[1].node)
             local worldOffsetX, worldOffsetY, worldOffsetZ = localDirectionToWorld(self.vehicle.components[1].node, sensorLocation.x, 0, sensorLocation.z)
             for _, trigger in pairs(ADTriggerManager.getUnloadTriggers()) do
@@ -52,6 +50,7 @@ function ADCollisionDetectionModule:detectObstacle()
 	if ((g_updateLoopIndex + self.vehicle.id) % AutoDrive.PERF_FRAMES == 0) then
 		local excludedList = self.vehicle.ad.taskModule:getActiveTask():getExcludedVehiclesForCollisionCheck()
 
+		local box = self.vehicle.ad.sensors.frontSensorDynamicLong:getBoxShape()
 		local boundingBox = {}
 	    boundingBox[1] = box.topLeft
 	    boundingBox[2] = box.topRight

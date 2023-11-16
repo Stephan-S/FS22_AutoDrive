@@ -44,12 +44,17 @@ function ADSensor:addSensorsToVehicle(vehicle)
     vehicle.ad.sensors = {}
     local sensorParameters = {}
     sensorParameters.dynamicLength = true
+    sensorParameters.minDynamicLength = 0.2
     sensorParameters.position = ADSensor.POS_FRONT
     sensorParameters.width = vehicle.size.width * 0.75
-    local frontSensorDynamic = ADCollSensor:new(vehicle, sensorParameters)
-    --frontSensorDynamic.drawDebug = true --test
-    --frontSensorDynamic.enabled = true --test
-    vehicle.ad.sensors["frontSensorDynamic"] = frontSensorDynamic
+    local frontSensorDynamicShort = ADCollSensor:new(vehicle, sensorParameters)
+    --frontSensorDynamicShort.drawDebug = true --test
+    --frontSensorDynamicShort.enabled = true --test
+    vehicle.ad.sensors["frontSensorDynamicShort"] = frontSensorDynamicShort
+
+    sensorParameters.minDynamicLength = 2
+    local frontSensorDynamicLong = ADCollSensor:new(vehicle, sensorParameters)
+    vehicle.ad.sensors["frontSensorDynamicLong"] = frontSensorDynamicLong
 
     sensorParameters.dynamicLength = false
     sensorParameters.width = vehicle.size.width * 0.65
@@ -83,6 +88,7 @@ function ADSensor:addSensorsToVehicle(vehicle)
 
     sensorParameters = {}
     sensorParameters.dynamicLength = true
+    sensorParameters.minDynamicLength = 0.3
     sensorParameters.width = vehicle.size.width * 0.75
     sensorParameters.position = ADSensor.POS_REAR
     local rearSensor = ADCollSensor:new(vehicle, sensorParameters)
@@ -168,6 +174,7 @@ function ADSensor:loadBaseParameters()
     local vehicle = self.vehicle
     if vehicle ~= nil and vehicle.size.length ~= nil and vehicle.size.width ~= nil then
         self.dynamicLength = true
+        self.minDynamicLength = 2
         self.dynamicRotation = true
         self.length = vehicle.size.length
         self.width = vehicle.size.width * ADSensor.WIDTH_FACTOR
@@ -187,6 +194,9 @@ function ADSensor:loadDynamicParameters(sensorParameters)
 
     if sensorParameters.dynamicLength ~= nil then
         self.dynamicLength = sensorParameters.dynamicLength == true
+    end
+    if sensorParameters.minDynamicLength ~= nil then
+        self.minDynamicLength = sensorParameters.minDynamicLength
     end
     if sensorParameters.dynamicRotation ~= nil then
         self.dynamicRotation = sensorParameters.dynamicRotation == true
@@ -270,10 +280,7 @@ function ADSensor:getBoxShape()
     self.location = self:getLocationByPosition()
     local lookAheadDistance = self.length
     if self.dynamicLength then
-        lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 / 40, 0.13, 1) * 15.5
-        if self.position == ADSensor.POS_REAR then
-            lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 / 40, 0.02, 1) * 15.5
-        end
+        lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 * 15.5 / 40, self.minDynamicLength, 16)
     end
 
     local vecZ = {x = 0, z = 1}
