@@ -963,36 +963,37 @@ end
 -- here also additional checks may be implemented
 function ADGraphManager:getNetworkErrors()
 	local network = self:getWayPoints()
-	for id, wp in ipairs(network) do
+	for _, wp in ipairs(network) do
 		wp.errorMapping = {}
 
 		if #wp.incoming > 0 then
-			for outIndex, outId in ipairs(wp.out) do
-				wp.errorMapping[outId] = true -- assume no path
-			end
-
-			for inIndex, inId in ipairs(wp.incoming) do
+			for _, inId in ipairs(wp.incoming) do
 				local inPoint = network[inId]
-                for outIndex, outId in ipairs(wp.out) do
+                for _, outId in ipairs(wp.out) do
+					local error = false
                     if inId ~= outId then
                         local outPoint = network[outId]
                         local angle = math.abs(AutoDrive.angleBetween({x = outPoint.x - wp.x, z = outPoint.z - wp.z}, {x = wp.x - inPoint.x, z = wp.z - inPoint.z}))
-                        if angle <= 90 then
-                            wp.errorMapping[outId] = false
-                        else
+                        if angle > 90 then
                             local isReverseStart = not table.contains(outPoint.incoming, wp.id)
                             local isReverseEnd = table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
-                            if isReverseStart or isReverseEnd then
-                                wp.errorMapping[outId] = false
+                            if not isReverseStart and not isReverseEnd then
+								error = true
                             end
                         end
                     end
                     if inId == outId and #wp.incoming == 1 then
                         -- only 1 dual connection
-                        wp.errorMapping[outId] = false
+                        error = false
                     end
+					wp.errorMapping[outId] = wp.errorMapping[outId] or error
                 end
             end
+			for _, outId in ipairs(wp.out) do
+				if wp.errorMapping[outId] == nil then
+					wp.errorMapping[outId] = true
+				end
+			end
         end
     end
 end
@@ -1177,7 +1178,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
 
             -- possible other errors
             if not wp.foundError then
-                local wrongAngle, count1, count2 = self:checkForOtherErrors(wp)
+                local wrongAngle = self:checkForOtherErrors(wp)
                 if wrongAngle then
                     local debugMapMarkerName = "9_" .. tostring(count9)
 
@@ -1280,19 +1281,16 @@ end
 
 
 function ADGraphManager:checkForOtherErrors(wp)
-    local ret = false
-
     if wp == nil then
         return true
     end
--- TODO
 
-	local network = self:getWayPoints()
-
-    for outIndex, outId in ipairs(wp.out) do
-        ret = ret or wp.errorMapping[outId]
+    for _, outId in ipairs(wp.out) do
+		if wp.errorMapping[outId] then
+			return true
+		end
     end
-    return ret
+    return false
 end
 
 function ADGraphManager:toggleWayPointAsSubPrio(wayPointId)
