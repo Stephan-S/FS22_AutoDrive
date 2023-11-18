@@ -967,29 +967,25 @@ function ADGraphManager:getNetworkErrors()
 		wp.errorMapping = {}
 
 		if #wp.incoming > 0 then
-			for outIndex, outId in ipairs(wp.out) do
-				wp.errorMapping[outId] = true -- assume no path
-			end
-
 			for inIndex, inId in ipairs(wp.incoming) do
 				local inPoint = network[inId]
                 for outIndex, outId in ipairs(wp.out) do
                     if inId ~= outId then
                         local outPoint = network[outId]
                         local angle = math.abs(AutoDrive.angleBetween({x = outPoint.x - wp.x, z = outPoint.z - wp.z}, {x = wp.x - inPoint.x, z = wp.z - inPoint.z}))
-                        if angle <= 90 then
-                            wp.errorMapping[outId] = false
+                        if angle > 90 then
+                            wp.errorMapping[outId] = inId
                         else
                             local isReverseStart = not table.contains(outPoint.incoming, wp.id)
                             local isReverseEnd = table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
-                            if isReverseStart or isReverseEnd then
-                                wp.errorMapping[outId] = false
+                            if not (isReverseStart or isReverseEnd) then
+                                wp.errorMapping[outId] = inId
                             end
                         end
                     end
-                    if inId == outId and #wp.incoming == 1 then
+                    if not (inId == outId and #wp.incoming == 1) then
                         -- only 1 dual connection
-                        wp.errorMapping[outId] = false
+                        wp.errorMapping[outId] = inId
                     end
                 end
             end
@@ -1281,7 +1277,6 @@ end
 
 function ADGraphManager:checkForOtherErrors(wp)
     local ret = false
-
     if wp == nil then
         return true
     end
@@ -1290,7 +1285,7 @@ function ADGraphManager:checkForOtherErrors(wp)
 	local network = self:getWayPoints()
 
     for outIndex, outId in ipairs(wp.out) do
-        ret = ret or wp.errorMapping[outId]
+        ret = ret or (wp.errorMapping[outId] ~= nil)
     end
     return ret
 end
