@@ -975,17 +975,18 @@ function ADGraphManager:getNetworkErrors()
                         local angle = math.abs(AutoDrive.angleBetween({x = outPoint.x - wp.x, z = outPoint.z - wp.z}, {x = wp.x - inPoint.x, z = wp.z - inPoint.z}))
                         if angle > 90 then
                             wp.errorMapping[outId] = inId
-                        else
                             local isReverseStart = not table.contains(outPoint.incoming, wp.id)
                             local isReverseEnd = table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
-                            if not (isReverseStart or isReverseEnd) then
-                                wp.errorMapping[outId] = inId
+                            if isReverseStart or isReverseEnd then
+                                wp.errorMapping[outId] = nil
+                            end
+                            if ADGraphManager:isDualRoad(wp, outPoint) then
+                                wp.errorMapping[outId] = nil
+                            end
+                            if ADGraphManager:isDualRoad(wp, inPoint) then
+                                wp.errorMapping[outId] = nil
                             end
                         end
-                    end
-                    if not (inId == outId and #wp.incoming == 1) then
-                        -- only 1 dual connection
-                        wp.errorMapping[outId] = inId
                     end
                 end
             end
@@ -1079,20 +1080,22 @@ function ADGraphManager:createDebugMarkers(updateMap)
             -- mark wayPoint without outgoing connection
 			if #wp.out == 0 then
 				if wp ~= nil then
-					local debugMapMarkerName = "1_" .. tostring(count1)
+                    if not ADGraphManager:getMapMarkerByWayPointId(wp.id) then
+                        local debugMapMarkerName = "1_" .. tostring(count1)
 
-					-- create the mapMarker
-                    local mapMarker = {}
-                    mapMarker.name = debugMapMarkerName
-                    mapMarker.group = ADGraphManager.debugGroupName
-                    mapMarker.markerIndex = mapMarkerCounter
-                    mapMarker.id = wp.id
-                    mapMarker.isADDebug = true
-                    self:setMapMarker(mapMarker)
+                        -- create the mapMarker
+                        local mapMarker = {}
+                        mapMarker.name = debugMapMarkerName
+                        mapMarker.group = ADGraphManager.debugGroupName
+                        mapMarker.markerIndex = mapMarkerCounter
+                        mapMarker.id = wp.id
+                        mapMarker.isADDebug = true
+                        self:setMapMarker(mapMarker)
 
-                    wp.foundError = true
-					count1 = count1 + 1
-					mapMarkerCounter = mapMarkerCounter + 1
+                        wp.foundError = true
+                        count1 = count1 + 1
+                        mapMarkerCounter = mapMarkerCounter + 1
+                    end
 				end
 			end
 
