@@ -534,13 +534,13 @@ function ADGraphManager:removeMapMarkerByWayPoint(wayPointId, sendEvent)
 	end
 end
 
-function ADGraphManager:toggleConnectionBetween(startNode, endNode, reverseDirection, sendEvent)
+function ADGraphManager:toggleConnectionBetween(startNode, endNode, reverseDirection, dualConnection, sendEvent)
 	if startNode == nil or endNode == nil then
 		return
 	end
 	if sendEvent == nil or sendEvent == true then
 		-- Propagating connection toggling all over the network
-		AutoDriveToggleConnectionEvent.sendEvent(startNode, endNode, reverseDirection)
+		AutoDriveToggleConnectionEvent.sendEvent(startNode, endNode, reverseDirection, dualConnection)
 	else
 		if table.contains(startNode.out, endNode.id) or table.contains(endNode.incoming, startNode.id) then
 			table.removeValue(startNode.out, endNode.id)
@@ -549,6 +549,10 @@ function ADGraphManager:toggleConnectionBetween(startNode, endNode, reverseDirec
 			table.insert(startNode.out, endNode.id)
 			if not reverseDirection then
 				table.insert(endNode.incoming, startNode.id)
+				if dualConnection then
+					table.insert(endNode.out, startNode.id)
+					table.insert(startNode.incoming, endNode.id)
+				end
 			end
 		end
 
@@ -687,10 +691,7 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 	local newWp = self:createNode(newId, x, y, z, {}, {}, flags)
 	self:setWayPoint(newWp)
 	if connectPrevious then
-		self:toggleConnectionBetween(previous, newWp, isReverse, false)
-		if dual then
-			self:toggleConnectionBetween(newWp, previous, isReverse, false)
-		end
+		self:toggleConnectionBetween(previous, newWp, isReverse, dual, false)
 	end
 
 	self:markChanges()
@@ -1599,26 +1600,31 @@ function ADGraphManager:removeNodesWithFlag(flagToRemove)
 	end
 end
 
-function ADGraphManager:createSplineConnection(start, waypoints, target, sendEvent)
+function ADGraphManager:createSplineConnection(start, waypoints, target, dualConnection, sendEvent)
 	if sendEvent == nil or sendEvent == true then
 		-- Propagating connection toggling all over the network
-		CreateSplineConnectionEvent.sendEvent(start, waypoints, target)
+		CreateSplineConnectionEvent.sendEvent(start, waypoints, target, dualConnection)
 	else
 		local lastId = start
 		local lastHeight = ADGraphManager:getWayPointById(start).y
-		for wpId, wp in pairs(waypoints) do
+		local subPrio = self:getIsPointSubPrio(start) or self:getIsPointSubPrio(target)
+		
+		for _, wp in pairs(waypoints) do
 			if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
 				wp.y = lastHeight
 			end
 			self:createWayPoint(wp.x, wp.y, wp.z, sendEvent)
 			local createdId = self:getWayPointsCount()
-			self:toggleConnectionBetween(ADGraphManager:getWayPointById(lastId), ADGraphManager:getWayPointById(createdId), false, false)
+			if subPrio then
+				ADGraphManager:toggleWayPointAsSubPrio(createdId)
+			end
+			self:toggleConnectionBetween(ADGraphManager:getWayPointById(lastId), ADGraphManager:getWayPointById(createdId), false, dualConnection, false)
 			lastId = createdId
 			lastHeight = wp.y
 		end
 
 		local wp = self:getWayPointById(lastId)
-		self:toggleConnectionBetween(wp, self:getWayPointById(target), false, false)
+		self:toggleConnectionBetween(wp, self:getWayPointById(target), false, dualConnection, false)
 	end
 end
 

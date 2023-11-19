@@ -107,7 +107,10 @@ AutoDrive.colors = {
 	ad_color_currentConnection = {1, 1, 1, 1},
 	ad_color_closestLine = {1, 0, 0, 1},
 	ad_color_editorHeightLine = {1, 1, 1, 1},
-	ad_color_previewOk = {0.3, 0.9, 0, 1},
+	ad_color_previewSingleConnection = {0.3, 0.9, 0, 1},
+	ad_color_previewDualConnection = {0, 0, 0.9, 1},
+	ad_color_previewSubPrioSingleConnection = {0.9, 0.4, 0.1, 1},
+	ad_color_previewSubPrioDualConnection = {0.3, 0.15, 0, 1},
 	ad_color_previewNotOk = {1, 0.1, 0, 1}
 }
 

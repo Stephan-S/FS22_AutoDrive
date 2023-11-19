@@ -46,10 +46,7 @@ function ADRecordingModule:start(dual, subPrio)
     if AutoDrive.getSetting("autoConnectStart") then
         if startNode ~= nil then
             if ADGraphManager:getDistanceBetweenNodes(startNodeId, self.lastWp.id) < 12 then
-                ADGraphManager:toggleConnectionBetween(startNode, self.lastWp, self.drivingReverse)
-                if self.isDual then
-                    ADGraphManager:toggleConnectionBetween(self.lastWp, startNode, self.drivingReverse)
-                end
+                ADGraphManager:toggleConnectionBetween(startNode, self.lastWp, self.drivingReverse, self.isDual)
             end
         end
     end
@@ -63,10 +60,7 @@ function ADRecordingModule:stop()
             local targetId = ADGraphManager:findMatchingWayPointForVehicle(self.vehicle)
             local targetNode = ADGraphManager:getWayPointById(targetId)
             if targetNode ~= nil then
-                ADGraphManager:toggleConnectionBetween(self.lastWp, targetNode, false)
-                if self.isDual then
-                    ADGraphManager:toggleConnectionBetween(targetNode, self.lastWp, false)
-                end
+                ADGraphManager:toggleConnectionBetween(self.lastWp, targetNode, false, self.isDual)
             end
         end
     end

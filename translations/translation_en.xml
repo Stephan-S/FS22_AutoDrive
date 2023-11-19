@@ -290,7 +290,7 @@
 		<text name="ad_color_singleConnection" 			        text="01 line of single-way connection" />
 		<text name="ad_color_dualConnection" 			        text="02 line of dual-way connection" />
 		<text name="ad_color_reverseConnection" 			    text="03 line of reverse connection" />
-		<text name="ad_color_default" 			                text="04 waypoint on sinle and reverse connection" />
+		<text name="ad_color_default" 			                text="04 waypoint on single and reverse connection" />
 		<text name="ad_color_subPrioSingleConnection" 			text="05 line of secondary single-way connection" />
 		<text name="ad_color_subPrioDualConnection" 			text="06 line of secondary dual-way connection" />
 		<text name="ad_color_subPrioNode" 			            text="07 secondary waypoint" />
@@ -301,8 +301,11 @@
 		<text name="ad_color_currentConnection" 			    text="12 line next path" />
 		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
 		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
-		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
-		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
+		<text name="ad_color_previewSingleConnection" 	        text="15 curve preview OK, single-way connection" />
+		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
+		<text name="ad_color_previewNotOk" 			            text="19 curve preview NotOK, has collision" />
 
 		<text name="button_delete_all" 							text="Delete All" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
