@@ -644,7 +644,7 @@ function AutoDrive:onDrawPreviews()
     local collisionFree = AutoDrive:checkForCollisionOnSpline()
     local color
     local isSubPrio = ADGraphManager:getIsPointSubPrio(lastWp.id) or ADGraphManager:getIsPointSubPrio(targetWp.id)
-    local isDual = AutoDrive.leftCTRLmodifierKeyPressed  -- leftCtrl: make dual connection
+    local isDual = AutoDrive.leftCTRLmodifierKeyPressed and AutoDrive.leftALTmodifierKeyPressed
     if not collisionFree then
         color = AutoDrive.currentColors.ad_color_previewNotOk
     elseif isDual and isSubPrio then

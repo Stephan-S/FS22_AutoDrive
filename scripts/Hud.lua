@@ -503,17 +503,14 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 				end
 
 				-- waypoint at mouse position
-                if button == 1 and isUp
-                    and not AutoDrive.leftLSHIFTmodifierKeyPressed
-                    -- and not AutoDrive.leftCTRLmodifierKeyPressed  -- dual connection
-                    and not AutoDrive.leftALTmodifierKeyPressed
-                    -- and AutoDrive.rightSHIFTmodifierKeyPressed  -- reverse connection
+				local connectOneWay = not AutoDrive.leftLSHIFTmodifierKeyPressed and not AutoDrive.leftCTRLmodifierKeyPressed and not AutoDrive.leftALTmodifierKeyPressed
+				local connectDual = not AutoDrive.leftLSHIFTmodifierKeyPressed and AutoDrive.leftCTRLmodifierKeyPressed and AutoDrive.leftALTmodifierKeyPressed
+                if button == 1 and isUp and (connectOneWay or connectDual)
                     then
 					-- left mouse button to select point / connect to already selected point
 					if vehicle.ad.selectedNodeId ~= nil then
 						if vehicle.ad.selectedNodeId ~= vehicle.ad.hoveredNodeId then
 							local reverseDirection = AutoDrive.rightSHIFTmodifierKeyPressed
-							local dualConnection = AutoDrive.leftCTRLmodifierKeyPressed
 
 							if not table.contains(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId).out, vehicle.ad.hoveredNodeId) then
 								-- connect selected point with hovered point
@@ -531,16 +528,16 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 										end
 									end
 
-									ADGraphManager:createSplineConnection(vehicle.ad.selectedNodeId, waypoints, vehicle.ad.hoveredNodeId, dualConnection)
+									ADGraphManager:createSplineConnection(vehicle.ad.selectedNodeId, waypoints, vehicle.ad.hoveredNodeId, connectDual)
 								else
 									AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
-									ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), reverseDirection, dualConnection)
+									ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), reverseDirection, connectDual)
 								end
 
 								AutoDrive.splineInterpolationUserCurvature = nil
 							else
 								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 1 vehicle.ad.selectedNodeId %d vehicle.ad.hoveredNodeId %d", vehicle.ad.selectedNodeId, vehicle.ad.hoveredNodeId)
-								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), reverseDirection, dualConnection)
+								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(vehicle.ad.hoveredNodeId), reverseDirection, connectDual)
 							end
 						end
 							
@@ -611,7 +608,8 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 				AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent auto connection 1 selectedNodeId %d", vehicle.ad.selectedNodeId)
 			end
 
-            if button == 1 and isUp 
+			-- if LSHIFT is pressed, selecting a waypoint will toggle its priority
+            if button == 1 and isUp
                 and AutoDrive.leftLSHIFTmodifierKeyPressed
                 and not AutoDrive.leftCTRLmodifierKeyPressed
                 and not AutoDrive.leftALTmodifierKeyPressed
@@ -627,13 +625,15 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 			--If no node is hovered / moved - create new node
 			if vehicle.ad.nodeToMoveId == nil and vehicle.ad.hoveredNodeId == nil then
                 if button == 1 and isUp
-                    -- and not AutoDrive.leftLSHIFTmodifierKeyPressed -- see below !!!
+                    -- and not AutoDrive.leftLSHIFTmodifierKeyPressed -- sub-priority
                     and AutoDrive.leftCTRLmodifierKeyPressed
-                    and not AutoDrive.leftALTmodifierKeyPressed
-                    -- and not AutoDrive.rightSHIFTmodifierKeyPressed -- see below !!!
+                    -- and not AutoDrive.leftALTmodifierKeyPressed  -- dual connection
+                    -- and not AutoDrive.rightSHIFTmodifierKeyPressed -- reverse
                     then
 					local reverseDirection = AutoDrive.rightSHIFTmodifierKeyPressed
 					local subPrio = AutoDrive.leftLSHIFTmodifierKeyPressed and not reverseDirection
+					local dualConnection = AutoDrive.leftALTmodifierKeyPressed and not reverseDirection
+
 						
 					--For rough depth assertion, we use the closest nodes location as this is roughly in the screen's center
 					local closest = vehicle:getClosestWayPoint()
@@ -691,7 +691,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 							if vehicle.ad.newcreated ~= nil and vehicle.ad.selectedNodeId == vehicle.ad.newcreated then
 								-- connect only if previous created point is selected and newcreated ~= nil
 								AutoDriveHud.debugMsg(vehicle, "AutoDriveHud:mouseEvent toggleConnectionBetween 2 vehicle.ad.selectedNodeId %d to %d", vehicle.ad.selectedNodeId, createdId)
-								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(createdId), reverseDirection)
+								ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(vehicle.ad.selectedNodeId), ADGraphManager:getWayPointById(createdId), reverseDirection, dualConnection)
 							end
 							vehicle.ad.newcreated = createdId
 							vehicle.ad.selectedNodeId = vehicle.ad.newcreated
