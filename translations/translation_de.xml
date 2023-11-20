@@ -308,8 +308,11 @@
 		<text name="ad_color_currentConnection" 			    text="12 Pfeil nächster Pfad" />
 		<text name="ad_color_closestLine" 			            text="13 Linie Fahrzeug <-> naheliegendster Wegpunkt" />
 		<text name="ad_color_editorHeightLine" 			        text="14 senkrechte Linie Wegpunkt am Boden <-> Wegpunkt über dem Fahrzeug" />
-		<text name="ad_color_previewOk" 			            text="15 Kurve Vorschauline OK, kollisionsfrei" />
-		<text name="ad_color_previewNotOk" 			            text="16 Kurve Vorschauline hat Kollision" />
+		<text name="ad_color_previewSingleConnection" 	        text="15 Kurve Vorschauline OK, Hauptstrecke eine Richtung" />
+		<text name="ad_color_previewDualConnection" 	        text="16 Kurve Vorschauline OK, Hauptstrecke zwei Richtungen" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 Kurve Vorschauline OK, Nebenstrecke eine Richtung" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 Kurve Vorschauline OK, Nebenstrecke zwei Richtungen" />
+		<text name="ad_color_previewNotOk" 			            text="19 Kurve Vorschauline hat Kollision" />
 
 		<text name="button_delete_all" 							text="Alle löschen" />
 		<text name="button_reset_selected" 					    text="Ausgewählten zurücksetzen" />
