@@ -308,7 +308,9 @@
 		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
 		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
 		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
-		<text name="ad_color_previewNotOk" 			            text="19 曲线预览注意，有碰撞" />
+		<text name="ad_color_previewOk" 			            text="19 曲线预览没问题，没有碰撞" />
+		<text name="ad_color_previewNotOk" 			            text="20 曲线预览注意，有碰撞" />
+		<text name="ad_color_textInputBackground" 			    text="21 Background for inputs of text, targets etc." />
 
 		<text name="button_delete_all" 							text="全部删除" />
 		<text name="button_reset_selected" 					    text="重置选择" />

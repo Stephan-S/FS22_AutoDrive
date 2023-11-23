@@ -304,7 +304,9 @@
 		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
 		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
 		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
-		<text name="ad_color_previewNotOk" 			            text="19 vista previa de la curva no OK, tiene colisión" />
+		<text name="ad_color_previewOk" 			            text="19 vista previa de la curva OK, sin colisión" />
+    <text name="ad_color_previewNotOk" 			            text="20 vista previa de la curva no OK, tiene colisión" />
+		<text name="ad_color_textInputBackground" 			    text="21 Fondo para entradas de texto, objetivos, etc." />
 
 		<text name="button_delete_all" 							text="Eliminar todas" />
 		<text name="button_reset_selected" 					    text="Resetear seleccionados" />

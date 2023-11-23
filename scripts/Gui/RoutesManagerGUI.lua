@@ -17,6 +17,11 @@ function ADRoutesManagerGui:onCreate()
 end
 
 function ADRoutesManagerGui:onOpen()
+    if self.textInputElement.overlay and self.textInputElement.overlay.colorFocused then
+        if AutoDrive.currentColors and AutoDrive.currentColors.ad_color_textInputBackground then
+            self.textInputElement.overlay.colorFocused = AutoDrive.currentColors.ad_color_textInputBackground
+        end
+    end
     self:refreshItems()
     ADRoutesManagerGui:superClass().onOpen(self)
 end

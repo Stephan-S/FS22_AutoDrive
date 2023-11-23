@@ -312,7 +312,9 @@
 		<text name="ad_color_previewDualConnection" 	        text="16 Kurve Vorschauline OK, Hauptstrecke zwei Richtungen" />
 		<text name="ad_color_previewSubPrioSingleConnection"    text="17 Kurve Vorschauline OK, Nebenstrecke eine Richtung" />
 		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 Kurve Vorschauline OK, Nebenstrecke zwei Richtungen" />
-		<text name="ad_color_previewNotOk" 			            text="19 Kurve Vorschauline hat Kollision" />
+		<text name="ad_color_previewOk" 			            text="19 Kurve Vorschauline OK, kollisionsfrei" />
+		<text name="ad_color_previewNotOk" 			            text="20 Kurve Vorschauline hat Kollision" />
+		<text name="ad_color_textInputBackground" 			    text="21 Hintergrund Eingabe von Texten, Zielen etc." />
 
 		<text name="button_delete_all" 							text="Alle löschen" />
 		<text name="button_reset_selected" 					    text="Ausgewählten zurücksetzen" />

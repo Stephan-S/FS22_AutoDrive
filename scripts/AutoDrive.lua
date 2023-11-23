@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.1.4"
+AutoDrive.version = "2.0.1.5-RC"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -92,6 +92,11 @@ AutoDrive.FLAG_TRAFFIC_SYSTEM_CONNECTION = 4
 -- add this to measured size of vehicles
 AutoDrive.DIMENSION_ADDITION = 0.2
 
+-- AD invoked by which type of user
+AutoDrive.USER_PLAYER = 1
+AutoDrive.USER_GIANTS = 2
+AutoDrive.USER_CP = 3
+
 AutoDrive.colors = {
 	ad_color_singleConnection = {0, 1, 0, 1},
 	ad_color_dualConnection = {0, 0, 1, 1},
@@ -111,7 +116,9 @@ AutoDrive.colors = {
 	ad_color_previewDualConnection = {0, 0, 0.9, 1},
 	ad_color_previewSubPrioSingleConnection = {0.9, 0.4, 0.1, 1},
 	ad_color_previewSubPrioDualConnection = {0.3, 0.15, 0, 1},
-	ad_color_previewNotOk = {1, 0.1, 0, 1}
+	ad_color_previewOk = {0.3, 0.9, 0, 1},
+	ad_color_previewNotOk = {1, 0.1, 0, 1},
+	ad_color_textInputBackground = {0.0227, 0.5346, 0.8519, 1} -- Giants original
 }
 
 AutoDrive.currentColors = {} -- this will hold the current colors, derived from default colors above, overwritten by local settings
@@ -149,7 +156,7 @@ end
 
 function AutoDrive:restartMySavegame()
 	if g_server then
-		restartApplication(" -autoStartSavegameId 1", true)
+		restartApplication(true, " -autoStartSavegameId 1")
 	end
 end
 

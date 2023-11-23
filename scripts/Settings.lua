@@ -1036,8 +1036,8 @@ AutoDrive.settings.useHazardLightReverse = {
 }
 
 AutoDrive.settings.scaleLines = {
-    values = {0.5, 1, 2, 3, 4, 5, 6, 10},
-    texts = {"50%", "100%", "200%", "300%", "400%", "500%", "600%", "1000%"},
+    values = {0.5, 1, 2, 3, 4, 5, 6, 10, 20, 30, 50, 100},
+    texts = {"50%", "100%", "200%", "300%", "400%", "500%", "600%", "1000%", "2000%", "3000%", "5000%", "10000%"},
     default = 2,
     current = 2,
     text = "gui_ad_scaleLines",

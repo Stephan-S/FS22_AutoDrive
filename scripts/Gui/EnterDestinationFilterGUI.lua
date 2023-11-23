@@ -22,6 +22,11 @@ function ADEnterDestinationFilterGui:onOpen()
     ADEnterDestinationFilterGui:superClass().onOpen(self)
     self.textInputElement.blockTime = 0
     self.textInputElement:onFocusActivate()
+    if self.textInputElement.overlay and self.textInputElement.overlay.colorFocused then
+        if AutoDrive.currentColors and AutoDrive.currentColors.ad_color_textInputBackground then
+            self.textInputElement.overlay.colorFocused = AutoDrive.currentColors.ad_color_textInputBackground
+        end
+    end
     if g_currentMission.controlledVehicle ~= nil and g_currentMission.controlledVehicle.ad ~= nil then
         self.textInputElement:setText(g_currentMission.controlledVehicle.ad.destinationFilterText)
     end
