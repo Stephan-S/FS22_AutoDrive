@@ -638,37 +638,45 @@ function AutoDrive.drawTripod(node, offset)
 end
 
 function AutoDrive:onDrawPreviews()
-    --if AutoDrive:checkForCollisionOnSpline() then
     local lastHeight = AutoDrive.splineInterpolation.startNode.y
     local lastWp = AutoDrive.splineInterpolation.startNode
+    local targetWp = AutoDrive.splineInterpolation.endNode
     local arrowPosition = ADDrawingManager.arrows.position.middle
     local collisionFree = AutoDrive:checkForCollisionOnSpline()
+    local color
+    local isSubPrio = ADGraphManager:getIsPointSubPrio(lastWp.id) or ADGraphManager:getIsPointSubPrio(targetWp.id)
+    local isDual = AutoDrive.leftCTRLmodifierKeyPressed and AutoDrive.leftALTmodifierKeyPressed
+    if not collisionFree then
+        color = AutoDrive.currentColors.ad_color_previewNotOk
+    elseif isDual and isSubPrio then
+        color = AutoDrive.currentColors.ad_color_previewSubPrioDualConnection
+    elseif isDual then
+        color = AutoDrive.currentColors.ad_color_previewDualConnection
+    elseif isSubPrio then
+        color = AutoDrive.currentColors.ad_color_previewSubPrioSingleConnection
+    else
+        color = AutoDrive.currentColors.ad_color_previewSingleConnection
+    end
+
     for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
         if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
             if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
                 wp.y = lastHeight
             end
 
-            if collisionFree then
-                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewOk))
-                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
-            else
-                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
-                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+            ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, unpack(color))
+            if not isDual then
+                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, arrowPosition, unpack(color))
             end
-
             lastWp = {x = wp.x, y = wp.y, z = wp.z}
             lastHeight = wp.y
         end
     end
 
-    local targetWp = AutoDrive.splineInterpolation.endNode
-    if collisionFree then
-        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewOk))
-        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
-    else
-        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
-        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+    
+    ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, unpack(color))
+    if not isDual then
+        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, arrowPosition, unpack(color))
     end
 end
 

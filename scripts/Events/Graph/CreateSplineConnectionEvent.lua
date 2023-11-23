@@ -8,15 +8,16 @@ function CreateSplineConnectionEvent.emptyNew()
 	return self
 end
 
-function CreateSplineConnectionEvent.new(start, waypoints, target)
+function CreateSplineConnectionEvent.new(start, waypoints, target, dualConnection)
 	local self = CreateSplineConnectionEvent.emptyNew()
 	self.start = start
 	self.waypoints = waypoints
 	self.target = target
+	self.dualConnection = dualConnection
 	return self
 end
 
-function CreateSplineConnectionEvent:writeStream(streamId, connection)	
+function CreateSplineConnectionEvent:writeStream(streamId, connection)
     local paramsXZ = g_currentMission.vehicleXZPosCompressionParams
     local paramsY = g_currentMission.vehicleYPosCompressionParams
 
@@ -30,6 +31,7 @@ function CreateSplineConnectionEvent:writeStream(streamId, connection)
 	end
 
 	streamWriteInt32(streamId, self.target)
+	streamWriteBool(streamId, self.dualConnection)
 end
 
 function CreateSplineConnectionEvent:readStream(streamId, connection)
@@ -47,21 +49,22 @@ function CreateSplineConnectionEvent:readStream(streamId, connection)
 	end	
 
 	self.target = streamReadInt32(streamId)
+	self.dualConnection = streamReadBool(streamId)
 	self:run(connection)
 end
 
 function CreateSplineConnectionEvent:run(connection)
 	if g_server ~= nil and connection:getIsServer() == false then
 		-- If the event is coming from a client, server have only to broadcast
-		CreateSplineConnectionEvent.sendEvent(self.start, self.waypoints, self.target)
+		CreateSplineConnectionEvent.sendEvent(self.start, self.waypoints, self.target, self.dualConnection)
 	else
 		-- If the event is coming from the server, both clients and server have to create the way point
-		ADGraphManager:createSplineConnection(self.start, self.waypoints, self.target, false)
+		ADGraphManager:createSplineConnection(self.start, self.waypoints, self.target, self.dualConnection, false)
 	end
 end
 
-function CreateSplineConnectionEvent.sendEvent(start, waypoints, target)
-	local event = CreateSplineConnectionEvent.new(start, waypoints, target)
+function CreateSplineConnectionEvent.sendEvent(start, waypoints, target, dualConnection)
+	local event = CreateSplineConnectionEvent.new(start, waypoints, target, dualConnection)
 	if g_server ~= nil then
 		-- Server have to broadcast to all clients and himself
 		g_server:broadcastEvent(event, true)

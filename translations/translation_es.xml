@@ -300,9 +300,13 @@
 		<text name="ad_color_currentConnection" 			    text="12 líneas siguiente ruta" />
 		<text name="ad_color_closestLine" 			            text="13 líneas desde el vehículo hasta el punto de referencia más cercano" />
 		<text name="ad_color_editorHeightLine" 			        text="14 línea desde el punto de ruta de superficie hasta el vehículo cercano" />
-		<text name="ad_color_previewOk" 			            text="15 vista previa de la curva OK, sin colisión" />
-		<text name="ad_color_previewNotOk" 			            text="16 vista previa de la curva no OK, tiene colisión" />
-		<text name="ad_color_textInputBackground" 			    text="17 Fondo para entradas de texto, objetivos, etc." />
+		<text name="ad_color_previewSingleConnection" 	        text="15 curve preview OK, single-way connection" />
+		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
+		<text name="ad_color_previewOk" 			            text="19 vista previa de la curva OK, sin colisión" />
+    <text name="ad_color_previewNotOk" 			            text="20 vista previa de la curva no OK, tiene colisión" />
+		<text name="ad_color_textInputBackground" 			    text="21 Fondo para entradas de texto, objetivos, etc." />
 
 		<text name="button_delete_all" 							text="Eliminar todas" />
 		<text name="button_reset_selected" 					    text="Resetear seleccionados" />
