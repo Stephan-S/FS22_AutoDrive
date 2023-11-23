@@ -198,6 +198,10 @@ function ADDimensionSensor:getRealVehicleDimensions()
 
     local maxWidthLeft, maxWidthRight, maxLengthFront, maxLengthBack = 0,0,0,0
 
+    if not entityExists(self.vehicle.components[1].node) then
+        -- if selling attachments, the vehicle chain is not updated complete in 1 frame, so need this
+        return 0, 0
+    end
     local rx, ry, rz = getWorldRotation(self.vehicle.components[1].node)
 
     local function leftright(dimStart, dimEnd)
