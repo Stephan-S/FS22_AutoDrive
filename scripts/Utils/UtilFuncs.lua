@@ -522,48 +522,40 @@ function AutoDrive:getSplineControlPoints(startNode, endNode)
 		return nil, nil
 	end
 
-	local function getWaypointDirection(node, waypoint_id)
+	local function getWaypointDirection(node, waypointId)
 		-- returns unit vector from start/end node to a waypoint
-		local wp = ADGraphManager:getWayPointById(waypoint_id)
-		local wp_vec = ADVectorUtils.subtract2D(node, wp)
-		return ADVectorUtils.unitVector2D(wp_vec)
+		local wp = ADGraphManager:getWayPointById(waypointId)
+		local wpVec = ADVectorUtils.subtract2D(node, wp)
+		return ADVectorUtils.unitVector2D(wpVec)
 	end
 
-	local function getAllConnectionVectors(node)
-		-- returns unit-vectors for all connections of a node
-		local connections = {}
+	local function getControlPoint(node, otherNode)
+		-- returns the node that forms the straightest connection (closest to 180 degrees)
+		local bestAngle, bestDirection = nil, nil
+		local startEndVec = ADVectorUtils.subtract2D(node, otherNode)
+
 		for _, px in pairs(node.incoming) do
-			table.insert(connections, getWaypointDirection(node, px))
-		end
-		for _, px in pairs(node.out) do
-			table.insert(connections, getWaypointDirection(node, px))
-		end
-		return connections
-	end
-
-	-- cache candidates
-	local p0v_candidates = getAllConnectionVectors(startNode)
-	local p3v_candidates = getAllConnectionVectors(endNode)
-	local best_p0v, best_p3v, best_dist = nil, nil, nil
-
-	-- iterate over all pairs of p0/p3 candidates
-	for _, p0v in pairs(p0v_candidates) do
-		for _, p3v in pairs(p3v_candidates) do
-			local intersects, dist_p0, dist_p3 = MathUtil.getLineLineIntersection2D(startNode.x, startNode.z, p0v.x, p0v.z, endNode.x, endNode.z, p3v.x, p3v.z)
-			-- p0/p3 are pointing away from the desired intersection, the returned distance has to be negative
-			if intersects and dist_p0 < 0 and dist_p3 < 0 then
-				local dist = -(dist_p0 + dist_p3)
-				if best_dist == nil or best_dist > dist then
-					-- keep the pair that results in the shortest distance
-					best_p0v, best_p3v, best_dist = p0v, p3v, dist
-				end
+			local dir = getWaypointDirection(node, px)
+			local angle = math.abs(180 - math.abs(AutoDrive.angleBetween(startEndVec, dir)))
+			if bestAngle == nil or bestAngle > angle then
+				bestAngle = angle
+				bestDirection = dir
 			end
 		end
+		for _, px in pairs(node.out) do
+			local dir = getWaypointDirection(node, px)
+			local angle = math.abs(180 - math.abs(AutoDrive.angleBetween(startEndVec, dir)))
+			if bestAngle == nil or bestAngle > angle then
+				bestAngle = angle
+				bestDirection = dir
+			end
+		end
+		if bestDirection == nil then
+			return nil
+		end
+		return ADVectorUtils.add2D(node, bestDirection)
 	end
-	if best_dist ~= nil then
-		return ADVectorUtils.add2D(startNode, best_p0v), ADVectorUtils.add2D(endNode, best_p3v)
-	end
-	return nil, nil
+	return getControlPoint(startNode, endNode), getControlPoint(endNode, startNode)
 end
 
 function AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
