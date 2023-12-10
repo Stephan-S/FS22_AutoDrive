@@ -5,7 +5,17 @@ AutoDrive.CHASEPOS_FRONT = 4
 AutoDrive.CHASEPOS_UNKNOWN = 0
 
 function AutoDrive.getIsBufferCombine(vehicle)
-    return vehicle ~= nil and vehicle.spec_combine ~= nil and vehicle.spec_combine.isBufferCombine == true
+    return vehicle ~= nil
+        and vehicle.spec_combine ~= nil
+        and vehicle.spec_combine.isBufferCombine == true
+end
+
+function AutoDrive.getIsAutoAimingChopper(vehicle)
+    return vehicle ~= nil
+        and vehicle.spec_combine ~= nil
+        and vehicle.spec_combine.isBufferCombine == true
+        and vehicle.spec_pipe ~= nil
+        and vehicle.spec_pipe.numAutoAimingStates > 0
 end
 
 function AutoDrive.getDischargeNode(combine)
@@ -114,7 +124,7 @@ function AutoDrive.getPipeSide(combine)
     local dischargeNode = AutoDrive.getDischargeNode(combine)
     local dischargeX, dichargeY, dischargeZ = getWorldTranslation(dischargeNode)
     local diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
-    if combine.ad ~= nil and AutoDrive.isPipeOut(combine) and not AutoDrive.getIsBufferCombine(combine) then
+    if combine.ad ~= nil and AutoDrive.isPipeOut(combine) and not AutoDrive.getIsAutoAimingChopper(combine) then
         combine.ad.storedPipeSide = AutoDrive.sign(diffX)
     end
     return AutoDrive.sign(diffX)
@@ -131,7 +141,7 @@ function AutoDrive.getPipeLength(combine)
                                         0, 
                                         pipeRootZ - dischargeZ)
     --AutoDrive.debugPrint(combine, AutoDrive.DC_COMBINEINFO, "AutoDrive.getPipeLength - " .. length)
-    if AutoDrive.isPipeOut(combine) and not AutoDrive.getIsBufferCombine(combine) then
+    if AutoDrive.isPipeOut(combine) and not AutoDrive.getIsAutoAimingChopper(combine) then
         local combineNode = AutoDrive.getPipeRoot(combine)
         local dischargeX, dichargeY, dischargeZ = getWorldTranslation(AutoDrive.getDischargeNode(combine))
         diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
