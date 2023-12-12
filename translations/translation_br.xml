@@ -56,7 +56,7 @@
 		<text name="input_AD_devAction"                         text="AD: Ação Developer" />
 		<text name="input_ADToggleAutomaticPickupTarget"		text="AD: Alternar para coleta automática" />
 		<text name="input_ADToggleAutomaticUnloadTarget"		text="AD: Alternar para descarga automática" />
-		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
+		<text name="input_ADToggleLoadByFillLevel"				text="AD: alternar para nível de preenchimento" />
 		<text name="hud_avoidFruit"								text="AD: Evitar plantações" />
 		<text name="hud_startCp"								text="AD: Iniciar CP / AIVE no destino" />
 		<text name="AD_parkVehicle_noPosSet"					text="Nenhum destino de estacionamento atribuído." />
