@@ -763,7 +763,7 @@ end
 function AutoDrive.debugMsg(vehicle, debugText, ...)
     local printText = "[AD] " .. tostring(g_updateLoopIndex) .. " "
     if vehicle ~= nil then
-        if vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil then
+        if vehicle.ad ~= nil and vehicle.ad.stateModule ~= nil and vehicle == vehicle:getRootVehicle() then
             printText = printText .. vehicle.ad.stateModule:getName() .. ": "
         elseif vehicle.getName ~= nil then
             printText = printText .. vehicle:getName() .. ": "

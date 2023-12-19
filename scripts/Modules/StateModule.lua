@@ -350,8 +350,8 @@ function ADStateModule:update(dt)
     end
 
     if g_server ~= nil then
-        if self.vehicle.ad.isCombine or (self:getMode() == AutoDrive.MODE_UNLOAD and self.active) then
-            if self.vehicle.ad.isCombine then
+        if self.vehicle.ad.isRegisterdHarvester or (self:getMode() == AutoDrive.MODE_UNLOAD and self.active) then
+            if self.vehicle.ad.isRegisterdHarvester then
                 if ADHarvestManager:hasHarvesterPotentialUnloaders(self.vehicle) ~= self.harversterPairingOk then
                     self:setHarvesterPairingOk(not self.harversterPairingOk)
                 end

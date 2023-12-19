@@ -217,14 +217,26 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
     --else
     --    self:startPathPlanningTo(target, combineVector)
     --end
-    if combine.spec_combine ~= nil and AutoDrive.getIsBufferCombine(combine) then
-        local pathFinderTarget = {x = pipeChasePos.x - (self.PATHFINDER_TARGET_DISTANCE) * rx, y = worldY, z = pipeChasePos.z - (self.PATHFINDER_TARGET_DISTANCE) * rz}
-        --local appendTarget = {x = pipeChasePos.x - (lengthOffset/2) * rx, y = worldY, z = pipeChasePos.z - (lengthOffset/2) * rz}
+    if combine.ad.isAutoAimingChopper then
+        -- local pathFinderTarget = {x = pipeChasePos.x - (self.PATHFINDER_TARGET_DISTANCE) * rx, y = worldY, z = pipeChasePos.z - (self.PATHFINDER_TARGET_DISTANCE) * rz}
+        local pathFinderTarget = {x = pipeChasePos.x, y = worldY, z = pipeChasePos.z}
+        self:startPathPlanningTo(pathFinderTarget, combineVector)
+
+    elseif combine.ad.isFixedPipeChopper then
+        local pathFinderTarget = {x = pipeChasePos.x, y = worldY, z = pipeChasePos.z}
+        -- only append target points / try to straighten the driver/trailer combination if we are driving up to the pipe not the rear end
+        if pipeChaseSide ~= AutoDrive.CHASEPOS_REAR then
+            pathFinderTarget = {x = pipeChasePos.x - (combine.size.length) * rx, y = worldY, z = pipeChasePos.z - (combine.size.length) * rz}
+        end
+        local appendedNode = {x = pipeChasePos.x - (combine.size.length / 2 * rx), y = worldY, z = pipeChasePos.z - (combine.size.length / 2 * rz)}
 
         self:startPathPlanningTo(pathFinderTarget, combineVector)
 
-        --table.insert(self.appendWayPoints, appendTarget)
+        if pipeChaseSide ~= AutoDrive.CHASEPOS_REAR then
+            table.insert(self.appendWayPoints, appendedNode)
+        end
     else
+        -- combine.ad.isHarvester 
         local pathFinderTarget = {x = pipeChasePos.x, y = worldY, z = pipeChasePos.z}
         -- only append target points / try to straighten the driver/trailer combination if we are driving up to the pipe not the rear end
         if pipeChaseSide ~= AutoDrive.CHASEPOS_REAR then
@@ -240,10 +252,10 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
         end
     end
 
-    if combine.spec_combine ~= nil then
+    if combine.spec_combine ~= nil and combine.ad.isHarvester then
         if combine.spec_combine.fillUnitIndex ~= nil and combine.spec_combine.fillUnitIndex ~= 0 then
             local fillType = g_fruitTypeManager:getFruitTypeIndexByFillTypeIndex(combine:getFillUnitFillType(combine.spec_combine.fillUnitIndex))
-            if fillType ~= nil and (not AutoDrive.getIsBufferCombine(combine)) then
+            if fillType ~= nil then
                 self.fruitToCheck = fillType
                 local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fillType)
 
@@ -1176,11 +1188,9 @@ function PathFinderModule:drawDebugForPF()
     pointTarget.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTarget.x, 1, pointTarget.z) + 3
     pointTargetUp.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTargetUp.x, 1, pointTargetUp.z) + 20
     AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0, 1)
-    local pointStart = self:gridLocationToWorldLocation(self.startCell)
-    local pointStartUp = self:gridLocationToWorldLocation(self.startCell)
+    local pointStart = {x = self.startX, z = self.startZ}
     pointStart.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointStart.x, 1, pointStart.z) + 3
-    pointStartUp.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointStartUp.x, 1, pointStartUp.z) + 6
-    AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0, 1)
+    AutoDriveDM:addLineTask(pointStart.x, pointStart.y, pointStart.z, pointStart.x, pointStart.y + 20, pointStart.z, 1, 0, 1, 0)
 
     local color_red = 0.1
     local color_green = 0.1

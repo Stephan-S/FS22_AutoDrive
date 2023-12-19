@@ -40,7 +40,7 @@ function AutoDriveHudInputEventEvent:run(connection)
         if self.eventType == self.TYPE_FIRST_MARKER then
 			local currentFirstMarker = self.vehicle.ad.stateModule:getFirstMarkerId()
 			if currentFirstMarker > 0 and currentFirstMarker ~= self.value then
-                if not (self.vehicle.spec_combine or AutoDrive.getIsBufferCombine(self.vehicle) or self.vehicle.ad.isCombine ~= nil) then
+                if not self.vehicle.ad.hasCombine then
                     -- not stop / change CP for harvesters
                     AutoDrive:StopCP(self.vehicle)
                 end

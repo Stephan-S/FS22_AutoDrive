@@ -263,6 +263,7 @@ function AutoDrive:onPostLoad(savegame)
         end
     end
 
+    -- sugarcane harvester need special consideration
     if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         if self.typeName == "combineCutterFruitPreparer" then
             local _, vehicleFillCapacity, _, _ = AutoDrive.getObjectFillLevels(self)
@@ -270,7 +271,9 @@ function AutoDrive:onPostLoad(savegame)
         end
     end
 
-    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
+    -- harvester types
+    local isValidHarvester = AutoDrive.setCombineType(self)
+    if isValidHarvester then
         ADHarvestManager:registerHarvester(self)
     end
 
@@ -675,17 +678,17 @@ end
 function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex)
     if attachable["spec_FS19_addon_strawHarvest.strawHarvestPelletizer"] ~= nil then
         attachable.isPremos = true
-        -- attachable.getIsBufferCombine = function()
-            -- return false
-        -- end
     end
     if (attachable.spec_pipe ~= nil and attachable.spec_combine ~= nil) or attachable.isPremos then
+        attachable.ad = self.ad -- takeover i.e. sensors from trailing vehicle
         attachable.isTrailedHarvester = true
         attachable.trailingVehicle = self
-        ADHarvestManager:registerHarvester(attachable)
-        self.ad.isCombine = true
+        -- harvester types
         self.ad.attachableCombine = attachable
-        attachable.ad = self.ad
+        local isValidHarvester = AutoDrive.setCombineType(attachable)
+        if isValidHarvester then
+            ADHarvestManager:registerHarvester(attachable)
+        end
     end
     AutoDrive.setValidSupportedFillType(self)
 
@@ -699,14 +702,11 @@ function AutoDrive:onPreDetachImplement(implement)
     local attachable = implement.object
     if attachable.isTrailedHarvester and attachable.trailingVehicle == self then
         attachable.ad = nil
-        self.ad.isCombine = false
         self.ad.attachableCombine = nil
         ADHarvestManager:unregisterHarvester(attachable)
         attachable.isTrailedHarvester = false
         attachable.trailingVehicle = nil
-        if attachable.isPremos then
-            -- attachable.getIsBufferCombine = nil
-        end
+        self.ad.isRegisterdHarvester = nil
     end
     if self.ad ~= nil then
         self.ad.frontToolWidth = nil
