@@ -213,7 +213,7 @@
 		<text name="gui_ad_callSecondUnloader"					text="Rufe 2. Ablader" />
 		<text name="gui_ad_callSecondUnloader_tooltip"			text="Rufe 2. Ablader wenn der aktuelle Abfahrer das eingestellte Füll Level erreicht hat" />
 		<text name="gui_ad_followOnlyOnField"					text="Abfahrer aufs Feld begrenzen" />
-		<text name="gui_ad_followOnlyOnField_tooltip"			text="Während dem aktiven Abladen / Häckseln, darf nicht über Feldgrenzen hinausgfahren werden" />
+		<text name="gui_ad_followOnlyOnField_tooltip"			text="Während dem aktiven Abladen / Häckseln, darf nicht über Feldgrenzen hinausgefahren werden" />
 		<text name="gui_ad_addSettingsToHUD"					text="Mehr Einstellungen im HUD" />
 		<text name="gui_ad_addSettingsToHUD_tooltip"			text="Blendet mehr Knöpfe im HUD ein um direkt Einstellungen vorzunehmen ohne dieses Menü aufzurufen" />
 		<text name="gui_ad_iconSetToUse"						text="Logo Personalisierug" />
