@@ -388,7 +388,7 @@ function ADInputManager:input_nextTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local nextTarget = ADGraphManager:getNextTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(nextTarget)
-        if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+        if not vehicle.ad.hasCombine then
             -- not stop / change CP for harvesters
             AutoDrive:StopCP(vehicle)
         end
@@ -400,7 +400,7 @@ function ADInputManager:input_previousTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local previousTarget = ADGraphManager:getPreviousTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(previousTarget)
-        if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+        if not vehicle.ad.hasCombine then
             -- not stop / change CP for harvesters
             AutoDrive:StopCP(vehicle)
         end
@@ -436,9 +436,9 @@ function ADInputManager:input_continue(vehicle)
 end
 
 function ADInputManager:input_callDriver(vehicle)
-    if vehicle.spec_pipe ~= nil and vehicle.spec_enterable ~= nil then
+    if vehicle.spec_combine ~= nil and vehicle.spec_pipe ~= nil and vehicle.spec_enterable ~= nil then
         ADHarvestManager:assignUnloaderToHarvester(vehicle)
-    elseif vehicle.ad.isCombine and vehicle.ad.attachableCombine ~= nil then
+    elseif vehicle.ad.attachableCombine ~= nil then
         ADHarvestManager:assignUnloaderToHarvester(vehicle.ad.attachableCombine)
     end
 end
@@ -464,7 +464,7 @@ function ADInputManager:input_swapTargets(vehicle)
     local currentFirstMarker = vehicle.ad.stateModule:getFirstMarkerId()
     vehicle.ad.stateModule:setFirstMarker(vehicle.ad.stateModule:getSecondMarkerId())
     vehicle.ad.stateModule:setSecondMarker(currentFirstMarker)
-    if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+    if not vehicle.ad.hasCombine then
         -- not stop / change CP for harvesters
         AutoDrive:StopCP(vehicle)
     end

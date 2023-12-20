@@ -4,19 +4,39 @@ AutoDrive.CHASEPOS_REAR = 3
 AutoDrive.CHASEPOS_FRONT = 4
 AutoDrive.CHASEPOS_UNKNOWN = 0
 
-function AutoDrive.getIsBufferCombine(vehicle)
-    return vehicle ~= nil
-        and vehicle.spec_combine ~= nil
-        and vehicle.spec_combine.isBufferCombine == true
+-- harvester types
+function AutoDrive.setCombineType(vehicle)
+    if vehicle == nil then
+        return false
+    end
+    if vehicle.ad == nil then
+        vehicle.ad = {}
+    end
+    local rootVehicle = vehicle:getRootVehicle()
+    local rootVehicleName = rootVehicle and rootVehicle:getName() or "no rootVehicle!!!"
+    vehicle.ad.hasCombine = false -- vehicle is any combine or has attached one
+    vehicle.ad.isAutoAimingChopper = false -- chopper with flexible self targeting pipe
+    vehicle.ad.isFixedPipeChopper = false -- chopper with fixed pipe
+    vehicle.ad.isChopper = false -- chopper, without bunker
+    vehicle.ad.isHarvester = false -- harvester with bunker
+
+    if (vehicle.spec_combine ~= nil and vehicle.spec_pipe ~= nil and vehicle.spec_combine.isBufferCombine == true and vehicle.spec_pipe.numAutoAimingStates > 0) then
+        vehicle.ad.isAutoAimingChopper = true
+    end
+    if (vehicle.spec_combine ~= nil and vehicle.spec_pipe ~= nil and vehicle.spec_combine.isBufferCombine == true and vehicle.spec_pipe.numAutoAimingStates == 0) then
+        vehicle.ad.isFixedPipeChopper = true
+    end
+    if (vehicle.spec_combine ~= nil and vehicle.spec_pipe ~= nil and vehicle.spec_combine.isBufferCombine == true) then
+        vehicle.ad.isChopper = true
+    end
+    if (vehicle.spec_combine ~= nil and vehicle.spec_pipe ~= nil and not vehicle.spec_combine.isBufferCombine) then
+        vehicle.ad.isHarvester = true
+    end
+
+    rootVehicle.ad.hasCombine = vehicle.ad.isAutoAimingChopper or vehicle.ad.isFixedPipeChopper or vehicle.ad.isChopper or vehicle.ad.isHarvester
+    return rootVehicle.ad.hasCombine
 end
 
-function AutoDrive.getIsAutoAimingChopper(vehicle)
-    return vehicle ~= nil
-        and vehicle.spec_combine ~= nil
-        and vehicle.spec_combine.isBufferCombine == true
-        and vehicle.spec_pipe ~= nil
-        and vehicle.spec_pipe.numAutoAimingStates > 0
-end
 
 function AutoDrive.getDischargeNode(combine)
     local dischargeNode = nil
@@ -124,7 +144,7 @@ function AutoDrive.getPipeSide(combine)
     local dischargeNode = AutoDrive.getDischargeNode(combine)
     local dischargeX, dichargeY, dischargeZ = getWorldTranslation(dischargeNode)
     local diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
-    if combine.ad ~= nil and AutoDrive.isPipeOut(combine) and not AutoDrive.getIsAutoAimingChopper(combine) then
+    if combine.ad ~= nil and (combine.ad.isFixedPipeChopper or combine.ad.isHarvester) and AutoDrive.isPipeOut(combine) then
         combine.ad.storedPipeSide = AutoDrive.sign(diffX)
     end
     return AutoDrive.sign(diffX)
@@ -141,7 +161,7 @@ function AutoDrive.getPipeLength(combine)
                                         0, 
                                         pipeRootZ - dischargeZ)
     --AutoDrive.debugPrint(combine, AutoDrive.DC_COMBINEINFO, "AutoDrive.getPipeLength - " .. length)
-    if AutoDrive.isPipeOut(combine) and not AutoDrive.getIsAutoAimingChopper(combine) then
+    if (combine.ad.isFixedPipeChopper or combine.ad.isHarvester) and AutoDrive.isPipeOut(combine) then
         local combineNode = AutoDrive.getPipeRoot(combine)
         local dischargeX, dichargeY, dischargeZ = getWorldTranslation(AutoDrive.getDischargeNode(combine))
         diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
@@ -186,21 +206,6 @@ function AutoDrive.isPipeOut(combine)
         end
     end
     return false
-end
-
-function AutoDrive.isSugarcaneHarvester(combine)
-    -- see Specialisation
-    return combine and combine.ad and combine.ad.isSugarcaneHarvester
-end
-
-function AutoDrive.isSugarcaneHarvester_old(combine)
-    local isSugarCaneHarvester = combine.typeName == "combineCutterFruitPreparer"
-    for _, implement in pairs(AutoDrive.getAllImplements(combine)) do
-        if implement ~= combine then
-            isSugarCaneHarvester = false
-        end
-    end
-    return isSugarCaneHarvester
 end
 
 function AutoDrive.getAIMarkerWidth(object)

@@ -183,7 +183,7 @@ end
 function EmptyHarvesterTask:getExcludedVehiclesForCollisionCheck()
     local excludedVehicles = {}
     if self.state == EmptyHarvesterTask.STATE_DRIVING then
-        table.insert(excludedVehicles, self.combine)
+        table.insert(excludedVehicles, self.combine:getRootVehicle())
     end
     return excludedVehicles
 end

@@ -87,7 +87,7 @@ function ADSettings:setupPages()
     end
 
     local combineEnabled = function()
-        if vehicleEnabled() and g_currentMission.controlledVehicle.ad.isCombine then
+        if vehicleEnabled() and (g_currentMission.controlledVehicle.ad and g_currentMission.controlledVehicle.ad.hasCombine) then
             return true
         end
         return false
