@@ -4,6 +4,7 @@ FollowCombineTask.debug = false
 FollowCombineTask.STATE_CHASING = 1
 FollowCombineTask.STATE_WAIT_FOR_TURN = 2
 FollowCombineTask.STATE_REVERSING = 3
+FollowCombineTask.STATE_REVERSING_FROM_CHOPPER = 12
 FollowCombineTask.STATE_WAIT_FOR_PASS_BY = 4
 FollowCombineTask.STATE_CIRCLING_PATHPLANNING = 5
 FollowCombineTask.STATE_CIRCLING = 6
