@@ -1036,15 +1036,15 @@ end
 -- here also additional checks may be implemented
 function ADGraphManager:getNetworkErrors()
 	local network = self:getWayPoints()
-	for id, wp in ipairs(network) do
+	for _, wp in ipairs(network) do
 		wp.errorMapping = {}
 
 		if #wp.incoming > 0 then
 										
-			for inIndex, inId in ipairs(wp.incoming) do
+			for _, inId in ipairs(wp.incoming) do
 				local inPoint = network[inId]
-				for outIndex, outId in ipairs(wp.out) do
-						
+				local hasGoodAngle = false
+				for _, outId in ipairs(wp.out) do
 					if inId ~= outId then
 						local outPoint = network[outId]
 						local angle =
@@ -1055,33 +1055,31 @@ function ADGraphManager:getNetworkErrors()
 							)
 						)
 						if angle > 90 then
-							wp.errorMapping[outId] = inId
+							local isBadAngle = true
 							local isReverseStart = not table.contains(outPoint.incoming, wp.id)
 							local isReverseEnd =
 								table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
 							if isReverseStart or isReverseEnd then
-								wp.errorMapping[outId] = nil
+								isBadAngle = false
 							end
 							if ADGraphManager:isDualRoad(wp, outPoint) then
-								wp.errorMapping[outId] = nil
+								isBadAngle = false
 							end
 							if ADGraphManager:isDualRoad(wp, inPoint) then
-								wp.errorMapping[outId] = nil
+								isBadAngle = false
 							end
+							if isBadAngle then
+								wp.errorMapping[inId] = outId
+							end
+						else
+							hasGoodAngle = true
 						end
 					end
-												
-							   
-				   
-		
-															 
+				end
+				if hasGoodAngle then
+					wp.errorMapping[inId] = nil
 				end
 			end
-									
-										 
-								  
-	   
-	  
 		end
 	end
 end
@@ -1383,13 +1381,10 @@ function ADGraphManager:checkForOtherErrors(wp)
 		return true
 	end
 	-- TODO
+	-- local network = self:getWayPoints()
 
-	local network = self:getWayPoints()
-
-	for outIndex, outId in ipairs(wp.out) do
-		ret = ret or (wp.errorMapping[outId] ~= nil)
-			  
-	 
+	for _, inId in ipairs(wp.incoming) do
+		ret = ret or (wp.errorMapping[inId] ~= nil)
 	end
 	return ret
 end
@@ -1474,7 +1469,7 @@ function ADGraphManager:getIsWayPointInSection(wayPointId, direction)
 		-- this is used to treat this wayPoint as last in a section
 		local foundReverse = false
 		for _, connectedId in pairs(connectedIds) do
-			connectedWayPoint = self:getWayPointById(connectedId)
+			local connectedWayPoint = self:getWayPointById(connectedId)
 			foundReverse = foundReverse or ADGraphManager:isReverseRoad(wayPoint, connectedWayPoint)
 		end
 		return not foundReverse
