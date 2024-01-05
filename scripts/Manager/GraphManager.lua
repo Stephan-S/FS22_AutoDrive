@@ -558,13 +558,13 @@ function ADGraphManager:removeMapMarkerByWayPoint(wayPointId, sendEvent)
 	end
 end
 
-function ADGraphManager:toggleConnectionBetween(startNode, endNode, reverseDirection, sendEvent)
+function ADGraphManager:toggleConnectionBetween(startNode, endNode, reverseDirection, dualConnection, sendEvent)
 	if startNode == nil or endNode == nil then
 		return
 	end
 	if sendEvent == nil or sendEvent == true then
 		-- Propagating connection toggling all over the network
-		AutoDriveToggleConnectionEvent.sendEvent(startNode, endNode, reverseDirection)
+        AutoDriveToggleConnectionEvent.sendEvent(startNode, endNode, reverseDirection, dualConnection)
 	else
 		if table.contains(startNode.out, endNode.id) or table.contains(endNode.incoming, startNode.id) then
 			table.removeValue(startNode.out, endNode.id)
@@ -573,10 +573,10 @@ function ADGraphManager:toggleConnectionBetween(startNode, endNode, reverseDirec
 			table.insert(startNode.out, endNode.id)
 			if not reverseDirection then
 				table.insert(endNode.incoming, startNode.id)
-						  
-											
-												 
-	   
+                if dualConnection then
+                    table.insert(endNode.out, startNode.id)
+                    table.insert(startNode.incoming, endNode.id)
+                end
 			end
 		end
 
@@ -715,10 +715,7 @@ function ADGraphManager:recordWayPoint(x, y, z, connectPrevious, dual, isReverse
 	local newWp = self:createNode(newId, x, y, z, {}, {}, flags)
 	self:setWayPoint(newWp)
 	if connectPrevious then
-		self:toggleConnectionBetween(previous, newWp, isReverse, false)
-		if dual then
-			self:toggleConnectionBetween(newWp, previous, isReverse, false)
-		end
+        self:toggleConnectionBetween(previous, newWp, isReverse, dual, false)
 	end
 
 	self:markChanges()
@@ -1039,15 +1036,15 @@ end
 -- here also additional checks may be implemented
 function ADGraphManager:getNetworkErrors()
 	local network = self:getWayPoints()
-	for id, wp in ipairs(network) do
+	for _, wp in ipairs(network) do
 		wp.errorMapping = {}
 
 		if #wp.incoming > 0 then
 										
-			for inIndex, inId in ipairs(wp.incoming) do
+			for _, inId in ipairs(wp.incoming) do
 				local inPoint = network[inId]
-				for outIndex, outId in ipairs(wp.out) do
-						
+				local hasGoodAngle = false
+				for _, outId in ipairs(wp.out) do
 					if inId ~= outId then
 						local outPoint = network[outId]
 						local angle =
@@ -1058,33 +1055,31 @@ function ADGraphManager:getNetworkErrors()
 							)
 						)
 						if angle > 90 then
-							wp.errorMapping[outId] = inId
+							local isBadAngle = true
 							local isReverseStart = not table.contains(outPoint.incoming, wp.id)
 							local isReverseEnd =
 								table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
 							if isReverseStart or isReverseEnd then
-								wp.errorMapping[outId] = nil
+								isBadAngle = false
 							end
 							if ADGraphManager:isDualRoad(wp, outPoint) then
-								wp.errorMapping[outId] = nil
+								isBadAngle = false
 							end
 							if ADGraphManager:isDualRoad(wp, inPoint) then
-								wp.errorMapping[outId] = nil
+								isBadAngle = false
 							end
+							if isBadAngle then
+								wp.errorMapping[inId] = outId
+							end
+						else
+							hasGoodAngle = true
 						end
 					end
-												
-							   
-				   
-		
-															 
+				end
+				if hasGoodAngle then
+					wp.errorMapping[inId] = nil
 				end
 			end
-									
-										 
-								  
-	   
-	  
 		end
 	end
 end
@@ -1386,13 +1381,10 @@ function ADGraphManager:checkForOtherErrors(wp)
 		return true
 	end
 	-- TODO
+	-- local network = self:getWayPoints()
 
-	local network = self:getWayPoints()
-
-	for outIndex, outId in ipairs(wp.out) do
-		ret = ret or (wp.errorMapping[outId] ~= nil)
-			  
-	 
+	for _, inId in ipairs(wp.incoming) do
+		ret = ret or (wp.errorMapping[inId] ~= nil)
 	end
 	return ret
 end
@@ -1477,7 +1469,7 @@ function ADGraphManager:getIsWayPointInSection(wayPointId, direction)
 		-- this is used to treat this wayPoint as last in a section
 		local foundReverse = false
 		for _, connectedId in pairs(connectedIds) do
-			connectedWayPoint = self:getWayPointById(connectedId)
+			local connectedWayPoint = self:getWayPointById(connectedId)
 			foundReverse = foundReverse or ADGraphManager:isReverseRoad(wayPoint, connectedWayPoint)
 		end
 		return not foundReverse
@@ -1712,29 +1704,29 @@ function ADGraphManager:removeNodesWithFlag(flagToRemove)
 	end
 end
 
-function ADGraphManager:createSplineConnection(start, waypoints, target, sendEvent)
+function ADGraphManager:createSplineConnection(start, waypoints, target, dualConnection, sendEvent)
 	if sendEvent == nil or sendEvent == true then
 		-- Propagating connection toggling all over the network
-		CreateSplineConnectionEvent.sendEvent(start, waypoints, target)
+        CreateSplineConnectionEvent.sendEvent(start, waypoints, target, dualConnection)
 	else
 		local lastId = start
 		local lastHeight = ADGraphManager:getWayPointById(start).y
+        local subPrio = self:getIsPointSubPrio(start) or self:getIsPointSubPrio(target)
 																				 
-
-		for wpId, wp in pairs(waypoints) do
+        for _, wp in pairs(waypoints) do
 			if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
 				wp.y = lastHeight
 			end
 			self:createWayPoint(wp.x, wp.y, wp.z, sendEvent)
 			local createdId = self:getWayPointsCount()
-
-													 
-	  
+            if subPrio then
+                ADGraphManager:toggleWayPointAsSubPrio(createdId)
+            end
 			self:toggleConnectionBetween(
 				ADGraphManager:getWayPointById(lastId),
 				ADGraphManager:getWayPointById(createdId),
 				false,
-				   
+                dualConnection,
 				false
 			)
 			lastId = createdId
@@ -1742,7 +1734,7 @@ function ADGraphManager:createSplineConnection(start, waypoints, target, sendEve
 		end
 
 		local wp = self:getWayPointById(lastId)
-		self:toggleConnectionBetween(wp, self:getWayPointById(target), false, false)
+        self:toggleConnectionBetween(wp, self:getWayPointById(target), false, dualConnection, false)
 	end
 end
 
