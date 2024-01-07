@@ -238,12 +238,15 @@ function ADDrivePathModule:followWaypoints(dt)
         if self.wayPoints[self:getCurrentWayPointIndex() - 1] ~= nil and self:getNextWayPoint() ~= nil then
             local highestAngle = self:getHighestApproachingAngle()
 
-            if self:isOnRoadNetwork() then
-                self.speedLimit = math.min(self.speedLimit, self:getMaxSpeedForAngle(highestAngle))
-            else
+            local maxSpeedForTurns = self:getSlowestApproachingSpeedLimit()
+            self.speedLimit = math.min(self.speedLimit, maxSpeedForTurns)
+
+            --if self:isOnRoadNetwork() then
+              --  self.speedLimit = math.min(self.speedLimit, self:getMaxSpeedForAngle(highestAngle))
+            --else
                 -- Let's increase the cornering speed for paths generated with the pathfinder module. There are many 45° angles in there that slow the process down otherwise.
-                self.speedLimit = math.min(self.speedLimit, math.max(12, self:getMaxSpeedForAngle(highestAngle) * 2))
-            end
+             --   self.speedLimit = math.min(self.speedLimit, math.max(12, self:getMaxSpeedForAngle(highestAngle) * 2))
+            --end
         end
 
         self.distanceToTarget = self:getDistanceToLastWaypoint(40)
@@ -380,6 +383,62 @@ function ADDrivePathModule:getCurrentLookAheadDistance()
     return math.min(ADDrivePathModule.LOOKAHEADDISTANCE * massFactor * speedFactor, 150)
 end
 
+function ADDrivePathModule:getSlowestApproachingSpeedLimit()
+    self.turnAngle = 0
+    self.distanceToLookAhead = self:getCurrentLookAheadDistance()
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getSlowestApproachingSpeedLimit -> Lookahead distance: " .. self.distanceToLookAhead)
+    local pointsToLookAhead = ADDrivePathModule.MAXLOOKAHEADPOINTS
+    local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+
+    if self:getCurrentWayPointIndex() + 2 >= #self.wayPoints then
+        return 1000
+    end
+
+    local baseDistance = MathUtil.vector2Length(self:getCurrentWayPoint().x - x, self:getCurrentWayPoint().z - z)
+
+    local slowestSpeed = 1000
+    local doneCheckingRoute = false
+    local currentLookAheadPoint = 1
+    while not doneCheckingRoute and currentLookAheadPoint <= pointsToLookAhead do
+        if self.wayPoints[self:getCurrentWayPointIndex() + currentLookAheadPoint] ~= nil then
+            local wp_ahead = self.wayPoints[self:getCurrentWayPointIndex() + currentLookAheadPoint]
+            local wp_current = self.wayPoints[self:getCurrentWayPointIndex() + currentLookAheadPoint - 1]
+            local wp_ref = self.wayPoints[self:getCurrentWayPointIndex() + currentLookAheadPoint - 2]
+            
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getSlowestApproachingSpeedLimit -> wp_ahead: " .. wp_ahead.x .. " / " .. wp_ahead.z)
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getSlowestApproachingSpeedLimit -> wp_current: " .. wp_current.x .. " / " .. wp_current.z)
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getSlowestApproachingSpeedLimit -> wp_ref: " .. wp_ref.x .. " / " .. wp_ref.z)
+
+            local angle = AutoDrive.angleBetween({x = wp_ahead.x - wp_current.x, z = wp_ahead.z - wp_current.z}, {x = wp_current.x - wp_ref.x, z = wp_current.z - wp_ref.z})
+            
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getSlowestApproachingSpeedLimit -> angle: " .. angle)
+
+            self.turnAngle = self.turnAngle + MathUtil.clamp(angle, -90, 90)
+
+            angle = math.abs(angle)
+
+            if MathUtil.vector2Length(self:getCurrentWayPoint().x - wp_ahead.x, self:getCurrentWayPoint().z - wp_ahead.z) <= (self.distanceToLookAhead - baseDistance) then
+                if angle < 180 then
+                    -- calculate velocity based on a maximal centrifugal acceleration (Based on Tommo's idea)
+                    local distance = MathUtil.vector2Length(wp_ref.x - wp_ahead.x, wp_ref.z - wp_ahead.z)
+                    local maxSpeed = self:getMaxSpeedForAngleAndDistance(angle, distance)
+
+                    slowestSpeed = math.min(slowestSpeed, maxSpeed)
+                end
+            else
+                doneCheckingRoute = true
+            end
+        else
+            doneCheckingRoute = true
+        end
+        currentLookAheadPoint = currentLookAheadPoint + 1
+    end
+    
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getSlowestApproachingSpeedLimit -> slowestSpeed: " .. slowestSpeed)
+
+    return slowestSpeed
+end
+
 function ADDrivePathModule:getHighestApproachingAngle()
     self.turnAngle = 0
     self.distanceToLookAhead = self:getCurrentLookAheadDistance()
@@ -494,6 +553,20 @@ function ADDrivePathModule:getApproachingHeightDiff()
         end
     end
     return heightDiff
+end
+
+function ADDrivePathModule:getMaxSpeedForAngleAndDistance(angle, distance)
+    -- a = (v^2)/r. [a=acceleration, fester Wert, v=gesuchte Geschwindigkeit, r=Kurvenradius]
+    -- Den Kurvenradius bekommen wir via
+    -- d/2 = r * sin (angle/2) [d: Entfernung von wp_ref zu wp_ahead, angle: Winkel - den berechnen wir bereits]
+    
+    local radius = (distance/2) / math.sin(math.rad(angle)/2)
+    local maxA = 20
+    local maxVelocity = math.sqrt(maxA * radius)
+    
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_DEVINFO, "ADDrivePathModule:getMaxSpeedForAngleAndDistance: angle: " .. angle .. " distance: " .. distance .. " -> maxVelocity: " .. maxVelocity)
+
+    return maxVelocity * AutoDrive.getSetting("cornerSpeed", self.vehicle)
 end
 
 function ADDrivePathModule:getMaxSpeedForAngle(angle)
