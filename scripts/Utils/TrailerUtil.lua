@@ -620,17 +620,19 @@ function AutoDrive.findGrainBackDoorTipSideIndex(vehicle, trailer)
         local tipSide = spec.tipSides[i]
         trailer:setCurrentDischargeNodeIndex(tipSide.dischargeNodeIndex)
         local currentDischargeNode = trailer:getCurrentDischargeNode()
-        local tx, ty, tz = getWorldTranslation(currentDischargeNode.node)
-        local _, _, diffZ = worldToLocal(trailer.components[1].node, tx, ty, tz + 50)
-        -- get the 2 most back doors
-        if diffZ < backDistance1 and currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
-            backDistance1 = diffZ
-            dischargeSpeed1 = currentDischargeNode.emptySpeed
-            tipSideIndex1 = i
-        elseif diffZ < backDistance2 and currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
-            backDistance2 = diffZ
-            dischargeSpeed2 = currentDischargeNode.emptySpeed
-            tipSideIndex2 = i
+        if currentDischargeNode then
+            local tx, ty, tz = getWorldTranslation(currentDischargeNode.node)
+            local _, _, diffZ = worldToLocal(trailer.components[1].node, tx, ty, tz + 50)
+            -- get the 2 most back doors
+            if diffZ < backDistance1 and currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
+                backDistance1 = diffZ
+                dischargeSpeed1 = currentDischargeNode.emptySpeed
+                tipSideIndex1 = i
+            elseif diffZ < backDistance2 and currentDischargeNode and currentDischargeNode.effects and table.count(currentDischargeNode.effects) > 0 then
+                backDistance2 = diffZ
+                dischargeSpeed2 = currentDischargeNode.emptySpeed
+                tipSideIndex2 = i
+            end
         end
     end
     local foundTwoBackDoors = math.abs(backDistance2 - backDistance1) < 1
