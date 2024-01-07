@@ -70,6 +70,7 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 			self.trafficVehicle = nil
 			local idToCheck = 3
 			local alreadyOnDualRoute = false
+			local lastId = nil
 			if wayPoints[currentWayPoint - 1] ~= nil and wayPoints[currentWayPoint] ~= nil then
 				alreadyOnDualRoute = ADGraphManager:isDualRoad(wayPoints[currentWayPoint - 1], wayPoints[currentWayPoint])
 			end
@@ -86,6 +87,7 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 						local testDual = ADGraphManager:isDualRoad(startNode, targetNode)
 						if testDual == true then
 							table.insert(dualRoutePoints, startNode.id)
+							lastId = targetNode.id
 							dualRoute = true
 						else
 							dualRoute = false
@@ -96,7 +98,7 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 					idToCheck = idToCheck + 1
 				end
 
-				if #dualRoutePoints > 1 then
+				if #dualRoutePoints > 0 then
 					for _, other in pairs(g_currentMission.vehicles) do
 						if other ~= self.vehicle and other.ad ~= nil and other.ad.stateModule ~= nil and other.ad.stateModule:isActive() and other.ad.drivePathModule:isOnRoadNetwork() then
 							local onSameRoute = false
@@ -110,6 +112,13 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 										if point == otherWayPoints[otherCurrentWayPoint + i].id then
 											onSameRoute = true
 											--check if going in same direction
+											if #dualRoutePoints == 1 then
+												if lastId ~= nil and otherWayPoints[otherCurrentWayPoint + i + 1] ~= nil then
+													if lastId == otherWayPoints[otherCurrentWayPoint + i + 1].id then
+														sameDirection = true
+													end
+												end
+											end
 											if dualRoutePoints[_ + 1] ~= nil and otherWayPoints[otherCurrentWayPoint + i + 1] ~= nil then
 												if dualRoutePoints[_ + 1] == otherWayPoints[otherCurrentWayPoint + i + 1].id then
 													sameDirection = true
