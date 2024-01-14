@@ -116,6 +116,8 @@
 		<text name="gui_ad_no"									text="Nein" />
 		<text name="gui_ad_FS22"								text="FS 22" />
 		<text name="gui_ad_FS19"								text="FS 19" />
+		<text name="gui_ad_BSMRange"							text="Bunker Silo Manager Reichweite" />
+		<text name="gui_ad_BSMRange_tooltip"					text="In diesem Abstand um das Ziel Bunker Silo wird Fahrzeugen der Reihe nach die Zufahrt gewährt" />
 		<text name="ad_bga_init"								text="Initialisieren" />
 		<text name="ad_bga_waiting"								text="Warten auf Abfahrer/Silo" />
 		<text name="ad_bga_active"								text="Aktiv" />
