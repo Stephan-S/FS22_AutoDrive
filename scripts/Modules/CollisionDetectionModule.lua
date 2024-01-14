@@ -69,30 +69,36 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 			self.trafficVehicle = nil
 			local idToCheck = 3
 			local alreadyOnDualRoute = false
-			local lastId = nil
+			local lastDualId = nil
 			if wayPoints[currentWayPoint - 1] ~= nil and wayPoints[currentWayPoint] ~= nil then
 				alreadyOnDualRoute = ADGraphManager:isDualRoad(wayPoints[currentWayPoint - 1], wayPoints[currentWayPoint])
 			end
 
 			if wayPoints[currentWayPoint + idToCheck] ~= nil and wayPoints[currentWayPoint + idToCheck + 1] ~= nil and not alreadyOnDualRoute then
-				local dualRoute = ADGraphManager:isDualRoad(wayPoints[currentWayPoint + idToCheck], wayPoints[currentWayPoint + idToCheck + 1])
 
 				local dualRoutePoints = {}
 				idToCheck = 0
-				while (dualRoute == true) or (idToCheck < 8) do
+				local foundDualRoute = false
+				local continueSearch = true
+				while (continueSearch == true) do
 					local startNode = wayPoints[currentWayPoint + idToCheck]
 					local targetNode = wayPoints[currentWayPoint + idToCheck + 1]
 					if (startNode ~= nil) and (targetNode ~= nil) then
 						local testDual = ADGraphManager:isDualRoad(startNode, targetNode)
 						if testDual == true then
 							table.insert(dualRoutePoints, startNode.id)
-							lastId = targetNode.id
-							dualRoute = true
+							lastDualId = targetNode.id
+							continueSearch = true
+							foundDualRoute = true
+						elseif foundDualRoute == true then
+							-- dual section ended - exit
+							continueSearch = false
 						else
-							dualRoute = false
+							-- check min 7 WP ahead even if not dual
+							continueSearch = idToCheck < 8
 						end
 					else
-						dualRoute = false
+						continueSearch = false
 					end
 					idToCheck = idToCheck + 1
 				end
@@ -112,8 +118,8 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 											onSameRoute = true
 											--check if going in same direction
 											if #dualRoutePoints == 1 then
-												if lastId ~= nil and otherWayPoints[otherCurrentWayPoint + i + 1] ~= nil then
-													if lastId == otherWayPoints[otherCurrentWayPoint + i + 1].id then
+												if lastDualId ~= nil and otherWayPoints[otherCurrentWayPoint + i + 1] ~= nil then
+													if lastDualId == otherWayPoints[otherCurrentWayPoint + i + 1].id then
 														sameDirection = true
 													end
 												end
