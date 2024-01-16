@@ -1059,6 +1059,17 @@ AutoDrive.settings.remainingDriveTimeInterval = {
     isUserSpecific = false
 }
 
+AutoDrive.settings.BSMRange = {
+    values = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 250, 300, 400, 500},
+    texts = { "gui_ad_off", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "120", "140", "160", "180", "200", "250", "300", "400", "500"},
+    default = 6,
+    current = 6,
+    text = "gui_ad_BSMRange",
+    tooltip = "gui_ad_BSMRange_tooltip",
+    translate = true,
+    isVehicleSpecific = false
+}
+
 function AutoDrive.getSetting(settingName, vehicle)
     if AutoDrive.settings[settingName] ~= nil then
         local setting = AutoDrive.settings[settingName]

@@ -262,6 +262,7 @@ function AutoDrive:loadMap(name)
 
 	ADMultipleTargetsManager:load()
 	-- AutoDrive.initTelemetry()
+	ADBunkerSiloManager:load()
 
 	InGameMenuAIFrame.onFrameOpen = Utils.appendedFunction(InGameMenuAIFrame.onFrameOpen, AutoDrive.onAIFrameOpen)
 	InGameMenuAIFrame.onFrameClose = Utils.appendedFunction(InGameMenuAIFrame.onFrameClose, AutoDrive.onAIFrameClose)
@@ -661,6 +662,7 @@ function AutoDrive:update(dt)
 	if g_server ~= nil then
 		ADHarvestManager:update(dt)
 		ADScheduler:update(dt)
+		ADBunkerSiloManager:update(dt)
 	end
 
 	ADMessagesManager:update(dt)

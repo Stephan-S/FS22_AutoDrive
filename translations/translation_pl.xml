@@ -111,6 +111,8 @@
 		<text name="gui_ad_no"									text="Nie" />
 		<text name="gui_ad_FS22"								text="FS 22" />
 		<text name="gui_ad_FS19"								text="FS 19" />
+		<text name="gui_ad_BSMRange"							text="Bunker Silo Manager Range" />
+		<text name="gui_ad_BSMRange_tooltip"					text="In this range vehicles to destination bunker silo one by one get driveway" />
 		<text name="ad_bga_init"								text="Inicjowanie" />
 		<text name="ad_bga_waiting"								text="Oczekiwanie na przyczepę/silos" />
 		<text name="ad_bga_active"								text="Aktywny" />

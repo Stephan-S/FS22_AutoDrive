@@ -8,6 +8,7 @@ UnloadAtDestinationTask.BALE_UNLOAD_DISTANCE = 5
 
 function UnloadAtDestinationTask:new(vehicle, destinationID)
     local o = UnloadAtDestinationTask:create()
+    o.taskType = "UnloadAtDestinationTask"
     o.vehicle = vehicle
     o.destinationID = destinationID
     o.isContinued = false
