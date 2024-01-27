@@ -940,7 +940,7 @@ function ADGraphManager:prepareWayPoints()
 					local angle = math.abs(AutoDrive.angleBetween({x = outPoint.x - wp.x, z = outPoint.z - wp.z}, {x = wp.x - inPoint.x, z = wp.z - inPoint.z}))
 					--print("prep4: " .. outId .. " angle: " .. angle)
 
-					if angle <= 90 then
+					if angle <= 80 then
 						table.insert(wp.transitMapping[inId], outId)
 						table.insert(wp.inverseTransitMapping[outId], inId)
 					else
