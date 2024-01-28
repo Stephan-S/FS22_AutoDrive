@@ -1012,7 +1012,7 @@ function ADGraphManager:prepareWayPoints()
 
 					--print("prep4: " .. outId .. " angle: " .. angle)
 
-					if angle <= 90 then
+					if angle <= 80 then
 						table.insert(wp.transitMapping[inId], outId)
 						table.insert(wp.inverseTransitMapping[outId], inId)
 					else
