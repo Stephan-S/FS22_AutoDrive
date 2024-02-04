@@ -973,7 +973,7 @@ function ADGraphManager:getNetworkErrors()
                     if inId ~= outId then
                         local outPoint = network[outId]
                         local angle = math.abs(AutoDrive.angleBetween({x = outPoint.x - wp.x, z = outPoint.z - wp.z}, {x = wp.x - inPoint.x, z = wp.z - inPoint.z}))
-                        if angle > 90 then
+                        if angle > 80 then
                             wp.errorMapping[outId] = inId
                             local isReverseStart = not table.contains(outPoint.incoming, wp.id)
                             local isReverseEnd = table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
