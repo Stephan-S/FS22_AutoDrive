@@ -44,12 +44,17 @@ function ADSensor:addSensorsToVehicle(vehicle)
     vehicle.ad.sensors = {}
     local sensorParameters = {}
     sensorParameters.dynamicLength = true
+    sensorParameters.minDynamicLength = 0.2
     sensorParameters.position = ADSensor.POS_FRONT
     sensorParameters.width = vehicle.size.width * 0.75
-    local frontSensorDynamic = ADCollSensor:new(vehicle, sensorParameters)
-    --frontSensorDynamic.drawDebug = true --test
-    --frontSensorDynamic.enabled = true --test
-    vehicle.ad.sensors["frontSensorDynamic"] = frontSensorDynamic
+    local frontSensorDynamicShort = ADCollSensor:new(vehicle, sensorParameters)
+    --frontSensorDynamicShort.drawDebug = true --test
+    --frontSensorDynamicShort.enabled = true --test
+    vehicle.ad.sensors["frontSensorDynamicShort"] = frontSensorDynamicShort
+
+    sensorParameters.minDynamicLength = 2
+    local frontSensorDynamicLong = ADCollSensor:new(vehicle, sensorParameters)
+    vehicle.ad.sensors["frontSensorDynamicLong"] = frontSensorDynamicLong
 
     sensorParameters.dynamicLength = false
     sensorParameters.width = vehicle.size.width * 0.65
@@ -83,6 +88,7 @@ function ADSensor:addSensorsToVehicle(vehicle)
 
     sensorParameters = {}
     sensorParameters.dynamicLength = true
+    sensorParameters.minDynamicLength = 0.3
     sensorParameters.width = vehicle.size.width * 0.75
     sensorParameters.position = ADSensor.POS_REAR
     local rearSensor = ADCollSensor:new(vehicle, sensorParameters)
@@ -168,6 +174,7 @@ function ADSensor:loadBaseParameters()
     local vehicle = self.vehicle
     if vehicle ~= nil and vehicle.size.length ~= nil and vehicle.size.width ~= nil then
         self.dynamicLength = true
+        self.minDynamicLength = 2
         self.dynamicRotation = true
         self.length = vehicle.size.length
         self.width = vehicle.size.width * ADSensor.WIDTH_FACTOR
@@ -187,6 +194,9 @@ function ADSensor:loadDynamicParameters(sensorParameters)
 
     if sensorParameters.dynamicLength ~= nil then
         self.dynamicLength = sensorParameters.dynamicLength == true
+    end
+    if sensorParameters.minDynamicLength ~= nil then
+        self.minDynamicLength = sensorParameters.minDynamicLength
     end
     if sensorParameters.dynamicRotation ~= nil then
         self.dynamicRotation = sensorParameters.dynamicRotation == true
@@ -270,10 +280,7 @@ function ADSensor:getBoxShape()
     self.location = self:getLocationByPosition()
     local lookAheadDistance = self.length
     if self.dynamicLength then
-        lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 / 40, 0.13, 1) * 15.5
-        if self.position == ADSensor.POS_REAR then
-            lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 / 40, 0.02, 1) * 15.5
-        end
+        lookAheadDistance = MathUtil.clamp(vehicle.lastSpeedReal * 3600 * 15.5 / 40, self.minDynamicLength, 16)
     end
 
     local vecZ = {x = 0, z = 1}
@@ -287,6 +294,8 @@ function ADSensor:getBoxShape()
     end
 
     local boxYPos = 2
+    local boxHeight = 0.75
+
     if self.position == ADSensor.POS_FRONT_LEFT or self.position == ADSensor.POS_FRONT_RIGHT then
         boxYPos = 2.25
     end
@@ -299,33 +308,33 @@ function ADSensor:getBoxShape()
     box.size = {}
     box.center = {}
     box.size[1] = self.width * 0.5
-    box.size[2] = 0.75 -- fixed height for now
+    box.size[2] = boxHeight * 0.5
     box.size[3] = lookAheadDistance * 0.5
     box.offset[1] = self.location.x
-    box.offset[2] = boxYPos -- fixed y pos for now
+    box.offset[2] = boxYPos
     box.offset[3] = self.location.z
-    box.center[1] = box.offset[1] + vecZ.x * box.size[3] -- + vecX.x * box.size[1]
-    box.center[2] = boxYPos -- fixed y pos for now
-    box.center[3] = box.offset[3] + vecZ.z * box.size[3] -- + vecX.z * box.size[1]
+    box.center[1] = box.offset[1] + vecZ.x * box.size[3]
+    box.center[2] = box.offset[2] + box.size[2]
+    box.center[3] = box.offset[3] + vecZ.z * box.size[3]
 
     box.topLeft = {}
     box.topLeft[1] = box.center[1] - vecX.x * box.size[1] + vecZ.x * box.size[3]
-    box.topLeft[2] = boxYPos
+    box.topLeft[2] = box.center[2]
     box.topLeft[3] = box.center[3] - vecX.z * box.size[1] + vecZ.z * box.size[3]
 
     box.topRight = {}
     box.topRight[1] = box.center[1] + vecX.x * box.size[1] + vecZ.x * box.size[3]
-    box.topRight[2] = boxYPos
+    box.topRight[2] = box.center[2]
     box.topRight[3] = box.center[3] + vecX.z * box.size[1] + vecZ.z * box.size[3]
 
     box.downRight = {}
     box.downRight[1] = box.center[1] + vecX.x * box.size[1] - vecZ.x * box.size[3]
-    box.downRight[2] = boxYPos
+    box.downRight[2] = box.center[2]
     box.downRight[3] = box.center[3] + vecX.z * box.size[1] - vecZ.z * box.size[3]
 
     box.downLeft = {}
     box.downLeft[1] = box.center[1] - vecX.x * box.size[1] - vecZ.x * box.size[3]
-    box.downLeft[2] = boxYPos
+    box.downLeft[2] = box.center[2]
     box.downLeft[3] = box.center[3] - vecX.z * box.size[1] - vecZ.z * box.size[3]
 
     if self.sideFactor == -1 then

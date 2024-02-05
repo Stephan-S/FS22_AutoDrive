@@ -715,7 +715,7 @@ function AutoDrive.getTriggerAndTrailerPairs(vehicle, dt)
     local trailerTriggerPairs = {}
     -- local trailers, _ = AutoDrive.getTrailersOf(vehicle, false)
     local trailers, _ = AutoDrive.getAllUnits(vehicle)
-    local maxTriggerDistance = AutoDrive.getSetting("maxTriggerDistance")
+    local maxTriggerDistance = AutoDrive.getMaxTriggerDistance(vehicle)
     for _, trailer in ipairs(trailers) do
         if trailer.getFillUnits ~= nil then
             local fillUnits = trailer:getFillUnits()
@@ -920,9 +920,9 @@ function AutoDrive.isInRangeToLoadUnloadTarget(vehicle)
         else
             ret =
                     (
-                        ((rootVehicle.ad.stateModule:getCurrentMode():shouldLoadOnTrigger() == true) and AutoDrive.getDistanceToTargetPosition(vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
+                        ((rootVehicle.ad.stateModule:getCurrentMode():shouldLoadOnTrigger() == true) and AutoDrive.getDistanceToTargetPosition(vehicle) <= AutoDrive.getMaxTriggerDistance(vehicle))
                         or
-                        ((rootVehicle.ad.stateModule:getCurrentMode():shouldUnloadAtTrigger() == true) and AutoDrive.getDistanceToUnloadPosition(vehicle) <= AutoDrive.getSetting("maxTriggerDistance"))
+                        ((rootVehicle.ad.stateModule:getCurrentMode():shouldUnloadAtTrigger() == true) and AutoDrive.getDistanceToUnloadPosition(vehicle) <= AutoDrive.getMaxTriggerDistance(vehicle))
                     )
         end
     end

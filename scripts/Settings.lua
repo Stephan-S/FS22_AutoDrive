@@ -740,6 +740,18 @@ AutoDrive.settings.maxTriggerDistance = {
     isVehicleSpecific = false
 }
 
+AutoDrive.settings.maxTriggerDistanceVehicle = {
+    values = {0, 10, 25, 50, 100, 200},
+    texts = {"gui_ad_useGlobalSetting", "10 m", "25 m", "50 m", "100 m", "200 m"},
+    default = 0,
+    current = 0,
+    text = "gui_ad_maxTriggerDistance",
+    tooltip = "gui_ad_maxTriggerDistance_tooltip",
+    translate = true,
+    isVehicleSpecific = true,
+}
+
+
 AutoDrive.settings.useBeaconLights = {
     values = {false, true},
     texts = {"gui_ad_no", "gui_ad_yes"},
@@ -1172,4 +1184,15 @@ function AutoDrive.readVehicleSettingsFromXML(vehicle, xmlFile, key)
             end
         end
     end
+end
+
+function AutoDrive.getMaxTriggerDistance(vehicle)
+    -- the max-trigger-distance can be set globally and per-vehicle.
+    -- a per-vehicle setting of 0 means "use global value"
+    -- NB: this might not be the best place for this function
+    local distance = AutoDrive.getSetting("maxTriggerDistanceVehicle", vehicle)
+    if distance == 0 then
+        distance = AutoDrive.getSetting("maxTriggerDistance")
+    end
+    return distance
 end

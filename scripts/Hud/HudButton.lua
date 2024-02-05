@@ -29,7 +29,7 @@ function ADHudButton:readImages()
         path = "input_toggleAutomaticUnloadTarget"
     end
 
-    while counter <= 19 do
+    while counter <= 6 do
         images[counter] = AutoDrive.directory .. "textures/" .. path .. "_" .. counter .. ".dds"
         counter = counter + 1
     end
@@ -139,15 +139,6 @@ function ADHudButton:getNewState(vehicle)
 
     if self.primaryAction == "input_removeMapMarker" then
         self.isVisible = AutoDrive.isEditorModeEnabled()
-    end
-
-    if self.primaryAction == "input_incLoopCounter" then
-        newState = math.max(0, vehicle.ad.stateModule:getLoopCounter() - vehicle.ad.stateModule:getLoopsDone()) + 1
-        if vehicle.ad.stateModule:isActive() and vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
-            if newState > 1 then
-                newState = newState + 9
-            end
-        end
     end
 
     if self.primaryAction == "input_parkVehicle" then

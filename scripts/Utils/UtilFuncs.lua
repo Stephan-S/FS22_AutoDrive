@@ -504,24 +504,58 @@ function AutoDrive:createSplineInterpolationBetween(startNode, endNode)
 		return
 	end
 
-	-- TODO: if we have more then one inbound or outbound connections, get the avg. vector
-	if #startNode.incoming >= 1 and #endNode.out >= 1  and AutoDrive.splineInterpolationUserCurvature >= 0.5 then
-		local p0 = nil
-		for _, px in pairs(startNode.incoming) do
-			p0 = ADGraphManager:getWayPointById(px)
-			--self.splineInterpolation.p0 = p0
-			break
+	if AutoDrive.splineInterpolationUserCurvature >= 0.5 then
+		local p0, p3 = AutoDrive:getSplineControlPoints(startNode, endNode)
+		if p0 ~= nil and p3 ~= nil then
+			return AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
 		end
-		local p3 = nil
-		for _, px in pairs(endNode.out) do
-			p3 = ADGraphManager:getWayPointById(px)
-			--self.splineInterpolation.p3 = p3
-			break
-		end	
-		return AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
-	else -- fallback to straight line connection behaviour
-		return
 	end
+    -- fallback to straight line connection behaviour
+end
+
+function AutoDrive:getSplineControlPoints(startNode, endNode)
+	-- Returns control points for the given startNode and endNode
+	if #startNode.incoming + #startNode.out == 0 then
+		return nil, nil
+	end
+	if #endNode.incoming + #endNode.out == 0 then
+		return nil, nil
+	end
+
+	local function getWaypointDirection(node, waypointId)
+		-- returns unit vector from start/end node to a waypoint
+		local wp = ADGraphManager:getWayPointById(waypointId)
+		local wpVec = ADVectorUtils.subtract2D(node, wp)
+		return ADVectorUtils.unitVector2D(wpVec)
+	end
+
+	local function getControlPoint(node, otherNode)
+		-- returns the node that forms the straightest connection (closest to 180 degrees)
+		local bestAngle, bestDirection = nil, nil
+		local startEndVec = ADVectorUtils.subtract2D(node, otherNode)
+
+		for _, px in pairs(node.incoming) do
+			local dir = getWaypointDirection(node, px)
+			local angle = math.abs(180 - math.abs(AutoDrive.angleBetween(startEndVec, dir)))
+			if bestAngle == nil or bestAngle > angle then
+				bestAngle = angle
+				bestDirection = dir
+			end
+		end
+		for _, px in pairs(node.out) do
+			local dir = getWaypointDirection(node, px)
+			local angle = math.abs(180 - math.abs(AutoDrive.angleBetween(startEndVec, dir)))
+			if bestAngle == nil or bestAngle > angle then
+				bestAngle = angle
+				bestDirection = dir
+			end
+		end
+		if bestDirection == nil then
+			return nil
+		end
+		return ADVectorUtils.add2D(node, bestDirection)
+	end
+	return getControlPoint(startNode, endNode), getControlPoint(endNode, startNode)
 end
 
 function AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
@@ -550,21 +584,19 @@ function AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
 		-- distance from start to end, divided by two to give it more roundness...
 		local dStartEnd = ADVectorUtils.distance2D(startNode, endNode) / self.splineInterpolation.curvature
 
-		-- we need to normalize the length of p0-start and end-p3, otherwise their length will influence the curve
-		-- get vector from p0->start
-		local vp0Start = ADVectorUtils.subtract2D(p0, startNode)
-		-- calculate unit vector of vp0Start
-		vp0Start = ADVectorUtils.unitVector2D(vp0Start)
+		-- we need to normalize the length of start-p0 and end-p3, otherwise their length will influence the curve
+		-- get vector from start->p0
+		local vStartp0 = ADVectorUtils.subtract2D(startNode, p0)
+		-- calculate unit vector of vStartp0
+		vStartp0 = ADVectorUtils.unitVector2D(vStartp0)
 		-- scale it like start->end
-		vp0Start = ADVectorUtils.scaleVector2D(vp0Start, dStartEnd)
-		-- invert it
-		vp0Start = ADVectorUtils.invert2D(vp0Start)
+		vStartp0 = ADVectorUtils.scaleVector2D(vStartp0, dStartEnd)
 		-- add it to the start Vector so that we get new p0
-		p0 = ADVectorUtils.add2D(startNode, vp0Start)
+		p0 = ADVectorUtils.add2D(startNode, vStartp0)
 		-- make sure p0 has a y value
 		p0.y = startNode.y
 
-		-- same for end->p3, except that we do not need to invert it, but just add it to the endNode
+		-- same for end->p3
 		local vEndp3 = ADVectorUtils.subtract2D(endNode, p3)
 		vEndp3 = ADVectorUtils.unitVector2D(vEndp3)
 		vEndp3 = ADVectorUtils.scaleVector2D(vEndp3, dStartEnd)
@@ -573,12 +605,10 @@ function AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
 
 		local prevWP = startNode
 		local secondLastWp = nil
-		local prevV = ADVectorUtils.subtract2D(p0, startNode)
 		-- we're calculting a VERY smooth curve and whenever the new point on the curve has a good distance to the last one create a new waypoint
 		-- but make sure that the last point also has a good distance to the endNode
 		for i = 1, 200 do
 			local px = AutoDrive:CatmullRomInterpolate(i, p0, startNode, endNode, p3, 200)
-			local newV = ADVectorUtils.subtract2D(prevWP, px)
 			local distPrev = ADVectorUtils.distance2D(prevWP, px)
 			local distEnd = ADVectorUtils.distance2D(px, endNode)
 
@@ -604,7 +634,6 @@ function AutoDrive:createSplineWithControlPoints(startNode, p0, endNode, p3)
 				
 				secondLastWp = prevWP
 				prevWP = px
-				prevV = newV
 			end
 		end
 		table.insert(self.splineInterpolation.waypoints, endNode)
@@ -693,9 +722,7 @@ end
 --- @return table Vector
 function ADVectorUtils.scaleVector2D(vector, scale)
 	scale = scale or 1.0
-	vector.x = ( vector.x * scale ) or 0
-	vector.z = ( vector.z * scale ) or 0
-	return vector
+	return { x = ( vector.x * scale ) or 0, z = ( vector.z * scale ) or 0 }
 end
 
 --- Returns the distance between zwo vectors using their x and z coordinates.
@@ -718,9 +745,7 @@ end
 --- @param vector table with x and z property
 --- @return table Vector inverted
 function ADVectorUtils.invert2D(vector)
-	vector.x = vector.x * -1
-	vector.z = vector.z * -1
-	return vector
+	return {x = vector.x * -1, z = vector.z * -1}
 end
 
 --- Adds x and z values of two given vectors and returns a new vector with x and z properties.
