@@ -1036,35 +1036,52 @@ end
 -- here also additional checks may be implemented
 function ADGraphManager:getNetworkErrors()
 	local network = self:getWayPoints()
-	for id, wp in ipairs(network) do
+	for _, wp in ipairs(network) do
 		wp.errorMapping = {}
 
 		if #wp.incoming > 0 then
-			for inIndex, inId in ipairs(wp.incoming) do
+										
+			for _, inId in ipairs(wp.incoming) do
 				local inPoint = network[inId]
-                for outIndex, outId in ipairs(wp.out) do
-                    if inId ~= outId then
-                        local outPoint = network[outId]
-                        local angle = math.abs(AutoDrive.angleBetween({x = outPoint.x - wp.x, z = outPoint.z - wp.z}, {x = wp.x - inPoint.x, z = wp.z - inPoint.z}))
-                        if angle > 80 then
-                            wp.errorMapping[outId] = inId
-                            local isReverseStart = not table.contains(outPoint.incoming, wp.id)
-                            local isReverseEnd = table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
-                            if isReverseStart or isReverseEnd then
-                                wp.errorMapping[outId] = nil
-                            end
-                            if ADGraphManager:isDualRoad(wp, outPoint) then
-                                wp.errorMapping[outId] = nil
-                            end
-                            if ADGraphManager:isDualRoad(wp, inPoint) then
-                                wp.errorMapping[outId] = nil
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
+				local hasGoodAngle = false
+				for _, outId in ipairs(wp.out) do
+					if inId ~= outId then
+						local outPoint = network[outId]
+						local angle =
+							math.abs(
+							AutoDrive.angleBetween(
+								{x = outPoint.x - wp.x, z = outPoint.z - wp.z},
+								{x = wp.x - inPoint.x, z = wp.z - inPoint.z}
+							)
+						)
+						if angle > 90 then
+							local isBadAngle = true
+							local isReverseStart = not table.contains(outPoint.incoming, wp.id)
+							local isReverseEnd =
+								table.contains(outPoint.incoming, wp.id) and not table.contains(wp.incoming, inPoint.id)
+							if isReverseStart or isReverseEnd then
+								isBadAngle = false
+							end
+							if ADGraphManager:isDualRoad(wp, outPoint) then
+								isBadAngle = false
+							end
+							if ADGraphManager:isDualRoad(wp, inPoint) then
+								isBadAngle = false
+							end
+							if isBadAngle then
+								wp.errorMapping[inId] = outId
+							end
+						else
+							hasGoodAngle = true
+						end
+					end
+				end
+				if hasGoodAngle then
+					wp.errorMapping[inId] = nil
+				end
+			end
+		end
+	end
 end
 
 function ADGraphManager:checkResetVehicleDestinations(destination)
