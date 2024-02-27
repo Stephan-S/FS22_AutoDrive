@@ -110,6 +110,8 @@
 		<text name="gui_ad_no"									text="否" />
 		<text name="gui_ad_FS22"								text="FS 22" />
 		<text name="gui_ad_FS19"								text="FS 19" />
+		<text name="gui_ad_BSMRange"							text="Bunker Silo Manager Range" />
+		<text name="gui_ad_BSMRange_tooltip"					text="In this range vehicles to destination bunker silo one by one get driveway" />
 		<text name="ad_bga_init"								text="初始化" />
 		<text name="ad_bga_waiting"								text="等待拖车/筒仓" />
 		<text name="ad_bga_active"								text="活跃" />
@@ -166,6 +168,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4种模式:不更改目标/仅装载目标/仅卸载目标/文件夹中的装载和卸载目标循环（不使用默认文件夹）（仅在使用文件夹处于活动状态时才考虑）" />
 		<text name="gui_ad_maxTriggerDistance"					text="最大触发距离" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="检测和激活目标触发器的距离。" />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="信标灯" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="是 - 在田地外自动使用信标灯/否 - 信标灯不会自动打开或关闭" />
 
@@ -303,8 +306,13 @@
 		<text name="ad_color_closestLine" 			            text="13 从车辆到最近航点的线" />
 		<text name="ad_color_editorHeightLine" 			        text="14 从地面航删除所有点到上述车辆的线" />
 
-		<text name="ad_color_previewOk" 			            text="15 曲线预览没问题，没有碰撞" />
-		<text name="ad_color_previewNotOk" 			            text="16 曲线预览注意，有碰撞" />
+		<text name="ad_color_previewSingleConnection" 	        text="15 curve preview OK, single-way connection" />
+		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
+		<text name="ad_color_previewOk" 			            text="19 曲线预览没问题，没有碰撞" />
+		<text name="ad_color_previewNotOk" 			            text="20 曲线预览注意，有碰撞" />
+		<text name="ad_color_textInputBackground" 			    text="21 Background for inputs of text, targets etc." />
 
 		<text name="button_delete_all" 							text="全部删除" />
 		<text name="button_reset_selected" 					    text="重置选择" />

@@ -10,7 +10,7 @@
 		<text name="input_ADSilomode"							text="AD: Módváltás" />
 		<text name="input_ADPreviousMode"						text="AD: Previous mode" />
 		<text name="input_ADRecord"								text="AD: felvétel" />
-		<text name="input_ADRecord_Dual"						text="AD: Record 2 way route" />
+		<text name="input_ADRecord_Dual"						text="AD: 2 irányú útvonal rögzítése" />
 		<text name="input_ADRecord_SubPrio"						text="AD: Record secondary route" />
 		<text name="input_ADRecord_SubPrioDual"					text="AD: Record 2 way secondary route route" />
 		<text name="input_ADSelectTarget"						text="AD: Cél választás" />
@@ -40,15 +40,15 @@
 		<text name="input_ADGoToVehicle"						text="AD: Váltás az érkezett járműre" />
 		<text name="input_ADNameDriver"							text="AD: Sofőr elnevezése" />
 		<text name="input_ADSetDestinationFilter"				text="AD: Destination filter" />
-		<text name="input_AD_FieldSpeed_up"						text="AD: Increase Field Speed" />
-		<text name="input_AD_FieldSpeed_down"					text="AD: Decrease Field Speed" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: Szántóföldi sebesség növelése" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: Szántóföldi sebesség csökkentése" />
 		<text name="input_ADIncLoopCounter"						text="AD: Útvonal ismétlése" />
-		<text name="input_ADDecLoopCounter"						text="AD: Decrease loop counter" />
+		<text name="input_ADDecLoopCounter"						text="AD: Körszámláló csökkentése" />
 		<text name="input_ADParkVehicle"						text="AD: Parkolja le a járművet" />
 		<text name="input_ADSetParkDestination"					text="AD: assign 1st Destination for parking" />
-		<text name="input_ADRefuelVehicle"						text="AD: Refuel vehicle" />
-		<text name="input_ADRepairVehicle"						text="AD: Repair vehicle" />	
-		<text name="input_ADbunkerUnloadType"					text="AD: Unload to Trailer or BGA" />
+		<text name="input_ADRefuelVehicle"						text="AD: Jármű tankolása" />
+		<text name="input_ADRepairVehicle"						text="AD: Jármű javítása" />	
+		<text name="input_ADbunkerUnloadType"					text="AD: Pótkocsiba vagy BGA-ba ürítés" />
 		<text name="input_ADSwapTargets"						text="AD: Cél csere" />
 		<text name="input_ADStartCP"							text="AD: Pass to CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Toggle CP/AIVE" />
@@ -57,7 +57,7 @@
 		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Toggle automatic unload target" />
 		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
 		<text name="hud_avoidFruit"								text="AD: Termény kikerülése" />
-		<text name="hud_startCp"								text="AD: Start CP / AIVE at destination" />
+		<text name="hud_startCp"								text="AD: CP / AIVE indítása az úticélnál" />
 		<text name="AD_parkVehicle_noPosSet"					text="Járműnek nincs parkolója. Jobb egérgombbal rendeljen hozzá parkolási helyet." />
 		<text name="AD_parkVehicle_selected"					text="Kiválasztott parkolóhely: " />
 		<text name="AD_Driver_of"								text="Sofőr ki" />
@@ -69,8 +69,8 @@
 		<text name="AD_No_Trailer"								text="Nem találja a pótkocsit" />
 		<text name="AD_No_Bunker"								text="Nem találja a Silót" />
 		<text name="AD_No_Shovel"								text="Nem talál kanalat" />
-		<text name="AD_No_Refuel_Station"						text="could not find refuel station" />
-		<text name="AD_No_Repair_Station"						text="could not find repair station for:" />
+		<text name="AD_No_Refuel_Station"						text="Nem talált töltőállomást" />
+		<text name="AD_No_Repair_Station"						text="Javítóállomás nem található a következőhöz:" />
 		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
 		<text name="AD_MODE_DRIVETO"							text="Sofőr" />
 		<text name="AD_MODE_DELIVERTO"							text="Szállító" />
@@ -89,6 +89,7 @@
 		<text name="gui_ad_blinkValue"						    text="Irányjelző bekapcsolása automatikus" />
 		<text name="gui_ad_blinkValue_tooltip"					text="Kormányállás az irányjelző fények automatikus engedélyezéséhez. (0 = az irányjelző fény automatikusan kikapcsol)" />
 		<text name="gui_ad_pipe_offset"							text="Cső eltolás" />
+		<text name="gui_ad_pipe_offset_tooltip"					text="Útvonal oldalirányú eltolása a kombájnhoz viszonyítva. Pozitív értékek: balra, negatív értékek: jobbra. Nulla érték a cső végénél található.
 		<text name="gui_ad_followDistance"						text="Távolság a kombájntól" />
 		<text name="gui_ad_followDistance_tooltip"				text="Távolság ha a kombájnt hátul követi" />
 		<text name="gui_ad_lookahead_turning"					text="Kanyarodási távolság" />
@@ -108,6 +109,8 @@
 		<text name="gui_ad_no"									text="Nem" />
 		<text name="gui_ad_FS22"								text="FS 22" />
 		<text name="gui_ad_FS19"								text="FS 19" />
+		<text name="gui_ad_BSMRange"							text="Bunker Silo Manager Range" />
+		<text name="gui_ad_BSMRange_tooltip"					text="In this range vehicles to destination bunker silo one by one get driveway" />
 		<text name="ad_bga_init"								text="Elindítás" />
 		<text name="ad_bga_waiting"								text="Várakozás pótkocsira" />
 		<text name="ad_bga_active"								text="Aktív" />
@@ -164,6 +167,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modes: A célok nem változnak / csak a felvételi célok / csak a célok kézbesítése / az átvétel és a célok kézbesítése a mappában ciklusosak (nem az alapértelmezett mappával) (csak akkor vehető figyelembe, ha a mappák használata aktív)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Maximális kirakodási távolság" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="A célponttól e távolságig a kirakodás felismerése esetén be- és kirakodás történik" />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Jelző lámpa" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Használjon jelzőfényeket az úton." />
 		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
@@ -188,8 +192,8 @@
 		<text name="gui_ad_enterGroupNameText"					text="Írja be a mappa nevét:" />
 		<text name="gui_ad_autoRefuel"							text="Automatikus tankolás" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Ha alacsony az üzemanyagszint, menjen az üzemanyagtöltési célig (közel az üzemanyag kiadóhoz)." />
-		<text name="gui_ad_autoRepair"							text="Automatic Repairing" />
-		<text name="gui_ad_autoRepair_tooltip"					text="Drive to workshop destination (close to repair trigger) when wear level is too high." />
+		<text name="gui_ad_autoRepair"							text="Automatikus javítás" />
+		<text name="gui_ad_autoRepair_tooltip"					text="Ha a kopási szint túl magas, hajtson egy műhelyhez (javító zónához közel)." />
 		<text name="gui_ad_filter"								text="Szűrő" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Célszűrés választás" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Szűrő szöveg bevitel:" />
@@ -214,33 +218,33 @@
 		<text name="gui_ad_wideHUD"								text="Széles HUD" />
 		<text name="gui_ad_wideHUD_tooltip"						text="Használjon széles HUD módot, amely lehetővé teszi még néhány beállítási gombot a HUD-ban" />
 		<text name="gui_ad_playSounds"							text="Sound" />
-		<text name="gui_ad_playSounds_tooltip"					text="Enables the sound effects for mouse clicks and notifications" />
-		<text name="gui_ad_scaleLines"							text="Scale Lines" />
-		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
+		<text name="gui_ad_playSounds_tooltip"					text="Engedélyezi a hanghatásokat egérkattintásokhoz és értesítésekhez." />
+		<text name="gui_ad_scaleLines"							text="Vonalvastagság" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Összekötő vonalak vastagsága" />
 		<text name="gui_ad_syncMultiTargets"					text="Több cél szinkronizálása" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Több útvonal, amely ugyanazt a mappát használja több célhoz, szinkronizálja a következő célokat" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Parkolás a végén" />
 		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="Csak az Átvétel és kézbesítés, kézbesítés módokban érhető el: Ha a munka befejeződött, a jármű / tartozék tárolt parkolási pozíciójába kerül. A Dedi-Server-en csak a jármű parkolóhelye áll rendelkezésre!" />
-		<text name="gui_ad_autoTipSide"                         text="Automatikus hegyoldal" />
-		<text name="gui_ad_autoTipSide_tooltip"                 text="Igen - Az AutoDrive automatikusan kiválasztja a csúcsoldalt / Nem - a már kiválasztott csúcsoldalt fogja használni" />
+		<text name="gui_ad_autoTipSide"                         text="Automatikus billentési oldal" />
+		<text name="gui_ad_autoTipSide_tooltip"                 text="Igen - Az AutoDrive automatikusan kiválasztja a billentési oldalt / Nem - a már kiválasztott billentési oldalt fogja használni" />
 		<text name="gui_ad_autoTrailerCover"                    text="Automatikus pótkocsi fedél " />
 		<text name="gui_ad_autoTrailerCover_tooltip"            text="Igen - az AutoDrive szükség esetén nyissa meg és zárja be a pótkocsi fedelét / Nem - az AutoDrive nem nyitja vagy zárja le a pótkocsi fedelét" />
 		<text name="gui_ad_useForwardTurningManoeuvre"          text="Forwards turning manoeuvre" />
 		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="Yes - AutoDrive unloaders try to plan a path forwards to adapt to 90° turns of the combine. / No - Unloaders will reverse before turn" />
-		<text name="gui_ad_ALUnload"                            text="Autoload: Unload Position" />
+		<text name="gui_ad_ALUnload"                            text="Autoload: Kirakodási pozíció" />
 		<text name="gui_ad_ALUnload_tooltip"                    text="Off-no automatic unload, center-unload on loading platform, left / right vehicle unload position (Position depend on vehicle setup, not AD!)" />
 		<text name="gui_ad_AL_off"                              text="Unload Off" />
-		<text name="gui_ad_AL_center"                           text="Unload center" />
-		<text name="gui_ad_AL_left"                             text="Unload left" />
-		<text name="gui_ad_AL_behind"                           text="Unload behind" />
-		<text name="gui_ad_AL_right"                            text="Unload right" />
-		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: wait time after unload" />
-		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Wait time after unloading, before continue to drive - useful for unload center: 0-no wait, wait selected time" />
-		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Network Generation" />
+		<text name="gui_ad_AL_center"                           text="Kirakodás középre" />
+		<text name="gui_ad_AL_left"                             text="Kirakodás balra" />
+		<text name="gui_ad_AL_behind"                           text="Kirakodás hátra" />
+		<text name="gui_ad_AL_right"                            text="Kirakodás jobbra" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="Autoload: várakozási idő kirakodás után" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="Várakozási idő kirakodás után, továbbhajtás előtt - hasznos a középső kirakodáshoz: 0 - nincs várakozás, várakozás a kiválasztott ideig" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - Hálózat generálás" />
 		<text name="gui_ad_scanConfirmationText"                text="Az AutoDrive generáljon útvonalhálózatot a térképen lévő forgalmi és segédadatokból?" />
-		<text name="gui_ad_noHarvesterAvailable"				text="No harvester with same target found" />
-		<text name="gui_ad_noUnloaderAvailable"					text="No driver with same target available" />
-		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
+		<text name="gui_ad_noHarvesterAvailable"				text="Nem található kombájn azonos úticéllal" />
+		<text name="gui_ad_noUnloaderAvailable"					text="Sofőr azonos úticéllal nem elérhető" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Maradék vezetési idő" />
 		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
 
 		<text name="gui_ad_settingsPage_title"					text="Beállítás - AutoDrive" />
@@ -251,7 +255,7 @@
 		<text name="gui_ad_eFeaturesSettingsPage_title"			text="Kísérleti szolgáltatások beállításai - AutoDrive" />
 		<text name="gui_ad_environmentSettingsPage_title"		text="Non-functional Settings - AutoDrive" />
 		<text name="gui_ad_restoreButtonText"					text="Visszaállítás" />
-		<text name="gui_ad_setDefaultButtonText" 				text="Set as default" />
+		<text name="gui_ad_setDefaultButtonText" 				text="Eredeti beállítás" />
 		<text name="gui_ad_settingsClosingDialog_title"			text="Minden változás elveszik" />
 		<text name="gui_ad_settingsClosingDialog_text"			text="Biztosan bezárja a beállításokat mentés nélkül?" />
 		<text name="gui_ad_routesManagerTitle" 					text="Útvonal szerkesztés" />
@@ -295,8 +299,13 @@
 		<text name="ad_color_currentConnection" 			    text="12 line next path" />
 		<text name="ad_color_closestLine" 			            text="13 line from vehicle to closest waypoint" />
 		<text name="ad_color_editorHeightLine" 			        text="14 line from surface waypoint to the one above vehicle" />
-		<text name="ad_color_previewOk" 			            text="15 curve preview OK, no collision" />
-		<text name="ad_color_previewNotOk" 			            text="16 curve preview NotOK, has collision" />
+		<text name="ad_color_previewSingleConnection" 	        text="15 curve preview OK, single-way connection" />
+		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
+		<text name="ad_color_previewOk" 			            text="19 curve preview OK, no collision" />
+		<text name="ad_color_previewNotOk" 			            text="20 curve preview NotOK, has collision" />
+		<text name="ad_color_textInputBackground" 			    text="21 Background for inputs of text, targets etc." />
 
 		<text name="button_delete_all" 							text="Összes törlése" />
 		<text name="button_reset_selected" 					    text="Reset selected" />
@@ -313,7 +322,7 @@
 		<text name="AD_task_wait_for_combine_turn"				text="Kombájnra várás" />
 		<text name="AD_task_drive_to_load_point"				text="Hajtson a rakodási ponthoz" />
 		<text name="AD_task_drive_to_refuel_point"				text="Hajtson az üzemanyagtöltési ponthoz" />
-		<text name="AD_task_drive_to_repair_point"				text="Drive to repair station" />
+		<text name="AD_task_drive_to_repair_point"				text="Hajtson egy javító állomáshoz" />
 		<text name="AD_task_stop_and_disable"					text="Megállás" />
 		<text name="AD_task_drive_to_unload_point"				text="Hajtson a kirakodási pontig" />
 		<text name="AD_task_wait_for_call"						text="Hívásra vár" />
@@ -328,7 +337,7 @@
 		<text name="AD_task_exiting_field"						text="Kilépés a fölről" />
 		<text name="AD_task_reversing_from_collision"			text="Tiszta terület keresése" />
         <text name="AD_task_drive_to_park"				        text="Parkolás a területen" />
-		<text name="AD_task_unload_area_in_fruit"			    text="Unload area blocked" />
+		<text name="AD_task_unload_area_in_fruit"			    text="Kirakodási terület blokkolva" />
 
 		<text name = "gui_CPAD_off"								text = "off"/>
 		<text name = "gui_CPAD_simple"							text = "simple"/>

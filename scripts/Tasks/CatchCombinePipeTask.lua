@@ -37,7 +37,8 @@ function CatchCombinePipeTask:setUp()
     local angleToCombineHeading = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombineHeading()
     local angleToCombine = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombine()
 
-    if angleToCombineHeading < 35 and angleToCombine < 90 and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < 60 then
+    if angleToCombineHeading < 35 and angleToCombine < 90 and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < 60
+        and not self.combine.ad.isFixedPipeChopper then
         self:finished()
     end
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
@@ -73,6 +74,7 @@ function CatchCombinePipeTask:update(dt)
             self.vehicle.ad.specialDrivingModule:update(dt)
         end
     elseif self.state == CatchCombinePipeTask.STATE_DELAY_PATHPLANNING then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_DELAY_PATHPLANNING")
         if self.waitForCheckTimer:timer(true, 1000, dt) then
             if self:startNewPathFinding() then
                 self.vehicle.ad.pathFinderModule:addDelayTimer(6000)
@@ -97,6 +99,7 @@ function CatchCombinePipeTask:update(dt)
             -- or AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE 
             then
             -- got stuck or to close to combine -> reverse
+            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_DRIVING stuck")
             self.stuckTimer:timer(false)
             local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
             self.reverseStartLocation = {x = x, y = y, z = z}
@@ -112,10 +115,12 @@ function CatchCombinePipeTask:update(dt)
             if self.vehicle.ad.drivePathModule:isTargetReached() then
                 -- check if we have actually reached the target or not
                 -- accept current location if we are in a good position to start chasing: distance and angle are important here
+                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_DRIVING TargetReached")
                 local angleToCombine = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombineHeading()
                 local isCorrectSide = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide()
 
                 if angleToCombine < 35 and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < 80 and isCorrectSide then
+                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_DRIVING -> STATE_FINISHED")
                     self.state = CatchCombinePipeTask.STATE_FINISHED
                     return
                 else
@@ -137,6 +142,7 @@ function CatchCombinePipeTask:update(dt)
             self.vehicle.ad.specialDrivingModule:driveReverse(dt, 15, 1, self.vehicle.ad.trailerModule:canBeHandledInReverse())
         end
     elseif self.state == CatchCombinePipeTask.STATE_WAIT_BEFORE_FINISH then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_WAIT_BEFORE_FINISH")
         self.waitTimer:timer(true, self.MAX_REVERSE_TIME, dt)
         if self.waitTimer:done() then
             self.waitTimer:timer(false)
@@ -147,6 +153,7 @@ function CatchCombinePipeTask:update(dt)
             self.vehicle.ad.specialDrivingModule:update(dt)
         end
     elseif self.state == CatchCombinePipeTask.STATE_FINISHED then
+        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:update - STATE_FINISHED")
         self:finished()
         return
     end
@@ -161,6 +168,7 @@ function CatchCombinePipeTask:finished(propagate)
 end
 
 function CatchCombinePipeTask:startNewPathFinding()
+    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:startNewPathFinding()")
     local pipeChasePos, pipeChaseSide = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeChasePosition(true)
     local x, _, z = getWorldTranslation(self.combine.components[1].node)
     local targetFieldId = g_farmlandManager:getFarmlandIdAtWorldPosition(pipeChasePos.x, pipeChasePos.z)
@@ -181,7 +189,7 @@ function CatchCombinePipeTask:startNewPathFinding()
 
     self.newPathFindingCounter = self.newPathFindingCounter + 1 -- used to prevent deadlock
 
-    if AutoDrive.getIsBufferCombine(self.combine) or (pipeChaseSide ~= AutoDrive.CHASEPOS_REAR or (targetFieldId == combineFieldId and cFillRatio <= 0.85)) then
+    if self.combine.ad.isChopper or (pipeChaseSide ~= AutoDrive.CHASEPOS_REAR or (targetFieldId == combineFieldId and cFillRatio <= 0.85)) then
     -- if self.combine:getIsBufferCombine() or (pipeChaseSide ~= AutoDrive.CHASEPOS_REAR and targetFieldId == combineFieldId and cFillRatio <= 0.85) then
         -- is chopper or chase not rear and harvester on correct field and filled < 85% - i.e. combine pipe not in fruit
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CatchCombinePipeTask:startNewPathFinding() - chase pos looks good - calculate path to it...")
@@ -195,6 +203,14 @@ function CatchCombinePipeTask:startNewPathFinding()
         self.waitForCheckTimer:timer(false)
     end
     return false
+end
+
+function CatchCombinePipeTask:getExcludedVehiclesForCollisionCheck()
+    local excludedVehicles = {}
+    if self.state == CatchCombinePipeTask.STATE_DRIVING then
+        table.insert(excludedVehicles, self.combine:getRootVehicle())
+    end
+    return excludedVehicles
 end
 
 function CatchCombinePipeTask:getI18nInfo()

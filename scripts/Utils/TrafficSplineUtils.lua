@@ -169,10 +169,7 @@ function AutoDrive:createWaypointsForSpline(startNodes, endNodes, usedSplines, s
 		if targetId >= 0 then			
 			local wpId = ADGraphManager:getWayPointsCount()
 			local wp = ADGraphManager:getWayPointById(wpId)
-			ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(targetId))
-			if isDualRoad then
-				ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(targetId), wp)
-			end
+			ADGraphManager:toggleConnectionBetween(wp, ADGraphManager:getWayPointById(targetId), false, isDualRoad)
 		else
 			if posX < mapSize and posZ < mapSize then
 				ADGraphManager:recordWayPoint(posX, posY, posZ, true, isDualRoad, false, 0, AutoDrive.FLAG_TRAFFIC_SYSTEM)
@@ -289,13 +286,13 @@ function AutoDrive:createJunctions(startNodes, endNodes, maxAngle, maxDist)
                                     end
 
                                     local wp = ADGraphManager:getWayPointById(lastId)
-                                    ADGraphManager:toggleConnectionBetween(wp, startNode, false)
+                                    ADGraphManager:toggleConnectionBetween(wp, startNode, false, false)
                                 end
                             else
                                 --print("AutoDrive:createJunctions - Fallback to toggle connections")
-                                ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
+                                ADGraphManager:toggleConnectionBetween(endNode, startNode, false, false)
                             end
-                            --ADGraphManager:toggleConnectionBetween(endNode, startNode, false)
+                            --ADGraphManager:toggleConnectionBetween(endNode, startNode, false, false)
                         end						
 					end
 				end				
@@ -312,7 +309,7 @@ function AutoDrive:checkForCollisionOnSpline()
     local mask = AutoDrive.collisionMaskSplines
 
 	for wpId, wp in pairs(self.splineInterpolation.waypoints) do
-		if wpId > 1 and wpId < (#self.splineInterpolation.waypoints - 1) then
+		if wpId > 1 then
 			local wpLast = self.splineInterpolation.waypoints[wpId - 1]
 			local deltaX, deltaY, deltaZ = wp.x - wpLast.x, wp.y - wpLast.y, wp.z - wpLast.z
 			local centerX, centerY, centerZ = wpLast.x + deltaX/2,  wpLast.y + deltaY/2,  wpLast.z + deltaZ/2

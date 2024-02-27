@@ -16,8 +16,9 @@ function AutoDrive.checkForVehiclesInBox(boundingBox, excludedVehicles)
                 end
             end
         end
-        if otherVehicle.spec_conveyorBelt and otherVehicle.spec_motorized and otherVehicle.getIsMotorStarted and otherVehicle:getIsMotorStarted() then
-            -- ignore operating conveyor belts
+        if (otherVehicle.spec_conveyorBelt and otherVehicle.spec_motorized and otherVehicle.getIsMotorStarted and otherVehicle:getIsMotorStarted()) -- ignore operating conveyor belts
+            or (otherVehicle.trainSystem ~= nil) -- ignore train vehicles
+        then
             isExcluded = true
         end
         if (not isExcluded) and otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then
@@ -197,6 +198,10 @@ function ADDimensionSensor:getRealVehicleDimensions()
 
     local maxWidthLeft, maxWidthRight, maxLengthFront, maxLengthBack = 0,0,0,0
 
+    if not entityExists(self.vehicle.components[1].node) then
+        -- if selling attachments, the vehicle chain is not updated complete in 1 frame, so need this
+        return 0, 0
+    end
     local rx, ry, rz = getWorldRotation(self.vehicle.components[1].node)
 
     local function leftright(dimStart, dimEnd)

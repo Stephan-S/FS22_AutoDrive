@@ -24,12 +24,10 @@ function ADCollisionDetectionModule:update(dt)
 end
 
 function ADCollisionDetectionModule:detectObstacle()
-	local box = self.vehicle.ad.sensors.frontSensorDynamic:getBoxShape()
-
 	if AutoDrive.getSetting("enableTrafficDetection") >= 1 then
-		if self.vehicle.ad.sensors.frontSensorDynamic:pollInfo() then
+		if self.vehicle.ad.sensors.frontSensorDynamicShort:pollInfo() then
             local frontSensorDynamicInBunkerArea = false
-            local sensorLocation = self.vehicle.ad.sensors.frontSensorDynamic:getLocationByPosition()
+            local sensorLocation = self.vehicle.ad.sensors.frontSensorDynamicShort:getLocationByPosition()
             local vehX, vehY, vehZ = getWorldTranslation(self.vehicle.components[1].node)
             local worldOffsetX, worldOffsetY, worldOffsetZ = localDirectionToWorld(self.vehicle.components[1].node, sensorLocation.x, 0, sensorLocation.z)
             for _, trigger in pairs(ADTriggerManager.getUnloadTriggers()) do
@@ -52,6 +50,7 @@ function ADCollisionDetectionModule:detectObstacle()
 	if ((g_updateLoopIndex + self.vehicle.id) % AutoDrive.PERF_FRAMES == 0) then
 		local excludedList = self.vehicle.ad.taskModule:getActiveTask():getExcludedVehiclesForCollisionCheck()
 
+		local box = self.vehicle.ad.sensors.frontSensorDynamicLong:getBoxShape()
 		local boundingBox = {}
 	    boundingBox[1] = box.topLeft
 	    boundingBox[2] = box.topRight
@@ -70,28 +69,36 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 			self.trafficVehicle = nil
 			local idToCheck = 3
 			local alreadyOnDualRoute = false
+			local lastDualId = nil
 			if wayPoints[currentWayPoint - 1] ~= nil and wayPoints[currentWayPoint] ~= nil then
 				alreadyOnDualRoute = ADGraphManager:isDualRoad(wayPoints[currentWayPoint - 1], wayPoints[currentWayPoint])
 			end
 
 			if wayPoints[currentWayPoint + idToCheck] ~= nil and wayPoints[currentWayPoint + idToCheck + 1] ~= nil and not alreadyOnDualRoute then
-				local dualRoute = ADGraphManager:isDualRoad(wayPoints[currentWayPoint + idToCheck], wayPoints[currentWayPoint + idToCheck + 1])
 
 				local dualRoutePoints = {}
 				idToCheck = 0
-				while (dualRoute == true) or (idToCheck < 8) do
+				local foundDualRoute = false
+				local continueSearch = true
+				while (continueSearch == true) do
 					local startNode = wayPoints[currentWayPoint + idToCheck]
 					local targetNode = wayPoints[currentWayPoint + idToCheck + 1]
 					if (startNode ~= nil) and (targetNode ~= nil) then
 						local testDual = ADGraphManager:isDualRoad(startNode, targetNode)
 						if testDual == true then
 							table.insert(dualRoutePoints, startNode.id)
-							dualRoute = true
+							lastDualId = targetNode.id
+							continueSearch = true
+							foundDualRoute = true
+						elseif foundDualRoute == true then
+							-- dual section ended - exit
+							continueSearch = false
 						else
-							dualRoute = false
+							-- check min 7 WP ahead even if not dual
+							continueSearch = idToCheck < 8
 						end
 					else
-						dualRoute = false
+						continueSearch = false
 					end
 					idToCheck = idToCheck + 1
 				end
@@ -110,6 +117,13 @@ function ADCollisionDetectionModule:detectAdTrafficOnRoute()
 										if point == otherWayPoints[otherCurrentWayPoint + i].id then
 											onSameRoute = true
 											--check if going in same direction
+											if #dualRoutePoints == 1 then
+												if lastDualId ~= nil and otherWayPoints[otherCurrentWayPoint + i + 1] ~= nil then
+													if lastDualId == otherWayPoints[otherCurrentWayPoint + i + 1].id then
+														sameDirection = true
+													end
+												end
+											end
 											if dualRoutePoints[_ + 1] ~= nil and otherWayPoints[otherCurrentWayPoint + i + 1] ~= nil then
 												if dualRoutePoints[_ + 1] == otherWayPoints[otherCurrentWayPoint + i + 1].id then
 													sameDirection = true

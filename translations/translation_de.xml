@@ -116,6 +116,8 @@
 		<text name="gui_ad_no"									text="Nein" />
 		<text name="gui_ad_FS22"								text="FS 22" />
 		<text name="gui_ad_FS19"								text="FS 19" />
+		<text name="gui_ad_BSMRange"							text="Bunker Silo Manager Reichweite" />
+		<text name="gui_ad_BSMRange_tooltip"					text="In diesem Abstand um das Ziel Bunker Silo wird Fahrzeugen der Reihe nach die Zufahrt gewährt" />
 		<text name="ad_bga_init"								text="Initialisieren" />
 		<text name="ad_bga_waiting"								text="Warten auf Abfahrer/Silo" />
 		<text name="ad_bga_active"								text="Aktiv" />
@@ -172,6 +174,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 Modi: kein Wechsel der Ziele / nur Beladeziele / nur Entladeziele / Be- und Entladeziele im Ordner rotierend wechseln (nicht für Standard-Ordner) (und nur wenn Ordner verwenden aktiv)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Maximaler Siloabstand" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Bis zu dieser Entfernung zum Zielpunkt wird beladen/entladen bei erkanntem Trigger." />
+		<text name="gui_ad_useGlobalSetting"					text="Globale Einstellung benutzen" />
 		<text name="gui_ad_useBeaconLights"						text="Rundumleuchten" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Ja - Außerhalb des Felds automatisch eingeschaltet / Nein - Rundumleuchten werden nicht automatisch ein- oder ausgeschaltet" />
 		<text name="gui_ad_worklightsWhenLoading"				text="Arbeitslicht beim Be- und Entladen" />
@@ -212,7 +215,7 @@
 		<text name="gui_ad_callSecondUnloader"					text="Rufe 2. Ablader" />
 		<text name="gui_ad_callSecondUnloader_tooltip"			text="Rufe 2. Ablader wenn der aktuelle Abfahrer das eingestellte Füll Level erreicht hat" />
 		<text name="gui_ad_followOnlyOnField"					text="Abfahrer aufs Feld begrenzen" />
-		<text name="gui_ad_followOnlyOnField_tooltip"			text="Während dem aktiven Abladen / Häckseln, darf nicht über Feldgrenzen hinausgfahren werden" />
+		<text name="gui_ad_followOnlyOnField_tooltip"			text="Während dem aktiven Abladen / Häckseln, darf nicht über Feldgrenzen hinausgefahren werden" />
 		<text name="gui_ad_addSettingsToHUD"					text="Mehr Einstellungen im HUD" />
 		<text name="gui_ad_addSettingsToHUD_tooltip"			text="Blendet mehr Knöpfe im HUD ein um direkt Einstellungen vorzunehmen ohne dieses Menü aufzurufen" />
 		<text name="gui_ad_iconSetToUse"						text="Logo Personalisierug" />
@@ -307,8 +310,13 @@
 		<text name="ad_color_currentConnection" 			    text="12 Pfeil nächster Pfad" />
 		<text name="ad_color_closestLine" 			            text="13 Linie Fahrzeug <-> naheliegendster Wegpunkt" />
 		<text name="ad_color_editorHeightLine" 			        text="14 senkrechte Linie Wegpunkt am Boden <-> Wegpunkt über dem Fahrzeug" />
-		<text name="ad_color_previewOk" 			            text="15 Kurve Vorschauline OK, kollisionsfrei" />
-		<text name="ad_color_previewNotOk" 			            text="16 Kurve Vorschauline hat Kollision" />
+		<text name="ad_color_previewSingleConnection" 	        text="15 Kurve Vorschauline OK, Hauptstrecke eine Richtung" />
+		<text name="ad_color_previewDualConnection" 	        text="16 Kurve Vorschauline OK, Hauptstrecke zwei Richtungen" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 Kurve Vorschauline OK, Nebenstrecke eine Richtung" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 Kurve Vorschauline OK, Nebenstrecke zwei Richtungen" />
+		<text name="ad_color_previewOk" 			            text="19 Kurve Vorschauline OK, kollisionsfrei" />
+		<text name="ad_color_previewNotOk" 			            text="20 Kurve Vorschauline hat Kollision" />
+		<text name="ad_color_textInputBackground" 			    text="21 Hintergrund Eingabe von Texten, Zielen etc." />
 
 		<text name="button_delete_all" 							text="Alle löschen" />
 		<text name="button_reset_selected" 					    text="Ausgewählten zurücksetzen" />

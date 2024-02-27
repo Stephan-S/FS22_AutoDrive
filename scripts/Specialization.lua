@@ -98,10 +98,9 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
     if registerEvents then
         -- attach our actions
         local _, eventName
-        local toggleButton = false
         local showF1Help = AutoDrive.getSetting("showHelp")
         for _, action in pairs(ADInputManager.actionsToInputs) do
-            _, eventName = InputBinding.registerActionEvent(g_inputBinding, action[1], self, ADInputManager.onActionCall, toggleButton, true, false, true)
+            _, eventName = InputBinding.registerActionEvent(g_inputBinding, action[1], self, ADInputManager.onActionCall, false, true, false, true)
             if action[5] then
                 g_inputBinding:setActionEventTextVisibility(eventName, action[5] and showF1Help)
                 if showF1Help then
@@ -110,6 +109,8 @@ function AutoDrive:onRegisterActionEvents(_, isOnActiveVehicle)
                         g_inputBinding:setActionEventTextPriority(eventName, action[6])
                     end
                 end
+            else
+                g_inputBinding:setActionEventTextVisibility(eventName, false)
             end
         end
     end
@@ -262,6 +263,7 @@ function AutoDrive:onPostLoad(savegame)
         end
     end
 
+    -- sugarcane harvester need special consideration
     if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
         if self.typeName == "combineCutterFruitPreparer" then
             local _, vehicleFillCapacity, _, _ = AutoDrive.getObjectFillLevels(self)
@@ -269,7 +271,9 @@ function AutoDrive:onPostLoad(savegame)
         end
     end
 
-    if self.spec_pipe ~= nil and self.spec_enterable ~= nil and self.spec_combine ~= nil then
+    -- harvester types
+    local isValidHarvester = AutoDrive.setCombineType(self)
+    if isValidHarvester then
         ADHarvestManager:registerHarvester(self)
     end
 
@@ -637,54 +641,62 @@ function AutoDrive.drawTripod(node, offset)
 end
 
 function AutoDrive:onDrawPreviews()
-    --if AutoDrive:checkForCollisionOnSpline() then
     local lastHeight = AutoDrive.splineInterpolation.startNode.y
     local lastWp = AutoDrive.splineInterpolation.startNode
+    local targetWp = AutoDrive.splineInterpolation.endNode
     local arrowPosition = ADDrawingManager.arrows.position.middle
     local collisionFree = AutoDrive:checkForCollisionOnSpline()
+    local color
+    local isSubPrio = ADGraphManager:getIsPointSubPrio(lastWp.id) or ADGraphManager:getIsPointSubPrio(targetWp.id)
+    local isDual = AutoDrive.leftCTRLmodifierKeyPressed and AutoDrive.leftALTmodifierKeyPressed
+    if not collisionFree then
+        color = AutoDrive.currentColors.ad_color_previewNotOk
+    elseif isDual and isSubPrio then
+        color = AutoDrive.currentColors.ad_color_previewSubPrioDualConnection
+    elseif isDual then
+        color = AutoDrive.currentColors.ad_color_previewDualConnection
+    elseif isSubPrio then
+        color = AutoDrive.currentColors.ad_color_previewSubPrioSingleConnection
+    else
+        color = AutoDrive.currentColors.ad_color_previewSingleConnection
+    end
+
     for wpId, wp in pairs(AutoDrive.splineInterpolation.waypoints) do
         if wpId ~= 1 and wpId < (#AutoDrive.splineInterpolation.waypoints - 1) then
             if math.abs(wp.y - lastHeight) > 1 then -- prevent point dropping into the ground in case of bridges etc
                 wp.y = lastHeight
             end
 
-            if collisionFree then
-                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewOk))
-                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
-            else
-                ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
-                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+            ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, unpack(color))
+            if not isDual then
+                ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, wp.x, wp.y, wp.z, 1, arrowPosition, unpack(color))
             end
-
             lastWp = {x = wp.x, y = wp.y, z = wp.z}
             lastHeight = wp.y
         end
     end
 
-    local targetWp = AutoDrive.splineInterpolation.endNode
-    if collisionFree then
-        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewOk))
-        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewOk))
-    else
-        ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
-        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, arrowPosition, unpack(AutoDrive.currentColors.ad_color_previewNotOk))
+    
+    ADDrawingManager:addLineTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, unpack(color))
+    if not isDual then
+        ADDrawingManager:addArrowTask(lastWp.x, lastWp.y, lastWp.z, targetWp.x, targetWp.y, targetWp.z, 1, arrowPosition, unpack(color))
     end
 end
 
 function AutoDrive:onPostAttachImplement(attachable, inputJointDescIndex, jointDescIndex)
     if attachable["spec_FS19_addon_strawHarvest.strawHarvestPelletizer"] ~= nil then
         attachable.isPremos = true
-        -- attachable.getIsBufferCombine = function()
-            -- return false
-        -- end
     end
     if (attachable.spec_pipe ~= nil and attachable.spec_combine ~= nil) or attachable.isPremos then
+        attachable.ad = self.ad -- takeover i.e. sensors from trailing vehicle
         attachable.isTrailedHarvester = true
         attachable.trailingVehicle = self
-        ADHarvestManager:registerHarvester(attachable)
-        self.ad.isCombine = true
+        -- harvester types
         self.ad.attachableCombine = attachable
-        attachable.ad = self.ad
+        local isValidHarvester = AutoDrive.setCombineType(attachable)
+        if isValidHarvester then
+            ADHarvestManager:registerHarvester(attachable)
+        end
     end
     AutoDrive.setValidSupportedFillType(self)
 
@@ -698,14 +710,11 @@ function AutoDrive:onPreDetachImplement(implement)
     local attachable = implement.object
     if attachable.isTrailedHarvester and attachable.trailingVehicle == self then
         attachable.ad = nil
-        self.ad.isCombine = false
         self.ad.attachableCombine = nil
         ADHarvestManager:unregisterHarvester(attachable)
         attachable.isTrailedHarvester = false
         attachable.trailingVehicle = nil
-        if attachable.isPremos then
-            -- attachable.getIsBufferCombine = nil
-        end
+        self.ad.isRegisterdHarvester = nil
     end
     if self.ad ~= nil then
         self.ad.frontToolWidth = nil

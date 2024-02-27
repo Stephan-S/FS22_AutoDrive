@@ -21,7 +21,7 @@ function LoadMode:reset()
     self.vehicle.ad.trailerModule:reset()
 end
 
-function LoadMode:start()
+function LoadMode:start(user)
 	AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "LoadMode:start start self.state %s", tostring(self.state))
     if not self.vehicle.ad.stateModule:isActive() then
         self.vehicle:startAutoDrive()

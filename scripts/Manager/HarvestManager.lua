@@ -16,7 +16,8 @@ function ADHarvestManager:registerHarvester(harvester)
     if not table.contains(self.idleHarvesters, harvester) and not table.contains(self.harvesters, harvester) then
         AutoDrive.debugPrint(harvester, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:registerHarvester - inserted")
         if harvester ~= nil and harvester.ad ~= nil then
-            harvester.ad.isCombine = true
+            local rootVehicle = harvester:getRootVehicle()
+            rootVehicle.ad.isRegisterdHarvester = true
         end
         if g_server ~= nil then
             table.insert(self.idleHarvesters, harvester)
@@ -27,7 +28,8 @@ end
 function ADHarvestManager:unregisterHarvester(harvester)
     AutoDrive.debugPrint(harvester, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:unregisterHarvester")
     if harvester ~= nil and harvester.ad ~= nil then
-        harvester.ad.isCombine = false
+        local rootVehicle = harvester:getRootVehicle()
+        rootVehicle.ad.isRegisterdHarvester = false
     end
     if g_server ~= nil then
         if table.contains(self.idleHarvesters, harvester) then
@@ -97,7 +99,7 @@ function ADHarvestManager:update(dt)
         if vehicle.isTrailedHarvester then
             vehicle = vehicle.trailingVehicle
         end
-        if (vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or (AutoDrive:getIsEntered(vehicle) and AutoDrive.isPipeOut(vehicle)) then
+        if (vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or (AutoDrive:getIsEntered(vehicle:getRootVehicle()) and AutoDrive.isPipeOut(vehicle)) then
             table.insert(self.harvesters, idleHarvester)
             table.removeValue(self.idleHarvesters, idleHarvester)
         end
@@ -107,7 +109,7 @@ function ADHarvestManager:update(dt)
         if vehicle.isTrailedHarvester then
             vehicle = vehicle.trailingVehicle
         end
-        if not ((vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or (AutoDrive:getIsEntered(vehicle) and AutoDrive.isPipeOut(vehicle))) then
+        if not ((vehicle.getIsAIActive ~= nil and vehicle:getIsAIActive()) or (AutoDrive:getIsEntered(vehicle:getRootVehicle()) and AutoDrive.isPipeOut(vehicle))) then
             table.insert(self.idleHarvesters, harvester)
             table.removeValue(self.harvesters, harvester)
 
@@ -229,7 +231,7 @@ function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
 end
 
 function ADHarvestManager.isHarvesterActive(harvester)
-    if AutoDrive.getIsBufferCombine(harvester) then
+    if harvester.ad.isChopper then
         return true
     else
         local fillLevel, fillCapacity, _, fillFreeCapacity = AutoDrive.getObjectFillLevels(harvester)
@@ -240,7 +242,7 @@ function ADHarvestManager.isHarvesterActive(harvester)
         -- Only chase the rear on low fill levels of the combine. This should prevent getting into unneccessarily tight spots for the final approach to the pipe.
         -- Also for small fields, there is often no purpose in chasing so far behind the combine as it will already start a turn soon
         local allowedToChase = true
-        if not AutoDrive.isSugarcaneHarvester(harvester) then
+        if not harvester.ad.isSugarcaneHarvester then
             local chasingRear = false
             local pipeSide = AutoDrive.getPipeSide(harvester)
             if pipeSide == AutoDrive.CHASEPOS_LEFT then
@@ -258,7 +260,7 @@ function ADHarvestManager.isHarvesterActive(harvester)
             end
         end
 
-        local manuallyControlled = AutoDrive:getIsEntered(harvester) and (not (harvester.getIsAIActive ~= nil and harvester:getIsAIActive()))
+        local manuallyControlled = AutoDrive:getIsEntered(harvester:getRootVehicle()) and (not (harvester.getIsAIActive ~= nil and harvester:getIsAIActive()))
 
         if manuallyControlled then
             return  AutoDrive.isPipeOut(harvester)

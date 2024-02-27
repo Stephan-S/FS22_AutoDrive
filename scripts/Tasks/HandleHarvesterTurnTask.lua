@@ -313,7 +313,7 @@ function HandleHarvesterTurnTask:generateReverseToCombineSection()
     local nodes = {}
 
     local sideChaseTermX = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getSideChaseOffsetX()
-    local sideChaseTermZ = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getSideChaseOffsetZ(AutoDrive.dynamicChaseDistance or not AutoDrive.getIsBufferCombine(self.combine))
+    local sideChaseTermZ = self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getSideChaseOffsetZ(AutoDrive.dynamicChaseDistance or not self.combine.ad.isChopper)
 
     if not AutoDrive.combineIsTurning(self.combine) then
         local chasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, -(sideChaseTermX + self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getPipeSlopeCorrection()), sideChaseTermZ - 2)

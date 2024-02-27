@@ -108,6 +108,8 @@
 		<text name="gui_ad_no"									text="No" />
 		<text name="gui_ad_FS22"								text="FS 22" />
 		<text name="gui_ad_FS19"								text="FS 19" />
+		<text name="gui_ad_BSMRange"							text="Bunker Silo Manager Range" />
+		<text name="gui_ad_BSMRange_tooltip"					text="In this range vehicles to destination bunker silo one by one get driveway" />
 		<text name="ad_bga_init"								text="Inicializando" />
 		<text name="ad_bga_waiting"								text="Esperando por Remolque/Silo" />
 		<text name="ad_bga_active"								text="Activo" />
@@ -164,6 +166,7 @@
 		<text name="gui_ad_rotateTargets_tooltip"			    text="4 modos: Sin cambio de objetivos/Solo recoger de objetivos/Solo entregar a objetivos/Recoger y entregar a objetivos dentro de la carpeta en bucle (no funciona con la carpeta por defecto) (solo funciona si se activa la opción de usar carpetas)" />
 		<text name="gui_ad_maxTriggerDistance"					text="Distancia máxima al desencadenante" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Distancia a la que se detectan y activan los desencadenantes (por ejemplo, al llegar a un punto de descarga)." />		
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
 		<text name="gui_ad_useBeaconLights"						text="Luces rotativas" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Sí: Usa luces rotativas automáticas fuera de los campos/No: Las luces rotativas no se encenderán ni apagarán automáticamente" />
 		<text name="gui_ad_worklightsWhenLoading"				text="Luz de trabajo al Cargar/Descargar" />
@@ -299,8 +302,13 @@
 		<text name="ad_color_currentConnection" 			    text="12 líneas siguiente ruta" />
 		<text name="ad_color_closestLine" 			            text="13 líneas desde el vehículo hasta el punto de referencia más cercano" />
 		<text name="ad_color_editorHeightLine" 			        text="14 línea desde el punto de ruta de superficie hasta el vehículo cercano" />
-		<text name="ad_color_previewOk" 			            text="15 vista previa de la curva OK, sin colisión" />
-		<text name="ad_color_previewNotOk" 			            text="16 vista previa de la curva no OK, tiene colisión" />
+		<text name="ad_color_previewSingleConnection" 	        text="15 curve preview OK, single-way connection" />
+		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
+		<text name="ad_color_previewOk" 			            text="19 vista previa de la curva OK, sin colisión" />
+    <text name="ad_color_previewNotOk" 			            text="20 vista previa de la curva no OK, tiene colisión" />
+		<text name="ad_color_textInputBackground" 			    text="21 Fondo para entradas de texto, objetivos, etc." />
 
 		<text name="button_delete_all" 							text="Eliminar todas" />
 		<text name="button_reset_selected" 					    text="Resetear seleccionados" />

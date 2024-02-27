@@ -13,7 +13,7 @@ function DriveToMode:reset()
     self.vehicle.ad.trailerModule:reset()
 end
 
-function DriveToMode:start()
+function DriveToMode:start(user)
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_VEHICLEINFO, "DriveToMode:start self.vehicle.ad.onRouteToRefuel %s", tostring(self.vehicle.ad.onRouteToRefuel))
     if not self.vehicle.ad.stateModule:isActive() then
         self.vehicle:startAutoDrive()

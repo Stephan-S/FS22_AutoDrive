@@ -47,6 +47,16 @@ function AutoDrive.devAction(vehicle)
     else
         Logging.info("[AD] AutoDrive.devAction vehicle %s", tostring(vehicle))
     end
+
+    if vehicle ~= nil and g_currentMission.mapWidth and AutoDrive.getDebugChannelIsSet(AutoDrive.DC_ROADNETWORKINFO) and AutoDrive.isInExtendedEditorMode() then
+        local x, y, z = getWorldTranslation(vehicle.rootNode)
+
+        for _, wp in pairs(ADGraphManager:getWayPoints()) do
+            if math.abs(wp.x) >= g_currentMission.mapWidth/2 or math.abs(wp.z) >= g_currentMission.mapHeight/2 then
+                ADGraphManager:moveWayPoint(wp.id, x, y, z, wp.flags)
+            end
+        end
+    end
     AutoDrive.devPrintDebugQueue(vehicle)
 end
 

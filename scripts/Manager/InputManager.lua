@@ -191,7 +191,7 @@ function ADInputManager:input_toggleConnection(vehicle)
         local closestWayPoint, _ = vehicle:getClosestWayPoint()
         if ADGraphManager:getWayPointById(closestWayPoint) ~= nil then
             if vehicle.ad.stateModule:getSelectedNeighbourPoint() ~= nil then
-                ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(closestWayPoint), vehicle.ad.stateModule:getSelectedNeighbourPoint(), false)
+                ADGraphManager:toggleConnectionBetween(ADGraphManager:getWayPointById(closestWayPoint), vehicle.ad.stateModule:getSelectedNeighbourPoint(), false, false)
             end
         end
     end
@@ -202,7 +202,7 @@ function ADInputManager:input_toggleConnectionInverted(vehicle)
         local closestWayPoint, _ = vehicle:getClosestWayPoint()
         if ADGraphManager:getWayPointById(closestWayPoint) ~= nil then
             if vehicle.ad.stateModule:getSelectedNeighbourPoint() ~= nil then
-                ADGraphManager:toggleConnectionBetween(vehicle.ad.stateModule:getSelectedNeighbourPoint(), ADGraphManager:getWayPointById(closestWayPoint), false)
+                ADGraphManager:toggleConnectionBetween(vehicle.ad.stateModule:getSelectedNeighbourPoint(), ADGraphManager:getWayPointById(closestWayPoint), false, false)
             end
         end
     end
@@ -269,7 +269,7 @@ function ADInputManager:input_start_stop(vehicle, farmId)
             vehicle.ad.stateModule:setActualFarmId(farmId) -- input_start_stop
         end
 
-        vehicle.ad.stateModule:getCurrentMode():start()
+        vehicle.ad.stateModule:getCurrentMode():start(AutoDrive.USER_PLAYER)
 
         if AutoDrive.rightSHIFTmodifierKeyPressed then
             for _, otherVehicle in pairs(g_currentMission.vehicles) do
@@ -278,7 +278,7 @@ function ADInputManager:input_start_stop(vehicle, farmId)
                     
                     if otherVehicle.ad.stateModule.activeBeforeSave then
                         -- g_currentMission:requestToEnterVehicle(otherVehicle)
-                        otherVehicle.ad.stateModule:getCurrentMode():start()
+                        otherVehicle.ad.stateModule:getCurrentMode():start(AutoDrive.USER_PLAYER)
                     end
                     if otherVehicle.ad.stateModule.AIVEActiveBeforeSave and otherVehicle.acParameters ~= nil then
                         -- g_currentMission:requestToEnterVehicle(otherVehicle)
@@ -296,11 +296,11 @@ function ADInputManager:input_start_stop(vehicle, farmId)
 end
 
 function ADInputManager:input_incLoopCounter(vehicle)
-    vehicle.ad.stateModule:increaseLoopCounter()
+    vehicle.ad.stateModule:changeLoopCounter(true)
 end
 
 function ADInputManager:input_decLoopCounter(vehicle)
-    vehicle.ad.stateModule:decreaseLoopCounter()
+    vehicle.ad.stateModule:changeLoopCounter(false)
 end
 
 function ADInputManager:input_setParkDestination(vehicle)
@@ -388,7 +388,7 @@ function ADInputManager:input_nextTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local nextTarget = ADGraphManager:getNextTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(nextTarget)
-        if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+        if not vehicle.ad.hasCombine then
             -- not stop / change CP for harvesters
             AutoDrive:StopCP(vehicle)
         end
@@ -400,7 +400,7 @@ function ADInputManager:input_previousTarget(vehicle)
         local currentTarget = vehicle.ad.stateModule:getFirstMarkerId()
         local previousTarget = ADGraphManager:getPreviousTargetAlphabetically(currentTarget)
         vehicle.ad.stateModule:setFirstMarker(previousTarget)
-        if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+        if not vehicle.ad.hasCombine then
             -- not stop / change CP for harvesters
             AutoDrive:StopCP(vehicle)
         end
@@ -436,9 +436,9 @@ function ADInputManager:input_continue(vehicle)
 end
 
 function ADInputManager:input_callDriver(vehicle)
-    if vehicle.spec_pipe ~= nil and vehicle.spec_enterable ~= nil then
+    if vehicle.spec_combine ~= nil and vehicle.spec_pipe ~= nil and vehicle.spec_enterable ~= nil then
         ADHarvestManager:assignUnloaderToHarvester(vehicle)
-    elseif vehicle.ad.isCombine and vehicle.ad.attachableCombine ~= nil then
+    elseif vehicle.ad.attachableCombine ~= nil then
         ADHarvestManager:assignUnloaderToHarvester(vehicle.ad.attachableCombine)
     end
 end
@@ -464,7 +464,7 @@ function ADInputManager:input_swapTargets(vehicle)
     local currentFirstMarker = vehicle.ad.stateModule:getFirstMarkerId()
     vehicle.ad.stateModule:setFirstMarker(vehicle.ad.stateModule:getSecondMarkerId())
     vehicle.ad.stateModule:setSecondMarker(currentFirstMarker)
-    if not (vehicle.spec_combine or AutoDrive.getIsBufferCombine(vehicle) or vehicle.ad.isCombine ~= nil) then
+    if not vehicle.ad.hasCombine then
         -- not stop / change CP for harvesters
         AutoDrive:StopCP(vehicle)
     end

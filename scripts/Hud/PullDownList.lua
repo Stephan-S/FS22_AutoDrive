@@ -229,27 +229,29 @@ function ADPullDownList:onDraw(vehicle, uiScale)
                         end
                     end
                 end
-                local isSelectedFillType = false
+
+                local makeBold = listEntry.isFolder
+                local makeBlue = listEntry.isFolder
+
                 if self.type == ADPullDownList.TYPE_FILLTYPE then
-                    isSelectedFillType = table.contains(vehicle.ad.stateModule:getSelectedFillTypes(), listEntry.returnValue)
+                    makeBold = table.contains(vehicle.ad.stateModule:getSelectedFillTypes(), listEntry.returnValue)
+                    makeBlue = makeBold or vehicle.ad.stateModule:getFillType() == listEntry.returnValue
                 end
+
+                setTextBold(makeBold)
 
                 if self.hovered == self.selected + (i - 1) then
                     -- mouse hovering over selected item
-                    if listEntry.isFolder or isSelectedFillType then
-                        setTextBold(true)
+                    if makeBlue then
                         setTextColor(0.296, 0.823, 1, 1)
                     else
-                        setTextBold(false)
                         setTextColor(0, 0.871, 1, 1)
                     end
                 else
                     -- other element
-                    if listEntry.isFolder or isSelectedFillType then
-                        setTextBold(true)
+                    if makeBlue then
                         setTextColor(0.0, 0.569, 0.835, 1)
                     else
-                        setTextBold(false)
                         setTextColor(1, 1, 1, 1)
                     end
                 end

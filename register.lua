@@ -22,6 +22,7 @@ source(Utils.getFilename("scripts/TelemetryExport.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Hud/GenericHudElement.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudButton.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Hud/HudCounterButton.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudSettingsButton.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudIcon.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Hud/HudSpeedmeter.lua", g_currentModDirectory))
@@ -79,6 +80,7 @@ source(Utils.getFilename("scripts/Manager/UserDataManager.lua", g_currentModDire
 source(Utils.getFilename("scripts/Manager/MultipleTargetsManager.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Manager/ThirdPartyModsManager.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Manager/Scheduler.lua", g_currentModDirectory))
+source(Utils.getFilename("scripts/Manager/BunkerSiloManager.lua", g_currentModDirectory))
 
 source(Utils.getFilename("scripts/Tasks/AbstractTask.lua", g_currentModDirectory))
 source(Utils.getFilename("scripts/Tasks/DriveToDestinationTask.lua", g_currentModDirectory))

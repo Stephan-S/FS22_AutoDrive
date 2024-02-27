@@ -18,7 +18,7 @@ function UnloadAtMode:reset()
     self.vehicle.ad.trailerModule:reset()
 end
 
-function UnloadAtMode:start()
+function UnloadAtMode:start(user)
     if not self.vehicle.ad.stateModule:isActive() then
         self.vehicle:startAutoDrive()
     end

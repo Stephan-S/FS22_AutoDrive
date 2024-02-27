@@ -160,7 +160,7 @@ function AutoDrive.combineIsTurning(combine)
     local fieldLengthInFront = AutoDrive.getLengthOfFieldInFront(combine, true, 50, 5)
     local fieldLengthBehind = math.abs(AutoDrive.getLengthOfFieldInFront(combine, false, 50, -5))
 
-    if (fieldLengthInFront <= 20 or fieldLengthBehind <= 20) and combine.ad.noMovementTimer.elapsedTime < 5000 and not AutoDrive.getIsBufferCombine(combine) then
+    if (fieldLengthInFront <= 20 or fieldLengthBehind <= 20) and combine.ad.noMovementTimer.elapsedTime < 5000 and not combine.ad.isChopper then
         combineIsTurning = true
     end
 
