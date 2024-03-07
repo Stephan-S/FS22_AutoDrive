@@ -89,7 +89,7 @@
 		<text name="gui_ad_blinkValue"						    text="Irányjelző bekapcsolása automatikus" />
 		<text name="gui_ad_blinkValue_tooltip"					text="Kormányállás az irányjelző fények automatikus engedélyezéséhez. (0 = az irányjelző fény automatikusan kikapcsol)" />
 		<text name="gui_ad_pipe_offset"							text="Cső eltolás" />
-		<text name="gui_ad_pipe_offset_tooltip"					text="Útvonal oldalirányú eltolása a kombájnhoz viszonyítva. Pozitív értékek: balra, negatív értékek: jobbra. Nulla érték a cső végénél található.
+		<text name="gui_ad_pipe_offset_tooltip"					text="Útvonal oldalirányú eltolása a kombájnhoz viszonyítva. Pozitív értékek: balra, negatív értékek: jobbra. Nulla érték a cső végénél található." />
 		<text name="gui_ad_followDistance"						text="Távolság a kombájntól" />
 		<text name="gui_ad_followDistance_tooltip"				text="Távolság ha a kombájnt hátul követi" />
 		<text name="gui_ad_lookahead_turning"					text="Kanyarodási távolság" />
