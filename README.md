@@ -1,7 +1,7 @@
 # FS22_AutoDrive
 FS22 version of the AutoDrive mod
 
-### Latest Release: 2.0.1.6
+### Latest Release: 2.0.1.7-RC
 ![GitHub all releases](https://img.shields.io/github/downloads/Stephan-S/FS22_AutoDrive/total?label=Downloads&style=plastic)  
 Direct Download: https://github.com/Stephan-S/FS22_AutoDrive/releases/latest/download/FS22_AutoDrive.zip
 
