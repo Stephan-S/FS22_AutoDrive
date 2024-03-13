@@ -193,7 +193,7 @@
 		<text name="gui_ad_autoRefuel"							text="Automatikus tankolás" />
 		<text name="gui_ad_autoRefuel_tooltip"					text="Ha alacsony az üzemanyagszint, menjen az üzemanyagtöltési célig (közel az üzemanyag kiadóhoz)." />
 		<text name="gui_ad_autoRepair"							text="Automatikus javítás" />
-		<text name="gui_ad_autoRepair_tooltip"					text="Ha a kopási szint túl magas, hajtson egy műhelyhez (javító zónához közelébe)." />
+		<text name="gui_ad_autoRepair_tooltip"					text="Ha a kopási szint túl magas, hajtson egy műhelyhez (javító zónához közel)." />
 		<text name="gui_ad_filter"								text="Szűrő" />
 		<text name="gui_ad_enterDestinationFilterTitle"			text="Célszűrés választás" />
 		<text name="gui_ad_enterDestinationFilterText"			text="Szűrő szöveg bevitel:" />
