@@ -347,16 +347,16 @@
 			
 		<text name="gui_ad_editorTip_1"							text="Egyszerű bal egérgomb klikkelés:"/>
 		<text name="gui_ad_editorTip_2"							text="Csak egér: 1. pont kiválasztása"/>
-		<text name="gui_ad_editorTip_3"							text="BCTRL = Csomópont létrehozása"/>
-		<text name="gui_ad_editorTip_4"							text="BALT = Csomópont törlése"/>
-		<text name="gui_ad_editorTip_5"							text="BSHIFT = Pont beállítása mellékútnak"/>
+		<text name="gui_ad_editorTip_3"							text="Bal CTRL = Csomópont létrehozása"/>
+		<text name="gui_ad_editorTip_4"							text="Bal ALT = Csomópont törlése"/>
+		<text name="gui_ad_editorTip_5"							text="Bal SHIFT = Pont beállítása mellékútnak"/>
 
 		<text name="gui_ad_editorTip_6"							text="Második csomópontra kattintva:"/>
 		<text name="gui_ad_editorTip_7"							text="Kapcsolat váltása"/>
-		<text name="gui_ad_editorTip_8"							text="JSHIFT = Fordított út létrehozása"/>
+		<text name="gui_ad_editorTip_8"							text="Jobb SHIFT = Fordított út létrehozása"/>
 
 		<text name="gui_ad_editorTip_9"							text="Az első csomópont kereszteződés, a második pedig a szomszédja:"/>
-		<text name="gui_ad_editorTip_10"						text="BCTRL: Szakasz típusának váltása (normál/kétirányú)"/>
-		<text name="gui_ad_editorTip_11"						text="BSHIFT = Mellékút beállítása"/>
+		<text name="gui_ad_editorTip_10"						text="BAl CTRL: Szakasz típusának váltása (normál/kétirányú)"/>
+		<text name="gui_ad_editorTip_11"						text="Bal SHIFT = Mellékút beállítása"/>
 	</texts>
 </l10n>
