@@ -52,14 +52,15 @@
 		<text name="input_ADSwapTargets"						text="AD: Zaměnit cíle" />
 		<text name="input_ADStartCP"							text="AD: Použít CP/AIVE" />
 		<text name="input_ADToggleCP_AIVE"						text="AD: Přepnout CP/AIVE" />
-		<text name="input_AD_devAction"                         			text="AD: Vývojářské Akce" />
-		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: Přepnout cíl automatického vyzvednutí" />
-		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: Přepnout cíl automatického vyložení" />
-		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
+		<text name="input_AD_devAction"                         text="AD: Vývojářské Akce" />
+		<text name="input_ADToggleAutomaticPickupTarget"		text="AD: Přepnout cíl automatického vyzvednutí" />
+		<text name="input_ADToggleAutomaticUnloadTarget"		text="AD: Přepnout cíl automatického vyložení" />
+		<text name="input_ADToggleLoadByFillLevel"				text="AD: Přepnout načítání podle úrovně naplnění" />
 		<text name="hud_avoidFruit"								text="AD: Nevjíždět do porostu" />
 		<text name="hud_startCp" 								text="AD: Start CP / AIVE v místě určení" />
-		<text name="AD_parkVehicle_noPosSet"					text="Vozidlo nemá parkoviště. Vyberte cíl a stiskněte pravého tlačítka myši." />
+		<text name="AD_parkVehicle_noPosSet"					text="Vozidlo nemá parkoviště. Vyberte cíl a stiskněte pravé tlačítko myši." />
 		<text name="AD_parkVehicle_selected"					text="Zvolená parkovací zóna: " />
+		<text name="AD_parkVehicle_deleted"					    text="cíl parkování smazán!" />
 		<text name="AD_Driver_of"								text="Řidič" />
 		<text name="AD_has_reached"								text="Stojí" />
 		<text name="AD_got_stuck"								text="Blokován" />
@@ -71,7 +72,7 @@
 		<text name="AD_No_Shovel"								text="Lžíce není připojena" />
 		<text name="AD_No_Refuel_Station"						text="nemůžu najít benzinku" />
 		<text name="AD_No_Repair_Station"						text="nemohl najít servisní dílnu pro :" />
-		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Wrong AD Mode to work together with CP" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="Nesprávný režim AD pro spolupráci s CP" />
 		<text name="AD_MODE_DRIVETO"							text="Jízda" />
 		<text name="AD_MODE_DELIVERTO"							text="Vykládka" />
 		<text name="AD_MODE_PICKUPANDDELIVER"					text="Nakládka a odvoz" />
@@ -108,8 +109,8 @@
 		<text name="gui_ad_no"									text="Ne" />
 		<text name="gui_ad_FS22"								text="FS 22" />
 		<text name="gui_ad_FS19"								text="FS 19" />
-		<text name="gui_ad_BSMRange"							text="Bunker Silo Manager Range" />
-		<text name="gui_ad_BSMRange_tooltip"					text="In this range vehicles to destination bunker silo one by one get driveway" />
+		<text name="gui_ad_BSMRange"							text="Silážní jáma: manažér rozsahu" />
+		<text name="gui_ad_BSMRange_tooltip"					text="V tomto rozsahu se vozidla do cílového sila bunkru jedno po druhém dostanou na příjezdovou cestu" />
 		<text name="ad_bga_init"								text="Inicializace" />
 		<text name="ad_bga_waiting"								text="Čekám na odvozce/jámu" />
 		<text name="ad_bga_active"								text="Aktivní" />
@@ -168,15 +169,15 @@
 		<text name="gui_ad_distributeToFolder_tooltip"			text="Všechny cíle v jednom adresáři budou použity pro vykládku" />
 		<text name="gui_ad_maxTriggerDistance"					text="Rozsah detekce triggerů" />
 		<text name="gui_ad_maxTriggerDistance_tooltip"			text="Rozsah, ve kterém jsou detekovány aktivní triggery (např. osivo a hnojivo)." />
-		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
+		<text name="gui_ad_useGlobalSetting"					text="Použít globální nastavení" />
 		<text name="gui_ad_useBeaconLights"						text="Zapnout maják" />
 		<text name="gui_ad_useBeaconLights_tooltip"				text="Použití majáku na silnici" />
-		<text name="gui_ad_worklightsWhenLoading"				text="Worklight when Loading / Unloading" />
-		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Yes - Use working lights when loading or unloading at a trigger" />
-		<text name="gui_ad_worklightsWhenSilo"					text="Worklight when in a Silo Bunker" />
-		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Yes - Use working lights when in a silo bunker" />
-		<text name="gui_ad_hazardLightReverse"					text="Hazard Lights" />
-		<text name="gui_ad_hazardLightReverse_tooltip"			text="Yes - Use hazard lights while reverse driving" />
+		<text name="gui_ad_worklightsWhenLoading"				text="Pracovní světlo při nakládání / vykládání" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="Ano - Při nakládání nebo vykládání použije pracovní světla" />
+		<text name="gui_ad_worklightsWhenSilo"					text="Pracovní světlo v silážní jámě" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="Ano - Použije pracovní světlo, když je v silážní jámě" />
+		<text name="gui_ad_hazardLightReverse"					text="Výstražná světla" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="Ano - Při couvání použije výstražná světla" />
 		<text name="gui_ad_activeUnloading"						text="Aktivní vykládání" />
 		<text name="gui_ad_activeUnloading_tooltip"				text="Vykládka kombajnu za jízdy." />
 		<text name="gui_ad_restrictToField"						text="Vyhledávat cestu jen na poli" />
@@ -220,8 +221,8 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Použijte široký režim HUD, který také umožňuje několik dalších tlačítek pro nastavení v HUD" />
 		<text name="gui_ad_playSounds"							text="Zvuk" />
 		<text name="gui_ad_playSounds_tooltip"					text="Umožňuje zvukové efekty pro kliknutí myší a upozornění" />
-		<text name="gui_ad_scaleLines"							text="Scale Lines" />
-		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
+		<text name="gui_ad_scaleLines"							text="Měřítko čar" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Měřítko tloušťky spojovacích čar" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronizujte více cílů" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Více řidičů používá stejnou složku s více cíly a budou  sychronizovány s dalšími cíly" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Zaparkovat po dokončení práce" />
@@ -245,8 +246,8 @@
 		<text name="gui_ad_scanConfirmationText"                text="Měla by aplikace AutoDrive generovat síť tras z dopravních a pomocných dat na mapě?" />
 		<text name="gui_ad_noHarvesterAvailable"				text="Nebyl nalezen žádný kombajn se stejným cílem" />
 		<text name="gui_ad_noUnloaderAvailable"					text="Není k dispozici žádný odvozce se stejným cílem" />
-		<text name="gui_ad_remainingDriveTimeInterval"			text="Remaining Drive time" />
-		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="For external mods: Interval to calculate the remaining drive time. In case of issues with performance increase or deactivate." />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="Zbývající čas jízdy" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="Pro externí mody: Interval pro výpočet zbývající doby jízdy. V případě problémů s výkonem zvyšte nebo deaktivujte." />
 
 		<text name="gui_ad_settingsPage_title"					text="Nastavení - AutoDrive" />
 		<text name="gui_ad_userSettingsPage_title"				text="Uživatelské nastavení - AutoDrive" />
@@ -350,18 +351,18 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "kombine CP/AD Tlačítka"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "vypnutý: výchozí/ jednoduché: CP: sekundární tlačítko myši > myš zapnutá + vypnutá, AD: Přepnout Hud> oba Hudy zapnuto + vypnuto / plný: stejně jednoduché, ale přepínání Hudu v jednotlivých krocích / požadováno: Zakázat pravé tlačítko HUD v nastavení CP"/>
 		
-		<text name = "gui_ad_editorTip_1"								text = "Jednoduché kliknutí levým tlačítkem myši:"/>
-		<text name = "gui_ad_editorTip_2"								text = "Pouze myš: Vyberte 1. bod"/>
-		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Vytvořit uzel"/>
-		<text name = "gui_ad_editorTip_4"								text = "LALT = Smazat uzel"/>
-		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Přepnout bod jako vedlejší silnici"/>
+		<text name = "gui_ad_editorTip_1"						text = "Jednoduché kliknutí levým tlačítkem myši:"/>
+		<text name = "gui_ad_editorTip_2"						text = "Pouze myš: Vyberte 1. bod"/>
+		<text name = "gui_ad_editorTip_3"						text = "LCTRL = Vytvořit uzel"/>
+		<text name = "gui_ad_editorTip_4"						text = "LALT = Smazat uzel"/>
+		<text name = "gui_ad_editorTip_5"						text = "LSHIFT = Přepnout bod jako vedlejší silnici"/>
 
-		<text name = "gui_ad_editorTip_6"								text = "Kliknutím na druhý uzel:"/>
-		<text name = "gui_ad_editorTip_7"								text = "Přepnout připojení"/>
-		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Vytvořte couvací cestu"/>
+		<text name = "gui_ad_editorTip_6"						text = "Kliknutím na druhý uzel:"/>
+		<text name = "gui_ad_editorTip_7"						text = "Přepnout připojení"/>
+		<text name = "gui_ad_editorTip_8"						text = "RSHIFT = Vytvořte couvací cestu"/>
 
-		<text name = "gui_ad_editorTip_9"								text = "1. uzel je průsečík, za druhé je to soused:"/>
-		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Přepnout typ segmentu (normální/duální)"/>
-		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Přepnout vedlejší silnici"/>
+		<text name = "gui_ad_editorTip_9"						text = "1. uzel je průsečík, za druhé je to soused:"/>
+		<text name = "gui_ad_editorTip_10"						text = "LCTRL: Přepnout typ segmentu (normální/duální)"/>
+		<text name = "gui_ad_editorTip_11"						text = "LSHIFT = Přepnout vedlejší silnici"/>
 	</texts>
 </l10n>
