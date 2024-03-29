@@ -60,6 +60,7 @@
 		<text name="hud_startCp" 								text="AD: Start CP / AIVE v místě určení" />
 		<text name="AD_parkVehicle_noPosSet"					text="Vozidlo nemá parkoviště. Vyberte cíl a stiskněte pravého tlačítka myši." />
 		<text name="AD_parkVehicle_selected"					text="Zvolená parkovací zóna: " />
+		<text name="AD_parkVehicle_deleted"         				text="cíl parkování smazán!" />
 		<text name="AD_Driver_of"								text="Řidič" />
 		<text name="AD_has_reached"								text="Stojí" />
 		<text name="AD_got_stuck"								text="Blokován" />
