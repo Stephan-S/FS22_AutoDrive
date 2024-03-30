@@ -18,8 +18,9 @@
 		<text name="input_AD_Speed_up"							text="AD: Zvýšit rychlost" />
 		<text name="input_AD_Speed_down"						text="AD: Snížit rychlost" />
 		<text name="input_AD_routes_manager" 					text="AD: Otevřít managera tras" />
-		<text name="input_AD_continue"							text="AD: Pokračovat" />
 		<text name="input_AD_open_notification_history" 		text="AD: Otevřít hystorii notifikací" />
+		<text name="input_AD_open_colorSettings" 		        text="AD: Přiřazení barev" />
+		<text name="input_AD_continue"							text="AD: Pokračovat" />
 		<text name="input_ADSelectTargetUnload"					text="AD: Následující vykládka" />
 		<text name="input_ADSelectPreviousTargetUnload"			text="AD: Předchozí vykládka" />
 		<text name="input_ADActivateDebug"						text="AD: Editovat trasu" />
@@ -260,7 +261,6 @@
 		<text name="gui_ad_setDefaultButtonText" 				text="Nastavit jako výchozí" />
 		<text name="gui_ad_settingsClosingDialog_title" 		text="Všechny změny budou ztraceny" />
 		<text name="gui_ad_settingsClosingDialog_text" 			text="Jste si jistí, že chcete vypnout nastavení bez uložení změn?" />
-		
 		<text name="gui_ad_routesManagerTitle" 					text="Správce tras" />
 		<text name="gui_ad_routesManagerTextTitle" 				text="Vložte název trasy:" />
 		<text name="gui_ad_button_export" 						text="Ulož" />
@@ -315,7 +315,6 @@
 
 		<text name="button_delete_all" 							text="Smazat všechny" />
 		<text name="button_reset_selected" 					    text="Resetovat vybrané" />
-
 		<text name="AD_task_pathfinding"						text="Plánování trasy" />
 		<text name="AD_task_catch_up_with_combine"				text="Párování s kombajnem" />
 		<text name="AD_task_clearcrop"							text="Odstranění plodin" />
@@ -351,18 +350,16 @@
 		<text name = "gui_ad_combineCPADHudMouse"				text = "kombine CP/AD Tlačítka"/>
     	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "vypnutý: výchozí/ jednoduché: CP: sekundární tlačítko myši > myš zapnutá + vypnutá, AD: Přepnout Hud> oba Hudy zapnuto + vypnuto / plný: stejně jednoduché, ale přepínání Hudu v jednotlivých krocích / požadováno: Zakázat pravé tlačítko HUD v nastavení CP"/>
 		
-		<text name = "gui_ad_editorTip_1"						text = "Jednoduché kliknutí levým tlačítkem myši:"/>
-		<text name = "gui_ad_editorTip_2"						text = "Pouze myš: Vyberte 1. bod"/>
-		<text name = "gui_ad_editorTip_3"						text = "LCTRL = Vytvořit uzel"/>
-		<text name = "gui_ad_editorTip_4"						text = "LALT = Smazat uzel"/>
-		<text name = "gui_ad_editorTip_5"						text = "LSHIFT = Přepnout bod jako vedlejší silnici"/>
-
-		<text name = "gui_ad_editorTip_6"						text = "Kliknutím na druhý uzel:"/>
-		<text name = "gui_ad_editorTip_7"						text = "Přepnout připojení"/>
-		<text name = "gui_ad_editorTip_8"						text = "RSHIFT = Vytvořte couvací cestu"/>
-
-		<text name = "gui_ad_editorTip_9"						text = "1. uzel je průsečík, za druhé je to soused:"/>
-		<text name = "gui_ad_editorTip_10"						text = "LCTRL: Přepnout typ segmentu (normální/duální)"/>
-		<text name = "gui_ad_editorTip_11"						text = "LSHIFT = Přepnout vedlejší silnici"/>
+		<text name = "gui_ad_editorTip_1"								text = "Jednoduché kliknutí levým tlačítkem myši:"/>
+		<text name = "gui_ad_editorTip_2"								text = "Pouze myš: Vyberte 1. bod"/>
+		<text name = "gui_ad_editorTip_3"								text = "LCTRL = Vytvořit uzel"/>
+		<text name = "gui_ad_editorTip_4"								text = "LALT = Smazat uzel"/>
+		<text name = "gui_ad_editorTip_5"								text = "LSHIFT = Přepnout bod jako vedlejší silnici"/>
+		<text name = "gui_ad_editorTip_6"								text = "Kliknutím na druhý uzel:"/>
+		<text name = "gui_ad_editorTip_7"								text = "Přepnout připojení"/>
+		<text name = "gui_ad_editorTip_8"								text = "RSHIFT = Vytvořte couvací cestu"/>
+		<text name = "gui_ad_editorTip_9"								text = "1. uzel je průsečík, za druhé je to soused:"/>
+		<text name = "gui_ad_editorTip_10"								text = "LCTRL: Přepnout typ segmentu (normální/duální)"/>
+		<text name = "gui_ad_editorTip_11"								text = "LSHIFT = Přepnout vedlejší silnici"/>
 	</texts>
 </l10n>
