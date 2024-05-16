@@ -361,17 +361,6 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
     -- self:resetClosestWayPoint()
     -- if we want to update distances every frame, when lines drawing is enabled, we can move this at the end of onDraw function
 
-    if AutoDrive.isEditorShowEnabled() then
-        local x, y, z = getWorldTranslation(self.components[1].node)
-        local distance = MathUtil.vector2Length(x - self.ad.lastDrawPosition.x, z - self.ad.lastDrawPosition.z)
-        if distance > AutoDrive.drawDistance / 2 then
-            self.ad.lastDrawPosition = {x = x, z = z}
-            self:resetWayPointsDistance()
-        end
-    else
-        self:resetWayPointsDistance()
-    end
-
     if self.isServer then
         self.ad.recordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
 
@@ -761,6 +750,7 @@ function AutoDrive:onEnterVehicle(isControlling)
             self.ad.stateModule:setActualFarmId(self.ad.stateModule:getPlayerFarmId()) -- onEnterVehicle
         end
     end
+    self:resetWayPointsDistance()
 end
 
 function AutoDrive:onLeaveVehicle(wasEntered)
@@ -809,6 +799,20 @@ function AutoDrive:onDrawEditorMode()
                     and not AutoDrive.leftCTRLmodifierKeyPressed
                     and not AutoDrive.leftALTmodifierKeyPressed
                     and not AutoDrive.rightSHIFTmodifierKeyPressed
+
+    if AutoDrive.isEditorShowEnabled() or AutoDrive.isInExtendedEditorMode() then
+        local x, y, z = getWorldTranslation(self.components[1].node)
+        local distance = MathUtil.vector2Length(x - self.ad.lastDrawPosition.x, z - self.ad.lastDrawPosition.z)
+        if distance > AutoDrive.drawDistance / 2 then
+            self.ad.lastDrawPosition = {x = x, z = z}
+            self:resetWayPointsDistance()
+        end
+    end
+
+    if AutoDrive:getIsEntered(self) and ADGraphManager:hasChanges() then
+        self:resetWayPointsDistance()
+        ADGraphManager:resetChanges()
+    end
 
     --Draw close destinations
     for _, marker in pairs(ADGraphManager:getMapMarkers()) do
@@ -1455,9 +1459,7 @@ function AutoDrive:getClosestWayPoint(noUpdate)
 end
 
 function AutoDrive:getClosestNotReversedWayPoint()
-    if self.ad.distances.closestNotReverse.wayPoint == -1 then
-        self:updateWayPointsDistance()
-    end
+    self:updateWayPointsDistance()
     if self.ad.distances.closestNotReverse.wayPoint ~= nil then
         return self.ad.distances.closestNotReverse.wayPoint.id, self.ad.distances.closestNotReverse.distance
     end
@@ -1478,9 +1480,7 @@ function AutoDrive:getWayPointsInRange(minDistance, maxDistance)
 end
 
 function AutoDrive:getWayPointIdsInRange(minDistance, maxDistance)
-    if self.ad.distances.wayPoints == nil then
-        self:updateWayPointsDistance()
-    end
+    self:updateWayPointsDistance()
     local inRange = {}
     for _, elem in pairs(self.ad.distances.wayPoints) do
         if elem.distance >= minDistance and elem.distance <= maxDistance and elem.wayPoint.id > 0 then
