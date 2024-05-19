@@ -1,4 +1,5 @@
 ADHarvestManager = {}
+ADHarvestManager.debug = false
 
 ADHarvestManager.MAX_PREDRIVE_LEVEL = 0.85
 ADHarvestManager.MAX_SEARCH_RANGE = 300
@@ -12,9 +13,9 @@ function ADHarvestManager:load()
 end
 
 function ADHarvestManager:registerHarvester(harvester)
-    AutoDrive.debugPrint(harvester, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:registerHarvester")
+    ADHarvestManager.debugMsg(harvester, "ADHarvestManager:registerHarvester")
     if not table.contains(self.idleHarvesters, harvester) and not table.contains(self.harvesters, harvester) then
-        AutoDrive.debugPrint(harvester, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:registerHarvester - inserted")
+        ADHarvestManager.debugMsg(harvester, "ADHarvestManager:registerHarvester - inserted")
         if harvester ~= nil and harvester.ad ~= nil then
             local rootVehicle = harvester:getRootVehicle()
             rootVehicle.ad.isRegisterdHarvester = true
@@ -26,7 +27,7 @@ function ADHarvestManager:registerHarvester(harvester)
 end
 
 function ADHarvestManager:unregisterHarvester(harvester)
-    AutoDrive.debugPrint(harvester, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:unregisterHarvester")
+    ADHarvestManager.debugMsg(harvester, "ADHarvestManager:unregisterHarvester")
     if harvester ~= nil and harvester.ad ~= nil then
         local rootVehicle = harvester:getRootVehicle()
         rootVehicle.ad.isRegisterdHarvester = false
@@ -35,22 +36,22 @@ function ADHarvestManager:unregisterHarvester(harvester)
         if table.contains(self.idleHarvesters, harvester) then
             local index = table.indexOf(self.idleHarvesters, harvester)
             local harvester = table.remove(self.idleHarvesters, index)
-            AutoDrive.debugPrint(harvester, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:unregisterHarvester - removed - idleHarvesters")
+            ADHarvestManager.debugMsg(harvester, "ADHarvestManager:unregisterHarvester - removed - idleHarvesters")
         end
         if table.contains(self.harvesters, harvester) then
             local index = table.indexOf(self.harvesters, harvester)
             local harvester = table.remove(self.harvesters, index)
-            AutoDrive.debugPrint(harvester, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:unregisterHarvester - removed - harvesters")
+            ADHarvestManager.debugMsg(harvester, "ADHarvestManager:unregisterHarvester - removed - harvesters")
         end
     end
 end
 
 function ADHarvestManager:registerAsUnloader(vehicle)
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:registerAsUnloader")
+    ADHarvestManager.debugMsg(vehicle, "ADHarvestManager:registerAsUnloader")
     --remove from active and idle list
     self:unregisterAsUnloader(vehicle)
     if not table.contains(self.idleUnloaders, vehicle) then
-        AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, "ADHarvestManager:registerAsUnloader - inserted")
+        ADHarvestManager.debugMsg(vehicle, "ADHarvestManager:registerAsUnloader - inserted")
         table.insert(self.idleUnloaders, vehicle)
     end
 end
@@ -79,14 +80,20 @@ function ADHarvestManager:unregisterAsUnloader(vehicle)
     end
 end
 
-function ADHarvestManager:fireUnloader(unloader)
+function ADHarvestManager:fireUnloader(unloader, harvester)
     if unloader.ad.stateModule:isActive() then
         local follower = unloader.ad.modes[AutoDrive.MODE_UNLOAD]:getFollowingUnloader()
         if follower ~= nil then
             follower.ad.taskModule:abortAllTasks()
+            if AutoDrive.getSetting("parkInField", follower) then
+                follower.ad.taskModule:addTask(ClearCropTask:new(follower, harvester))
+            end
             follower.ad.taskModule:addTask(StopAndDisableADTask:new(follower, ADTaskModule.DONT_PROPAGATE, true))
         end
         unloader.ad.taskModule:abortAllTasks()
+        if AutoDrive.getSetting("parkInField", unloader) then
+            unloader.ad.taskModule:addTask(ClearCropTask:new(unloader, harvester))
+        end
         unloader.ad.taskModule:addTask(StopAndDisableADTask:new(unloader, ADTaskModule.DONT_PROPAGATE, true))
     end
     self:unregisterAsUnloader(unloader)
@@ -115,7 +122,7 @@ function ADHarvestManager:update(dt)
 
             local unloader = self:getAssignedUnloader(harvester)
             if unloader ~= nil then
-                self:fireUnloader(unloader)
+                self:fireUnloader(unloader, harvester)
             end
         end
     end
@@ -207,7 +214,6 @@ end
 
 function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
     local ret = false
-    local _, maxCapacity, _, leftCapacity = AutoDrive.getObjectFillLevels(harvester)
 
     local cpIsCalling = AutoDrive:getIsCPWaitingForUnload(harvester)
 
@@ -215,18 +221,19 @@ function ADHarvestManager.doesHarvesterNeedUnloading(harvester, ignorePipe)
     ret = (
             (
                     (
-                        (maxCapacity > 0 and leftCapacity / maxCapacity < 0.2)
-                        -- (maxCapacity > 0 and leftCapacity < 1.0)
-                    or 
                         cpIsCalling
                     )
-                and
-                -- (pipeOut or ignorePipe) 
-                (pipeOut or (ignorePipe == true))
+                or
+                (pipeOut)
             )
             and 
             harvester.ad.noMovementTimer.elapsedTime > 5000
         )
+    ADHarvestManager.debugMsg(harvester, "ADHarvestManager.doesHarvesterNeedUnloading cpIsCalling %s pipeOut %s noMovementTimer %s"
+    , tostring(cpIsCalling)
+    , tostring(pipeOut)
+    , tostring(harvester.ad.noMovementTimer.elapsedTime > 5000)
+    )
     return ret
 end
 
@@ -265,6 +272,7 @@ function ADHarvestManager.isHarvesterActive(harvester)
         if manuallyControlled then
             return  AutoDrive.isPipeOut(harvester)
         end
+        ADHarvestManager.debugMsg(harvester, "ADHarvestManager.isHarvesterActive reachedPreCallLevel %s isAlmostFull %s allowedToChase %s", reachedPreCallLevel, isAlmostFull, allowedToChase)
 
         return reachedPreCallLevel and (not isAlmostFull) and allowedToChase
     end
@@ -374,4 +382,12 @@ function ADHarvestManager.getOpenPipePercent(harvester)
 		end
 	end
 	return openPipe, pipePercent
+end
+
+function ADHarvestManager.debugMsg(vehicle, debugText, ...)
+    if ADHarvestManager.debug == true then
+        AutoDrive.debugMsg(vehicle, debugText, ...)
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, debugText, ...)
+    end
 end
