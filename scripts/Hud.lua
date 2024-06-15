@@ -438,7 +438,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
             for i = #self.hudElements, 1, -1 do
                 local element = self.hudElements[i]
                 local layer = element.layer
-                mouseEventHandled, silent = element:mouseEvent(vehicle, posX, posY, isDown, isUp, button, layer)
+                local mouseEventHandled, silent = element:mouseEvent(vehicle, posX, posY, isDown, isUp, button, layer)
                 if mouseEventHandled then
                     -- Maybe a PullDownList have been expanded/collapsed, so need to refresh layer sequence
                     self:refreshHudElementsLayerSequence()

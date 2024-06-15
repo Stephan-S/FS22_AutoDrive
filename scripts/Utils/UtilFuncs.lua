@@ -105,7 +105,7 @@ function AutoDrive.streamWriteStringOrEmpty(streamId, string)
 end
 
 function AutoDrive.streamReadUIntNList(streamId, numberOfBits)
-	list = {}
+	local list = {}
 	local len = streamReadUIntN(streamId, numberOfBits)
 	for i = 1, len do
 		local v = streamReadUIntN(streamId, numberOfBits)
@@ -288,7 +288,7 @@ end
 function table:concatNil(sep, i, j)
 	local res = table.concat(self, sep, i, j)
 	if res == "" then
-		res = nil
+		return nil
 	end
 	return res
 end
@@ -1186,7 +1186,6 @@ function AutoDrive.checkWaypointsMultipleSameOut(correctit)
 			for j, linkedNodeId_1 in ipairs(network[i].out) do
 				local wp_2 = network[linkedNodeId_1]
 				if wp_2 ~= nil then
-					found = false
 					for k, linkedNodeId_2 in ipairs(network[i].out) do
 						if k>j then
 							local wp_3 = network[linkedNodeId_2]

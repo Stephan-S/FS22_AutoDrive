@@ -1233,7 +1233,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
             -- mark wayPoint without incoming connection
             if not wp.foundError and wp.out ~= nil then
                 for _, wp_out in pairs(wp.out) do
-                    local missingIncoming = self:checkForMissingIncoming(wp, self:getWayPointById(wp_out))
+                    local missingIncoming = self:checkForMissingIncoming(wp)
                     if missingIncoming then
                         local debugMapMarkerName = "3_" .. tostring(count3)
 

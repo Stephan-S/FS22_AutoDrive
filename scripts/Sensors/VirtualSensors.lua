@@ -234,8 +234,8 @@ function ADSensor:getLocationByPosition()
         --local frontToolLength = 0 --AutoDrive.getFrontToolLength(self.vehicle)
         --lengthOffset = frontToolLength / 2
         --end
-        location = self:getRotatedFront()
-        if location == nil then
+        local front = self:getRotatedFront()
+        if front == nil then
             location = {x = 0, z = vehicle.size.length / 2}
         end
         --location.z = location.z + AutoDrive.getVehicleLeadingEdge(vehicle)
@@ -387,7 +387,7 @@ function ADSensor:updateSensor(dt)
     end
 end
 
-function ADSensor:onUpdate()
+function ADSensor:onUpdate(dt)
     Logging.warning("[AutoDrive] ADSensor:onUpdate() called - Please override this in instance class")
 end
 

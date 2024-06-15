@@ -164,7 +164,7 @@ function AutoDrive.getPipeLength(combine)
     if (combine.ad.isFixedPipeChopper or combine.ad.isHarvester) and AutoDrive.isPipeOut(combine) then
         local combineNode = AutoDrive.getPipeRoot(combine)
         local dischargeX, dichargeY, dischargeZ = getWorldTranslation(AutoDrive.getDischargeNode(combine))
-        diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
+        local diffX, _, _ = worldToLocal(combineNode, dischargeX, dichargeY, dischargeZ)
         length = math.abs(diffX)
 
         -- Store pipe length for 'normal' harvesters

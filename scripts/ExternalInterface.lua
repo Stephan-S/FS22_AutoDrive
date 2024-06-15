@@ -827,9 +827,9 @@ function AutoDrive:getALFillTypes(object) -- used by PullDownList, getSupportedF
     -- spec_universalAutoload
     local spec = object.spec_universalAutoload
     if spec and AutoDrive:hasAL(object) then
-        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALCurrentFillType spec_universalAutoload function not supported!")
+        AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALCurrentFillType spec_universalAutoload function not supported!")
     end
-    AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALFillTypes #fillTypes %s", tostring(#fillTypes))
+    AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALFillTypes #fillTypes %s", tostring(#fillTypes))
     return fillTypes
 end
 
@@ -846,7 +846,7 @@ function AutoDrive:getALCurrentFillType(object) -- used by onEnterVehicle, onPos
     -- spec_universalAutoload
     local spec = object.spec_universalAutoload
     if spec and AutoDrive:hasAL(object) then
-        AutoDrive.debugPrint(vehicle, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALCurrentFillType spec_universalAutoload function not supported!")
+        AutoDrive.debugPrint(object, AutoDrive.DC_EXTERNALINTERFACEINFO, "AutoDrive:getALCurrentFillType spec_universalAutoload function not supported!")
     end
     return nil
 end
