@@ -5,6 +5,7 @@ ClearCropTask.TARGET_DISTANCE_SIDE = 10
 ClearCropTask.TARGET_DISTANCE_FRONT_STEP = 10
 ClearCropTask.MAX_HARVESTER_DISTANCE = 50
 ClearCropTask.WAIT_TIME = 10000
+ClearCropTask.DRIVE_TIME = 30000
 ClearCropTask.STUCK_TIME = 60000
 ClearCropTask.STATE_CLEARING_FIRST = {}
 ClearCropTask.STATE_CLEARING_SECOND = {}
@@ -19,6 +20,7 @@ function ClearCropTask:new(vehicle, harvester)
     o.vehicle = vehicle
     o.harvester = harvester
     o.waitTimer = AutoDriveTON:new()
+    o.driveTimer = AutoDriveTON:new()
     o.stuckTimer = AutoDriveTON:new()
     o.state = ClearCropTask.STATE_WAITING
     o.reverseStartLocation = nil
@@ -48,30 +50,23 @@ function ClearCropTask:setUp()
     end
 
     self.wayPoints = {}
-    table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, (ClearCropTask.TARGET_DISTANCE_SIDE / 2) * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 0.5))
-    table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 1))
-    table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 2))
-    table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 3))
-    table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 4))
 
-    self.harvesterWayPoints = {}
-
-    if self.harvester then
-        table.insert(self.harvesterWayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 1))
-        table.insert(self.harvesterWayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 2))
-        table.insert(self.harvesterWayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 3))
-        local distance = AutoDrive.getDistanceBetween(self.vehicle, self.harvester)
-        ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:setUp distance %.0f"
-        , distance
-        )
-        if distance < ClearCropTask.MAX_HARVESTER_DISTANCE then
-            self.vehicle.ad.drivePathModule:setWayPoints(self.harvesterWayPoints)
-        else
-            self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
-        end
+    local distance = AutoDrive.getDistanceBetween(self.vehicle, self.harvester)
+    ClearCropTask.debugMsg(self.harvester, "ClearCropTask:setUp distance %.0f"
+    , distance
+    )
+    if self.harvester and distance < ClearCropTask.MAX_HARVESTER_DISTANCE then
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 1))
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 2))
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 3))
     else
-        self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, (ClearCropTask.TARGET_DISTANCE_SIDE / 2) * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 0.5))
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 1))
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 2))
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 3))
+        table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.vehicle, ClearCropTask.TARGET_DISTANCE_SIDE * cleartowards, ClearCropTask.TARGET_DISTANCE_FRONT_STEP * 4))
     end
+    self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
 end
 
 function ClearCropTask:update(dt)
@@ -92,22 +87,29 @@ function ClearCropTask:update(dt)
         self:finished()
         return
     end
-    self.waitTimer:timer(true, ClearCropTask.WAIT_TIME, dt)
 
     if self.state == ClearCropTask.STATE_WAITING then
+        self.waitTimer:timer(true, ClearCropTask.WAIT_TIME, dt)
         if self.waitTimer:done() then
             ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update STATE_WAITING - done waiting - clear now...")
             self.waitTimer:timer(false)
+            self.driveTimer:timer(false)
+            self.stuckTimer:timer(false)
+            self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
             self.state = ClearCropTask.STATE_CLEARING_FIRST
             return
         end
     elseif self.state == ClearCropTask.STATE_CLEARING_FIRST then
+        self.driveTimer:timer(true, ClearCropTask.DRIVE_TIME, dt)
         if self.vehicle.ad.drivePathModule:isTargetReached() then
-            ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update isTargetReached")
+            ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update 1 isTargetReached")
             self:finished()
             return
-        elseif self.waitTimer:done() then
+        elseif self.driveTimer:done() then
+            ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update 1 driveTimer:done")
             self.waitTimer:timer(false)
+            self.driveTimer:timer(false)
+            self.stuckTimer:timer(false)
             local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
             self.reverseStartLocation = {x = x, y = y, z = z}
             self.state = ClearCropTask.STATE_REVERSING
@@ -126,6 +128,9 @@ function ClearCropTask:update(dt)
         if distanceToReversStart > 20 then
             ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update distanceToReversStart > 20")
             self.waitTimer:timer(false)
+            self.driveTimer:timer(false)
+            self.stuckTimer:timer(false)
+            self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
             self.state = ClearCropTask.STATE_CLEARING_SECOND
             return
         else
@@ -133,12 +138,7 @@ function ClearCropTask:update(dt)
         end
     elseif self.state == ClearCropTask.STATE_CLEARING_SECOND then
         if self.vehicle.ad.drivePathModule:isTargetReached() then
-            ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update isTargetReached")
-            self:finished()
-            return
-        elseif self.waitTimer:done() then
-            ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update waitTimer:done")
-            self.waitTimer:timer(false)
+            ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update 2 isTargetReached")
             self:finished()
             return
         else
@@ -148,6 +148,7 @@ function ClearCropTask:update(dt)
 end
 
 function ClearCropTask:abort()
+    ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:abort")
 end
 
 function ClearCropTask:finished()
