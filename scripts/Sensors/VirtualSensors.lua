@@ -237,6 +237,8 @@ function ADSensor:getLocationByPosition()
         local front = self:getRotatedFront()
         if front == nil then
             location = {x = 0, z = vehicle.size.length / 2}
+        else
+            location = front
         end
         --location.z = location.z + AutoDrive.getVehicleLeadingEdge(vehicle)
         --location.z = location.z + 2
