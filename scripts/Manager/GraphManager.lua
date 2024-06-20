@@ -120,10 +120,12 @@ function ADGraphManager:setMapMarkers(mapMarkers)
     -- create debug markers, debug markers are not saved, so no need to delete them or update map hotspots required
     -- notifyDestinationListeners is called from caller function -> argument is false
     self:createDebugMarkers(false)
+    self:markChanges()
 end
 
 function ADGraphManager:setMapMarker(mapMarker)
     self.mapMarkers[mapMarker.markerIndex] = mapMarker
+    self:markChanges()
 end
 
 function ADGraphManager:getPathTo(vehicle, waypointId, startPoint)
@@ -1137,6 +1139,7 @@ function ADGraphManager:removeDebugMarkers()
             end
         end
     end
+    self:markChanges()
 end
 
 -- create debug markers for waypoints issues
@@ -1230,7 +1233,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
             -- mark wayPoint without incoming connection
             if not wp.foundError and wp.out ~= nil then
                 for _, wp_out in pairs(wp.out) do
-                    local missingIncoming = self:checkForMissingIncoming(wp, self:getWayPointById(wp_out))
+                    local missingIncoming = self:checkForMissingIncoming(wp)
                     if missingIncoming then
                         local debugMapMarkerName = "3_" .. tostring(count3)
 
@@ -1298,6 +1301,7 @@ function ADGraphManager:createDebugMarkers(updateMap)
     if shouldUpdateMap == true then
         AutoDrive:notifyDestinationListeners()
     end
+    self:markChanges()
 end
 
 function ADGraphManager:checkForWrongReverseStart(wp_ref, wp_current, wp_ahead)

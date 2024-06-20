@@ -54,7 +54,11 @@ function ADBunkerSiloManager:update(dt)
             if triggerX ~= nil then
                 local distance = MathUtil.vector2Length(triggerX - vehicleX, triggerZ - vehicleZ)
                 if distance < bsmRange then
-                    if AutoDrive.isVehicleInBunkerSiloArea(vehicle) or bunkerSilo.adClosestVehicle == vehicle then
+                    local fillLevel, _, _, _ = AutoDrive.getAllFillLevels(AutoDrive.getAllUnits(vehicle))
+                    if AutoDrive.isVehicleInBunkerSiloArea(vehicle)
+                    or bunkerSilo.adClosestVehicle == vehicle
+                    or fillLevel < 0.1
+                    then
                         -- IMPORTANT: DO NOT SET setUnPaused to avoid crash with CP silo compacter !!!
                         -- vehicle.ad.drivePathModule:setUnPaused()
                     else

@@ -1,18 +1,18 @@
 FollowCombineTask = ADInheritsFrom(AbstractTask)
 FollowCombineTask.debug = false
 
-FollowCombineTask.STATE_CHASING = 1
-FollowCombineTask.STATE_WAIT_FOR_TURN = 2
-FollowCombineTask.STATE_REVERSING = 3
-FollowCombineTask.STATE_REVERSING_FROM_CHOPPER = 12
-FollowCombineTask.STATE_WAIT_FOR_PASS_BY = 4
-FollowCombineTask.STATE_CIRCLING_PATHPLANNING = 5
-FollowCombineTask.STATE_CIRCLING = 6
-FollowCombineTask.STATE_FINISHED = 7
-FollowCombineTask.STATE_WAIT_BEFORE_FINISH = 8
-FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY = 9
-FollowCombineTask.STATE_GENERATE_UTURN_PATH = 10
-FollowCombineTask.STATE_DRIVE_UTURN_PATH = 11
+FollowCombineTask.STATE_CHASING = {}
+FollowCombineTask.STATE_WAIT_FOR_TURN = {}
+FollowCombineTask.STATE_REVERSING = {}
+FollowCombineTask.STATE_REVERSING_FROM_CHOPPER = {}
+FollowCombineTask.STATE_WAIT_FOR_PASS_BY = {}
+FollowCombineTask.STATE_CIRCLING_PATHPLANNING = {}
+FollowCombineTask.STATE_CIRCLING = {}
+FollowCombineTask.STATE_FINISHED = {}
+FollowCombineTask.STATE_WAIT_BEFORE_FINISH = {}
+FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY = {}
+FollowCombineTask.STATE_GENERATE_UTURN_PATH = {}
+FollowCombineTask.STATE_DRIVE_UTURN_PATH = {}
 
 FollowCombineTask.MAX_REVERSE_DISTANCE = 20
 FollowCombineTask.MIN_COMBINE_DISTANCE = 25
@@ -43,11 +43,12 @@ function FollowCombineTask:new(vehicle, combine)
     o.angleToCombine = vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:getAngleToCombine()
     o.trailers = nil
     o.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
+    FollowCombineTask.setStateNames(o)
     return o
 end
 
 function FollowCombineTask:setUp()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask setUp")
+    FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask setUp")
     self.lastChaseSide = self.chaseSide
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     self.activeUnloading = AutoDrive.getSetting("activeUnloading", self.combine)
@@ -62,6 +63,11 @@ function FollowCombineTask:update(dt)
 
     self:updateStates(dt)
 
+    if self.lastState ~= self.state then
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update %s -> %s", tostring(self:getStateName(self.lastState)), tostring(self:getStateName()))
+        self.lastState = self.state
+    end
+
     if self.state == FollowCombineTask.STATE_CHASING then
         self.chaseTimer:timer(true, 4000, dt)
         self.stuckTimer:timer(self.vehicle.lastSpeedReal <= 0.0002, self.MAX_STUCK_TIME, dt)
@@ -69,18 +75,18 @@ function FollowCombineTask:update(dt)
         if self.combine.ad.isChopper then
             if self.filled and self.chaseSide ~= nil and self.chaseSide ~= AutoDrive.CHASEPOS_REAR then
                 --skip reversing
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - filled chopper")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - filled chopper")
                 self.state = FollowCombineTask.STATE_FINISHED -- finish immediate
                 return
             elseif self.filledToUnload and self.chaseSide ~= nil and self.chaseSide == AutoDrive.CHASEPOS_REAR then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - filledToUnload chopper")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - filledToUnload chopper")
                 local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
                 self.reverseStartLocation = {x = x, y = y, z = z}
                 self.state = FollowCombineTask.STATE_REVERSING -- reverse to get room from harvester
                 return
             end
         elseif self.filled or (self.combine.ad.isHarvester and self.combineFillPercent <= 0.1 and (not self.activeUnloading)) then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - filled harvester")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - filled harvester")
             self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH -- unload after some time to let harvester drive away
             return
         end
@@ -92,7 +98,7 @@ function FollowCombineTask:update(dt)
                 FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING stuckTimer:done -> STATE_REVERSING")
             end
             self.stuckTimer:timer(false)
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - stuck -> stuckTimer:%s angleWrongTimer:%s"
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - stuck -> stuckTimer:%s angleWrongTimer:%s"
                 , tostring(self.stuckTimer:done()), tostring(self.angleWrongTimer.elapsedTime > 15000))
             local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
             self.reverseStartLocation = {x = x, y = y, z = z}
@@ -105,7 +111,7 @@ function FollowCombineTask:update(dt)
         end
 
         if not self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide() then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - not UnloaderOnCorrectSide -> finished")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - not UnloaderOnCorrectSide -> finished")
             self:finished()
             return
         end
@@ -114,7 +120,7 @@ function FollowCombineTask:update(dt)
             and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE -- if to close -> reverse
             then
             -- Stop chasing and wait for a normal unload call while standing
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - to close to harvester -> reverse")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - to close to harvester -> reverse")
             local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
             self.reverseStartLocation = {x = x, y = y, z = z}
             self.state = FollowCombineTask.STATE_REVERSING -- reverse to get room from harvester
@@ -123,7 +129,7 @@ function FollowCombineTask:update(dt)
 
         if (not self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide(self.chaseSide)) and (not AutoDrive.combineIsTurning(self.combine)) then
             if self.lastChaseSide ~= CombineUnloaderMode.CHASEPOS_REAR then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - switching chase side from side to elsewhere - let's wait for passby next")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - switching chase side from side to elsewhere - let's wait for passby next")
                 self.state = FollowCombineTask.STATE_WAIT_FOR_PASS_BY
             end
         end
@@ -131,7 +137,7 @@ function FollowCombineTask:update(dt)
         if AutoDrive.combineIsTurning(self.combine) then
             -- harvester turns
             --print("Waiting for turn now - 1- t:" ..  tostring(AutoDrive.combineIsTurning(self.combine)) .. " anglewrongtimer: " .. tostring(self.angleWrongTimer.elapsedTime > 10000))      
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_CHASING - combineIsTurning")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - combineIsTurning")
             self.state = FollowCombineTask.STATE_WAIT_FOR_TURN
             return
         elseif ((self.combine.lastSpeedReal * self.combine.movingDirection) <= -0.00005) then
@@ -140,17 +146,17 @@ function FollowCombineTask:update(dt)
             self:followChasePoint(dt)
         end
     elseif self.state == FollowCombineTask.STATE_WAIT_FOR_TURN then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN")
         self.waitForTurnTimer:timer(true, self.MAX_TURN_TIME, dt)
         if self.waitForTurnTimer:done() then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn took to long - set finished now")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn took to long - set finished now")
             self.waitForTurnTimer:timer(false)
             self.state = FollowCombineTask.STATE_FINISHED
             return
         end
 
         if AutoDrive.combineIsTurning(self.combine) then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combineIsTurning")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combineIsTurning")
             if self.combine.ad.isHarvester and (self.distanceToCombine < ((self.vehicle.size.length + self.combine.size.length) / 2 + 10)) then
                 -- harvester
                 -- if combine drive reverse to turn -> reverse to keep distance
@@ -161,43 +167,44 @@ function FollowCombineTask:update(dt)
                     local isdrivingReverse = ((self.combine.lastSpeedReal * self.combine.movingDirection) <= -0.00051) 
                     local combineIsDriving = (self.combine.lastSpeedReal > 0.001) 
                     self.stuckTimer:timer(self.vehicle.lastSpeedReal <= 0.0002, 15000, dt)
+
                     if isdrivingReverse then
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> self:reverse")
+                        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> self:reverse")
                         self:reverse(dt)
                     elseif self.stuckTimer:done() or (not combineIsDriving and (self:getAngleToCobine() > 45)) then
                         -- if stuck with harvester - try reverse
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - stuck / getAngleToCobine() > 45 -> STATE_REVERSING_FROM_CHOPPER combineIsDriving %s", tostring(combineIsDriving))
+                        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - stuck / getAngleToCobine() > 45 -> STATE_REVERSING_FROM_CHOPPER combineIsDriving %s", tostring(combineIsDriving))
                         self.stuckTimer:timer(false)
                         local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
                         self.reverseStartLocation = {x = x, y = y, z = z}
                         self.state = FollowCombineTask.STATE_REVERSING_FROM_CHOPPER -- reverse to get room from harvester
                         return
                     elseif combineIsDriving then
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combineIsDriving -> stopVehicle")
+                        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combineIsDriving -> stopVehicle")
                         self.vehicle.ad.specialDrivingModule:stopVehicle()
                         self.vehicle.ad.specialDrivingModule:update(dt)
                     else
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> followChasePoint self.chaseSide %s", tostring(self.chaseSide))
+                        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> followChasePoint self.chaseSide %s", tostring(self.chaseSide))
                         self:followChasePoint(dt)
                     end
                 else
                     -- isFixedPipeChopper
-                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - noMovementTimer %d", self.combine.ad.noMovementTimer.elapsedTime)
+                    FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - noMovementTimer %d", self.combine.ad.noMovementTimer.elapsedTime)
                     local dischargeState = self.combine:getDischargeState()
                     self.fillingTimer:timer(not self.combine.spec_combine.isFilling, 100, dt)
                     if self.fillingTimer:done() and self.combine.ad.noMovementTimer.elapsedTime < 5000 then
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - fillingTimer:done")
+                        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - fillingTimer:done")
                         -- harvested to end of row
                         AutoDrive:holdCPCombine(self.combine)
                         self.vehicle.ad.specialDrivingModule:stopVehicle()
                         self.vehicle.ad.specialDrivingModule:update(dt)
                     else
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> followChasePoint no AutoAimingChopper")
+                        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> followChasePoint no AutoAimingChopper")
                         self:followChasePoint(dt)
                     end
                     self.dischargeTimer:timer(dischargeState ~= Dischargeable.DISCHARGE_STATE_OBJECT , 500, dt)
                     if self.dischargeTimer:done() and self.fillingTimer:done() and self.combine.ad.noMovementTimer.elapsedTime < 5000 then
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - dischargeTimer:done")
+                        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - dischargeTimer:done")
                         self.fillingTimer:timer(false)
                         self.dischargeTimer:timer(false)
                         local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
@@ -207,7 +214,7 @@ function FollowCombineTask:update(dt)
                     end
                 end
             else
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> stopVehicle")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN -> stopVehicle")
                 -- stop while combine is turning
                 self.vehicle.ad.specialDrivingModule:stopVehicle()
                 self.vehicle.ad.specialDrivingModule:update(dt)
@@ -227,27 +234,27 @@ function FollowCombineTask:update(dt)
                 or self.waitForTurnTimer.elapsedTime > 15000 -- turn longer than 15 sec
             ) then
             if (self.angleToCombineHeading + self.angleToCombine) < 180 and self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide(self.chaseSide) then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn finished - Heading looks good - start chasing again")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn finished - Heading looks good - start chasing again")
                 self.waitForTurnTimer:timer(false)
                 self.chaseTimer:timer(false)
                 self.state = FollowCombineTask.STATE_CHASING
                 return
             elseif self.angleToCombineHeading > 150 and self.angleToCombineHeading < 210 and self.distanceToCombine < 80 and AutoDrive.experimentalFeatures.UTurn == true and self.combine.ad.isHarvester then
                 -- Instead of directly trying a long way around to get behind the harvester, let's wait for him to pass us by and then U-turn
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn finished - Heading inverted - wait for passby, then U-turn")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn finished - Heading inverted - wait for passby, then U-turn")
                 self.state = FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY
                 self.waitForTurnTimer:timer(false)
                 self.chaseTimer:timer(false)
                 self.waitForPassByTimer:timer(false)
             else
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn finished - Heading looks bad - stop to be able to start pathfinder")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_TURN - combine turn finished - Heading looks bad - stop to be able to start pathfinder")
                 self.stayOnField = true
                 self.state = FollowCombineTask.STATE_FINISHED
                 return
             end
         end
     elseif self.state == FollowCombineTask.STATE_WAIT_FOR_PASS_BY then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_PASS_BY")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_PASS_BY")
         self.waitForPassByTimer:timer(true, 2200, dt)
         self.vehicle.ad.specialDrivingModule:stopVehicle()
         self.vehicle.ad.specialDrivingModule:update(dt)
@@ -255,24 +262,24 @@ function FollowCombineTask:update(dt)
             self.waitForPassByTimer:timer(false)
             self.chaseTimer:timer(false)
             if (self.angleToCombineHeading + self.angleToCombine) < 180 and self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide() then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_PASS_BY - passby timer elapsed - heading looks good - chasing again")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_PASS_BY - passby timer elapsed - heading looks good - chasing again")
                 self.state = FollowCombineTask.STATE_CHASING
                 return
             else
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_PASS_BY - passby timer elapsed - heading looks bad - set finished now")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_PASS_BY - passby timer elapsed - heading looks bad - set finished now")
                 self.stayOnField = true
                 self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
                 return
             end
         end
     elseif self.state == FollowCombineTask.STATE_REVERSING then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_REVERSING")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_REVERSING")
         local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
         local distanceToReverseStart = MathUtil.vector2Length(x - self.reverseStartLocation.x, z - self.reverseStartLocation.z)
         self.reverseTimer:timer(true, self.MAX_REVERSE_TIME, dt)
         local doneReversing = distanceToReverseStart > self.MAX_REVERSE_DISTANCE or (not self.startedChasing)
         if doneReversing or self.reverseTimer:done() then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_REVERSING - done reversing - set finished")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_REVERSING - done reversing - set finished")
             self.reverseTimer:timer(false)
             self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
             return
@@ -280,7 +287,7 @@ function FollowCombineTask:update(dt)
             self:reverse(dt)
         end
     elseif self.state == FollowCombineTask.STATE_REVERSING_FROM_CHOPPER then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER")
         local cx, _, cz = getWorldTranslation(self.combine.components[1].node)
         local vx, _, vz = getWorldTranslation(self.vehicle.components[1].node)
         local distanceToReverseStart = MathUtil.vector2Length(vx - self.reverseStartLocation.x, vz - self.reverseStartLocation.z)
@@ -288,7 +295,7 @@ function FollowCombineTask:update(dt)
         self.reverseTimer:timer(true, self.MAX_REVERSE_TIME, dt)
         local doneReversing = distanceToReverseStart > self.MAX_REVERSE_DISTANCE or distanceToCombine > self.MAX_REVERSE_DISTANCE
         if doneReversing or self.reverseTimer:done() then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER - done reversing - set finished")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER - done reversing - set finished")
             self.reverseTimer:timer(false)
             if self.combine.ad.isFixedPipeChopper and AutoDrive:getIsCPActive(self.combine) then
                 -- wait for CP to finish a turn maneuver before invoke pathfinder
@@ -299,18 +306,18 @@ function FollowCombineTask:update(dt)
             return
         else
             if self.combine.ad.isFixedPipeChopper then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER - not AutoAimingChopper -> holdCPCombine")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER - not AutoAimingChopper -> holdCPCombine")
                 AutoDrive:holdCPCombine(self.combine)
             else
                 if self:getAngleToCobine() > 30 then
-                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER - AngleToCobine > 30 -> holdCPCombine")
+                    FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_REVERSING_FROM_CHOPPER - AngleToCobine > 30 -> holdCPCombine")
                     AutoDrive:holdCPCombine(self.combine)
                 end
             end
             self:reverse(dt)
         end
     elseif self.state == FollowCombineTask.STATE_WAIT_BEFORE_FINISH then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_BEFORE_FINISH")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_BEFORE_FINISH")
         -- wait for CP to finish a turn maneuver before invoke pathfinder
         -- TODO: check if following is useful!
         local combineIsDriving = self.combine.ad.isFixedPipeChopper and AutoDrive:getIsCPActive(self.combine) and (self.combine.lastSpeedReal > 0.001)
@@ -324,12 +331,12 @@ function FollowCombineTask:update(dt)
             self.vehicle.ad.specialDrivingModule:update(dt)
         end
     elseif self.state == FollowCombineTask.STATE_WAIT_FOR_COMBINE_TO_PASS_BY then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_COMBINE_TO_PASS_BY")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_COMBINE_TO_PASS_BY")
         self.waitForPassByTimer:timer(true, 15000, dt)
         self.vehicle.ad.specialDrivingModule:stopVehicle()
         self.vehicle.ad.specialDrivingModule:update(dt)
         if self.waitForPassByTimer:done() then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_COMBINE_TO_PASS_BY - passby timer elapsed - heading looks bad - set finished now")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_COMBINE_TO_PASS_BY - passby timer elapsed - heading looks bad - set finished now")
             self.stayOnField = true
             self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
             return
@@ -337,7 +344,7 @@ function FollowCombineTask:update(dt)
             local cx, cy, cz = getWorldTranslation(self.combine.components[1].node)
             local _, _, offsetZ = worldToLocal(self.vehicle.components[1].node, cx, cy, cz)
             if offsetZ <= -10 then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_WAIT_FOR_COMBINE_TO_PASS_BY - combine passed us. Calculate U-turn now")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_WAIT_FOR_COMBINE_TO_PASS_BY - combine passed us. Calculate U-turn now")
                 self.state = FollowCombineTask.STATE_GENERATE_UTURN_PATH
                 local cx, cy, cz = getWorldTranslation(self.combine.components[1].node)        
                 local offsetX, _, _ = worldToLocal(self.vehicle.components[1].node, cx, cy, cz)
@@ -346,30 +353,30 @@ function FollowCombineTask:update(dt)
             end
         end
     elseif self.state == FollowCombineTask.STATE_GENERATE_UTURN_PATH then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_GENERATE_UTURN_PATH")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_GENERATE_UTURN_PATH")
         if self.vehicle.ad.uTurn ~= nil and self.vehicle.ad.uTurn.inProgress then
             self.vehicle:generateUTurn(true)
         elseif self.vehicle.ad.uTurn ~= nil and not self.vehicle.ad.uTurn.inProgress then
             if self.vehicle.ad.uTurn.colliFound or self.vehicle.ad.uTurn.points == nil or #self.vehicle.ad.uTurn.points < 5 then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_GENERATE_UTURN_PATH - U-Turn generation failed due to collision - set finished now")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_GENERATE_UTURN_PATH - U-Turn generation failed due to collision - set finished now")
                 self.stayOnField = true
                 self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
             else
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_GENERATE_UTURN_PATH - U-Turn generation finished - passing points to drivePathModule now")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_GENERATE_UTURN_PATH - U-Turn generation finished - passing points to drivePathModule now")
                 self.vehicle.ad.drivePathModule:setWayPoints(self.vehicle.ad.uTurn.points)
                 self.state = FollowCombineTask.STATE_DRIVE_UTURN_PATH
             end
         end
     elseif self.state == FollowCombineTask.STATE_DRIVE_UTURN_PATH then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH")
         if self.vehicle.ad.drivePathModule:isTargetReached() then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH - U-Turn finished")
+            FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH - U-Turn finished")
             if (self.angleToCombineHeading + self.angleToCombine) < 180 and self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:isUnloaderOnCorrectSide() then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH - passby timer elapsed - heading looks good - chasing again")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH - passby timer elapsed - heading looks good - chasing again")
                 self.state = FollowCombineTask.STATE_CHASING
                 return
             else
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH - passby timer elapsed - heading looks bad - set finished now")
+                FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_DRIVE_UTURN_PATH - passby timer elapsed - heading looks bad - set finished now")
                 self.stayOnField = true
                 self.state = FollowCombineTask.STATE_WAIT_BEFORE_FINISH
                 return
@@ -378,7 +385,7 @@ function FollowCombineTask:update(dt)
             self.vehicle.ad.drivePathModule:update(dt)
         end
     elseif self.state == FollowCombineTask.STATE_FINISHED then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:update STATE_FINISHED")
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_FINISHED")
         self:finished()
         return
     end
@@ -434,7 +441,7 @@ end
 
 function FollowCombineTask:followChasePoint(dt)
     if self:shouldWaitForChasePos(dt) then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:followChasePoint getAngleToChasePos %.0f -> stopVehicle", self:getAngleToChasePos())
+        FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:followChasePoint getAngleToChasePos %.0f -> stopVehicle", self:getAngleToChasePos())
         self.vehicle.ad.specialDrivingModule:stopVehicle()
         self.vehicle.ad.specialDrivingModule:update(dt)
     else
@@ -452,7 +459,7 @@ function FollowCombineTask:followChasePoint(dt)
 end
 
 function FollowCombineTask:shouldWaitForChasePos(dt)
-    local angle = self:getAngleToChasePos(dt)
+    local angle = self:getAngleToChasePos()
     self.angleWrongTimer:timer(angle > 50, 3000, dt)
     local _, _, diffZ = worldToLocal(self.vehicle.components[1].node, self.chasePos.x, self.chasePos.y, self.chasePos.z)
     return self.angleWrongTimer:done() or  diffZ <= -1 --or (not self.combine.ad.sensors.frontSensorFruit:pollInfo())
@@ -507,7 +514,7 @@ function FollowCombineTask:abort()
 end
 
 function FollowCombineTask:finished()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "FollowCombineTask:finished()")
+    FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:finished()")
     self.vehicle.ad.taskModule:setCurrentTaskFinished()
 end
 
@@ -518,6 +525,29 @@ function FollowCombineTask:getExcludedVehiclesForCollisionCheck()
     end
     return excludedVehicles
 end
+
+function FollowCombineTask:setStateNames()
+    if self.statesToNames == nil then
+        self.statesToNames = {}
+        for name, id in pairs(FollowCombineTask) do
+            if string.sub(name, 1, 6) == "STATE_" then
+                self.statesToNames[id] = name
+            end
+        end
+    end
+end
+
+function FollowCombineTask:getStateName(state)
+    local requestedState = state
+    if requestedState == nil then
+        requestedState = self.state
+    end
+    if requestedState == nil then
+        Logging.error("[AD] FollowCombineTask: Could not find name for state ->%s<- !", tostring(requestedState))
+    end
+    return self.statesToNames[requestedState] or ""
+end
+
 
 function FollowCombineTask:getI18nInfo()
     local text = "$l10n_AD_task_chasing_combine;"
@@ -534,7 +564,7 @@ function FollowCombineTask:getI18nInfo()
         elseif self.chaseSide == AutoDrive.CHASEPOS_RIGHT then
             text = text .. " - " .. "$l10n_AD_task_chase_side_right;"
         end
-    elseif self.state == FollowCombineTask.STATE_REVERSING_FROM_CHOPPER then
+    elseif self.state == FollowCombineTask.STATE_REVERSING_FROM_CHOPPER or self.state == FollowCombineTask.STATE_WAIT_FOR_TURN then
         text = text .. " - " .. "$l10n_AD_task_wait_for_combine_turn;"
     elseif self.state == FollowCombineTask.STATE_REVERSING then
         text = text .. " - " .. "$l10n_AD_task_reversing_from_combine;"
@@ -549,5 +579,7 @@ end
 function FollowCombineTask.debugMsg(vehicle, debugText, ...)
     if FollowCombineTask.debug == true then
         AutoDrive.debugMsg(vehicle, debugText, ...)
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, debugText, ...)
     end
 end

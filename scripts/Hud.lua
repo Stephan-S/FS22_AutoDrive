@@ -429,6 +429,7 @@ function AutoDriveHud:mouseEvent(vehicle, posX, posY, isDown, isUp, button)
 	
 	if mouseActiveForAutoDrive then
 		local mouseEventHandled = false
+		local silent = false
 		if AutoDrive.splineInterpolation ~= nil then			
 			AutoDrive.splineInterpolation.valid = false
 		end

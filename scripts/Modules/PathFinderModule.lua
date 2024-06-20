@@ -906,7 +906,7 @@ function PathFinderModule:checkGridCell(cell)
                     string.format("PFM checkGridCell isRestricted self.restrictToField %s self.fallBackMode1 %s isOnField %s x,z %d %d",
                         tostring(self.restrictToField),
                         tostring(self.fallBackMode1),
-                        tostring(isOnField),
+                        tostring(cell.isOnField),
                         math.floor(worldPos.x),
                         math.floor(worldPos.z)
                     )
@@ -1196,7 +1196,7 @@ function PathFinderModule:drawDebugForPF()
     local color_green = 0.1
     local color_blue = 0.1
     local color_count = 0
-    index = 0
+    local index = 0
     for _, cell in pairs(self.grid) do
         index = index + 1
 
@@ -2089,11 +2089,11 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
     return false, angleBetween
 end
 
-function PathFinderModule.debugVehicleMsg(vehicle, msg, ...)
+function PathFinderModule.debugVehicleMsg(vehicle, msg)
     -- collect output for single vehicle - help to examine sequences for a single vehicle
     if vehicle ~= nil and vehicle.ad ~= nil and vehicle.ad.debug ~= nil then
         if AutoDrive.debugVehicleMsg ~= nil then
-            AutoDrive.debugVehicleMsg(vehicle, msg, ...)
+            AutoDrive.debugVehicleMsg(vehicle, msg)
         end
     end
 end
