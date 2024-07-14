@@ -240,7 +240,11 @@ function CombineUnloaderMode:getNextTask()
         nextTask = self:getTaskAfterUnload(filledToUnload)
     elseif self.state == self.STATE_LEAVE_CROP then
         CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_LEAVE_CROP")
-        self:setToWaitForCall()
+        if filledToUnload then
+            nextTask = self:getTaskAfterUnload(filledToUnload)
+        else
+            self:setToWaitForCall()
+        end
     elseif self.state == self.STATE_DRIVE_TO_UNLOAD then
         CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_UNLOAD")
         nextTask = DriveToDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getFirstMarker().id)
@@ -358,10 +362,16 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
         --self.followingUnloader = nil
         --self.combine = nil
         if AutoDrive.checkIsOnField(x, y, z) and distanceToStart > 30 then
-            -- is activated on a field - use ExitFieldTask to leave field according to setting
-            CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload ExitFieldTask...")
-            nextTask = ExitFieldTask:new(self.vehicle)
-            self.state = self.STATE_EXIT_FIELD
+            if AutoDrive.isVehicleOrTrailerInCrop(self.vehicle, true) then
+                CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload ClearCropTask...")
+                nextTask = ClearCropTask:new(self.vehicle, self.combine)
+                self.state = self.STATE_LEAVE_CROP
+            else
+                -- is activated on a field - use ExitFieldTask to leave field according to setting
+                CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload ExitFieldTask...")
+                nextTask = ExitFieldTask:new(self.vehicle)
+                self.state = self.STATE_EXIT_FIELD
+            end
         else
             CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload UnloadAtDestinationTask...")
             nextTask = UnloadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
