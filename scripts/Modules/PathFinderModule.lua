@@ -717,9 +717,7 @@ function PathFinderModule:update(dt)
 
             if nextCell == nil then
                 --One last attempt by backtracking up to #lastSteps times here
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PathFinderModule:update - Trying to backtrace now")
                 local backtracingSteps = self.lastSteps:Count()
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PathFinderModule:update - Trying to backtrace now. MaxSteps: %d", backtracingSteps)
                 for i = 0, (backtracingSteps-1) do
                     outCells = {}
                     for _, outCell in pairs(self.lastSteps:PeekAhead(i).out) do
@@ -730,7 +728,6 @@ function PathFinderModule:update(dt)
                     end
                     nextCell = self:findClosestCellEdge(outCells, currentDistance)
                     if nextCell ~= nil then
-                        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PathFinderModule:update - found new cell by backtracing %d steps", (i+1))
                         break
                     end
                 end                
