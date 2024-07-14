@@ -440,7 +440,7 @@ function AutoDrive.drawNetworkOnMap()
 							if isSubPrio(outNode) then
 								r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioDualConnection)
 							end
-						elseif ADGraphManager:isReverseRoad(start, target) then
+						elseif ADGraphManager:isReverseRoad(node, outNode) then
 							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_reverseConnection)
 						end
 						setOverlayColor( AutoDrive.courseOverlayId,  r, g, b, a)
