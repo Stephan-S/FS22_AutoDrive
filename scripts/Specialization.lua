@@ -1038,7 +1038,6 @@ function AutoDrive:startAutoDrive()
     if self.isServer then
         if not self.ad.stateModule:isActive() then
             self.ad.stateModule:setActive(true)
-            self.ad.stateModule:setLoopsDone(0)
 
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
@@ -1141,7 +1140,6 @@ function AutoDrive:stopAutoDrive()
                 self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
             end
 
-            self.ad.stateModule:setLoopsDone(0)
             self.ad.stateModule:setActive(false)
 
             self.ad.taskModule:abortAllTasks()
