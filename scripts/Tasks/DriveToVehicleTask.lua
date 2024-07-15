@@ -17,6 +17,7 @@ function DriveToVehicleTask:new(vehicle, targetVehicle)
 end
 
 function DriveToVehicleTask:setUp()
+    self.vehicle.ad.pathFinderModule:reset()
     self.vehicle.ad.pathFinderModule:startPathPlanningToVehicle(self.targetVehicle, DriveToVehicleTask.TARGET_DISTANCE)
     self.trailers, _ = AutoDrive.getAllUnits(self.vehicle)
     AutoDrive.setTrailerCoverOpen(self.vehicle, self.trailers, false)
@@ -92,8 +93,8 @@ end
 
 function DriveToVehicleTask:getI18nInfo()
     if self.state == DriveToVehicleTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     else
         return "$l10n_AD_task_drive_to_vehicle;"
     end

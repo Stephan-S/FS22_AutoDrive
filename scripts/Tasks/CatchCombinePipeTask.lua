@@ -199,6 +199,7 @@ function CatchCombinePipeTask:startNewPathFinding()
     -- if self.combine:getIsBufferCombine() or (pipeChaseSide ~= AutoDrive.CHASEPOS_REAR and targetFieldId == combineFieldId and cFillRatio <= 0.85) then
         -- is chopper or chase not rear and harvester on correct field and filled < 85% - i.e. combine pipe not in fruit
         CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:startNewPathFinding() - chase pos looks good - calculate path to it...")
+        self.vehicle.ad.pathFinderModule:reset()
         self.vehicle.ad.pathFinderModule:startPathPlanningToPipe(self.combine, false)
         -- use false to enable pathfinder fallback
         self.combinesStartLocation = {}
@@ -244,8 +245,8 @@ end
 function CatchCombinePipeTask:getI18nInfo()
     local text = "$l10n_AD_task_catch_up_with_combine;"
     if self.state == CatchCombinePipeTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        text = text .. " - " .. "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        text = text .. " - " .. "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     elseif self.state == CatchCombinePipeTask.STATE_DELAY_PATHPLANNING then
         text = text .. " - " .. "$l10n_AD_task_unload_area_in_fruit;"
     elseif self.state == CatchCombinePipeTask.STATE_REVERSING then

@@ -116,8 +116,8 @@ function FollowCombineTask:update(dt)
             return
         end
 
-        if self.combine.ad.isHarvester and self.combineFillPercent > 90 
-            and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE -- if to close -> reverse
+        if self.combine.ad.isHarvester and ((self.combineFillPercent > 90 and AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE) -- if to close -> reverse
+            or AutoDrive:getIsCPTurning(self.combine))
             then
             -- Stop chasing and wait for a normal unload call while standing
             FollowCombineTask.debugMsg(self.vehicle, "FollowCombineTask:update STATE_CHASING - to close to harvester -> reverse")
@@ -402,6 +402,7 @@ function FollowCombineTask:startPathPlanningForCircling()
     local targetPos = AutoDrive.createWayPointRelativeToVehicle(self.vehicle, sideOffset, 0)
     local directionX, directionY, directionZ = localToWorld(self.vehicle.components[1].node, 0, 0, 0)
     local direction = {x = directionX - targetPos.x, z = directionZ - targetPos.z}
+    self.vehicle.ad.pathFinderModule:reset()
     self.vehicle.ad.pathFinderModule:startPathPlanningTo(targetPos, direction)
 end
 

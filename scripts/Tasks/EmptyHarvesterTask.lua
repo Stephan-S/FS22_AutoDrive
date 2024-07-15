@@ -30,6 +30,7 @@ end
 
 function EmptyHarvesterTask:setUp()
     EmptyHarvesterTask.debugMsg(self.vehicle, "EmptyHarvesterTask:setUp")
+    self.vehicle.ad.pathFinderModule:reset()
     self.vehicle.ad.pathFinderModule:startPathPlanningToPipe(self.combine, false)
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
@@ -59,6 +60,7 @@ function EmptyHarvesterTask:update(dt)
                     return
                 else
                     self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:notifyAboutFailedPathfinder()
+                    self.vehicle.ad.pathFinderModule:reset()
                     self.vehicle.ad.pathFinderModule:startPathPlanningToPipe(self.combine, false)
                     self.vehicle.ad.pathFinderModule:addDelayTimer(10000)
                 end
@@ -222,8 +224,8 @@ end
 function EmptyHarvesterTask:getI18nInfo()
     local text = "$l10n_AD_task_unloading_combine;"
     if self.state == EmptyHarvesterTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        text = text .. " - " .. "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        text = text .. " - " .. "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     elseif self.state == EmptyHarvesterTask.STATE_DRIVING then
         text = text .. " - " .. "$l10n_AD_task_drive_to_combine_pipe;"
     elseif self.state == EmptyHarvesterTask.STATE_UNLOADING then

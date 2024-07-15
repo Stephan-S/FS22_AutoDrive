@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.1.7-RC2"
+AutoDrive.version = "2.0.1.7-RC3"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -17,6 +17,7 @@ AutoDrive.experimentalFeatures.UTurn = true
 AutoDrive.experimentalFeatures.FoldImplements = true
 AutoDrive.experimentalFeatures.RefuelOnlyAtValidStations = true
 AutoDrive.experimentalFeatures.RecordWhileNotInVehicle = false
+AutoDrive.experimentalFeatures.NewPathfinder = true
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true
