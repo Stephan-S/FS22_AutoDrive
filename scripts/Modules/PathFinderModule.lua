@@ -2253,9 +2253,9 @@ end
 
 function PathFinderModule:drawDebugNewPF()
     if self.closedset then
-        for k, node in pairs(self.closedset) do
+        for k, _ in pairs(self.closedset) do
             if k.text then
-                local point = self:gridLocationToWorldLocation({k.x, k.z})
+                local point = self:gridLocationToWorldLocation({x = k.x, z = k.z})
                 point.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, point.x, 1, point.z)
                 Utils.renderTextAtWorldPosition(point.x, point.y + 4, point.z, tostring(k.text), getCorrectTextSize(0.013), 0)
             end
