@@ -150,6 +150,9 @@ function AutoDrive.getBoundingBoxForVehicle(vehicle, force)
 end
 
 function AutoDrive.getDistanceBetween(vehicleOne, vehicleTwo)
+    if vehicleOne == nil or vehicleTwo == nil then
+        printCallstack()
+    end
     local x1, _, z1 = getWorldTranslation(vehicleOne.components[1].node)
     local x2, _, z2 = getWorldTranslation(vehicleTwo.components[1].node)
 
