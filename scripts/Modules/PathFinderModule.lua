@@ -333,6 +333,10 @@ function PathFinderModule:startPathPlanningToVehicle(targetVehicle, targetDistan
 end
 
 function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningTo self.minTurnRadius %.1f"
+        , self.minTurnRadius
+    )
+
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningTo targetPoint x,z %d %d",
             math.floor(targetPoint.x),
@@ -2640,9 +2644,34 @@ end
 
 function PathFinderModule:collisionTestCallback(transformId)
     if transformId ~= 0 and transformId ~= g_currentMission.terrainRootNode then
-        local object = g_currentMission:getNodeObject(transformId)
-        if (object == nil) or (object ~= nil and not (object == self.vehicle or object.rootVehicle == self.vehicle)) then
+        local collisionObject = g_currentMission:getNodeObject(transformId)
+        if (collisionObject == nil) or (collisionObject ~= nil and not (collisionObject.rootVehicle == self.vehicle)) then
             self.collisionhits = self.collisionhits + 1
+        end
+        if PathFinderModule.debug == true then
+            local currentCollMask = getCollisionMask(transformId)
+            if currentCollMask then
+                local x, _, z = getWorldTranslation(self.vehicle.components[1].node)
+                x = x + g_currentMission.mapWidth/2
+                z = z + g_currentMission.mapHeight/2
+
+                PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback transformId ->%s<- collisionObject ->%s<- getRigidBodyType->transformId %s getName->transformId %s getNodePath %s"
+                    , tostring(transformId)
+                    , tostring(collisionObject)
+                    , tostring(getRigidBodyType(transformId))
+                    , tostring(getName(transformId))
+                    , tostring(I3DUtil.getNodePath(transformId))
+                )
+                if collisionObject then
+                    PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback collisionObject type ->%s<-"
+                        , tostring(type(collisionObject))
+                    )
+                end
+                PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:collisionTestCallback xz %.0f %.0f currentCollMask %s"
+                    , x, z
+                    , MathUtil.numberToSetBitsStr(currentCollMask)
+                )
+            end
         end
     end
 end
