@@ -51,11 +51,13 @@ function ClearCropTask:setUp()
 
     self.wayPoints = {}
 
-    local distance = AutoDrive.getDistanceBetween(self.vehicle, self.harvester)
-    ClearCropTask.debugMsg(self.harvester, "ClearCropTask:setUp distance %.0f"
-    , distance
-    )
-    if self.harvester and distance < ClearCropTask.MAX_HARVESTER_DISTANCE then
+    if self.harvester then
+        local distance = AutoDrive.getDistanceBetween(self.vehicle, self.harvester)
+        ClearCropTask.debugMsg(self.harvester, "ClearCropTask:setUp distance %.0f"
+            , distance
+        )
+    end
+    if self.harvester and AutoDrive.getDistanceBetween(self.vehicle, self.harvester) < ClearCropTask.MAX_HARVESTER_DISTANCE then
         table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 1))
         table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 2))
         table.insert(self.wayPoints, AutoDrive.createWayPointRelativeToVehicle(self.harvester, 0, self.vehicleTrainLength * 3))
