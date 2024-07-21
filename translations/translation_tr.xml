@@ -220,6 +220,8 @@
 		<text name="gui_ad_playSounds_tooltip"					                                            text="Enables the sound effects for mouse clicks and notifications" />
 		<text name="gui_ad_scaleLines"							text="Scale Lines" />
 		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
+		<text name="gui_ad_scaleMarkerText"						text="Scale Destination Name" />
+		<text name="gui_ad_scaleMarkerText_tooltip"				text="Scale Size of Destination Names" />
         <text name="gui_ad_syncMultiTargets"                                                                text="Birden çok hedefi senkronize et"  />
         <text name="gui_ad_syncMultiTargets_tooltip"                                                        text="Birden çok hedef için aynı klasörü kullanan birden çok sürücü, sonraki hedefleri senkronize edecek"  />
         <text name="gui_ad_enableParkAtJobFinished"                                                         text="Park işi tamamlandı"  />
