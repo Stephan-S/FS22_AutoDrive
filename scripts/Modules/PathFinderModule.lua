@@ -773,6 +773,7 @@ function PathFinderModule:update(dt)
                     if dubinsPath then
                         self.dubinsDone = true
                         self.wayPoints = dubinsPath
+                        self:appendWayPointsNew()
                         self.isFinished = true
                         self.smoothDone = true
                         return  -- found path
@@ -2824,25 +2825,29 @@ function PathFinderModule:createWayPointsNew()
     self:smoothResultingPPPath_Refined()
 
     if self.smoothStep == 2 then
-        -- When going to network, dont turn actual road network nodes into pathFinderPoints
-        if self.goingToNetwork then
-            for i = 1, #self.wayPoints, 1 do
-                self.wayPoints[i].isPathFinderPoint = true
-            end
-        end
+        self:appendWayPointsNew()
+    end
+end
 
-        if self.appendWayPoints ~= nil then
-            for i = 1, #self.appendWayPoints, 1 do
-                self.wayPoints[#self.wayPoints + 1] = self.appendWayPoints[i]
-            end
-            self.smoothStep = 3
+function PathFinderModule:appendWayPointsNew()
+    -- When going to network, dont turn actual road network nodes into pathFinderPoints
+    if self.goingToNetwork then
+        for i = 1, #self.wayPoints, 1 do
+            self.wayPoints[i].isPathFinderPoint = true
         end
+    end
 
-        -- See comment above
-        if not self.goingToNetwork then
-            for i = 1, #self.wayPoints, 1 do
-                self.wayPoints[i].isPathFinderPoint = true
-            end
+    if self.appendWayPoints ~= nil then
+        for i = 1, #self.appendWayPoints, 1 do
+            self.wayPoints[#self.wayPoints + 1] = self.appendWayPoints[i]
+        end
+        self.smoothStep = 3
+    end
+
+    -- See comment above
+    if not self.goingToNetwork then
+        for i = 1, #self.wayPoints, 1 do
+            self.wayPoints[i].isPathFinderPoint = true
         end
     end
 end
