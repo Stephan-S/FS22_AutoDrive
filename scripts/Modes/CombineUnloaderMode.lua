@@ -659,11 +659,13 @@ function CombineUnloaderMode:getRearChaseOffsetX(leftBlocked, rightBlocked)
     end
 end
 
-function CombineUnloaderMode:getRearChaseOffsetZ()
+function CombineUnloaderMode:getRearChaseOffsetZ(planningPhase)
     local followDistance = AutoDrive.getSetting("followDistance", self.vehicle)
     local rearChaseOffset = -followDistance - (self.combine.size.length / 2)
     if self.combine.ad.isAutoAimingChopper and not self.combine.ad.isSugarcaneHarvester then
-        rearChaseOffset = -followDistance - (self.combine.size.length / 2)
+        if planningPhase then
+            rearChaseOffset = - (self.combine.size.length / 2)
+        end
     else
         -- math.sqrt(2) ensures the trailer could straighten if it was turned 90 degrees, and it makes this point further
         -- back than the pathfinder (straightening) target in PathFinderModule:startPathPlanningToPipe
@@ -714,7 +716,7 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
 
     local sideChaseTermX = self:getSideChaseOffsetX()
     local sideChaseTermZ = self:getSideChaseOffsetZ(AutoDrive.dynamicChaseDistance or self.combine.ad.isHarvester)
-    local rearChaseTermZ = self:getRearChaseOffsetZ()
+    local rearChaseTermZ = self:getRearChaseOffsetZ(planningPhase)
 
     if self.combine.ad.isChopper then
         -- any chopper
