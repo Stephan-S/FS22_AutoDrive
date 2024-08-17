@@ -2300,6 +2300,15 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
                 )
             )
         end
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle belowGroundLevel xz %d,%d terrain123 %.1f %.1f %.1f getWaterYAtWorldPosition %s waterY %s "
+        , math.floor(x1)
+        , math.floor(z1)
+        , terrain1
+        , terrain2
+        , terrain3
+        , tostring(g_currentMission.environmentAreaSystem:getWaterYAtWorldPosition(worldPosMiddle.x, terrain3, worldPosMiddle.z))
+        , tostring(waterY)
+        )
     end
 
     if (angleBetween) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
@@ -2311,6 +2320,14 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
                 )
             )
         end
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleBetween xz %d,%d angleBetween %.1f terrain12 %.1f %.1f length %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleBetween)
+        , terrain1
+        , terrain2
+        , length
+        )
     end
 
     if (angleBetweenCenter) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
@@ -2322,6 +2339,36 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
                 )
             )
         end
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleBetweenCenter xz %d,%d angleBetweenCenter %.1f terrain32 %.1f %.1f lengthMiddle %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleBetweenCenter)
+        , terrain3
+        , terrain2
+        , lengthMiddle
+        )
+    end
+
+    if (angleLeft) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleLeft xz %d,%d angleLeft %.1f terrainLeft %.1f terrain1 %.1f lengthLeft %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleLeft)
+        , terrainLeft
+        , terrain1
+        , lengthLeft
+        )
+    end
+
+    if (angleRight) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleRight xz %d,%d angleRight %.1f terrainRight %.1f terrain1 %.1f lengthRight %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleRight)
+        , terrainRight
+        , terrain1
+        , lengthRight
+        )
     end
 
     if belowGroundLevel or (angleBetween) > PathFinderModule.SLOPE_DETECTION_THRESHOLD or (angleBetweenCenter) > PathFinderModule.SLOPE_DETECTION_THRESHOLD 
@@ -2630,7 +2677,7 @@ function PathFinderModule:getDirections(fromNode, node)
     end
     local directions = {}
 
-    if fromNode then
+--[[     if fromNode then
         PathFinderModule.debugMsg(self.vehicle, "PFM:getDirections fromNode %d,%d fromNode.direction %s node xz %d,%d node.direction %s"
             , fromNode.x, fromNode.z
             , tostring(self.direction_to_text[fromNode.direction+1])
@@ -2644,6 +2691,7 @@ function PathFinderModule:getDirections(fromNode, node)
             , tostring(self.direction_to_text[node.direction+1])
         )
     end
+ ]]
     if (fromNode == nil and node.direction == self.PP_RIGHT) or (fromNode and fromNode.x == node.x and fromNode.z < node.z) then
         directions[1] = { -1, 1 }
         directions[1].direction = self.PP_DOWN_RIGHT
@@ -2713,6 +2761,7 @@ function PathFinderModule:getDirections(fromNode, node)
             , tostring(node.direction)
         )
     end
+--[[     
     PathFinderModule.debugMsg(self.vehicle, "PFM:getDirections %d,%d direction %s %d,%d direction %s %d,%d direction %s"
         , directions[1][1], directions[1][2]
         , tostring(self.direction_to_text[directions[1].direction+1])
@@ -2721,6 +2770,7 @@ function PathFinderModule:getDirections(fromNode, node)
         , directions[3][1], directions[3][2]
         , tostring(self.direction_to_text[directions[3].direction+1])
     )
+ ]]
     return directions
 end
 
@@ -3045,7 +3095,7 @@ function PathFinderModule:collisionTestCallback(transformId)
             if PathFinderModule.debug == true then
                 local currentCollMask = getCollisionMask(transformId)
                 if currentCollMask then
-                    local x, _, z = getWorldTranslation(self.vehicle.components[1].node)
+                    local x, _, z = getWorldTranslation(transformId)
                     x = x + g_currentMission.mapWidth/2
                     z = z + g_currentMission.mapHeight/2
 
@@ -3057,11 +3107,11 @@ function PathFinderModule:collisionTestCallback(transformId)
                         , tostring(I3DUtil.getNodePath(transformId))
                     )
                     if collisionObject then
-                        PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback collisionObject type ->%s<-"
-                            , tostring(type(collisionObject))
+                        PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback xmlFilename ->%s<-"
+                            , tostring(collisionObject.xmlFilename)
                         )
                     end
-                    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:collisionTestCallback xz %.0f %.0f currentCollMask %s"
+                    PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback xz %.0f %.0f currentCollMask %s"
                         , x, z
                         , MathUtil.numberToSetBitsStr(currentCollMask)
                     )
