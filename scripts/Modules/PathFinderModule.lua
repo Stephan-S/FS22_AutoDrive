@@ -360,6 +360,12 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
         )
     )
     ADScheduler:addPathfinderVehicle(self.vehicle)
+    if math.abs(targetVector.x) < 0.001 then
+        targetVector.x = 0.001
+    end
+    if math.abs(targetVector.z) < 0.001 then
+        targetVector.z = 0.001
+    end
     self.targetVector = targetVector
     local vehicleWorldX, vehicleWorldY, vehicleWorldZ = getWorldTranslation(self.vehicle.components[1].node)
     local vehicleRx, _, vehicleRz = localDirectionToWorld(self.vehicle.components[1].node, 0, 0, 1)
