@@ -2395,6 +2395,7 @@ function PathFinderModule.debugVehicleMsg(vehicle, msg)
 end
 
 function PathFinderModule:drawDebugNewPF()
+    -- AStar
     if self.cachedNodes and #self.cachedNodes > 0 then
         for z, row in pairs(self.cachedNodes) do
             for x, node in pairs(row) do
@@ -2464,6 +2465,7 @@ function PathFinderModule:drawDebugNewPF()
         end
     end
 
+    -- Dubins Path
     if self.dubinsPath and #self.dubinsPath > 0 then
 
         local lastPoint = nil
@@ -2593,7 +2595,7 @@ function PathFinderModule:isDriveableAstar(cell)
         -- check for obstacles
         local shapeDefinition = self:getShapeDefByDirectionType(cell)   --> return shape for the cell according to direction, on ground level, 2.65m height
         self.collisionhits = 0
-        local shapes = overlapBox(shapeDefinition.x, shapeDefinition.y + 3, shapeDefinition.z, 0, shapeDefinition.angleRad, 0, shapeDefinition.widthX, shapeDefinition.height, shapeDefinition.widthZ, "collisionTestCallback", self, self.mask, true, true, true)
+        local shapes = overlapBox(shapeDefinition.x, shapeDefinition.y + 3, shapeDefinition.z, 0, shapeDefinition.angleRad, 0, shapeDefinition.widthX, 2.65, shapeDefinition.widthZ, "collisionTestCallback", self, self.mask, true, true, true)
         cell.hasCollision = cell.hasCollision or (self.collisionhits > 0)
         cell.isRestricted = cell.isRestricted or cell.hasCollision
         if cell.hasCollision then
@@ -2970,7 +2972,7 @@ function PathFinderModule:isDriveableDubins(cell)
     if not cell.isRestricted then
         -- check for obstacles
         self.collisionhits = 0
-        local shapes = overlapBox(cell.worldPos.x, cell.worldPos.y + 3, cell.worldPos.z, 0, cell.t, 0, sizeMax, 5, sizeMax, "collisionTestCallback", self, self.mask, true, true, true)
+        local shapes = overlapBox(cell.worldPos.x, cell.worldPos.y + 3, cell.worldPos.z, 0, cell.t, 0, sizeMax, 2.65, sizeMax, "collisionTestCallback", self, self.mask, true, true, true)
         cell.hasCollision = cell.hasCollision or (self.collisionhits > 0)
         cell.isRestricted = cell.isRestricted or cell.hasCollision
         if cell.hasCollision then
