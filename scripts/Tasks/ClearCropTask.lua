@@ -94,9 +94,7 @@ function ClearCropTask:update(dt)
         self.waitTimer:timer(true, ClearCropTask.WAIT_TIME, dt)
         if self.waitTimer:done() then
             ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update STATE_WAITING - done waiting - clear now...")
-            self.waitTimer:timer(false)
-            self.driveTimer:timer(false)
-            self.stuckTimer:timer(false)
+            self:resetAllTimers()
             self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
             self.state = ClearCropTask.STATE_CLEARING_FIRST
             return
@@ -109,9 +107,7 @@ function ClearCropTask:update(dt)
             return
         elseif self.driveTimer:done() then
             ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update 1 driveTimer:done")
-            self.waitTimer:timer(false)
-            self.driveTimer:timer(false)
-            self.stuckTimer:timer(false)
+            self:resetAllTimers()
             local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
             self.reverseStartLocation = {x = x, y = y, z = z}
             self.state = ClearCropTask.STATE_REVERSING
@@ -129,9 +125,7 @@ function ClearCropTask:update(dt)
         end
         if distanceToReversStart > 20 then
             ClearCropTask.debugMsg(self.vehicle, "ClearCropTask:update distanceToReversStart > 20")
-            self.waitTimer:timer(false)
-            self.driveTimer:timer(false)
-            self.stuckTimer:timer(false)
+            self:resetAllTimers()
             self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
             self.state = ClearCropTask.STATE_CLEARING_SECOND
             return
@@ -178,6 +172,12 @@ function ClearCropTask:getStateName(state)
         Logging.error("[AD] ClearCropTask: Could not find name for state ->%s<- !", tostring(requestedState))
     end
     return self.statesToNames[requestedState] or ""
+end
+
+function ClearCropTask:resetAllTimers()
+    -- self.stuckTimer:timer(false) -- stuckTimer reset by speed changes
+    self.waitTimer:timer(false)
+    self.driveTimer:timer(false)
 end
 
 function ClearCropTask:getI18nInfo()

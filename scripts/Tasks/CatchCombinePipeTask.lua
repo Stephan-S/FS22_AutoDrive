@@ -55,6 +55,24 @@ function CatchCombinePipeTask:update(dt)
     if self.lastState ~= self.state then
         CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update %s -> %s", tostring(self:getStateName(self.lastState)), tostring(self:getStateName()))
         self.lastState = self.state
+        self:resetAllTimers()
+    end
+
+    local checkForStuck = (self.vehicle.lastSpeedReal <= 0.0002) and (
+        self.state == CatchCombinePipeTask.STATE_DRIVING
+    )
+
+    self.stuckTimer:timer(checkForStuck, self.MAX_STUCK_TIME, dt)
+    if self.stuckTimer:done()
+        -- or AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE 
+        then
+        -- got stuck or to close to combine -> reverse
+        CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update - STATE_DRIVING stuck")
+        self.stuckTimer:timer(false)
+        local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+        self.reverseStartLocation = {x = x, y = y, z = z}
+        self.state = CatchCombinePipeTask.STATE_REVERSING
+        return
     end
 
     if self.state == CatchCombinePipeTask.STATE_PATHPLANNING then
@@ -71,52 +89,43 @@ function CatchCombinePipeTask:update(dt)
                 return
             else
                 self.vehicle.ad.drivePathModule:setWayPoints(self.wayPoints)
-                self.stuckTimer:timer(false)
                 self.state = CatchCombinePipeTask.STATE_DRIVING
+                return
             end
         else
             self.vehicle.ad.pathFinderModule:update(dt)
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
+            return
         end
     elseif self.state == CatchCombinePipeTask.STATE_DELAY_PATHPLANNING then
         CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update - STATE_DELAY_PATHPLANNING")
         if self.waitForCheckTimer:timer(true, 1000, dt) then
-            if self:startNewPathFinding() then
-                self.vehicle.ad.pathFinderModule:addDelayTimer(6000)
-                self.state = CatchCombinePipeTask.STATE_PATHPLANNING
-            end
             if self.newPathFindingCounter > self.MAX_COUNT_NEW_PATHFINDING then
                 -- prevent deadlock
                 self.state = CatchCombinePipeTask.STATE_FINISHED
                 return
             end
+            if self:startNewPathFinding() then
+                self.vehicle.ad.pathFinderModule:addDelayTimer(6000)
+                self.state = CatchCombinePipeTask.STATE_PATHPLANNING
+                return
+            end
         end        
         self.vehicle.ad.specialDrivingModule:stopVehicle()
         self.vehicle.ad.specialDrivingModule:update(dt)
+        return
     elseif self.state == CatchCombinePipeTask.STATE_DRIVING then
         -- check if this is still a clever path to follow
         -- do this by distance of the combine to the last location pathfinder started at
         local x, y, z = getWorldTranslation(self.combine.components[1].node)
         local combineTravelDistance = MathUtil.vector2Length(x - self.combinesStartLocation.x, z - self.combinesStartLocation.z)
 
-        self.stuckTimer:timer(self.vehicle.lastSpeedReal <= 0.0002, self.MAX_STUCK_TIME, dt)
-        if self.stuckTimer:done() 
-            -- or AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE 
-            then
-            -- got stuck or to close to combine -> reverse
-            CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update - STATE_DRIVING stuck")
-            self.stuckTimer:timer(false)
-            local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
-            self.reverseStartLocation = {x = x, y = y, z = z}
-            self.state = CatchCombinePipeTask.STATE_REVERSING
-            return
-        end
-
         if combineTravelDistance > 85 then
             CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update - combine travelled - recalculate path")
             self.waitForCheckTimer.elapsedTime = 4000
             self.state = CatchCombinePipeTask.STATE_DELAY_PATHPLANNING
+            return
         else
             if self.vehicle.ad.drivePathModule:isTargetReached() then
                 -- check if we have actually reached the target or not
@@ -132,6 +141,7 @@ function CatchCombinePipeTask:update(dt)
                 else
                     CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update - angle or distance to combine too high - recalculate path now")
                     self.state = CatchCombinePipeTask.STATE_DELAY_PATHPLANNING
+                    return
                 end
             else
                 self.vehicle.ad.drivePathModule:update(dt)
@@ -142,8 +152,8 @@ function CatchCombinePipeTask:update(dt)
         local distanceToReverseStart = MathUtil.vector2Length(x - self.reverseStartLocation.x, z - self.reverseStartLocation.z)
         self.reverseTimer:timer(true, self.MAX_REVERSE_TIME, dt)
         if distanceToReverseStart > self.MAX_REVERSE_DISTANCE or self.reverseTimer:done() then
-            self.reverseTimer:timer(false)
             self.state = CatchCombinePipeTask.STATE_WAIT_BEFORE_FINISH
+            return
         else
             self.vehicle.ad.specialDrivingModule:driveReverse(dt, 15, 1, self.vehicle.ad.trailerModule:canBeHandledInReverse())
         end
@@ -151,12 +161,12 @@ function CatchCombinePipeTask:update(dt)
         CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update - STATE_WAIT_BEFORE_FINISH")
         self.waitTimer:timer(true, self.MAX_REVERSE_TIME, dt)
         if self.waitTimer:done() then
-            self.waitTimer:timer(false)
             self.state = CatchCombinePipeTask.STATE_FINISHED
             return
         else
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
+            return
         end
     elseif self.state == CatchCombinePipeTask.STATE_FINISHED then
         CatchCombinePipeTask.debugMsg(self.vehicle, "CatchCombinePipeTask:update - STATE_FINISHED")
@@ -240,6 +250,13 @@ function CatchCombinePipeTask:getStateName(state)
         Logging.error("[AD] CatchCombinePipeTask: Could not find name for state ->%s<- !", tostring(requestedState))
     end
     return self.statesToNames[requestedState] or ""
+end
+
+function CatchCombinePipeTask:resetAllTimers()
+    -- self.stuckTimer:timer(false) -- stuckTimer reset by speed changes
+    self.reverseTimer:timer(false)
+    self.waitTimer:timer(false)
+    self.waitForCheckTimer:timer(false)
 end
 
 function CatchCombinePipeTask:getI18nInfo()
