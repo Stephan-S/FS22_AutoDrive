@@ -851,13 +851,14 @@ function PathFinderModule:update(dt)
                     table.insert(self.path, self.nodeGoal)
                     diffNetTime = netGetTime() - diffNetTime
                     self.diffOverallNetTime = self.diffOverallNetTime + diffNetTime
-
-                    PathFinderModule.debugMsg(self.vehicle, "PFM:update find goal reached self.steps %d diffOverallNetTime %d self.nodeGoal xz %d,%d current xz %d,%d"
-                        , self.steps
-                        , self.diffOverallNetTime
-                        , self.nodeGoal.x, self.nodeGoal.z
-                        , current.x, current.z
-                    )
+                    if current then
+                        PathFinderModule.debugMsg(self.vehicle, "PFM:update find goal reached self.steps %d diffOverallNetTime %d self.nodeGoal xz %d,%d current xz %d,%d"
+                            , self.steps
+                            , self.diffOverallNetTime
+                            , self.nodeGoal.x, self.nodeGoal.z
+                            , current.x, current.z
+                        )
+                    end
 
                     self.isFinished = true
                     return  -- found path
