@@ -805,7 +805,13 @@ function PathFinderModule:update(dt)
             end
             if not self.initNew then
                 self:setupNew(self.behindStartCell, self.startCell,self.targetCell)
-                if self.nodeBehindStart == self.nodeGoal then
+                local dx, dz = self.nodeStart.x - self.nodeGoal.x, self.nodeStart.z - self.nodeGoal.z
+                local diff = math.sqrt(dx * dx + dz * dz)
+                local toCloseToTarget = (diff < 3)
+                dx, dz = self.nodeBehindStart.x - self.nodeGoal.x, self.nodeBehindStart.z - self.nodeGoal.z
+                diff = math.sqrt(dx * dx + dz * dz)
+                toCloseToTarget = toCloseToTarget or (diff < 3)
+                if (self.nodeBehindStart == self.nodeGoal) or toCloseToTarget then
                     self.completelyBlocked = true
                     return  -- no valid path
                 end

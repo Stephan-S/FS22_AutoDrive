@@ -112,7 +112,9 @@ function FollowCombineTask:update(dt)
             return
         end
 
-        if self.angleWrongTimer.elapsedTime > 15000 then
+        local wrongChopperHeading = self.combine.ad.isChopper and (self.angleToCombineHeading > 90 and self.distanceToCombine < 30)
+
+        if (self.angleWrongTimer.elapsedTime > 15000) or wrongChopperHeading then
             -- if stuck with harvester - try reverse
             if (g_updateLoopIndex  % 60 == 0) or self.loop5 == nil then
                 self.loop5 = true
