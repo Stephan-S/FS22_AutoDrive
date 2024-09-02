@@ -487,6 +487,9 @@ function ADGraphManager:removeMapMarker(markerId, sendEvent)
             AutoDriveDeleteMapMarkerEvent.sendEvent(markerId)
         else
             if self.mapMarkers[markerId] ~= nil then
+                -- remove deleted marker from vehicle destinations
+                ADGraphManager:checkResetVehicleDestinations(markerId)
+
                 table.remove(self.mapMarkers, markerId)
                 --Readjust stored markerIndex values to point to corrected ID
                 for markerID, marker in pairs(self.mapMarkers) do
@@ -530,8 +533,6 @@ function ADGraphManager:removeMapMarker(markerId, sendEvent)
                         end
                     end
                 end
-                -- remove deleted marker from vehicle destinations
-                ADGraphManager:checkResetVehicleDestinations(markerId)
             end
 
             -- Calling external interop listeners
