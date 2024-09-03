@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="79">
+<modDesc descVersion="80">
 	<author>AutoDrive Team</author>
 	<title>
 		<en>AutoDrive</en>
 	</title>
 	<description>
 		<en>
-			<![CDATA[This mod can be used to create a network of routes for vehicles to drive autonomously. Once setup you can tell a tractor which is standing anywhere close to the network to drive to any point, such as the shop, field 1 or to a sell point.
+			<![CDATA[
+This mod can be used to create a network of routes for vehicles to drive autonomously.
+Once setup you can tell a tractor which is standing anywhere close to the network to drive to any point, such as the shop, field 1 or to a sell point.
+
+Changelog 2.0.1.6:
+- initial ModHub Release 2.0.1.6
 ]]>
 		</en>
 		<de>
-			<![CDATA[Dieser Mod erlaubt es ein Netzwerk von Routen aufzuzeichnen, um dann ein Fahrzeug von jedem beliebigen Punkt zu speziell definierten Zielen, wie zum Beispiel der eigenen Farm, Feld 1 oder auch zu jedem Verkaufspunkt fahren zu lassen.
+			<![CDATA[
+Dieser Mod erlaubt es ein Netzwerk von Routen aufzuzeichnen, um dann ein Fahrzeug von jedem beliebigen Punkt zu speziell definierten Zielen, wie zum Beispiel der eigenen Farm, Feld 1 oder auch zu jedem Verkaufspunkt fahren zu lassen.
+
+Changelog 2.0.1.6:
+- Initiale ModHub Version 2.0.1.6
 ]]>
 		</de>
 		<it>
@@ -34,7 +43,7 @@ Différents modes d'utilisation ont été ajoutés depuis les premières version
 	</description>
 	<version>2.0.1.6</version>
 	<multiplayer supported="true" />
-	<iconFilename>icon.dds</iconFilename>
+	<iconFilename>icon_AutoDrive.dds</iconFilename>
 	<extraSourceFiles>
 		<sourceFile filename="register.lua" />
 	</extraSourceFiles>
