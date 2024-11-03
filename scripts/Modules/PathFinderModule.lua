@@ -643,6 +643,32 @@ function PathFinderModule:update(dt)
     if AutoDrive.isEditorModeEnabled() and AutoDrive.getDebugChannelIsSet(AutoDrive.DC_PATHINFO) then
         if self.isNewPF then
             self:drawDebugNewPF()
+            if self.isFinished and self.smoothDone and self.wayPoints ~= nil then
+                local lastPoint = nil
+                for index, point in ipairs(self.wayPoints) do
+                    if point.isPathFinderPoint and lastPoint ~= nil then
+                        ADDrawingManager:addLineTask(lastPoint.x, lastPoint.y, lastPoint.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                        ADDrawingManager:addArrowTask(lastPoint.x, lastPoint.y, lastPoint.z, point.x, point.y, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+
+                        if AutoDrive.getSettingState("lineHeight") == 1 then
+                            local gy = point.y - AutoDrive.drawHeight + 4
+                            local ty = lastPoint.y - AutoDrive.drawHeight + 4
+                            ADDrawingManager:addLineTask(point.x, gy, point.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addSphereTask(point.x, gy, point.z, 3, 1, 0.09, 0.09, 0.15)
+                            ADDrawingManager:addLineTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addArrowTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+                        else
+                            local gy = point.y - AutoDrive.drawHeight - 4
+                            local ty = lastPoint.y - AutoDrive.drawHeight - 4
+                            ADDrawingManager:addLineTask(point.x, gy, point.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addSphereTask(point.x, gy, point.z, 3, 1, 0.09, 0.09, 0.15)
+                            ADDrawingManager:addLineTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addArrowTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+                        end
+                    end
+                    lastPoint = point
+                end
+            end
         else
             if self.isFinished and self.smoothDone and self.wayPoints ~= nil and self.chainStartToTarget ~= nil and #self.chainStartToTarget > 0 and self.vehicle.ad.stateModule:getSpeedLimit() > 40 then
                 self:drawDebugForCreatedRoute()
