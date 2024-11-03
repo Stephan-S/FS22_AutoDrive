@@ -1047,6 +1047,18 @@ AutoDrive.settings.scaleLines = {
     isUserSpecific = true
 }
 
+AutoDrive.settings.scaleMarkerText = {
+    values = {0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+    texts = {"50%", "100%", "200%", "300%", "400%", "500%", "600%", "700%", "800%", "900%", "1000%"},
+    default = 2,
+    current = 2,
+    text = "gui_ad_scaleMarkerText",
+    tooltip = "gui_ad_scaleMarkerText_tooltip",
+    translate = false,
+    isVehicleSpecific = false,
+    isUserSpecific = true
+}
+
 AutoDrive.settings.remainingDriveTimeInterval = {
     values = {0, 1, 3, 5, 10, 20, 30, 60},
     texts = {"gui_ad_off", "1s", "3s", "5s", "10s", "20s", "30s", "60s"},

@@ -11,6 +11,7 @@ function ExitFieldTask:new(vehicle)
     local o = ExitFieldTask:create()
     o.vehicle = vehicle
     o.trailers = nil
+    o.failedPathFinder = 0
     return o
 end
 
@@ -27,9 +28,12 @@ function ExitFieldTask:update(dt)
         if self.vehicle.ad.pathFinderModule:hasFinished() then
             self.wayPoints = self.vehicle.ad.pathFinderModule:getPath()
             if self.wayPoints == nil or #self.wayPoints == 0 then
-                self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:notifyAboutFailedPathfinder()
-                self:selectNextStrategy()
-                if self.vehicle.ad.pathFinderModule:isTargetBlocked() then
+                self.failedPathFinder = self.failedPathFinder + 1
+                if self.failedPathFinder > 5 then
+                    self.failedPathFinder = 0
+                    self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:notifyAboutFailedPathfinder()
+                    self:selectNextStrategy()
+                elseif self.vehicle.ad.pathFinderModule:isTargetBlocked() then
                     -- If the selected field exit isn't reachable, try the next strategy and restart without delay
                     self:startPathPlanning()
                 elseif self.vehicle.ad.pathFinderModule:timedOut() or self.vehicle.ad.pathFinderModule:isBlocked() then
@@ -74,6 +78,7 @@ function ExitFieldTask:startPathPlanning()
             if closestDistance > AutoDrive.getDriverRadius(self.vehicle) then
                 -- initiate pathFinder only if distance to closest wayPoint is enought to find a path
                 local vecToNextPoint = {x = wayPoints[2].x - closestNode.x, z = wayPoints[2].z - closestNode.z}
+                self.vehicle.ad.pathFinderModule:reset()
                 self.vehicle.ad.pathFinderModule:startPathPlanningTo(closestNode, vecToNextPoint)
             else
                 -- close to network, set task finished
@@ -93,6 +98,7 @@ function ExitFieldTask:startPathPlanning()
                 targetNode = wayPoints[5]
                 vecToNextPoint = {x = wayPoints[6].x - targetNode.x, z = wayPoints[6].z - targetNode.z}
             end
+            self.vehicle.ad.pathFinderModule:reset()
             self.vehicle.ad.pathFinderModule:startPathPlanningTo(targetNode, vecToNextPoint)
         else
             AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.WARN, "$l10n_AD_Driver_of; %s $l10n_AD_cannot_find_path;", 5000, self.vehicle.ad.stateModule:getName())
@@ -120,8 +126,8 @@ end
 
 function ExitFieldTask:getI18nInfo()
     if self.state == ExitFieldTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     else
         return "$l10n_AD_task_exiting_field;"
     end

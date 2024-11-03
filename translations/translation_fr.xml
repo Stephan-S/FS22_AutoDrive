@@ -224,6 +224,8 @@
 		<text name="gui_ad_playSounds_tooltip"					text="Active les sons lors de clics et des notifications" />
 		<text name="gui_ad_scaleLines"							text="Scale Lines" />
 		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
+		<text name="gui_ad_scaleMarkerText"						text="Scale Destination Name" />
+		<text name="gui_ad_scaleMarkerText_tooltip"				text="Scale Size of Destination Names" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchroniser plusieurs destinations" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Plusieurs conducteurs utilisant le même dossier pour plusieurs destination synchroniseront les destinations suivantes" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Se garer à la fin du travail" />

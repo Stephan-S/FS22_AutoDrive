@@ -17,6 +17,7 @@ function RepairTask:setUp()
     self.repairTrigger = nil
     if ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = RepairTask.STATE_PATHPLANNING
+        self.vehicle.ad.pathFinderModule:reset()
         self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.destinationID)
     else
         self.state = RepairTask.STATE_DRIVING
@@ -103,8 +104,8 @@ end
 
 function RepairTask:getI18nInfo()
     if self.state == RepairTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     else
         return "$l10n_AD_task_drive_to_repair_point;"
     end

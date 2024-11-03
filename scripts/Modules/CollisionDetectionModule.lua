@@ -56,6 +56,7 @@ function ADCollisionDetectionModule:detectObstacle()
 	    boundingBox[2] = box.topRight
 	    boundingBox[3] = box.downRight
 		boundingBox[4] = box.downLeft
+		boundingBox[1].y = box.y
 
 		self.detectedCollision = AutoDrive:checkForVehicleCollision(self.vehicle, boundingBox, excludedList)
 	end

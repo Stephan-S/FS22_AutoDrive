@@ -41,7 +41,7 @@ function AutoDriveVehicleData.registerEventListeners(vehicleType)
     end
 end
 
-function AutoDrive.registerFunctions(vehicleType)
+function AutoDriveVehicleData.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "getParkDestination", AutoDriveVehicleData.getParkDestination)
     SpecializationUtil.registerFunction(vehicleType, "setParkDestination", AutoDriveVehicleData.setParkDestination)
 end
@@ -88,7 +88,7 @@ function AutoDriveVehicleData:onEnterVehicle()
     local actualparkDestination = -1
     if g_dedicatedServer == nil then
         -- only send the client event to server
-        local selectedWorkTool = AutoDrive.getSelectedWorkTool(self, true)
+        local selectedWorkTool = AutoDrive.getSelectedWorkTool(self)
         if selectedWorkTool ~= nil and selectedWorkTool.advd ~= nil then
             actualparkDestination = selectedWorkTool.advd.parkDestination
         else

@@ -221,6 +221,8 @@
 		<text name="gui_ad_playSounds_tooltip"					text="Engedélyezi a hanghatásokat egérkattintásokhoz és értesítésekhez." />
 		<text name="gui_ad_scaleLines"							text="Vonalvastagság" />
 		<text name="gui_ad_scaleLines_tooltip"					text="Összekötő vonalak vastagsága" />
+		<text name="gui_ad_scaleMarkerText"						text="Scale Destination Name" />
+		<text name="gui_ad_scaleMarkerText_tooltip"				text="Scale Size of Destination Names" />
 		<text name="gui_ad_syncMultiTargets"					text="Több cél szinkronizálása" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Több útvonal, amely ugyanazt a mappát használja több célhoz, szinkronizálja a következő célokat" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Parkolás a végén" />

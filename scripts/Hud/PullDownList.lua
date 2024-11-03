@@ -703,21 +703,29 @@ function ADPullDownList:act(vehicle, posX, posY, isDown, isUp, button)
         elseif button == 4 and isUp then
             -- mouse wheel
             local oldSelected = self.selected
-            self.selected = math.max(1, self.selected - 1)
-            if oldSelected ~= self.selected then
-                self.hovered = math.max(1, self.hovered - 1)
+            local decrement = 1
+            if AutoDrive.leftCTRLmodifierKeyPressed then
+                decrement = 10
             end
-            if self.hovered > (self.selected + ADPullDownList.MAX_SHOWN - 1) then
-                self.hovered = self.selected + ADPullDownList.MAX_SHOWN - 1
+            self.selected = math.max(1, self.selected - decrement)
+            if oldSelected ~= self.selected then
+                self.hovered = math.max(1, self.hovered - decrement)
+            end
+            if self.hovered > (self.selected + ADPullDownList.MAX_SHOWN - decrement) then
+                self.hovered = self.selected + ADPullDownList.MAX_SHOWN - decrement
             end
             AutoDrive.mouseWheelActive = true
             return true
         elseif button == 5 and isUp then
             -- mouse wheel
-            if self:getListElementByIndex(vehicle, self.selected + 1 + ADPullDownList.MAX_SHOWN - 3) ~= nil then
-                self.selected = self.selected + 1
-                if self:getListElementByIndex(vehicle, self.hovered + 1 + ADPullDownList.MAX_SHOWN - 3) ~= nil then
-                    self.hovered = self.hovered + 1
+            local increment = 1
+            if AutoDrive.leftCTRLmodifierKeyPressed then
+                increment = 10
+            end
+            if self:getListElementByIndex(vehicle, self.selected + increment + ADPullDownList.MAX_SHOWN - 3) ~= nil then
+                self.selected = self.selected + increment
+                if self:getListElementByIndex(vehicle, self.hovered + increment + ADPullDownList.MAX_SHOWN - 3) ~= nil then
+                    self.hovered = self.hovered + increment
                 end
             end
             AutoDrive.mouseWheelActive = true

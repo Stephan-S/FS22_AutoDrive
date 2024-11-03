@@ -22,11 +22,13 @@ function AutoDrive.checkForVehiclesInBox(boundingBox, excludedVehicles)
             isExcluded = true
         end
         if (not isExcluded) and otherVehicle ~= nil and otherVehicle.components ~= nil and otherVehicle.size.width ~= nil and otherVehicle.size.length ~= nil and otherVehicle.rootNode ~= nil then
-            local x, _, z = getWorldTranslation(otherVehicle.components[1].node)
+            local x, y, z = getWorldTranslation(otherVehicle.components[1].node)
             local distance = MathUtil.vector2Length(boundingBox[1].x - x, boundingBox[1].z - z)
             if distance < 50 then
                 if AutoDrive.boxesIntersect(boundingBox, AutoDrive.getBoundingBoxForVehicle(otherVehicle)) == true then
-                    return true
+                    if math.abs(boundingBox[1].y - y) < 10 then
+                        return true
+                    end
                 end
             end
         end
@@ -150,6 +152,9 @@ function AutoDrive.getBoundingBoxForVehicle(vehicle, force)
 end
 
 function AutoDrive.getDistanceBetween(vehicleOne, vehicleTwo)
+    if vehicleOne == nil or vehicleTwo == nil then
+        printCallstack()
+    end
     local x1, _, z1 = getWorldTranslation(vehicleOne.components[1].node)
     local x2, _, z2 = getWorldTranslation(vehicleTwo.components[1].node)
 

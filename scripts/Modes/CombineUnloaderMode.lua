@@ -1,4 +1,5 @@
 CombineUnloaderMode = ADInheritsFrom(AbstractMode)
+CombineUnloaderMode.debug = false
 
 CombineUnloaderMode.STATE_INIT = {}
 CombineUnloaderMode.STATE_WAIT_TO_BE_CALLED = {}
@@ -43,7 +44,7 @@ function CombineUnloaderMode:reset()
 end
 
 function CombineUnloaderMode:start(user)
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:start start self.state %s", tostring(self:getStateName()))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:start start self.state %s", tostring(self:getStateName()))
     if not self.vehicle.ad.stateModule:isActive() then
         self.vehicle:startAutoDrive()
     end
@@ -58,13 +59,13 @@ function CombineUnloaderMode:start(user)
     if self.activeTask ~= nil then
         self.vehicle.ad.taskModule:addTask(self.activeTask)
     end
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:start end self.state %s", tostring(self:getStateName()))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:start end self.state %s", tostring(self:getStateName()))
 end
 
 function CombineUnloaderMode:monitorTasks(dt)
     if self.combine ~= nil and (self.state == self.STATE_DRIVE_TO_START or self.state == self.STATE_DRIVE_TO_UNLOAD or self.state == self.STATE_EXIT_FIELD) then
         if AutoDrive.getDistanceBetween(self.vehicle, self.combine) > 25 then
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:monitorTasks -> unregisterAsUnloader")
+            CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:monitorTasks -> unregisterAsUnloader")
             ADHarvestManager:unregisterAsUnloader(self.vehicle)
             self.followingUnloader = nil
             self.combine = nil
@@ -75,7 +76,7 @@ function CombineUnloaderMode:monitorTasks(dt)
     end
     --We are stuck
     if self.failedPathFinder >= 5 or ((self.vehicle.ad.specialDrivingModule:shouldStopMotor() or self.vehicle.ad.specialDrivingModule.stoppedTimer:done()) and self.vehicle.ad.specialDrivingModule.isBlocked) then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:monitorTasks() - detected stuck vehicle - try reversing out of it now")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:monitorTasks() - detected stuck vehicle - try reversing out of it now")
         self.vehicle.ad.specialDrivingModule:releaseVehicle()
         self.vehicle.ad.taskModule:abortAllTasks()
         self.activeTask = ReverseFromBadLocationTask:new(self.vehicle)
@@ -90,7 +91,7 @@ function CombineUnloaderMode:monitorTasks(dt)
 end
 
 function CombineUnloaderMode:notifyAboutFailedPathfinder()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:notifyAboutFailedPathfinder self.failedPathFinder %s ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 %s", tostring(self.failedPathFinder), tostring(ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:notifyAboutFailedPathfinder self.failedPathFinder %s ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 %s", tostring(self.failedPathFinder), tostring(ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20))
     --print("CombineUnloaderMode:notifyAboutFailedPathfinder() - blocked: " .. tostring(self.vehicle.ad.pathFinderModule.completelyBlocked) .. " distance: " .. ADGraphManager:getDistanceFromNetwork(self.vehicle))
     if self.vehicle.ad.pathFinderModule.completelyBlocked and ADGraphManager:getDistanceFromNetwork(self.vehicle) > 20 then
         self.failedPathFinder = self.failedPathFinder + 1
@@ -134,14 +135,14 @@ function CombineUnloaderMode:promoteFollowingUnloader(combine)
 end
 
 function CombineUnloaderMode:handleFinishedTask()
-    -- AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask")
+    -- CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:handleFinishedTask")
     self.vehicle.ad.trailerModule:reset()
     self.lastTask = self.activeTask
     self.activeTask = self:getNextTask()
     if self.activeTask ~= nil then
         self.vehicle.ad.taskModule:addTask(self.activeTask)
     end
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:handleFinishedTask self.state %s", tostring(self:getStateName()))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:handleFinishedTask self.state %s", tostring(self:getStateName()))
 end
 
 function CombineUnloaderMode:stop()
@@ -163,15 +164,15 @@ function CombineUnloaderMode:continue()
     end
 
     if self.state == self.STATE_DRIVE_TO_UNLOAD then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue self.STATE_DRIVE_TO_UNLOAD")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:continue self.STATE_DRIVE_TO_UNLOAD")
         self.activeTask:continue()
     else
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue self.state" .. tostring(self:getStateName()))
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:continue self.state" .. tostring(self:getStateName()))
         self.vehicle.ad.taskModule:abortCurrentTask()
 
         if AutoDrive.checkIsOnField(x, y, z) and distanceToStart > 30 then
             -- is activated on a field - use ExitFieldTask to leave field according to setting
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue ExitFieldTask...")
+            CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:continue ExitFieldTask...")
             self.activeTask = ExitFieldTask:new(self.vehicle)
             self.state = self.STATE_EXIT_FIELD
         else
@@ -181,7 +182,7 @@ function CombineUnloaderMode:continue()
                     self.vehicle.ad.stateModule:setSecondMarker(nextTarget)
                 end
             end
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:continue UnloadAtDestinationTask...")
+            CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:continue UnloadAtDestinationTask...")
             self.activeTask = UnloadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
             self.state = self.STATE_DRIVE_TO_UNLOAD
         end
@@ -194,7 +195,7 @@ function CombineUnloaderMode:continue()
 end
 
 function CombineUnloaderMode:getNextTask()
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask start self.state %s", tostring(self:getStateName()))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask start self.state %s", tostring(self:getStateName()))
     local nextTask
 
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
@@ -202,7 +203,7 @@ function CombineUnloaderMode:getNextTask()
     local _, _, filledToUnload, _ = AutoDrive.getAllFillLevels(self.trailers)
 
     if self.state == self.STATE_INIT then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask STATE_INIT filledToUnload %s", tostring(filledToUnload))
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask STATE_INIT filledToUnload %s", tostring(filledToUnload))
         if filledToUnload then -- fill level above setting unload level
             if (AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders") then
                 local nextTarget = ADMultipleTargetsManager:getNextTarget(self.vehicle, false)
@@ -224,9 +225,9 @@ function CombineUnloaderMode:getNextTask()
                 self:setToWaitForCall()
             end
         end
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_INIT end self.state %s", tostring(self:getStateName()))
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_INIT end self.state %s", tostring(self:getStateName()))
     elseif self.state == self.STATE_DRIVE_TO_COMBINE then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_COMBINE")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_COMBINE")
         -- we finished the precall to combine route
         -- check if we should wait / pull up to combines pipe
         nextTask = FollowCombineTask:new(self.vehicle, self.combine)
@@ -234,14 +235,14 @@ function CombineUnloaderMode:getNextTask()
         self.breadCrumbs = Queue:new()
         self.lastBreadCrumb = nil
     elseif self.state == self.STATE_DRIVE_TO_PIPE or self.state == self.STATE_REVERSE_FROM_BAD_LOCATION then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_PIPE | STATE_REVERSE_FROM_BAD_LOCATION")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_PIPE | STATE_REVERSE_FROM_BAD_LOCATION")
         --Drive to pipe can be finished when combine is emptied or when vehicle has reached 'old' pipe position and should switch to active mode
         nextTask = self:getTaskAfterUnload(filledToUnload)
     elseif self.state == self.STATE_LEAVE_CROP then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_LEAVE_CROP")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_LEAVE_CROP")
         self:setToWaitForCall()
     elseif self.state == self.STATE_DRIVE_TO_UNLOAD then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_UNLOAD")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_UNLOAD")
         nextTask = DriveToDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getFirstMarker().id)
         if (AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders") then
             local nextTarget = ADMultipleTargetsManager:getNextTarget(self.vehicle, true)
@@ -251,10 +252,10 @@ function CombineUnloaderMode:getNextTask()
         end
         self.state = self.STATE_DRIVE_TO_START
     elseif self.state == self.STATE_DRIVE_TO_START then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_START")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_DRIVE_TO_START")
         self:setToWaitForCall()
     elseif self.state == self.STATE_ACTIVE_UNLOAD_COMBINE then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_ACTIVE_UNLOAD_COMBINE")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_ACTIVE_UNLOAD_COMBINE")
         if filledToUnload then
             nextTask = self:getTaskAfterUnload(filledToUnload)
         else
@@ -262,13 +263,13 @@ function CombineUnloaderMode:getNextTask()
             self.state = self.STATE_DRIVE_TO_COMBINE
         end
     elseif self.state == self.STATE_FOLLOW_CURRENT_UNLOADER then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_FOLLOW_CURRENT_UNLOADER")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_FOLLOW_CURRENT_UNLOADER")
         if self.targetUnloader ~= nil then
             self.targetUnloader.ad.modes[AutoDrive.MODE_UNLOAD]:unregisterFollowingUnloader()
         end
         nextTask = self:getTaskAfterUnload(filledToUnload)
     elseif self.state == self.STATE_EXIT_FIELD then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask - STATE_EXIT_FIELD")
+        CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask - STATE_EXIT_FIELD")
         if (AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_ONLYDELIVER or AutoDrive.getSetting("rotateTargets", self.vehicle) == AutoDrive.RT_PICKUPANDDELIVER) and AutoDrive.getSetting("useFolders") then
             local nextTarget = ADMultipleTargetsManager:getNextTarget(self.vehicle, false)
             if nextTarget ~= nil then
@@ -279,19 +280,19 @@ function CombineUnloaderMode:getNextTask()
         self.state = self.STATE_DRIVE_TO_UNLOAD
     end
 
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getNextTask end self.state %s", tostring(self:getStateName()))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getNextTask end self.state %s", tostring(self:getStateName()))
     return nextTask
 end
 
 function CombineUnloaderMode:setToWaitForCall(keepCombine)
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall start self.state %s keepCombine %s", tostring(self.state), tostring(keepCombine))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:setToWaitForCall start self.state %s keepCombine %s", tostring(self:getStateName()), tostring(keepCombine))
     -- We just have to wait to be wait to be called (again)
     self.state = self.STATE_WAIT_TO_BE_CALLED
     self.vehicle.ad.taskModule:addTask(WaitForCallTask:new(self.vehicle))
     if self.combine ~= nil and self.combine.ad ~= nil and (keepCombine == nil or keepCombine ~= true) then
         self.combine = nil
     end
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:setToWaitForCall end self.state %s self.combine %s", tostring(self:getStateName()), tostring(self.combine))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:setToWaitForCall end self.state %s self.combine %s", tostring(self:getStateName()), tostring(self.combine))
 end
 
 function CombineUnloaderMode:assignToHarvester(harvester)
@@ -336,7 +337,7 @@ end
 
 function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
     local nextTask
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload start filledToUnload %s", tostring(filledToUnload))
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload start filledToUnload %s", tostring(filledToUnload))
 
     local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
     local point = nil
@@ -358,11 +359,11 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
         --self.combine = nil
         if AutoDrive.checkIsOnField(x, y, z) and distanceToStart > 30 then
             -- is activated on a field - use ExitFieldTask to leave field according to setting
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload ExitFieldTask...")
+            CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload ExitFieldTask...")
             nextTask = ExitFieldTask:new(self.vehicle)
             self.state = self.STATE_EXIT_FIELD
         else
-            AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload UnloadAtDestinationTask...")
+            CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload UnloadAtDestinationTask...")
             nextTask = UnloadAtDestinationTask:new(self.vehicle, self.vehicle.ad.stateModule:getSecondMarker().id)
             self.state = self.STATE_DRIVE_TO_UNLOAD
         end
@@ -371,11 +372,11 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
         if (self.combine and self.combine.ad.isChopper) or (AutoDrive.getSetting("parkInField", self.vehicle) or (self.lastTask ~= nil and self.lastTask.stayOnField)) then
             -- If we are in fruit, we should clear it
             if AutoDrive.isVehicleOrTrailerInCrop(self.vehicle, true) then
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload ClearCropTask...")
-                nextTask = ClearCropTask:new(self.vehicle)
+                CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload ClearCropTask...")
+                nextTask = ClearCropTask:new(self.vehicle, self.combine)
                 self.state = self.STATE_LEAVE_CROP
             else
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload setToWaitForCall")
+                CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload setToWaitForCall")
                 self:setToWaitForCall()
             end
         else
@@ -384,7 +385,7 @@ function CombineUnloaderMode:getTaskAfterUnload(filledToUnload)
             self.state = self.STATE_DRIVE_TO_START
         end
     end
-    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getTaskAfterUnload end")
+    CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getTaskAfterUnload end")
     return nextTask
 end
 
@@ -543,18 +544,18 @@ function CombineUnloaderMode:getPipeChaseWayPoint(offsetX, offsetZ)
     local wayPoint = {x = 0, y = 0, z = 0}
     local trailer = g_currentMission.nodeToObject[self.targetFillNode]
     if trailer == nil then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint trailer == nil")
+        CombineUnloaderMode.debugMsg(self.vehicle, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint trailer == nil")
         trailer = self.vehicle
     end
     local _, trailerDistY, _ = localToLocal(self.targetFillNode, trailer.components[1].node, 0, 0, 0)
     local dischargeNode = AutoDrive.getDischargeNode(self.combine)
     if dischargeNode == nil then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint dischargeNode == nil")
+        CombineUnloaderMode.debugMsg(self.vehicle, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint dischargeNode == nil")
         dischargeNode = self.combine.components[1].node
     end
     local combinePipeRootNode = AutoDrive.getPipeRoot(self.combine)
     if combinePipeRootNode == nil then
-        AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint combinePipeRootNode == nil")
+        CombineUnloaderMode.debugMsg(self.vehicle, "ERROR: CombineUnloaderMode:getPipeChaseWayPoint combinePipeRootNode == nil")
         combinePipeRootNode = self.combine.components[1].node
     end
     local targetX, targetY, targetZ = getWorldTranslation(dischargeNode)
@@ -658,11 +659,13 @@ function CombineUnloaderMode:getRearChaseOffsetX(leftBlocked, rightBlocked)
     end
 end
 
-function CombineUnloaderMode:getRearChaseOffsetZ()
+function CombineUnloaderMode:getRearChaseOffsetZ(planningPhase)
     local followDistance = AutoDrive.getSetting("followDistance", self.vehicle)
     local rearChaseOffset = -followDistance - (self.combine.size.length / 2)
     if self.combine.ad.isAutoAimingChopper and not self.combine.ad.isSugarcaneHarvester then
-        rearChaseOffset = -followDistance - (self.combine.size.length / 2)
+        if planningPhase then
+            rearChaseOffset = - (self.combine.size.length / 2)
+        end
     else
         -- math.sqrt(2) ensures the trailer could straighten if it was turned 90 degrees, and it makes this point further
         -- back than the pathfinder (straightening) target in PathFinderModule:startPathPlanningToPipe
@@ -713,11 +716,11 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
 
     local sideChaseTermX = self:getSideChaseOffsetX()
     local sideChaseTermZ = self:getSideChaseOffsetZ(AutoDrive.dynamicChaseDistance or self.combine.ad.isHarvester)
-    local rearChaseTermZ = self:getRearChaseOffsetZ()
+    local rearChaseTermZ = self:getRearChaseOffsetZ(planningPhase)
 
     if self.combine.ad.isChopper then
         -- any chopper
-        --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getPipeChasePosition=IsBufferCombine")
+        --CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getPipeChasePosition=IsBufferCombine")
         local leftChasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, sideChaseTermX + self:getPipeSlopeCorrection(), sideChaseTermZ - 2)
         local rightChasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, -(sideChaseTermX + self:getPipeSlopeCorrection()), sideChaseTermZ - 2)
         local rearChasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, 0, rearChaseTermZ)
@@ -754,7 +757,7 @@ function CombineUnloaderMode:getPipeChasePosition(planningPhase)
         end
     else
         -- harveser with bunker
-        --AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_COMBINEINFO, "CombineUnloaderMode:getPipeChasePosition:IsNormalCombine")
+        --CombineUnloaderMode.debugMsg(self.vehicle, "CombineUnloaderMode:getPipeChasePosition:IsNormalCombine")
         local rearChaseTermX = self:getRearChaseOffsetX(leftBlocked, rightBlocked)
 
         local sideChasePos = AutoDrive.createWayPointRelativeToVehicle(self.combine, self.pipeSide * (sideChaseTermX + self:getPipeSlopeCorrection()), sideChaseTermZ)
@@ -873,5 +876,7 @@ end
 function CombineUnloaderMode.debugMsg(vehicle, debugText, ...)
     if CombineUnloaderMode.debug == true then
         AutoDrive.debugMsg(vehicle, debugText, ...)
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_COMBINEINFO, debugText, ...)
     end
 end
