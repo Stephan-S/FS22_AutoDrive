@@ -218,10 +218,10 @@
 		<text name="gui_ad_wideHUD_tooltip"						text="Usar el modo de ventana ancha, lo que permite mostrar algunos botones más en el panel" />
 		<text name="gui_ad_playSounds"							text="Sonido" />
 		<text name="gui_ad_playSounds_tooltip"					text="Habilita los efectos de sonido para clics del ratón" />
-		<text name="gui_ad_scaleLines"							text="Scale Lines" />
-		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
-		<text name="gui_ad_scaleMarkerText"						text="Scale Destination Name" />
-		<text name="gui_ad_scaleMarkerText_tooltip"				text="Scale Size of Destination Names" />
+		<text name="gui_ad_scaleLines"							text="Escalar líneas" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Escala el grosor de las líneas de conexión" />
+		<text name="gui_ad_scaleMarkerText"						text="Escalar nombre de destinos" />
+		<text name="gui_ad_scaleMarkerText_tooltip"				text="Escala el tamaño de los nombres de destinos" />
 		<text name="gui_ad_syncMultiTargets"					text="Sincronizar múltiples objetivos" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Múltiples conductores usando la misma carpeta para múltiples objetivos se coordinarán con los siguientes objetivos" />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Aparcar al terminar el trabajo" />
