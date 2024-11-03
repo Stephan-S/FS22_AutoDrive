@@ -818,7 +818,8 @@ function AutoDrive:onDrawEditorMode()
     for _, marker in pairs(ADGraphManager:getMapMarkers()) do
         local wp = ADGraphManager:getWayPointById(marker.id)
         if MathUtil.vector2Length(wp.x - x1, wp.z - z1) < maxDistance then
-            Utils.renderTextAtWorldPosition(wp.x, wp.y + 4, wp.z, marker.name, getCorrectTextSize(0.013), 0)
+            local scale = AutoDrive.getSetting("scaleMarkerText") or 1
+            Utils.renderTextAtWorldPosition(wp.x, wp.y + 4, wp.z, marker.name, getCorrectTextSize(0.013) * scale, 0)
             DrawingManager:addMarkerTask(wp.x, wp.y + 0.45, wp.z)
         end
     end
@@ -1038,7 +1039,6 @@ function AutoDrive:startAutoDrive()
     if self.isServer then
         if not self.ad.stateModule:isActive() then
             self.ad.stateModule:setActive(true)
-            self.ad.stateModule:setLoopsDone(0)
 
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
@@ -1141,7 +1141,6 @@ function AutoDrive:stopAutoDrive()
                 self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
             end
 
-            self.ad.stateModule:setLoopsDone(0)
             self.ad.stateModule:setActive(false)
 
             self.ad.taskModule:abortAllTasks()

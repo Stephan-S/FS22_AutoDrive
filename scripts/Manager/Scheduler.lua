@@ -2,7 +2,7 @@ ADScheduler = {}
 ADScheduler.UPDATE_TIME = 3000 -- time interval for calculation/check
 ADScheduler.FRAMES_TO_CHECK_FOR_ACTUAL_FPS = 10 -- number of frames to calculate actual FPS
 ADScheduler.FRAMES_TO_CHECK_FOR_AVERAGE_FPS = 60 * 60 -- number of frames to calculate average FPS
-ADScheduler.MIN_STEPS_PER_FRAME = 8 -- min steps for pathfinder per frame
+ADScheduler.MIN_STEPS_PER_FRAME = 2 -- min steps for pathfinder per frame
 ADScheduler.MAX_STEPS_PER_FRAME = 8 -- max steps for pathfinder per frame
 ADScheduler.FPS_DIFFERENCE = 0.1   -- 10 % difference to average for calculation/check
 ADScheduler.MIN_FPS = 20 -- min FPS where stepsPerFrame will always be decreased
@@ -108,9 +108,9 @@ function ADScheduler:addPathfinderVehicle(vehicle)
         table.insert(self.pathFinderVehicles, vehicle)
         -- set new vehicle a delay
         if table.count(self.pathFinderVehicles) > 1 then
-            AutoDrive.debugPrint(vehicle, AutoDrive.DC_PATHINFO, "Scheduler addPathfinderVehicle addDelayTimer 10000")
+            AutoDrive.debugPrint(vehicle, AutoDrive.DC_PATHINFO, "Scheduler addPathfinderVehicle addDelayTimer 5000")
             -- if already vehicle in table, pause this new one
-            vehicle.ad.pathFinderModule:addDelayTimer(10000)
+            vehicle.ad.pathFinderModule:addDelayTimer(5000)
         end
     end
 end
@@ -120,25 +120,37 @@ function ADScheduler:removePathfinderVehicle(vehicle)
     if table.contains(self.pathFinderVehicles, vehicle) then
         AutoDrive.debugPrint(vehicle, AutoDrive.DC_PATHINFO, "Scheduler removePathfinderVehicle")
         table.removeValue(self.pathFinderVehicles, vehicle)
+        if self.activePathFinderVehicle == vehicle then
+            self.updateTimer:timer(true, ADScheduler.UPDATE_TIME, ADScheduler.UPDATE_TIME) -- shoutcut timer
+        end
     end
 end
 
 function ADScheduler:updateActiveVehicle()
-    if self.activePathFinderVehicle ~= nil then
-        -- pause current vehicle
-        self.activePathFinderVehicle.ad.pathFinderModule:addDelayTimer(10000)
+    -- pause all vehicles
+    for _, vehicle in pairs(self.pathFinderVehicles) do
+        if vehicle and vehicle.ad and vehicle.ad.pathFinderModule then
+            vehicle.ad.pathFinderModule:addDelayTimer(5000)
+        end
+    end
+    if self.activePathFinderVehicle and table.contains(self.pathFinderVehicles, self.activePathFinderVehicle) then
+        -- add this vehicle to end of queue
+        local vehicle = self.activePathFinderVehicle
+        self.activePathFinderVehicle = nil
+        self:removePathfinderVehicle(vehicle)
+        self:addPathfinderVehicle(vehicle)
     end
 
     -- get next vehicle
-    self.activePathFinderVehicle = self.pathFinderVehicles[1]
+    local nextVehicle = self.pathFinderVehicles[1]
 
-    if self.activePathFinderVehicle ~= nil then
-        AutoDrive.debugPrint(self.activePathFinderVehicle, AutoDrive.DC_PATHINFO, "Scheduler updateActiveVehicle activePathFinderVehicle")
+    if nextVehicle ~= nil then
+        AutoDrive.debugPrint(nextVehicle, AutoDrive.DC_PATHINFO, "Scheduler updateActiveVehicle activate nextVehicle")
         -- found vehicle
-        -- add this vehicle to end of queue
-        self:removePathfinderVehicle(self.activePathFinderVehicle)
-        self:addPathfinderVehicle(self.activePathFinderVehicle)
         -- unpause vehicle to continue pathfinder calculation
-        self.activePathFinderVehicle.ad.pathFinderModule:addDelayTimer(0)
+        if nextVehicle.ad and nextVehicle.ad.pathFinderModule then
+            nextVehicle.ad.pathFinderModule:addDelayTimer(0)
+        end
+        self.activePathFinderVehicle = nextVehicle
     end
 end

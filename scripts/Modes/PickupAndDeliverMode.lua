@@ -229,18 +229,21 @@ function PickupAndDeliverMode:getNextTask(forced)
     elseif self.state == PickupAndDeliverMode.STATE_RETURN_TO_START then
         -- job done - stop AD and tasks
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask STATE_RETURN_TO_START StopAndDisableADTask...")
+        self.vehicle.ad.stateModule:setLoopsDone(0)
         nextTask = StopAndDisableADTask:new(self.vehicle, ADTaskModule.DONT_PROPAGATE)
         self.state = PickupAndDeliverMode.STATE_FINISHED
         AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.INFO, "$l10n_AD_Driver_of; %s $l10n_AD_has_reached; %s", 5000, self.vehicle.ad.stateModule:getName(), self.vehicle.ad.stateModule:getFirstMarkerName())
     elseif self.state == PickupAndDeliverMode.STATE_PARK then
         -- job done - drive to park position and stop AD and tasks
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask STATE_RETURN_TO_START StopAndDisableADTask...")
+        self.vehicle.ad.stateModule:setLoopsDone(0)
         nextTask = StopAndDisableADTask:new(self.vehicle, ADTaskModule.DONT_PROPAGATE)
         self.state = PickupAndDeliverMode.STATE_FINISHED
         -- message for reached park position send by ParkTask as only there the correct destination is known
     else
         -- error path - should never appear!
         AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PickupAndDeliverMode:getNextTask self.state %s NO nextTask assigned !!!", tostring(self.state))
+        self.vehicle.ad.stateModule:setLoopsDone(0)
         nextTask = StopAndDisableADTask:new(self.vehicle, ADTaskModule.DONT_PROPAGATE)
         self.state = PickupAndDeliverMode.STATE_FINISHED
         AutoDriveMessageEvent.sendMessageOrNotification(self.vehicle, ADMessagesManager.messageTypes.ERROR, "$l10n_AD_Driver_of; %s $l10n_AD_has_reached; %s", 5000, self.vehicle.ad.stateModule:getName(), "???")

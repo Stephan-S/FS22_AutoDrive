@@ -57,6 +57,7 @@ This is inclusive of the field border cells!
 ]]
 
 PathFinderModule = {}
+PathFinderModule.debug = false
 
 PathFinderModule.PATHFINDER_MAX_RETRIES = 3
 PathFinderModule.MAX_PATHFINDER_STEPS_PER_FRAME = 2
@@ -68,27 +69,7 @@ PathFinderModule.PATHFINDER_TARGET_DISTANCE_PIPE = 16
 PathFinderModule.PATHFINDER_TARGET_DISTANCE_PIPE_CLOSE = 6
 PathFinderModule.PATHFINDER_START_DISTANCE = 7
 PathFinderModule.MAX_FIELDBORDER_CELLS = 5
-
-PathFinderModule.PP_UP = 0
-PathFinderModule.PP_UP_RIGHT = 1
-PathFinderModule.PP_RIGHT = 2
-PathFinderModule.PP_DOWN_RIGHT = 3
-PathFinderModule.PP_DOWN = 4
-PathFinderModule.PP_DOWN_LEFT = 5
-PathFinderModule.PP_LEFT = 6
-PathFinderModule.PP_UP_LEFT = 7
-
-PathFinderModule.direction_to_text = {
-"PathFinderModule.PP_UP",
-"PathFinderModule.PP_UP_RIGHT",
-"PathFinderModule.PP_RIGHT",
-"PathFinderModule.PP_DOWN_RIGHT",
-"PathFinderModule.PP_DOWN",
-"PathFinderModule.PP_DOWN_LEFT",
-"PathFinderModule.PP_LEFT",
-"PathFinderModule.PP_UP_LEFT",
-"PathFinderModule.unknown"
-}
+PathFinderModule.PATHFINDER_MIN_DISTANCE_START_TARGET = 50
 
 PathFinderModule.PP_MIN_DISTANCE = 20
 PathFinderModule.PP_CELL_X = 9
@@ -101,6 +82,7 @@ PathFinderModule.PP_MAX_EAGER_LOOKAHEAD_STEPS = 1
 
 PathFinderModule.MIN_FRUIT_VALUE = 50
 PathFinderModule.SLOPE_DETECTION_THRESHOLD = math.rad(20)
+PathFinderModule.NEW_PF_STEP_FACTOR = 4
 --[[
 from Giants Engine:
 AITurnStrategy.SLOPE_DETECTION_THRESHOLD  = 0.5235987755983
@@ -111,14 +93,20 @@ function PathFinderModule:new(vehicle)
     setmetatable(o, self)
     self.__index = self
     o.vehicle = vehicle
+    o.dubins = ADDubins:new()
     PathFinderModule.reset(o)
     return o
 end
 
 function PathFinderModule:reset()
+    PathFinderModule.debugMsg(self.vehicle, "PFM:reset start")
     self.mask = AutoDrive.collisionMaskTerrain
     self.steps = 0
     self.grid = {}
+    self.wayPoints = {}
+    self.initNew = false
+    self.path = {}
+    self.diffOverallNetTime = 0
     self.retryCounter = 0
     self.delayTime = 0
     self.restrictToField = false
@@ -129,6 +117,55 @@ function PathFinderModule:reset()
     self.fallBackMode3 = false
     self.isFinished = true
     self.smoothDone = true
+    self.fruitAreas = {}
+
+    if AutoDrive.experimentalFeatures.NewPathfinder then
+        self.PP_UP = 0
+        self.PP_UP_LEFT = 1
+        self.PP_LEFT = 2
+        self.PP_DOWN_LEFT = 3
+        self.PP_DOWN = 4
+        self.PP_DOWN_RIGHT = 5
+        self.PP_RIGHT = 6
+        self.PP_UP_RIGHT = 7
+        self.direction_to_text = {
+            "PP_UP",
+            "PP_UP_LEFT",
+            "PP_LEFT",
+            "PP_DOWN_LEFT",
+            "PP_DOWN",
+            "PP_DOWN_RIGHT",
+            "PP_RIGHT",
+            "PP_UP_RIGHT",
+            "unknown"
+        }
+        self.minTurnRadius = AutoDrive.getDriverRadius(self.vehicle)
+        self.dubinsDone = false
+        self.dubinsCount = 0
+        self.isNewPF = true
+    else
+        self.PP_UP = 0
+        self.PP_UP_RIGHT = 1
+        self.PP_RIGHT = 2
+        self.PP_DOWN_RIGHT = 3
+        self.PP_DOWN = 4
+        self.PP_DOWN_LEFT = 5
+        self.PP_LEFT = 6
+        self.PP_UP_LEFT = 7
+        self.direction_to_text = {
+            "PP_UP",
+            "PP_UP_RIGHT",
+            "PP_RIGHT",
+            "PP_DOWN_RIGHT",
+            "PP_DOWN",
+            "PP_DOWN_LEFT",
+            "PP_LEFT",
+            "PP_UP_LEFT",
+            "unknown"
+        }
+    self.minTurnRadius = AutoDrive.getDriverRadius(self.vehicle) * 2 / 3
+    self.isNewPF = false
+    end
 end
 
 function PathFinderModule:hasFinished()
@@ -146,6 +183,9 @@ function PathFinderModule:getPath()
 end
 
 function PathFinderModule:startPathPlanningToNetwork(destinationId)
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningToNetwork destinationId %s"
+        , tostring(destinationId)
+    )
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningToNetwork destinationId %s",
             tostring(destinationId)
@@ -157,6 +197,9 @@ function PathFinderModule:startPathPlanningToNetwork(destinationId)
 end
 
 function PathFinderModule:startPathPlanningToWayPoint(wayPointId, destinationId)
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningToWayPoint destinationId %s"
+        , tostring(destinationId)
+    )
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningToWayPoint wayPointId %s",
             tostring(wayPointId)
@@ -176,6 +219,9 @@ function PathFinderModule:startPathPlanningToWayPoint(wayPointId, destinationId)
 end
 
 function PathFinderModule:startPathPlanningToPipe(combine, chasing)
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningToPipe chasing %s"
+        , tostring(chasing)
+    )
     AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PathFinderModule:startPathPlanningToPipe")
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningToPipe combine %s",
@@ -279,6 +325,9 @@ function PathFinderModule:startPathPlanningToPipe(combine, chasing)
 end
 
 function PathFinderModule:startPathPlanningToVehicle(targetVehicle, targetDistance)
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningToVehicle targetDistance %s"
+        , tostring(targetDistance)
+    )
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningToVehicle targetVehicle %s",
             tostring(targetVehicle:getName())
@@ -300,6 +349,10 @@ function PathFinderModule:startPathPlanningToVehicle(targetVehicle, targetDistan
 end
 
 function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningTo self.minTurnRadius %.1f"
+        , self.minTurnRadius
+    )
+
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningTo targetPoint x,z %d %d",
             math.floor(targetPoint.x),
@@ -307,6 +360,12 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
         )
     )
     ADScheduler:addPathfinderVehicle(self.vehicle)
+    if math.abs(targetVector.x) < 0.001 then
+        targetVector.x = 0.001
+    end
+    if math.abs(targetVector.z) < 0.001 then
+        targetVector.z = 0.001
+    end
     self.targetVector = targetVector
     local vehicleWorldX, vehicleWorldY, vehicleWorldZ = getWorldTranslation(self.vehicle.components[1].node)
     local vehicleRx, _, vehicleRz = localDirectionToWorld(self.vehicle.components[1].node, 0, 0, 1)
@@ -316,7 +375,6 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
 
     local angleRad = math.atan2(targetVector.z, targetVector.x)
     angleRad = AutoDrive.normalizeAngle(angleRad)
-    self.minTurnRadius = AutoDrive.getDriverRadius(self.vehicle) * 2 / 3
 
     self.vectorX = {x =   math.cos(angleRad) * self.minTurnRadius, z = math.sin(angleRad) * self.minTurnRadius}
     self.vectorZ = {x = - math.sin(angleRad) * self.minTurnRadius, z = math.cos(angleRad) * self.minTurnRadius}
@@ -336,6 +394,7 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
 
     self.fruitToCheck = nil
 
+    self.start = {x = self.startX, z = self.startZ}
     self.startCell = {x = 0, z = 0}
     self.startCell.direction = self:worldDirectionToGridDirection(vehicleVector)
     self.startCell.visited = false
@@ -347,6 +406,12 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
     self.startCell.bordercells = 0
     self.currentCell = nil
 
+    local vehicleBehindX, _, vehicleBehindZ = localDirectionToWorld(self.vehicle.components[1].node, 0, 0, -self.minTurnRadius)
+    local vehicleBehindVector = {x = vehicleBehindX, z = vehicleBehindZ}
+    self.behindStartCell = self:worldLocationToGridLocation(vehicleWorldX + vehicleBehindX, vehicleWorldZ + vehicleBehindZ)
+    self.behindStartCell.direction = self:worldDirectionToGridDirection(vehicleBehindVector, vehicleVector)
+    self.behind = {x = vehicleWorldX + vehicleBehindX, z = vehicleWorldZ + vehicleBehindZ}
+
     -- table.insert(self.grid, self.startCell)
     local gridKey = string.format("%d|%d|%d", self.startCell.x, self.startCell.z, self.startCell.direction)
     self.grid[gridKey] = self.startCell
@@ -357,10 +422,12 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
 
     local targetCellZ = (((targetX - self.startX) / self.vectorX.x) * self.vectorX.z - targetZ + self.startZ) / (((self.vectorZ.x / self.vectorX.x) * self.vectorX.z) - self.vectorZ.z)
     local targetCellX = (targetZ - self.startZ - targetCellZ * self.vectorZ.z) / self.vectorX.z
-
     targetCellX = AutoDrive.round(targetCellX)
     targetCellZ = AutoDrive.round(targetCellZ)
     self.targetCell = {x = targetCellX, z = targetCellZ, direction = self.PP_UP}
+    self.targetAhead = {x = targetX + self.vectorX.x, z = targetZ + self.vectorX.z}
+    self.targetAheadCell = self:worldLocationToGridLocation(self.targetAhead.x, self.targetAhead.z)
+
     self:determineBlockedCells(self.targetCell)
     --self:checkGridCell(self.targetCell)
 
@@ -371,7 +438,6 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
 
     self.startIsOnField = AutoDrive.checkIsOnField(vehicleWorldX, vehicleWorldY, vehicleWorldZ) and self.vehicle.ad.sensors.frontSensorField:pollInfo(true)
     self.endIsOnField = AutoDrive.checkIsOnField(targetX, vehicleWorldY, targetZ)
-
     self.restrictToField = AutoDrive.getSetting("restrictToField", self.vehicle) and self.startIsOnField and self.endIsOnField
     self.goingToPipe = false
     self.chasingVehicle = false
@@ -392,7 +458,40 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
     -- else
         -- self.reachedFieldBorder = true
     -- end
+
+    self.q0 = {
+        vehicleWorldX
+        , -vehicleWorldZ
+        , AutoDrive.normalizeAngle(math.atan2(vehicleRx, vehicleRz) + math.pi + math.pi / 2)
+    }
+
+    self.q1 = {
+        targetX
+        , -targetZ
+        , AutoDrive.normalizeAngle(math.atan2(targetVector.x, targetVector.z) + math.pi + math.pi / 2)
+    }
+
+    self:setupNew(self.behindStartCell, self.startCell,self.targetCell)
+
     self.chainStartToTarget = {}
+
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningTo vehicleWorldX xz %.1f,%.1f"
+        , vehicleWorldX, vehicleWorldZ
+    )
+
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningTo targetX xz %.1f,%.1f"
+        , targetX, targetZ
+    )
+
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningTo self.behind xz %.1f,%.1f"
+        , self.behind.x, self.behind.z
+    )
+
+    local location = self:gridLocationToWorldLocation(self.behindStartCell)
+    PathFinderModule.debugMsg(self.vehicle, "PathFinderModule:startPathPlanningTo behindStartCell location xz %.1f,%.1f"
+        , location.x, location.z
+    )
+
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningTo self.minTurnRadius %s vectorX.x,vectorX.z %s %s vectorZ.x,vectorZ.z %s %s",
             tostring(self.minTurnRadius),
@@ -406,14 +505,14 @@ function PathFinderModule:startPathPlanningTo(targetPoint, targetVector)
         string.format("PFM startPathPlanningTo startCell xz %d %d direction %s",
             math.floor(self.startCell.x),
             math.floor(self.startCell.z),
-            tostring(PathFinderModule.direction_to_text[self.startCell.direction+1])
+            tostring(self.direction_to_text[self.startCell.direction+1])
         )
     )
     PathFinderModule.debugVehicleMsg(self.vehicle,
         string.format("PFM startPathPlanningTo start targetCell xz %d %d direction %s",
             math.floor(self.targetCell.x),
             math.floor(self.targetCell.z),
-            tostring(PathFinderModule.direction_to_text[self.targetCell.direction+1])
+            tostring(self.direction_to_text[self.targetCell.direction+1])
         )
     )
     PathFinderModule.debugVehicleMsg(self.vehicle,
@@ -454,9 +553,13 @@ function PathFinderModule:restartAtNextWayPoint()
 end
 
 function PathFinderModule:autoRestart()
+    PathFinderModule.debugMsg(self.vehicle, "PFM:autoRestart start")
     self.steps = 0
     self.grid = {}
     self.wayPoints = {}
+    self.initNew = false
+    self.path = {}
+    self.diffOverallNetTime = 0
     self.startCell.visited = false
     self.startCell.out = nil
     self.currentCell = nil
@@ -472,6 +575,7 @@ function PathFinderModule:autoRestart()
 end
 
 function PathFinderModule:abort()
+    PathFinderModule.debugMsg(self.vehicle, "PFM:abort start")
     self.isFinished = true
     self.smoothDone = true
     self.wayPoints = {}
@@ -513,7 +617,7 @@ function PathFinderModule:getCurrentState()
         actualState = actualState + 1
     end
 
-    return actualState, maxStates
+    return actualState, maxStates, self.steps, self.max_pathfinder_steps
 end
 
 function PathFinderModule:timedOut()    --> not self:isBlocked() -- used in: ExitFieldTask, UnloadAtDestinationTask
@@ -525,6 +629,7 @@ function PathFinderModule:addDelayTimer(delayTime)      -- used in: ExitFieldTas
 end
 
 function PathFinderModule:update(dt)
+
     --stop if called without prior 'start' method calls
     if self.startCell == nil then
         self:abort()
@@ -536,19 +641,55 @@ function PathFinderModule:update(dt)
     end
 
     if AutoDrive.isEditorModeEnabled() and AutoDrive.getDebugChannelIsSet(AutoDrive.DC_PATHINFO) then
-        if self.isFinished and self.smoothDone and self.wayPoints ~= nil and self.chainStartToTarget ~= nil and #self.chainStartToTarget > 0 and self.vehicle.ad.stateModule:getSpeedLimit() > 40 then
-            self:drawDebugForCreatedRoute()
+        if self.isNewPF then
+            self:drawDebugNewPF()
+            if self.isFinished and self.smoothDone and self.wayPoints ~= nil then
+                local lastPoint = nil
+                for index, point in ipairs(self.wayPoints) do
+                    if point.isPathFinderPoint and lastPoint ~= nil then
+                        ADDrawingManager:addLineTask(lastPoint.x, lastPoint.y, lastPoint.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                        ADDrawingManager:addArrowTask(lastPoint.x, lastPoint.y, lastPoint.z, point.x, point.y, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+
+                        if AutoDrive.getSettingState("lineHeight") == 1 then
+                            local gy = point.y - AutoDrive.drawHeight + 4
+                            local ty = lastPoint.y - AutoDrive.drawHeight + 4
+                            ADDrawingManager:addLineTask(point.x, gy, point.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addSphereTask(point.x, gy, point.z, 3, 1, 0.09, 0.09, 0.15)
+                            ADDrawingManager:addLineTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addArrowTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+                        else
+                            local gy = point.y - AutoDrive.drawHeight - 4
+                            local ty = lastPoint.y - AutoDrive.drawHeight - 4
+                            ADDrawingManager:addLineTask(point.x, gy, point.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addSphereTask(point.x, gy, point.z, 3, 1, 0.09, 0.09, 0.15)
+                            ADDrawingManager:addLineTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, 1, 0.09, 0.09)
+                            ADDrawingManager:addArrowTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+                        end
+                    end
+                    lastPoint = point
+                end
+            end
         else
-            self:drawDebugForPF()
+            if self.isFinished and self.smoothDone and self.wayPoints ~= nil and self.chainStartToTarget ~= nil and #self.chainStartToTarget > 0 and self.vehicle.ad.stateModule:getSpeedLimit() > 40 then
+                self:drawDebugForCreatedRoute()
+            else
+                self:drawDebugForPF()
+            end
         end
     end
-
     if self.isFinished then
         if not self.smoothDone then
-            self:createWayPoints()
+            if self.isNewPF then
+                self:createWayPointsNew()
+            else
+                self:createWayPoints()
+            end
         end
         if self.smoothDone then
             ADScheduler:removePathfinderVehicle(self.vehicle)
+            -- PathFinderModule.debugMsg(self.vehicle, "PFM:update Complete #self.path %s"
+            --     , tostring(#self.path)
+            -- )
         end
         return
     end
@@ -586,7 +727,7 @@ function PathFinderModule:update(dt)
             )
             self.fallBackMode1 = true
             self:autoRestart()
-        elseif fallBackModeAllowed2 then
+        elseif fallBackModeAllowed2 and not self.isNewPF then
             AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PathFinderModule:update - error - retryAllowed: no -> fallBackModeAllowed2: yes -> going fallback now -> disable field borders #self.grid %d", table.count(self.grid))
             PathFinderModule.debugVehicleMsg(self.vehicle,
                 string.format("PFM update - error - retryAllowed: no -> fallBackModeAllowed2: yes -> going fallback now -> disable field borders #self.grid %d",
@@ -651,63 +792,195 @@ function PathFinderModule:update(dt)
         return
     end
 
-    --We should see some perfomance increase by localizing the sqrt/pow functions right here
-    local sqrt = math.sqrt
-    local distanceFunc = function(a, b)
-        return sqrt(a * a + b * b)
-    end
+    if self.isNewPF then
+        if not self.isFinished then
+            if MathUtil.vector2Length(self.start.x - self.target.x, self.start.z - self.target.z) < PathFinderModule.PATHFINDER_MIN_DISTANCE_START_TARGET then
+                -- try dubins first before full pathfinder if close to target
+                if not self.dubinsDone then
+                    self.dubinsCount = self.dubinsCount + 1
+                    local dubinsPath = self:getDubinsPath()
+                    PathFinderModule.debugMsg(self.vehicle, "PFM:update getDubinsPath dubinsPath %s"
+                        , tostring(dubinsPath)
+                    )
+                    if dubinsPath then
+                        self.dubinsDone = true
+                        self.wayPoints = dubinsPath
+                        self:appendWayPointsNew()
+                        self.isFinished = true
+                        self.smoothDone = true
+                        return  -- found path
+                    else
+                        -- self.completelyBlocked = true
+                          -- no valid path
+                        -- PathFinderModule.debugMsg(self.vehicle, "PFM:update getDubinsPath self.completelyBlocked %s"
+                        --     , tostring(self.completelyBlocked)
+                        -- )
+                    end
+                    PathFinderModule.debugMsg(self.vehicle, "PFM:update getDubinsPath self.fallBackMode3 %s"
+                        , tostring(self.fallBackMode3)
+                    )
+                    if self.fallBackMode3 or self.dubinsCount > 4 then
+                        self.dubinsDone = true
+                        -- self.completelyBlocked = false
+                        -- self.fallBackMode1 = false  -- disable restrict to field
+                        -- self.fallBackMode2 = false  -- disable restrict to field border
+                        -- self.fallBackMode3 = false  -- disable avoid fruit
+                    end
+                    -- return
+                end
+            end
+            if not self.initNew then
+                self:setupNew(self.behindStartCell, self.startCell,self.targetCell)
+                local dx, dz = self.nodeStart.x - self.nodeGoal.x, self.nodeStart.z - self.nodeGoal.z
+                local diff = math.sqrt(dx * dx + dz * dz)
+                local toCloseToTarget = (diff < 3)
+                dx, dz = self.nodeBehindStart.x - self.nodeGoal.x, self.nodeBehindStart.z - self.nodeGoal.z
+                diff = math.sqrt(dx * dx + dz * dz)
+                toCloseToTarget = toCloseToTarget or (diff < 3)
+                if (self.nodeBehindStart == self.nodeGoal) or toCloseToTarget then
+                    self.completelyBlocked = true
+                    return  -- no valid path
+                end
+            end
+            local diffNetTime = netGetTime()
 
-    for i = 1, ADScheduler:getStepsPerFrame(), 1 do
-        if self.currentCell == nil then
+            local current
+            local add_neighbor_fn = function(neighbor, cost)
+                if self:isDriveableAstar(neighbor) then
+                    if not self.closedset[neighbor] then
+                        if not cost then cost = self:get_cost(current, neighbor) end
+                        local tentative_g_score = self.g_score[current] + cost
+                        local openset_idx = self.openset[neighbor]
+                        if not openset_idx or tentative_g_score < self.g_score[neighbor] then
+                            self.came_from[neighbor] = current
+                            self.g_score[neighbor] = tentative_g_score
+                            self.h_score[neighbor] = self.h_score[neighbor] or self:estimate_cost(neighbor, self.nodeGoal)
+                            self.f_score[neighbor] = tentative_g_score + self.h_score[neighbor]
+                            self.openset[neighbor] = true
+                        end
+                    end
+                end
+            end
+            local count = 0
+            while next(self.openset) do
+                count = count + 1
+                if count > 10000 then
+                    diffNetTime = netGetTime() - diffNetTime
+                    self.diffOverallNetTime = self.diffOverallNetTime + diffNetTime
 
-            self.currentCell = self:findClosestCell(self.grid, math.huge)
+                    AutoDrive.debugMsg(self.vehicle, "PFM:find ERROR exit counter count %d self.diffOverallNetTime %d"
+                        , count
+                        , self.diffOverallNetTime
+                    )
 
-            if self.currentCell ~= nil and distanceFunc(self.targetCell.x - self.currentCell.x, self.targetCell.z - self.currentCell.z) < 1.5 then
+                    self.completelyBlocked = true
+                    return  -- no valid path
+                end
+                current = self:pop_best_node(self.openset, self.f_score)
+                if current == self.nodeGoal or self:reachedGoal(current, self.nodeGoal) then
+                    self.came_from[self.nodeGoal] = current
+                    self.path = self:unwind_path({}, self.came_from, self.nodeGoal)
+                    table.insert(self.path, self.nodeGoal)
+                    diffNetTime = netGetTime() - diffNetTime
+                    self.diffOverallNetTime = self.diffOverallNetTime + diffNetTime
+                    if current then
+                        PathFinderModule.debugMsg(self.vehicle, "PFM:update find goal reached self.steps %d diffOverallNetTime %d self.nodeGoal xz %d,%d current xz %d,%d"
+                            , self.steps
+                            , self.diffOverallNetTime
+                            , self.nodeGoal.x, self.nodeGoal.z
+                            , current.x, current.z
+                        )
+                    end
 
+                    self.isFinished = true
+                    return  -- found path
+                end
+                if current then self.closedset[current] = true end
+                local from_node = self.came_from[current]
+                self:get_neighbors(current, from_node, add_neighbor_fn)
+                if count > (ADScheduler:getStepsPerFrame() * PathFinderModule.NEW_PF_STEP_FACTOR) then
+                    diffNetTime = netGetTime() - diffNetTime
+                    self.diffOverallNetTime = self.diffOverallNetTime + diffNetTime
+
+                    PathFinderModule.debugMsg(self.vehicle, "PFM:find steps in frame count %d diffNetTime %d self.diffOverallNetTime %d"
+                        , count
+                        , diffNetTime
+                        , self.diffOverallNetTime
+                    )
+
+                    return -- shedule
+                end
+            end
+            diffNetTime = netGetTime() - diffNetTime
+            self.diffOverallNetTime = self.diffOverallNetTime + diffNetTime
+
+            PathFinderModule.debugMsg(self.vehicle, "PFM:find exit end count %d self.diffOverallNetTime %d"
+                , count
+                , self.diffOverallNetTime
+            )
+
+            self.completelyBlocked = true
+            return -- no valid path
+        end
+    else
+        --We should see some perfomance increase by localizing the sqrt/pow functions right here
+        local sqrt = math.sqrt
+        local distanceFunc = function(a, b)
+            return sqrt(a * a + b * b)
+        end
+
+        for i = 1, ADScheduler:getStepsPerFrame(), 1 do
+            if self.currentCell == nil then
+
+                self.currentCell = self:findClosestCell(self.grid, math.huge)
+
+                if self.currentCell ~= nil and distanceFunc(self.targetCell.x - self.currentCell.x, self.targetCell.z - self.currentCell.z) < 1.5 then
+
+                    if self.currentCell.out == nil then
+                        self:determineNextGridCells(self.currentCell)
+                    end
+
+                    if self:reachedTargetsNeighbor(self.currentCell.out) then
+                        return
+                    end
+                end
+
+                if self.currentCell == nil then
+                    --Mark process stopped if we have no more cells to check
+                    AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PathFinderModule:update - Mark process stopped if we have no more cells to check")
+                    PathFinderModule.debugVehicleMsg(self.vehicle,
+                        string.format("PFM update - Mark process stopped if we have no more cells to check #self.grid %d",
+                            table.count(self.grid)
+                        )
+                    )
+                    self.completelyBlocked = true
+                    break
+                end
+            else
                 if self.currentCell.out == nil then
                     self:determineNextGridCells(self.currentCell)
                 end
+                self:testNextCells(self.currentCell)
 
+                --Try shortcutting the process here. We dont have to go through the whole grid if one of the out points is viable and closer than the currenCell which was already closest
+                local currentDistance = distanceFunc(self.targetCell.x - self.currentCell.x, self.targetCell.z - self.currentCell.z)
+
+                local outCells = {}
+                for _, outCell in pairs(self.currentCell.out) do
+                    local gridKey = string.format("%d|%d|%d", outCell.x, outCell.z, outCell.direction)
+                    if self.grid[gridKey] ~= nil then
+                        table.insert(outCells, self.grid[gridKey])
+                    end
+                end
+                local nextCell = self:findClosestCell(outCells, currentDistance)
+
+                -- Lets again check if we have reached our target already
                 if self:reachedTargetsNeighbor(self.currentCell.out) then
                     return
                 end
-            end
 
-            if self.currentCell == nil then
-                --Mark process stopped if we have no more cells to check
-                AutoDrive.debugPrint(self.vehicle, AutoDrive.DC_PATHINFO, "PathFinderModule:update - Mark process stopped if we have no more cells to check")
-                PathFinderModule.debugVehicleMsg(self.vehicle,
-                    string.format("PFM update - Mark process stopped if we have no more cells to check #self.grid %d",
-                        table.count(self.grid)
-                    )
-                )
-                self.completelyBlocked = true
-                break
+                self.currentCell = nextCell
             end
-        else
-            if self.currentCell.out == nil then
-                self:determineNextGridCells(self.currentCell)
-            end
-            self:testNextCells(self.currentCell)
-
-            --Try shortcutting the process here. We dont have to go through the whole grid if one of the out points is viable and closer than the currenCell which was already closest
-            local currentDistance = distanceFunc(self.targetCell.x - self.currentCell.x, self.targetCell.z - self.currentCell.z)
-
-            local outCells = {}
-            for _, outCell in pairs(self.currentCell.out) do
-                local gridKey = string.format("%d|%d|%d", outCell.x, outCell.z, outCell.direction)
-                if self.grid[gridKey] ~= nil then
-                    table.insert(outCells, self.grid[gridKey])
-                end
-            end
-            local nextCell = self:findClosestCell(outCells, currentDistance)
-
-            -- Lets again check if we have reached our target already
-            if self:reachedTargetsNeighbor(self.currentCell.out) then
-                return
-            end
-
-            self.currentCell = nextCell
         end
     end
 end
@@ -764,7 +1037,7 @@ function PathFinderModule:testNextCells(cell)
                 math.floor(cell.z),
                 tostring(cell.isRestricted),
                 tostring(cell.hasFruit),
-                tostring(PathFinderModule.direction_to_text[cell.direction+1])
+                tostring(self.direction_to_text[cell.direction+1])
             )
         )
     end
@@ -776,11 +1049,11 @@ function PathFinderModule:testNextCells(cell)
                 string.format("PFM testNextCells location xz %d %d direction %s",
                     math.floor(location.x),
                     math.floor(location.z),
-                    tostring(PathFinderModule.direction_to_text[location.direction+1])
+                    tostring(self.direction_to_text[location.direction+1])
                 )
             )
         end
-        for i = -1, PathFinderModule.PP_UP_LEFT, 1 do -- important: do not break this loop to check for all directions!
+        for i = -1, self.PP_UP_LEFT, 1 do -- important: do not break this loop to check for all directions!
             local gridKey = string.format("%d|%d|%d", location.x, location.z, i)
             if self.grid[gridKey] ~= nil then
                 -- cell is already in the grid
@@ -790,7 +1063,7 @@ function PathFinderModule:testNextCells(cell)
                             tostring(gridKey),
                             tostring(self.grid[gridKey].x),
                             tostring(self.grid[gridKey].z),
-                            tostring(PathFinderModule.direction_to_text[self.grid[gridKey].direction+1])
+                            tostring(self.direction_to_text[self.grid[gridKey].direction+1])
                         )
                     )
                 end
@@ -822,7 +1095,7 @@ function PathFinderModule:testNextCells(cell)
                     string.format("PFM testNextCells location xz %d %d createPoint %s",
                         math.floor(location.x),
                         math.floor(location.z),
-                        tostring(PathFinderModule.direction_to_text[location.direction+1])
+                        tostring(self.direction_to_text[location.direction+1])
                     )
                 )
             end
@@ -849,7 +1122,7 @@ function PathFinderModule:testNextCells(cell)
                         string.format("PFM testNextCells different direction xz %d %d createPoint %s",
                             math.floor(location.x),
                             math.floor(location.z),
-                            tostring(PathFinderModule.direction_to_text[location.direction+1])
+                            tostring(self.direction_to_text[location.direction+1])
                         )
                     )
                 end
@@ -983,8 +1256,9 @@ function PathFinderModule:gridLocationToWorldLocation(cell)
     return result
 end
 
-function PathFinderModule:worldDirectionToGridDirection(vector)
-    local angle = AutoDrive.angleBetween(self.vectorX, vector)
+function PathFinderModule:worldDirectionToGridDirection(vector, baseVector)
+    local baseVector = baseVector or self.vectorX
+    local angle = AutoDrive.angleBetween(baseVector, vector)
 
     local direction = math.floor(angle / 45)
     local remainder = angle % 45
@@ -1169,7 +1443,7 @@ function PathFinderModule:checkForFruitTypeInArea(cell, fruitTypeIndex, corners)
                     math.floor(cell.x),
                     math.floor(cell.z),
                     tostring(fruitValue),
-                    tostring(PathFinderModule.direction_to_text[cell.direction+1])
+                    tostring(self.direction_to_text[cell.direction+1])
                 )
             )
         end
@@ -1277,28 +1551,28 @@ function PathFinderModule:drawDebugForPF()
         if cell.isRestricted == true then
             -- any restriction
             if cell.hasFruit == true then
-                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 1)
+                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 1) -- cyan
                 Utils.renderTextAtWorldPosition(pointCenter.x, pointB.y + 0.4, pointCenter.z, tostring(cell.fruitValue), getCorrectTextSize(0.013), 0)
 
             else
-                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 0, 0)
+                AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 0, 0) -- red
             end
         else
-            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 0)
+            AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 0, 1, 0) -- green
         end
 
         if cell.hasCollision == true then
             -- ground collision, slope, water
             if cell.hasVehicleCollision then        -- TODO: hasVehicleCollision ???
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 0, 1)
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 0, 1)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 0, 0, 1) -- blue
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 0, 0, 1) -- blue
             else
-                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 0)
-                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 1, 0)
+                AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 0) -- yellow
+                AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 1, 0) -- yellow
             end
         else
-            AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0, 1)
-            AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0, 1)
+            AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 0, 1) -- magenta
+            AutoDriveDM:addLineTask(pointCenter.x, pointCenter.y, pointCenter.z, pointCenterUp.x, pointCenterUp.y, pointCenterUp.z, 1, 1, 0, 1) -- magenta
         end
 
         for i = 0, 10, 1 do
@@ -1362,11 +1636,11 @@ function PathFinderModule:drawDebugForPF()
             pointTarget.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTarget.x, 1, pointTarget.z) + 6
             pointTargetUp.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTargetUp.x, 1, pointTargetUp.z) + 10
             if cell.bordercells == 1 then
-                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 1, 0, 0)
+                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 1, 0, 0) -- red
             elseif cell.bordercells == 2 then
-                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 1, 0)
+                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 1, 0) -- green
             elseif cell.bordercells > 2 then
-                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0, 1)
+                AutoDriveDM:addLineTask(pointTarget.x, pointTarget.y, pointTarget.z, pointTargetUp.x, pointTargetUp.y, pointTargetUp.z, 1, 0, 0, 1) -- blue
             end
         end
         --[[
@@ -1409,8 +1683,8 @@ function PathFinderModule:drawDebugForPF()
     pointD.z = pointD.z - self.vectorX.z * size + self.vectorZ.z * size
     pointD.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointD.x, 1, pointD.z) + 3
 
-    AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 1, 1)
-    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 1)
+    AutoDriveDM:addLineTask(pointA.x, pointA.y, pointA.z, pointB.x, pointB.y, pointB.z, 1, 1, 1, 1) -- white
+    AutoDriveDM:addLineTask(pointC.x, pointC.y, pointC.z, pointD.x, pointD.y, pointD.z, 1, 1, 1, 1) -- white
 
     local pointAB = self:gridLocationToWorldLocation(self.targetCell)
     pointAB.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointAB.x, 1, pointAB.z) + 3
@@ -1419,7 +1693,7 @@ function PathFinderModule:drawDebugForPF()
     pointTargetVector.x = pointTargetVector.x + self.targetVector.x * 10
     pointTargetVector.z = pointTargetVector.z + self.targetVector.z * 10
     pointTargetVector.y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, pointTargetVector.x, 1, pointTargetVector.z) + 3
-    AutoDriveDM:addLineTask(pointAB.x, pointAB.y, pointAB.z, pointTargetVector.x, pointTargetVector.y, pointTargetVector.z, 1, 1, 1, 1)
+    AutoDriveDM:addLineTask(pointAB.x, pointAB.y, pointAB.z, pointTargetVector.x, pointTargetVector.y, pointTargetVector.z, 1, 1, 1, 1) -- white
 end
 
 function PathFinderModule:drawDebugForCreatedRoute()
@@ -1490,12 +1764,14 @@ function PathFinderModule:drawDebugForCreatedRoute()
         end
     end
 
-    for i, waypoint in pairs(self.wayPoints) do
-        Utils.renderTextAtWorldPosition(waypoint.x, waypoint.y + 4, waypoint.z, "Node " .. i, getCorrectTextSize(0.013), 0)
-        if i > 1 then
-            local wp = waypoint
-            local pfWp = self.wayPoints[i - 1]
-            AutoDriveDM:addLineTask(wp.x, wp.y, wp.z, pfWp.x, pfWp.y, pfWp.z, 1, 0, 1, 1)
+    if self.wayPoints then
+        for i, waypoint in pairs(self.wayPoints) do
+            Utils.renderTextAtWorldPosition(waypoint.x, waypoint.y + 4, waypoint.z, "Node " .. i, getCorrectTextSize(0.013), 0)
+            if i > 1 then
+                local wp = waypoint
+                local pfWp = self.wayPoints[i - 1]
+                AutoDriveDM:addLineTask(wp.x, wp.y, wp.z, pfWp.x, pfWp.y, pfWp.z, 1, 0, 1, 1)
+            end
         end
     end
 end
@@ -1841,8 +2117,14 @@ function PathFinderModule:smoothResultingPPPath_Refined()
                 local corner4Z = node.z + math.sin(rightAngle) * sideLength
 
                 if not hasCollision then
-                    local shapes = overlapBox(worldPos.x + vectorX / 2, y + 3, worldPos.z + vectorZ / 2, 0, angleRad, 0, length / 2 + 2.5, 2.65, sideLength + 1.5, "collisionTestCallbackIgnore", nil, self.mask, true, true, true)
-                    hasCollision = hasCollision or (shapes > 0)
+                    if self.isNewPF then
+                        self.collisionhits = 0
+                        local shapes = overlapBox(worldPos.x + vectorX / 2, y + 3, worldPos.z + vectorZ / 2, 0, angleRad, 0, length / 2 + 2.5, 2.65, sideLength + 1.5, "collisionTestCallback", self, self.mask, true, true, true)
+                        hasCollision = hasCollision or (self.collisionhits > 0)
+                    else
+                        local shapes = overlapBox(worldPos.x + vectorX / 2, y + 3, worldPos.z + vectorZ / 2, 0, angleRad, 0, length / 2 + 2.5, 2.65, sideLength + 1.5, "Ignore", nil, self.mask, true, true, true)
+                        hasCollision = hasCollision or (shapes > 0)
+                    end
 
                     if hasCollision then
                         if self.vehicle ~= nil and self.vehicle.ad ~= nil and self.vehicle.ad.debug ~= nil and AutoDrive.debugVehicleMsg ~= nil then
@@ -2057,6 +2339,15 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
                 )
             )
         end
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle belowGroundLevel xz %d,%d terrain123 %.1f %.1f %.1f getWaterYAtWorldPosition %s waterY %s "
+        , math.floor(x1)
+        , math.floor(z1)
+        , terrain1
+        , terrain2
+        , terrain3
+        , tostring(g_currentMission.environmentAreaSystem:getWaterYAtWorldPosition(worldPosMiddle.x, terrain3, worldPosMiddle.z))
+        , tostring(waterY)
+        )
     end
 
     if (angleBetween) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
@@ -2068,6 +2359,14 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
                 )
             )
         end
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleBetween xz %d,%d angleBetween %.1f terrain12 %.1f %.1f length %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleBetween)
+        , terrain1
+        , terrain2
+        , length
+        )
     end
 
     if (angleBetweenCenter) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
@@ -2079,6 +2378,36 @@ function PathFinderModule:checkSlopeAngle(x1, z1, x2, z2)
                 )
             )
         end
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleBetweenCenter xz %d,%d angleBetweenCenter %.1f terrain32 %.1f %.1f lengthMiddle %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleBetweenCenter)
+        , terrain3
+        , terrain2
+        , lengthMiddle
+        )
+    end
+
+    if (angleLeft) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleLeft xz %d,%d angleLeft %.1f terrainLeft %.1f terrain1 %.1f lengthLeft %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleLeft)
+        , terrainLeft
+        , terrain1
+        , lengthLeft
+        )
+    end
+
+    if (angleRight) > PathFinderModule.SLOPE_DETECTION_THRESHOLD then
+        PathFinderModule.debugMsg(self.vehicle, "PFM:checkSlopeAngle angleRight xz %d,%d angleRight %.1f terrainRight %.1f terrain1 %.1f lengthRight %.1f "
+        , math.floor(x1)
+        , math.floor(z1)
+        , math.deg(angleRight)
+        , terrainRight
+        , terrain1
+        , lengthRight
+        )
     end
 
     if belowGroundLevel or (angleBetween) > PathFinderModule.SLOPE_DETECTION_THRESHOLD or (angleBetweenCenter) > PathFinderModule.SLOPE_DETECTION_THRESHOLD 
@@ -2095,5 +2424,748 @@ function PathFinderModule.debugVehicleMsg(vehicle, msg)
         if AutoDrive.debugVehicleMsg ~= nil then
             AutoDrive.debugVehicleMsg(vehicle, msg)
         end
+    end
+end
+
+function PathFinderModule:drawDebugNewPF()
+    -- AStar
+    if self.cachedNodes and #self.cachedNodes > 0 then
+        for z, row in pairs(self.cachedNodes) do
+            for x, node in pairs(row) do
+                -- cell outline
+                local gridFactor = PathFinderModule.GRID_SIZE_FACTOR
+                if self.isSecondChasingVehicle then
+                    gridFactor = PathFinderModule.GRID_SIZE_FACTOR_SECOND_UNLOADER
+                end
+                local corners = self:getCorners(node, {x = self.vectorX.x * gridFactor, z = self.vectorX.z * gridFactor}, {x = self.vectorZ.x * gridFactor, z = self.vectorZ.z * gridFactor})
+                local tempY = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, corners[1].x, 1, corners[1].z)
+                if node.isOnField then
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[2].x, tempY, corners[2].z, 1, 0, 1, 0) -- green
+                    ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[4].x, tempY, corners[4].z, 1, 0, 1, 0)
+                    ADDrawingManager:addLineTask(corners[3].x, tempY, corners[3].z, corners[4].x, tempY, corners[4].z, 1, 0, 1, 0)
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[3].x, tempY, corners[3].z, 1, 0, 1, 0)
+                else
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[2].x, tempY, corners[2].z, 1, 1, 0, 0) -- red
+                    ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[4].x, tempY, corners[4].z, 1, 1, 0, 0)
+                    ADDrawingManager:addLineTask(corners[3].x, tempY, corners[3].z, corners[4].x, tempY, corners[4].z, 1, 1, 0, 0)
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[3].x, tempY, corners[3].z, 1, 1, 0, 0)
+                end
+                if node.isRestricted then
+                    if node.hasFruit then
+                        ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[3].x, tempY, corners[3].z, 1, 0, 1, 1) -- cyan
+                    else
+                        ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[3].x, tempY, corners[3].z, 1, 1, 0, 0) -- red
+                    end
+                else
+                    ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[3].x, tempY, corners[3].z, 1, 0, 1, 0) -- green
+                end
+                if node.hasCollision then
+                    if node.hasVehicleCollision then
+                        ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[4].x, tempY, corners[4].z, 1, 1, 0, 1) -- blue
+                    else
+                        ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[4].x, tempY, corners[4].z, 1, 1, 1, 0) -- yellow
+                    end
+                end
+
+                -- cell text
+                if node.text == nil then
+                    node.text = string.format("%d,%d", x, z)
+                end
+                local point = self:gridLocationToWorldLocation({x = node.x, z = node.z})
+                Utils.renderTextAtWorldPosition(point.x, tempY + 3, point.z, node.text, getCorrectTextSize(0.013), 0)
+
+                -- behind point
+                if node.isBehind then
+                    local text = string.format("B %d,%d", x, z)
+                    Utils.renderTextAtWorldPosition(point.x, tempY + 4, point.z, text, getCorrectTextSize(0.013), 0)
+                    ADDrawingManager:addSphereTask(self.behind.x, tempY + 3, self.behind.z, 6, 0, 0, 1, 0) -- blue
+                end
+
+                -- start point
+                if node.isStart then
+                    local text = string.format("S %d,%d", x, z)
+                    Utils.renderTextAtWorldPosition(point.x, tempY + 5, point.z, text, getCorrectTextSize(0.013), 0)
+                    ADDrawingManager:addSphereTask(self.startX, tempY + 3, self.startZ, 6, 0, 1, 0, 0) -- green
+                end
+
+                -- goal point            
+                if node.isGoal then
+                    local text = string.format("T %d,%d", x, z)
+                    Utils.renderTextAtWorldPosition(point.x, tempY + 6, point.z, text, getCorrectTextSize(0.013), 0)
+                    ADDrawingManager:addSphereTask(self.target.x, tempY + 3, self.target.z, 6, 1, 0, 0, 0) -- red
+                end
+            end
+        end
+    end
+
+    -- Dubins Path
+    if self.dubinsPath and #self.dubinsPath > 0 then
+
+        local lastPoint = nil
+        for index, point in ipairs(self.dubinsPath) do
+            if lastPoint ~= nil then
+                ADDrawingManager:addLineTask(lastPoint.x, lastPoint.y, lastPoint.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                ADDrawingManager:addArrowTask(lastPoint.x, lastPoint.y, lastPoint.z, point.x, point.y, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+
+                if AutoDrive.getSettingState("lineHeight") == 1 then
+                    local gy = point.y - AutoDrive.drawHeight + 4
+                    local ty = lastPoint.y - AutoDrive.drawHeight + 4
+                    ADDrawingManager:addLineTask(point.x, gy, point.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                    ADDrawingManager:addSphereTask(point.x, gy, point.z, 3, 1, 0.09, 0.09, 0.15)
+                    ADDrawingManager:addLineTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, 1, 0.09, 0.09)
+                    ADDrawingManager:addArrowTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+                else
+                    local gy = point.y - AutoDrive.drawHeight - 4
+                    local ty = lastPoint.y - AutoDrive.drawHeight - 4
+                    ADDrawingManager:addLineTask(point.x, gy, point.z, point.x, point.y, point.z, 1, 1, 0.09, 0.09)
+                    ADDrawingManager:addSphereTask(point.x, gy, point.z, 3, 1, 0.09, 0.09, 0.15)
+                    ADDrawingManager:addLineTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, 1, 0.09, 0.09)
+                    ADDrawingManager:addArrowTask(lastPoint.x, ty, lastPoint.z, point.x, gy, point.z, 1, ADDrawingManager.arrows.position.start, 1, 0.09, 0.09)
+                end
+            end
+            lastPoint = point
+        end
+    end
+    if self.dubinsNodes then
+        local i = 0
+        for z, row in pairs(self.dubinsNodes) do
+            for x, node in pairs(row) do
+                local corners = node.corners
+                i = i + 1
+                local text = string.format("%d",i)
+                -- Utils.renderTextAtWorldPosition(x, node.worldPos.y + 3, z, text, getCorrectTextSize(0.013), 0)
+                local tempY = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, node.corners[1].x, 1, node.corners[1].z)
+                if node.isOnField then
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[2].x, tempY, corners[2].z, 1, 0, 1, 0) -- green
+                    ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[4].x, tempY, corners[4].z, 1, 0, 1, 0)
+                    ADDrawingManager:addLineTask(corners[3].x, tempY, corners[3].z, corners[4].x, tempY, corners[4].z, 1, 0, 1, 0)
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[3].x, tempY, corners[3].z, 1, 0, 1, 0)
+                else
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[2].x, tempY, corners[2].z, 1, 1, 0, 0) -- red
+                    ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[4].x, tempY, corners[4].z, 1, 1, 0, 0)
+                    ADDrawingManager:addLineTask(corners[3].x, tempY, corners[3].z, corners[4].x, tempY, corners[4].z, 1, 1, 0, 0)
+                    ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[3].x, tempY, corners[3].z, 1, 1, 0, 0)
+                end
+                if node.isRestricted then
+                    if node.hasFruit then
+                        ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[3].x, tempY, corners[3].z, 1, 0, 1, 1) -- cyan
+                    else
+                        ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[3].x, tempY, corners[3].z, 1, 1, 0, 0) -- red
+                    end
+                else
+                    ADDrawingManager:addLineTask(corners[2].x, tempY, corners[2].z, corners[3].x, tempY, corners[3].z, 1, 0, 1, 0) -- green
+                end
+                if node.hasCollision then
+                    if node.hasVehicleCollision then
+                        ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[4].x, tempY, corners[4].z, 1, 1, 0, 1) -- blue
+                    else
+                        ADDrawingManager:addLineTask(corners[1].x, tempY, corners[1].z, corners[4].x, tempY, corners[4].z, 1, 1, 1, 0) -- yellow
+                    end
+                end
+                if node.fruitValue and node.fruitValue > 0 then
+                    local text = string.format("%d",node.fruitValue)
+                    Utils.renderTextAtWorldPosition(x, node.worldPos.y + 3, z, text, getCorrectTextSize(0.013), 0)
+                end
+            end
+        end
+    end
+end
+
+function PathFinderModule:isDriveableAstar(cell)
+    cell.isRestricted = false
+    cell.incoming = cell.from_node
+    cell.hasCollision = false
+
+    local worldPos = self:gridLocationToWorldLocation(cell)
+    --Try going through the checks in a way that fast checks happen before slower ones which might then be skipped
+
+    cell.isOnField = AutoDrive.checkIsOnField(worldPos.x, 0, worldPos.z)
+
+    -- check the most probable restrictions on field first to prevent unneccessary checks
+    if not cell.isRestricted and self.restrictToField and not (self.fallBackMode1 or self.fallBackMode2) then
+        -- in fallBackMode1 we ignore the field restriction
+        cell.isRestricted = cell.isRestricted or (not cell.isOnField)
+        if not cell.isOnField then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableAstar not cell.isOnField xz %d,%d "
+                , cell.x, cell.z
+            )
+        end
+    end
+
+    local gridFactor = PathFinderModule.GRID_SIZE_FACTOR
+    if self.isSecondChasingVehicle then
+        gridFactor = PathFinderModule.GRID_SIZE_FACTOR_SECOND_UNLOADER
+    end
+    local corners = self:getCorners(cell, {x = self.vectorX.x * gridFactor, z = self.vectorX.z * gridFactor}, {x = self.vectorZ.x * gridFactor, z = self.vectorZ.z * gridFactor})
+
+    if not cell.isRestricted and self.avoidFruitSetting and not self.fallBackMode3 then
+        -- check for fruit
+        self:checkForFruitInArea(cell, corners) -- set cell.isRestricted if fruit found
+        table.insert(self.fruitAreas, corners)
+        if cell.isRestricted then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableAstar cell.isRestricted xz %d,%d fruit found %s"
+                , cell.x, cell.z
+                , self.fruitToCheck
+            )
+        end
+    end
+
+    if not cell.isRestricted and cell.incoming ~= nil then
+        -- check for up/down is to big or below water level
+        local worldPosPrevious = self:gridLocationToWorldLocation(cell.incoming)
+        local angelToSlope, angle = self:checkSlopeAngle(worldPos.x, worldPos.z, worldPosPrevious.x, worldPosPrevious.z)    --> true if up/down or roll is to big or below water level
+        cell.angle = angle
+        cell.hasCollision = cell.hasCollision or angelToSlope
+        cell.isRestricted = cell.isRestricted or cell.hasCollision
+        if angelToSlope then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableAstar angelToSlope xz %d,%d"
+                , cell.x, cell.z
+            )
+        end
+    end
+
+    if not cell.isRestricted then
+        -- check for obstacles
+        local shapeDefinition = self:getShapeDefByDirectionType(cell)   --> return shape for the cell according to direction, on ground level, 2.65m height
+        self.collisionhits = 0
+        local shapes = overlapBox(shapeDefinition.x, shapeDefinition.y + 3, shapeDefinition.z, 0, shapeDefinition.angleRad, 0, shapeDefinition.widthX, 2.65, shapeDefinition.widthZ, "collisionTestCallback", self, self.mask, true, true, true)
+        cell.hasCollision = cell.hasCollision or (self.collisionhits > 0)
+        cell.isRestricted = cell.isRestricted or cell.hasCollision
+        if cell.hasCollision then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableAstar cell.hasCollision xz %d,%d collision"
+                , cell.x, cell.z
+            )
+        end
+    end
+
+    if not cell.isRestricted and cell.incoming ~= nil then
+        local worldPosPrevious = self:gridLocationToWorldLocation(cell.incoming)
+        local vectorX = worldPosPrevious.x - worldPos.x
+        local vectorZ = worldPosPrevious.z - worldPos.z
+        local dirVec = { x=vectorX, z = vectorZ}
+
+        local cellUsedByVehiclePath = AutoDrive.checkForVehiclePathInBox(corners, self.minTurnRadius, self.vehicle, dirVec)
+        cell.isRestricted = cell.isRestricted or cellUsedByVehiclePath
+        self.blockedByOtherVehicle = self.blockedByOtherVehicle or cellUsedByVehiclePath
+        if cellUsedByVehiclePath then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableAstar cellUsedByVehiclePath xz %d,%d vehicle"
+                , cell.x, cell.z
+            )
+        end
+    end
+    return not(cell.isRestricted)
+end
+
+ -- Cost of two adjacent nodes
+-- current, neighbor
+function PathFinderModule:get_cost(from_node, to_node)
+    local dx, dz = from_node.x - to_node.x, from_node.z - to_node.z
+    return math.sqrt(dx * dx + dz * dz) + (from_node.cost + to_node.cost) * 0.5
+end
+
+-- For heuristic. Estimate cost of current node to goal node
+-- neighbor, goal
+function PathFinderModule:estimate_cost(node, goal_node)
+    return self:get_cost(node, goal_node) * 1.5 + (node.cost + goal_node.cost) * 0.5
+end
+
+-- current = self:pop_best_node(self.openset, self.f_score)
+-- return: node / nil
+-- self.openset, f_score
+function PathFinderModule:pop_best_node(set, score)
+    local best, node = math.huge, nil
+
+    for k, v in pairs(set) do
+        local s = score[k]
+
+        if s < best then
+            best  = s or math.huge
+            node = k
+        end
+    end
+    if not node then return end
+    set[node] = nil
+    return node
+end
+
+-- {}, self.came_from, self.nodeGoal
+function PathFinderModule:unwind_path(flat_path, came_from, goal)
+    if came_from[goal] and (came_from[goal] ~= self.nodeGoal) then
+		table.insert(flat_path, 1, came_from[goal])
+		return self:unwind_path(flat_path, came_from, came_from[goal])
+	else
+        return flat_path
+	end
+end
+
+-- Node must be able to check if they are the same
+-- so the example cannot directly return a different table for same coord
+function PathFinderModule:get_node(x, z)
+    local row = self.cachedNodes[z]
+    if not row then row = {}; self.cachedNodes[z] = row end
+    local node = row[x]
+    if not node then node = { x = x, z = z, cost = 0 }; row[x] = node end
+    return node
+end
+
+function PathFinderModule:getDirections(fromNode, node)
+    if node == nil then
+        AutoDrive.debugMsg(self.vehicle, "PFM:getDirections ERROR fromNode %s node %s"
+            , tostring(fromNode)
+            , tostring(node)
+        )
+        return
+    end
+    local directions = {}
+
+--[[     if fromNode then
+        PathFinderModule.debugMsg(self.vehicle, "PFM:getDirections fromNode %d,%d fromNode.direction %s node xz %d,%d node.direction %s"
+            , fromNode.x, fromNode.z
+            , tostring(self.direction_to_text[fromNode.direction+1])
+            , node.x, node.z
+            , tostring(self.direction_to_text[node.direction+1])
+        )
+    else
+        PathFinderModule.debugMsg(self.vehicle, "PFM:getDirections fromNode %s node xz %d,%d node.direction %s"
+            , tostring(fromNode)
+            , node.x, node.z
+            , tostring(self.direction_to_text[node.direction+1])
+        )
+    end
+ ]]
+    if (fromNode == nil and node.direction == self.PP_RIGHT) or (fromNode and fromNode.x == node.x and fromNode.z < node.z) then
+        directions[1] = { -1, 1 }
+        directions[1].direction = self.PP_DOWN_RIGHT
+        directions[2] = { 0, 1 }
+        directions[2].direction = self.PP_RIGHT
+        directions[3] = { 1, 1 }
+        directions[3].direction = self.PP_UP_RIGHT
+    elseif (fromNode == nil and node.direction == self.PP_LEFT) or (fromNode and fromNode.x == node.x and fromNode.z > node.z) then
+        directions[1] = { -1, -1 }
+        directions[1].direction = self.PP_DOWN_LEFT
+        directions[2] = { 0, -1 }
+        directions[2].direction = self.PP_LEFT
+        directions[3] = { 1, -1 }
+        directions[3].direction = self.PP_UP_LEFT
+    elseif (fromNode == nil and node.direction == self.PP_UP) or (fromNode and fromNode.x < node.x and fromNode.z == node.z) then
+        directions[1] = { 1, -1 }
+        directions[1].direction = self.PP_UP_LEFT
+        directions[2] = { 1, 0 }
+        directions[2].direction = self.PP_UP
+        directions[3] = { 1, 1 }
+        directions[3].direction = self.PP_UP_RIGHT
+    elseif (fromNode == nil and node.direction == self.PP_DOWN) or (fromNode and fromNode.x > node.x and fromNode.z == node.z) then
+        directions[1] = { -1, -1 }
+        directions[1].direction = self.PP_DOWN_LEFT
+        directions[2] = { -1, 0 }
+        directions[2].direction = self.PP_DOWN
+        directions[3] = { -1, 1 }
+        directions[3].direction = self.PP_DOWN_RIGHT
+    elseif (fromNode == nil and node.direction == self.PP_UP_RIGHT) or (fromNode and fromNode.x < node.x and fromNode.z < node.z) then
+        directions[1] = { 1, 0 }
+        directions[1].direction = self.PP_UP
+        directions[2] = { 1, 1 }
+        directions[2].direction = self.PP_UP_RIGHT
+        directions[3] = { 0, 1 }
+        directions[3].direction = self.PP_RIGHT
+    elseif (fromNode == nil and node.direction == self.PP_DOWN_LEFT) or (fromNode and fromNode.x > node.x and fromNode.z > node.z) then
+        directions[1] = { 0, -1 }
+        directions[1].direction = self.PP_LEFT
+        directions[2] = { -1, -1 }
+        directions[2].direction = self.PP_DOWN_LEFT
+        directions[3] = { -1, 0 }
+        directions[3].direction = self.PP_DOWN
+    elseif (fromNode == nil and node.direction == self.PP_UP_LEFT) or (fromNode and fromNode.x < node.x and fromNode.z > node.z) then
+        directions[1] = { 0, -1 }
+        directions[1].direction = self.PP_LEFT
+        directions[2] = { 1, -1 }
+        directions[2].direction = self.PP_UP_LEFT
+        directions[3] = { 1, 0 }
+        directions[3].direction = self.PP_UP
+    elseif (fromNode == nil and node.direction == self.PP_DOWN_RIGHT) or (fromNode and fromNode.x > node.x and fromNode.z < node.z) then
+        directions[1] = { -1, 0 }
+        directions[1].direction = self.PP_DOWN
+        directions[2] = { -1, 1 }
+        directions[2].direction = self.PP_DOWN_RIGHT
+        directions[3] = { 0, 1 }
+        directions[3].direction = self.PP_RIGHT
+    else
+        if fromNode then
+            AutoDrive.debugMsg(self.vehicle, "PFM:getDirections ERROR fromNode xz %d,%d"
+                , fromNode.x
+                , fromNode.z
+            )
+        end
+        AutoDrive.debugMsg(self.vehicle, "PFM:getDirections ERROR fromNode %s node xz %d,%d node.direction %s"
+            , tostring(fromNode)
+            , node.x, node.z
+            , tostring(node.direction)
+        )
+    end
+--[[     
+    PathFinderModule.debugMsg(self.vehicle, "PFM:getDirections %d,%d direction %s %d,%d direction %s %d,%d direction %s"
+        , directions[1][1], directions[1][2]
+        , tostring(self.direction_to_text[directions[1].direction+1])
+        , directions[2][1], directions[2][2]
+        , tostring(self.direction_to_text[directions[2].direction+1])
+        , directions[3][1], directions[3][2]
+        , tostring(self.direction_to_text[directions[3].direction+1])
+    )
+ ]]
+    return directions
+end
+
+-- Return all neighbor nodes. Means a target that can be moved from the current node
+-- current, from_node, add_neighbor_fn
+function PathFinderModule:get_neighbors(node, fromNode, add_neighbor_fn)
+    local x, z = node.x, node.z
+    local directions = self:getDirections(fromNode, node)
+    if directions then
+        for i, offset in ipairs(directions) do
+            local tnode = self:get_node(x + offset[1], z + offset[2])
+            tnode.direction = offset.direction
+            tnode.from_node = fromNode
+            add_neighbor_fn(tnode)
+        end
+    end
+end
+
+local all_neighbors_offset = {
+    { -1, -1 }, { 0, -1 }, { 1, -1 },
+    { -1, 0 },             { 1, 0 },
+    { -1, 1 },  { 0, 1 },  { 1, 1 }
+}
+
+function PathFinderModule:setBlockedGoal()
+    local x, z = self.targetAheadCell.x, self.targetAheadCell.z
+    for i, offset in ipairs(all_neighbors_offset) do
+        if not (self.targetCell.x == (x + offset[1]) and self.targetCell.z == (z + offset[2])) then
+            local tnode = self:get_node(x + offset[1], z + offset[2])
+            tnode.text = string.format("G %d,%d",x + offset[1], z + offset[2])
+            tnode.isBlockedGoal = true
+            self.closedset[tnode] = true
+        end
+    end
+end
+
+function PathFinderModule:reachedGoal(current, goal)
+    if math.abs(current.x - goal.x) < 2 and math.abs(current.z - goal.z) < 2 then
+        return true
+    else
+        return false
+    end
+end
+
+function PathFinderModule:setupNew(behindStartCell, startCell, targetCell, userdata)
+    PathFinderModule.debugMsg(self.vehicle, "PFM:setupNew behindStartCell %s,%s startCell %s,%s targetCell %s,%s"
+        , tostring(behindStartCell.x)
+        , tostring(behindStartCell.z)
+        , tostring(startCell.x)
+        , tostring(startCell.z)
+        , tostring(targetCell.x)
+        , tostring(targetCell.z)
+    )
+    self.cachedNodes = {}
+    self.openset = {}
+    self.closedset = {}
+    self.came_from = {}
+    self.g_score = {}
+    self.h_score = {}
+    self.f_score = {}
+
+    self.nodeBehindStart = self:get_node(behindStartCell.x, behindStartCell.z)
+    self.nodeBehindStart.isBehind = true
+    self.nodeBehindStart.direction = behindStartCell.direction
+
+    self.nodeStart = self:get_node(startCell.x, startCell.z)
+    self.nodeStart.isStart = true
+    self.nodeStart.direction = startCell.direction
+
+    self.nodeGoal = self:get_node(targetCell.x, targetCell.z)
+    self.nodeGoal.isGoal = true
+    self.nodeGoal.direction = targetCell.direction
+
+    self.g_score[self.nodeBehindStart] = math.huge
+    self.h_score[self.nodeBehindStart] = math.huge
+    self.f_score[self.nodeBehindStart] = math.huge
+
+    self.g_score[self.nodeStart] = 0
+    self.h_score[self.nodeStart] = self:estimate_cost(self.nodeStart, self.nodeGoal)
+    self.f_score[self.nodeStart] = self.h_score[self.nodeStart]
+    self.came_from[self.nodeStart] = self.nodeBehindStart
+
+    self.openset[self.nodeStart] = true
+    self.closedset[self.nodeBehindStart] = true
+    self:isDriveableAstar(self.nodeStart)
+    self:setBlockedGoal()
+    self.initNew = true
+end
+
+function PathFinderModule:createWayPointsNew()
+    if self.smoothStep == 0 then
+        self.wayPoints = {}
+        for index, cell in ipairs(self.path) do
+            self.wayPoints[index] = self:gridLocationToWorldLocation(cell)
+            self.wayPoints[index].y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, self.wayPoints[index].x, 1, self.wayPoints[index].z)
+            self.wayPoints[index].direction = cell.direction
+        end
+        -- remove zig zag line
+        self:smoothResultingPPPath()
+    end
+    -- shortcut the path if possible
+    self:smoothResultingPPPath_Refined()
+
+    if self.smoothStep == 2 then
+        self:appendWayPointsNew()
+    end
+end
+
+function PathFinderModule:appendWayPointsNew()
+    -- When going to network, dont turn actual road network nodes into pathFinderPoints
+    if self.goingToNetwork then
+        for i = 1, #self.wayPoints, 1 do
+            self.wayPoints[i].isPathFinderPoint = true
+        end
+    end
+
+    if self.appendWayPoints ~= nil then
+        for i = 1, #self.appendWayPoints, 1 do
+            self.wayPoints[#self.wayPoints + 1] = self.appendWayPoints[i]
+        end
+        self.smoothStep = 3
+    end
+
+    -- See comment above
+    if not self.goingToNetwork then
+        for i = 1, #self.wayPoints, 1 do
+            self.wayPoints[i].isPathFinderPoint = true
+        end
+    end
+end
+
+function PathFinderModule:isDriveableDubins(cell)
+    cell.isRestricted = false
+    cell.hasCollision = false
+    PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableDubins start xz %d,%d "
+        , cell.x, cell.z
+    )
+
+    --Try going through the checks in a way that fast checks happen before slower ones which might then be skipped
+
+    cell.isOnField = AutoDrive.checkIsOnField(cell.worldPos.x, 0, cell.worldPos.z)
+
+    -- check the most probable restrictions on field first to prevent unneccessary checks
+    if not cell.isRestricted and self.restrictToField and not (self.fallBackMode1 or self.fallBackMode2) then
+        cell.isRestricted = cell.isRestricted or (not cell.isOnField)
+        if not cell.isOnField then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableDubins not cell.isOnField xz %d,%d "
+                , cell.x, cell.z
+            )
+        end
+    end
+
+    local angleRad = AutoDrive.normalizeAngle(cell.t)
+    local sizeMax = self.vehicle.size.width / 2
+    local vectorX = {x =   math.cos(angleRad) * sizeMax, z = math.sin(angleRad) * sizeMax}
+    local vectorZ = {x = - math.sin(angleRad) * sizeMax, z = math.cos(angleRad) * sizeMax}
+
+    local corners = {}
+    local centerLocation = cell.worldPos
+    corners[1] = {x = centerLocation.x + (-vectorX.x - vectorZ.x), z = centerLocation.z + (-vectorX.z - vectorZ.z)}
+    corners[2] = {x = centerLocation.x + (vectorX.x - vectorZ.x), z = centerLocation.z + (vectorX.z - vectorZ.z)}
+    corners[3] = {x = centerLocation.x + (-vectorX.x + vectorZ.x), z = centerLocation.z + (-vectorX.z + vectorZ.z)}
+    corners[4] = {x = centerLocation.x + (vectorX.x + vectorZ.x), z = centerLocation.z + (vectorX.z + vectorZ.z)}
+    cell.corners = corners
+
+    if not cell.isRestricted and self.avoidFruitSetting and not self.fallBackMode3 then
+        -- check for fruit
+        self:checkForFruitInArea(cell, corners) -- set cell.isRestricted if fruit found
+        if cell.isRestricted then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableDubins cell.isRestricted xz %d,%d fruit found %s"
+                , cell.x, cell.z
+                , self.fruitToCheck
+            )
+        end
+    end
+
+    if not cell.isRestricted and cell.incoming ~= nil then
+        -- check for up/down is to big or below water level
+        local worldPosPrevious = cell.incoming.worldPos
+        local angelToSlope, angle = self:checkSlopeAngle(cell.worldPos.x, cell.worldPos.z, worldPosPrevious.x, worldPosPrevious.z)    --> true if up/down or roll is to big or below water level
+        cell.angle = angle
+        cell.hasCollision = cell.hasCollision or angelToSlope
+        cell.isRestricted = cell.isRestricted or cell.hasCollision
+        if angelToSlope then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableDubins angelToSlope xz %d,%d"
+                , cell.x, cell.z
+            )
+        end
+    end
+
+    if not cell.isRestricted then
+        -- check for obstacles
+        self.collisionhits = 0
+        local shapes = overlapBox(cell.worldPos.x, cell.worldPos.y + 3, cell.worldPos.z, 0, cell.t, 0, sizeMax, 2.65, sizeMax, "collisionTestCallback", self, self.mask, true, true, true)
+        cell.hasCollision = cell.hasCollision or (self.collisionhits > 0)
+        cell.isRestricted = cell.isRestricted or cell.hasCollision
+        if cell.hasCollision then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableDubins cell.hasCollision xz %d,%d collision"
+                , cell.x, cell.z
+            )
+        end
+    end
+
+    if not cell.isRestricted and cell.incoming ~= nil then
+        local worldPosPrevious = cell.incoming.worldPos
+        local vectorX = worldPosPrevious.x - cell.worldPos.x
+        local vectorZ = worldPosPrevious.z - cell.worldPos.z
+        local dirVec = { x=vectorX, z = vectorZ}
+
+        local cellUsedByVehiclePath = AutoDrive.checkForVehiclePathInBox(corners, self.minTurnRadius, self.vehicle, dirVec)
+        cell.isRestricted = cell.isRestricted or cellUsedByVehiclePath
+        self.blockedByOtherVehicle = self.blockedByOtherVehicle or cellUsedByVehiclePath
+        if cellUsedByVehiclePath then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableDubins cellUsedByVehiclePath xz %d,%d vehicle"
+                , cell.x, cell.z
+            )
+        end
+    end
+    if cell.isRestricted then
+        PathFinderModule.debugMsg(self.vehicle, "PFM:isDriveableDubins end isRestricted xz %d,%d "
+            , cell.x, cell.z
+        )
+    end
+    return not(cell.isRestricted)
+end
+
+function PathFinderModule:getDubinsPath()
+    PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath start")
+    self.dubinsPath = nil
+    local result = ADDubins.EDUBNOPATH
+    self.dubinsNodes  = {}
+    local diffNetTime = netGetTime()
+
+    local function get_node(x, z)
+        local row = self.dubinsNodes[z]
+        if not row then row = {}; self.dubinsNodes[z] = row end
+        local node = row[x]
+        if not node then node = { x = x, z = z, cost = 0 }; row[x] = node end
+        return node
+    end
+
+    local function checkPath()
+        local result = self.dubins:dubins_path_sample_many(ADDubins.DubinsPath, 1, self.dubins.createWayPoints)
+        PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath dubins_path_sample_many result %d"
+            , result
+        )
+        if result == ADDubins.EDUBOK then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath dubins_path_sample_many #self.dubins.outPath %d"
+            , #self.dubins.outPath
+            )
+            if self.dubins.outPath and #self.dubins.outPath > 0 then
+                local fromCell = nil
+                for i, wayPoint in ipairs(self.dubins.outPath) do
+                    local cell = get_node(wayPoint.x, wayPoint.z)
+                    cell.worldPos = {x = wayPoint.x, y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, wayPoint.x, 1, wayPoint.z), z = wayPoint.z}
+                    cell.t = wayPoint.t
+                    cell.incomming = fromCell
+                    fromCell = cell
+                    if not self:isDriveableDubins(cell) then
+                        result = ADDubins.EDUBNOPATH
+                        break
+                    end
+                end
+            else
+                result = ADDubins.EDUBNOPATH
+            end
+        end
+        return result
+    end
+
+    self.dubins.outPath = {}
+    result = self.dubins:dubins_shortest_path(ADDubins.DubinsPath, self.q0, self.q1, self.minTurnRadius)
+    PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath dubins_shortest_path result %d"
+        , result
+    )
+    if result == ADDubins.EDUBOK then
+        result = checkPath()
+        if result == ADDubins.EDUBOK then
+            PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath found shortest path #self.dubins.outPath %d result %d"
+                , #self.dubins.outPath
+                , result
+            )
+            self.dubinsPath = self.dubins.outPath
+            return self.dubinsPath
+        end
+    end
+
+    for i = 1, 6, 1 do
+        self.dubins.outPath = {}
+        result = self.dubins:dubins_path(ADDubins.DubinsPath, self.q0, self.q1, self.minTurnRadius, i)
+        PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath dubins_path i %d result %d"
+            , i
+            , result
+        )
+        if result == ADDubins.EDUBOK then
+            result = checkPath()
+        end
+        if result == ADDubins.EDUBOK then
+            break
+        end
+    end
+    PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath #self.dubins.outPath %d result %d"
+        , #self.dubins.outPath
+        , result
+    )
+    if result == ADDubins.EDUBOK then
+        self.dubinsPath = self.dubins.outPath
+    end
+
+    diffNetTime = netGetTime() - diffNetTime
+    PathFinderModule.debugMsg(self.vehicle, "PFM:getDubinsPath end diffNetTime %d"
+        , diffNetTime
+    )
+    return self.dubinsPath
+end
+
+function PathFinderModule:collisionTestCallback(transformId)
+    if transformId ~= 0 and transformId ~= g_currentMission.terrainRootNode then
+        local collisionObject = g_currentMission:getNodeObject(transformId)
+        if (collisionObject == nil) or (collisionObject ~= nil and not (collisionObject.rootVehicle == self.vehicle)) then
+            self.collisionhits = self.collisionhits + 1
+            if PathFinderModule.debug == true then
+                local currentCollMask = getCollisionMask(transformId)
+                if currentCollMask then
+                    local x, _, z = getWorldTranslation(transformId)
+                    x = x + g_currentMission.mapWidth/2
+                    z = z + g_currentMission.mapHeight/2
+
+                    PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback transformId ->%s<- collisionObject ->%s<- getRigidBodyType->transformId %s getName->transformId %s getNodePath %s"
+                        , tostring(transformId)
+                        , tostring(collisionObject)
+                        , tostring(getRigidBodyType(transformId))
+                        , tostring(getName(transformId))
+                        , tostring(I3DUtil.getNodePath(transformId))
+                    )
+                    if collisionObject then
+                        PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback xmlFilename ->%s<-"
+                            , tostring(collisionObject.xmlFilename)
+                        )
+                    end
+                    PathFinderModule.debugMsg(collisionObject, "PathFinderModule:collisionTestCallback xz %.0f %.0f currentCollMask %s"
+                        , x, z
+                        , MathUtil.numberToSetBitsStr(currentCollMask)
+                    )
+                end
+            end
+        end
+    end
+end
+
+function PathFinderModule.debugMsg(vehicle, debugText, ...)
+    if PathFinderModule.debug == true then
+        AutoDrive.debugMsg(vehicle, debugText, ...)
+    else
+        AutoDrive.debugPrint(vehicle, AutoDrive.DC_PATHINFO, debugText, ...)
     end
 end

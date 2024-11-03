@@ -17,6 +17,7 @@ function RefuelTask:setUp()
     self.matchingFillTypes = {}
     if ADGraphManager:getDistanceFromNetwork(self.vehicle) > 30 then
         self.state = RefuelTask.STATE_PATHPLANNING
+        self.vehicle.ad.pathFinderModule:reset()
         self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.destinationID)
     else
         self.state = RefuelTask.STATE_DRIVING
@@ -193,8 +194,8 @@ end
 
 function RefuelTask:getI18nInfo()
     if self.state == RefuelTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     else
         return "$l10n_AD_task_drive_to_refuel_point;"
     end

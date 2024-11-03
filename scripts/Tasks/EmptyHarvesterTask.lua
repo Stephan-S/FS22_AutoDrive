@@ -9,6 +9,7 @@ EmptyHarvesterTask.STATE_WAITING = {}
 EmptyHarvesterTask.STATE_UNLOADING_FINISHED = {}
 
 EmptyHarvesterTask.REVERSE_TIME = 30000
+EmptyHarvesterTask.MAX_STUCK_TIME = 60000
 EmptyHarvesterTask.WAITING_TIME = 7000
 
 function EmptyHarvesterTask:new(vehicle, combine)
@@ -18,6 +19,7 @@ function EmptyHarvesterTask:new(vehicle, combine)
     o.state = EmptyHarvesterTask.STATE_PATHPLANNING
     o.wayPoints = nil
     o.reverseStartLocation = nil
+    o.stuckTimer = AutoDriveTON:new()
     o.reverseTimer = AutoDriveTON:new()
     o.waitTimer = AutoDriveTON:new()
     o.holdCPCombineTimer = AutoDriveTON:new()
@@ -30,6 +32,7 @@ end
 
 function EmptyHarvesterTask:setUp()
     EmptyHarvesterTask.debugMsg(self.vehicle, "EmptyHarvesterTask:setUp")
+    self.vehicle.ad.pathFinderModule:reset()
     self.vehicle.ad.pathFinderModule:startPathPlanningToPipe(self.combine, false)
     self.trailers, self.trailerCount = AutoDrive.getAllUnits(self.vehicle)
     self.tractorTrainLength = AutoDrive.getTractorTrainLength(self.vehicle, true, false)
@@ -44,6 +47,23 @@ function EmptyHarvesterTask:update(dt)
     if self.lastState ~= self.state then
         EmptyHarvesterTask.debugMsg(self.vehicle, "EmptyHarvesterTask:update %s -> %s", tostring(self:getStateName(self.lastState)), tostring(self:getStateName()))
         self.lastState = self.state
+        self:resetAllTimers()
+    end
+
+    local checkForStuck = (self.vehicle.lastSpeedReal <= 0.0002) and (
+        self.state == EmptyHarvesterTask.STATE_DRIVING
+        or self.state == EmptyHarvesterTask.STATE_UNLOADING
+    )
+
+    self.stuckTimer:timer(checkForStuck, self.MAX_STUCK_TIME, dt)
+    if self.stuckTimer:done()
+        -- or AutoDrive.getDistanceBetween(self.vehicle, self.combine) < self.MIN_COMBINE_DISTANCE 
+        then
+        -- got stuck or to close to combine -> reverse
+        EmptyHarvesterTask.debugMsg(self.vehicle, "EmptyHarvesterTask:update - STATE_DRIVING stuck")
+        local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+        self.reverseStartLocation = {x = x, y = y, z = z}
+        self.state = EmptyHarvesterTask.STATE_REVERSING
     end
 
     if self.state == EmptyHarvesterTask.STATE_PATHPLANNING then
@@ -59,20 +79,24 @@ function EmptyHarvesterTask:update(dt)
                     return
                 else
                     self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:notifyAboutFailedPathfinder()
+                    self.vehicle.ad.pathFinderModule:reset()
                     self.vehicle.ad.pathFinderModule:startPathPlanningToPipe(self.combine, false)
                     self.vehicle.ad.pathFinderModule:addDelayTimer(10000)
                 end
             else
                 self.state = EmptyHarvesterTask.STATE_DRIVING
+                return
             end
         else
             self.vehicle.ad.pathFinderModule:update(dt)
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
+            return
         end
     elseif self.state == EmptyHarvesterTask.STATE_DRIVING then
         if self.vehicle.ad.drivePathModule:isTargetReached() then
             self.state = EmptyHarvesterTask.STATE_UNLOADING
+            return
         else
             self.vehicle.ad.drivePathModule:update(dt)
         end
@@ -108,9 +132,8 @@ function EmptyHarvesterTask:update(dt)
             local distanceToCombine = AutoDrive.getDistanceBetween(self.vehicle, self.combine)
 
             if combineFillLevel <= 0.1 or filledToUnload then
-                local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
-                self.reverseStartLocation = {x = x, y = y, z = z}
                 self.state = EmptyHarvesterTask.STATE_UNLOADING_FINISHED
+                return
             else
                 -- Drive forward with collision checks active and only for a limited distance
                 if distanceToCombine > 30 then
@@ -127,9 +150,13 @@ function EmptyHarvesterTask:update(dt)
         if AutoDrive:getIsCPCombineInPocket(self.combine) or AutoDrive.combineIsTurning(self.combine) then
             -- reverse if CP unload in a pocket or pullback position
             -- reverse if combine is turning
+            local x, y, z = getWorldTranslation(self.vehicle.components[1].node)
+            self.reverseStartLocation = {x = x, y = y, z = z}
             self.state = EmptyHarvesterTask.STATE_REVERSING
+            return
         else
             self.state = EmptyHarvesterTask.STATE_WAITING
+            return
         end
     elseif self.state == EmptyHarvesterTask.STATE_REVERSING then
         self.vehicle.ad.specialDrivingModule.motorShouldNotBeStopped = false
@@ -156,9 +183,8 @@ function EmptyHarvesterTask:update(dt)
         end
         self.reverseTimer:timer(true, EmptyHarvesterTask.REVERSE_TIME, dt)
         if (distanceToReversStart > overallLength) or self.reverseTimer:done() then
-            self.holdCPCombineTimer:timer(false)
-            self.reverseTimer:timer(false)
             self.state = EmptyHarvesterTask.STATE_WAITING
+            return
         else
             self.vehicle.ad.specialDrivingModule:driveReverse(dt, 10, 1, self.vehicle.ad.trailerModule:canBeHandledInReverse())
         end
@@ -170,12 +196,12 @@ function EmptyHarvesterTask:update(dt)
         end
         self.waitTimer:timer(true, waitTime, dt)
         if self.waitTimer:done() then
-            self.waitTimer:timer(false)
             self:finished()
             return
         else
             self.vehicle.ad.specialDrivingModule:stopVehicle()
             self.vehicle.ad.specialDrivingModule:update(dt)
+            return
         end
     end
 end
@@ -219,11 +245,18 @@ function EmptyHarvesterTask:getStateName(state)
     return self.statesToNames[requestedState] or ""
 end
 
+function EmptyHarvesterTask:resetAllTimers()
+    -- self.stuckTimer:timer(false) -- stuckTimer reset by speed changes
+    self.reverseTimer:timer(false)
+    self.waitTimer:timer(false)
+    self.holdCPCombineTimer:timer(false)
+end
+
 function EmptyHarvesterTask:getI18nInfo()
     local text = "$l10n_AD_task_unloading_combine;"
     if self.state == EmptyHarvesterTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        text = text .. " - " .. "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        text = text .. " - " .. "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     elseif self.state == EmptyHarvesterTask.STATE_DRIVING then
         text = text .. " - " .. "$l10n_AD_task_drive_to_combine_pipe;"
     elseif self.state == EmptyHarvesterTask.STATE_UNLOADING then

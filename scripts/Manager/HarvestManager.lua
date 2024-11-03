@@ -137,7 +137,7 @@ function ADHarvestManager:update(dt)
                 else
                     if AutoDrive.getSetting("callSecondUnloader", harvester) then
                         local unloader = self:getAssignedUnloader(harvester)
-                        if unloader.ad.modes[AutoDrive.MODE_UNLOAD]:getFollowingUnloader() == nil then
+                        if unloader and unloader.ad and unloader.ad.modes and unloader.ad.modes[AutoDrive.MODE_UNLOAD]:getFollowingUnloader() == nil then
                             local trailers, _ = AutoDrive.getAllUnits(unloader)
 
                             local fillLevel, _, _, fillFreeCapacity = AutoDrive.getAllFillLevels(trailers)
