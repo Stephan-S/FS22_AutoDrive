@@ -118,6 +118,10 @@ function PathFinderModule:reset()
     self.isFinished = true
     self.smoothDone = true
     self.fruitAreas = {}
+    self.goingToNetwork  = false
+    self.goingToPipe = false
+    self.chasingVehicle = false
+    self.isSecondChasingVehicle = false
 
     if AutoDrive.experimentalFeatures.NewPathfinder then
         self.PP_UP = 0
