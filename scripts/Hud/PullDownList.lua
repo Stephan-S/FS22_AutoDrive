@@ -497,14 +497,16 @@ function ADPullDownList:createSelection_FillType()
 
     if vehicle ~= nil then
         local trailers, _ = AutoDrive.getAllUnits(vehicle)
-        supportedFillTypes = {}
-        for _, trailer in ipairs(trailers) do
-            if AutoDrive:hasAL(trailer) then
-                local alFillTypes = AutoDrive:getALFillTypes(trailer)
-                if alFillTypes ~= nil and #alFillTypes > 0 then
-                    -- self.autoLoadFillTypes is either nil or it contains items. It is never empty.
-                    self.autoLoadFillTypes = alFillTypes
-                    break
+        if trailers then
+            supportedFillTypes = {}
+            for _, trailer in ipairs(trailers) do
+                if AutoDrive:hasAL(trailer) then
+                    local alFillTypes = AutoDrive:getALFillTypes(trailer)
+                    if alFillTypes ~= nil and #alFillTypes > 0 then
+                        -- self.autoLoadFillTypes is either nil or it contains items. It is never empty.
+                        self.autoLoadFillTypes = alFillTypes
+                        break
+                    end
                 end
             end
         end
