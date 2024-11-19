@@ -361,17 +361,6 @@ function AutoDrive:onUpdateTick(dt, isActiveForInput, isActiveForInputIgnoreSele
     -- self:resetClosestWayPoint()
     -- if we want to update distances every frame, when lines drawing is enabled, we can move this at the end of onDraw function
 
-    if AutoDrive.isEditorShowEnabled() then
-        local x, y, z = getWorldTranslation(self.components[1].node)
-        local distance = MathUtil.vector2Length(x - self.ad.lastDrawPosition.x, z - self.ad.lastDrawPosition.z)
-        if distance > AutoDrive.drawDistance / 2 then
-            self.ad.lastDrawPosition = {x = x, z = z}
-            self:resetWayPointsDistance()
-        end
-    else
-        self:resetWayPointsDistance()
-    end
-
     if self.isServer then
         self.ad.recordingModule:updateTick(dt, isActiveForInput, isActiveForInputIgnoreSelection, isSelected)
 
@@ -761,6 +750,7 @@ function AutoDrive:onEnterVehicle(isControlling)
             self.ad.stateModule:setActualFarmId(self.ad.stateModule:getPlayerFarmId()) -- onEnterVehicle
         end
     end
+    self:resetWayPointsDistance()
 end
 
 function AutoDrive:onLeaveVehicle(wasEntered)
@@ -810,11 +800,26 @@ function AutoDrive:onDrawEditorMode()
                     and not AutoDrive.leftALTmodifierKeyPressed
                     and not AutoDrive.rightSHIFTmodifierKeyPressed
 
+    if AutoDrive.isEditorShowEnabled() or AutoDrive.isInExtendedEditorMode() then
+        local x, y, z = getWorldTranslation(self.components[1].node)
+        local distance = MathUtil.vector2Length(x - self.ad.lastDrawPosition.x, z - self.ad.lastDrawPosition.z)
+        if distance > AutoDrive.drawDistance / 2 then
+            self.ad.lastDrawPosition = {x = x, z = z}
+            self:resetWayPointsDistance()
+        end
+    end
+
+    if AutoDrive:getIsEntered(self) and ADGraphManager:hasChanges() then
+        self:resetWayPointsDistance()
+        ADGraphManager:resetChanges()
+    end
+
     --Draw close destinations
     for _, marker in pairs(ADGraphManager:getMapMarkers()) do
         local wp = ADGraphManager:getWayPointById(marker.id)
         if MathUtil.vector2Length(wp.x - x1, wp.z - z1) < maxDistance then
-            Utils.renderTextAtWorldPosition(wp.x, wp.y + 4, wp.z, marker.name, getCorrectTextSize(0.013), 0)
+            local scale = AutoDrive.getSetting("scaleMarkerText") or 1
+            Utils.renderTextAtWorldPosition(wp.x, wp.y + 4, wp.z, marker.name, getCorrectTextSize(0.013) * scale, 0)
             DrawingManager:addMarkerTask(wp.x, wp.y + 0.45, wp.z)
         end
     end
@@ -1034,7 +1039,6 @@ function AutoDrive:startAutoDrive()
     if self.isServer then
         if not self.ad.stateModule:isActive() then
             self.ad.stateModule:setActive(true)
-            self.ad.stateModule:setLoopsDone(0)
 
             self.ad.isStoppingWithError = false
             self.ad.onRouteToPark = false
@@ -1137,7 +1141,6 @@ function AutoDrive:stopAutoDrive()
                 self.spec_aiVehicle.aiTrafficCollisionTranslation[2] = 0
             end
 
-            self.ad.stateModule:setLoopsDone(0)
             self.ad.stateModule:setActive(false)
 
             self.ad.taskModule:abortAllTasks()
@@ -1455,9 +1458,7 @@ function AutoDrive:getClosestWayPoint(noUpdate)
 end
 
 function AutoDrive:getClosestNotReversedWayPoint()
-    if self.ad.distances.closestNotReverse.wayPoint == -1 then
-        self:updateWayPointsDistance()
-    end
+    self:updateWayPointsDistance()
     if self.ad.distances.closestNotReverse.wayPoint ~= nil then
         return self.ad.distances.closestNotReverse.wayPoint.id, self.ad.distances.closestNotReverse.distance
     end
@@ -1478,9 +1479,7 @@ function AutoDrive:getWayPointsInRange(minDistance, maxDistance)
 end
 
 function AutoDrive:getWayPointIdsInRange(minDistance, maxDistance)
-    if self.ad.distances.wayPoints == nil then
-        self:updateWayPointsDistance()
-    end
+    self:updateWayPointsDistance()
     local inRange = {}
     for _, elem in pairs(self.ad.distances.wayPoints) do
         if elem.distance >= minDistance and elem.distance <= maxDistance and elem.wayPoint.id > 0 then

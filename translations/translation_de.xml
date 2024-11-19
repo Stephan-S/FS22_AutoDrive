@@ -228,6 +228,8 @@
 		<text name="gui_ad_playSounds_tooltip"					text="Schaltet die Soundeffekte an, die bei Mausklicks und Benachrichtigungen genuttz werden" />
 		<text name="gui_ad_scaleLines"							text="Linien Skalierung" />
 		<text name="gui_ad_scaleLines_tooltip"					text="Skaliert die Stärke der Verbindungslinien" />
+		<text name="gui_ad_scaleMarkerText"						text="Zieltext Skalierung" />
+		<text name="gui_ad_scaleMarkerText_tooltip"				text="Skaliert die Beschriftung der Ziele" />
 		<text name="gui_ad_syncMultiTargets"					text="Synchronisiere 'Mehrere Ziele'" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Wenn mehrere Fahrer die selben Ziele anfahren, wird die Zielauswahl synchronisiert." />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Am Ende Parken" />

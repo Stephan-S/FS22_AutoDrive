@@ -1,5 +1,5 @@
 AutoDrive = {}
-AutoDrive.version = "2.0.1.6"
+AutoDrive.version = "2.0.1.8"
 
 AutoDrive.directory = g_currentModDirectory
 
@@ -17,6 +17,7 @@ AutoDrive.experimentalFeatures.UTurn = true
 AutoDrive.experimentalFeatures.FoldImplements = true
 AutoDrive.experimentalFeatures.RefuelOnlyAtValidStations = true
 AutoDrive.experimentalFeatures.RecordWhileNotInVehicle = false
+AutoDrive.experimentalFeatures.NewPathfinder = true
 
 AutoDrive.dynamicChaseDistance = true
 AutoDrive.smootherDriving = true
@@ -440,7 +441,7 @@ function AutoDrive.drawNetworkOnMap()
 							if isSubPrio(outNode) then
 								r, g, b, a = unpack(AutoDrive.currentColors.ad_color_subPrioDualConnection)
 							end
-						elseif ADGraphManager:isReverseRoad(start, target) then
+						elseif ADGraphManager:isReverseRoad(node, outNode) then
 							r, g, b, a = unpack(AutoDrive.currentColors.ad_color_reverseConnection)
 						end
 						setOverlayColor( AutoDrive.courseOverlayId,  r, g, b, a)

@@ -262,13 +262,14 @@ function ADInputManager:input_start_stop(vehicle, farmId)
     end
     if vehicle.ad.stateModule:isActive() then
         vehicle.ad.isStoppingWithError = true
+        vehicle.ad.stateModule:setLoopsDone(0)
         vehicle:stopAutoDrive()
     else
         if farmId and farmId > 0 then
             -- set the farmId for the vehicle controlled by AD
             vehicle.ad.stateModule:setActualFarmId(farmId) -- input_start_stop
         end
-
+        vehicle.ad.stateModule:setLoopsDone(0)
         vehicle.ad.stateModule:getCurrentMode():start(AutoDrive.USER_PLAYER)
 
         if AutoDrive.rightSHIFTmodifierKeyPressed then
@@ -278,6 +279,7 @@ function ADInputManager:input_start_stop(vehicle, farmId)
                     
                     if otherVehicle.ad.stateModule.activeBeforeSave then
                         -- g_currentMission:requestToEnterVehicle(otherVehicle)
+                        otherVehicle.ad.stateModule:setLoopsDone(0)
                         otherVehicle.ad.stateModule:getCurrentMode():start(AutoDrive.USER_PLAYER)
                     end
                     if otherVehicle.ad.stateModule.AIVEActiveBeforeSave and otherVehicle.acParameters ~= nil then

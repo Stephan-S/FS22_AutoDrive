@@ -382,7 +382,7 @@ function ADTriggerManager:getBestPickupLocationFor(vehicle, trailer, fillType)
             local aifillTypes = loadingStation:getAISupportedFillTypes()
 			if aifillTypes[fillType] and loadingStation:getFillLevel(fillType, farmId) > 0 then
                 if loadingStation.getAITargetPositionAndDirection ~= nil then
-                    x, z, xDir, zDir = loadingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
+                    local x, z, xDir, zDir = loadingStation:getAITargetPositionAndDirection(FillType.UNKNOWN)
 
                     table.insert(validLoadingStations, loadingStation)
                 end

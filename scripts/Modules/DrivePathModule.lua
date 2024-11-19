@@ -215,7 +215,7 @@ function ADDrivePathModule:isCloseToWaypoint()
                 angle = math.abs(angle)
 
                 local isReverseStart = wp_ahead.incoming ~= nil and (not table.contains(wp_ahead.incoming, wp_current.id))
-                if angle >= 90 and not isReverseStart then
+                if angle >= 135 and not isReverseStart then
                     return true
                 end
             end

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<translationContributors>泰迪藍</translationContributors>
+	<texts>
+		<text name="UNKNOWN"									text="未知" />
+		<text name="input_ADToggleHud"							text="AD: 切換 HUD" />
+		<text name="input_ADToggleHudExtension"					text="AD: 顯示 HUD 信息" />
+		<text name="input_ADToggleMouse"						text="AD: 切換滑鼠" />
+		<text name="input_ADEnDisable"							text="AD: 啟用/禁用" />
+		<text name="input_ADSilomode"							text="AD: 更改模式" />
+		<text name="input_ADPreviousMode"						text="AD: 上一模式" />
+		<text name="input_ADRecord"								text="AD: 記錄" />
+		<text name="input_ADRecord_Dual"						text="AD: 記錄雙向路線" />
+		<text name="input_ADRecord_SubPrio"						text="AD: 記錄次要路線" />
+		<text name="input_ADRecord_SubPrioDual"					text="AD: 記錄雙向次要路線" />
+		<text name="input_ADSelectTarget"						text="AD: 選擇下一個目標" />
+		<text name="input_ADSelectPreviousTarget"				text="AD: 選擇上一個目標" />
+		<text name="input_AD_Speed_up"							text="AD: 提高速度" />
+		<text name="input_AD_Speed_down"						text="AD: 降低速度" />
+		<text name="input_AD_routes_manager" 					text="AD: 打開路線管理器" />
+		<text name="input_AD_open_notification_history" 		text="AD: 打開通知歷史" />
+		<text name="input_AD_open_colorSettings" 		        text="AD: 顏色分配" />
+		<text name="input_AD_continue"							text="AD: 繼續" />
+		<text name="input_ADSelectTargetUnload"					text="AD: 選擇下一個卸載" />
+		<text name="input_ADSelectPreviousTargetUnload"			text="AD: 選擇上一個卸載" />
+		<text name="input_ADActivateDebug"						text="AD: 編輯模式" />
+		<text name="input_ADDisplayMapPoints"					text="AD: 顯示航點" />
+		<text name="input_ADDebugSelectNeighbor"				text="AD: 選擇相鄰點" />
+		<text name="input_ADDebugChangeNeighbor"				text="AD: 選擇下一個相鄰點" />
+		<text name="input_ADDebugPreviousNeighbor"				text="AD: 選擇上一個相鄰點" />
+		<text name="input_ADDebugCreateConnection"				text="AD: 切換連接" />
+		<text name="input_ADDebugToggleConnectionInverted"		text="AD: 切換反轉之間的連接" />
+		<text name="input_ADDebugCreateMapMarker"				text="AD: 創建/編輯目標" />
+		<text name="input_ADRenameMapMarker"					text="AD: 編輯選定的目標" />
+		<text name="input_ADDebugDeleteWayPoint"				text="AD: 刪除航點" />
+		<text name="input_ADDebugDeleteDestination"				text="AD: 刪除最近的目標" />
+		<text name="input_ADSelectNextFillType"					text="AD: 選擇下一個填充類型" />
+		<text name="input_ADSelectPreviousFillType"				text="AD: 選擇上一個填充類型" />
+		<text name="input_ADOpenGUI"							text="AD: 打開圖形用戶界面" />
+		<text name="input_ADCallDriver"							text="AD: 呼叫司機" />
+		<text name="input_ADGoToVehicle"						text="AD: 前往到達的車輛" />
+		<text name="input_ADNameDriver"							text="AD: 指定司機姓名" />
+		<text name="input_ADSetDestinationFilter"				text="AD: 目的地篩選器" />
+		<text name="input_AD_FieldSpeed_up"						text="AD: 提高田間速度" />
+		<text name="input_AD_FieldSpeed_down"					text="AD: 降低田間速度" />
+		<text name="input_ADIncLoopCounter"						text="AD: 增加循環計數器" />
+		<text name="input_ADDecLoopCounter"						text="AD: 減少循環計數器" />
+		<text name="input_ADbunkerUnloadType"					text="AD: 卸載到拖車或 BGA" />
+		<text name="input_ADParkVehicle"						text="AD: 停放車輛" />
+		<text name="input_ADSetParkDestination"					text="AD: 指定第一個停車目的地" />
+		<text name="input_ADRefuelVehicle"						text="AD: 車輛加油" />
+		<text name="input_ADRepairVehicle"						text="AD: 修理車輛" />	
+		<text name="input_ADSwapTargets"						text="AD: 交換目標" />
+		<text name="input_ADStartCP"							text="AD: 交接給 CP/ALIVE" />
+		<text name="input_ADToggleCP_AIVE"						text="AD: 切換 CP/AIVE" />
+		<text name="input_AD_devAction"                         text="AD: 開發人員操作" />
+		<text name="input_ADToggleAutomaticPickupTarget"				text="AD: 切換自動拾取目標" />
+		<text name="input_ADToggleAutomaticUnloadTarget"				text="AD: 切換自動卸載目標" />
+		<text name="input_ADToggleLoadByFillLevel"				text="AD: Toggle loading by fill level" />
+		<text name="hud_avoidFruit"								text="AD: 避開作物" />
+		<text name="hud_startCp"								text="AD: 在目的地開始 CP / AIVE" />
+		<text name="AD_parkVehicle_noPosSet"					text="未指定停車目的地。" />
+		<text name="AD_parkVehicle_selected"					text="選擇的停車地點：" />
+		<text name="AD_parkVehicle_deleted"					    text="停車目的地已刪除！" />
+		<text name="AD_Driver_of"								text="司機" />
+		<text name="AD_has_reached"								text="已達到" />
+		<text name="AD_got_stuck"								text="卡住了" />
+		<text name="AD_cannot_reach"							text="無法到達" />
+		<text name="AD_cannot_find_path"						text="無法計算路徑" />
+		<text name="AD_new_marker"								text="新目標：" />
+		<text name="AD_No_Trailer"								text="找不到拖車" />
+		<text name="AD_No_Bunker"								text="找不到筒倉" />
+		<text name="AD_No_Shovel"								text="找不到連接的工具" />
+		<text name="AD_No_Refuel_Station"						text="找不到加油站：" />
+		<text name="AD_No_Repair_Station"						text="找不到維修站：" />
+		<text name="AD_Wrong_Mode_takeover_from_CP"				text="錯誤的AD模式與CP一起工作" />
+		<text name="AD_MODE_DRIVETO"							text="駕駛" />
+		<text name="AD_MODE_DELIVERTO"							text="送貨" />
+		<text name="AD_MODE_PICKUPANDDELIVER"					text="取貨和送貨" />
+		<text name="AD_MODE_UNLOAD"								text="卸載收割機" />
+		<text name="AD_MODE_LOAD"								text="加載" />
+		<text name="AD_MODE_BGA"								text="卸料倉" />
+		<text name="AD_synchronizing"							text="從服務器加載網絡.." />
+		<text name="AD_lctrl_for_extendedEditor" 				text="左CTRL 用於擴展編輯器模式" />
+		<text name="AD_lctrl_for_creation" 						text="左CTRL 創建" />
+		<text name="AD_lalt_for_deletion" 						text="左ALT 刪除" />
+		<text name="AD_lshift_for_reverse" 						text="右SHIFT 倒車" />
+		<text name="gui_ad_Setting"								text="AutoDrive - 設置" />
+		<text name="gui_ad_collisionHeigth"						text="地面碰撞高度" />
+		<text name="gui_ad_collisionHeigth_tooltip"				text="設置車輛前方的碰撞檢測。 如果在行駛過程中沒有檢測到其他車輛，則逐步減少。 (默認 2m)" />
+		<text name="gui_ad_blinkValue"						    text="自動轉向燈" />
+		<text name="gui_ad_blinkValue_tooltip"					text="自動啟用轉向燈的轉向角度。 (0 = 轉向燈自動停用)" />
+		<text name="gui_ad_pipe_offset"							text="伸出螺旋鉆" />
+		<text name="gui_ad_followDistance"						text="收割機距離" />
+		<text name="gui_ad_followDistance_tooltip"				text="跟隨收割機後端時保持距離" />
+		<text name="gui_ad_lookahead_turning"					text="前視距離（轉彎）" />
+		<text name="gui_ad_lookahead_turning_tooltip"			text="車輛前方調整轉向以跟隨下一段路的距離" />
+		<text name="gui_ad_useFastestRoute"						text="使用最快的路線" />
+		<text name="gui_ad_useFastestRoute_tooltip"				text="在計算最佳路線時，考慮行駛速度而不是簡單的距離。" />
+		<text name="gui_ad_mapMarkerDetour"						text="最遠距離" />
+		<text name="gui_ad_mapMarkerDetour_tooltip"				text="避開目標時的最遠路線" />
+		<text name="gui_ad_siloEmpty"							text="如果筒倉是空的" />
+		<text name="gui_ad_siloEmpty_tooltip"					text="取貨和送貨司機如何對空筒倉作出反應" />
+		<text name="gui_ad_useFolders"							text="使用文件夾" />
+		<text name="gui_ad_useFolders_tooltip"					text="使用文件夾來構建目的地" />
+		<text name="gui_ad_wait"								text="等待" />
+		<text name="gui_ad_drive"								text="繼續駕駛" />
+		<text name="gui_ad_off"									text="Off" />
+		<text name="gui_ad_yes"									text="是" />
+		<text name="gui_ad_no"									text="否" />
+		<text name="gui_ad_FS22"								text="FS 22" />
+		<text name="gui_ad_FS19"								text="FS 19" />
+		<text name="gui_ad_BSMRange"							text="料倉管理範圍" />
+		<text name="gui_ad_BSMRange_tooltip"					text="在這個範圍內，車輛到目的地的料倉一個接一個地得到車道" />
+		<text name="ad_bga_init"								text="初始化" />
+		<text name="ad_bga_waiting"								text="等待拖車/筒倉" />
+		<text name="ad_bga_active"								text="活躍" />
+		<text name="gui_ad_autoConnect_start"					text="自動連接（開始）" />
+		<text name="gui_ad_autoConnect_start_tooltip"			text="錄制自動連接開始時合適的節點" />
+		<text name="gui_ad_autoConnect_end"						text="自動連接（結束）" />
+		<text name="gui_ad_autoConnect_end_tooltip"				text="錄制自動連接結束時合適的節點" />
+		<text name="gui_ad_parkInField"							text="田間停車" />
+		<text name="gui_ad_parkInField_tooltip"					text="卸載聯合收割機後 - 如果沒有停在作物里" />
+		<text name="gui_ad_unloadFillLevel"						text="卸載填充水平" />
+		<text name="gui_ad_unloadFillLevel_tooltip"				text="卸貨收割機後。 直接以該填充水平卸貨。" />
+		<text name="gui_ad_findDriver"							text="找司機" />
+		<text name="gui_ad_findDriver_tooltip"					text="搜索附近的司機（忽略目的地）" />
+		<text name="gui_ad_gui_scale"							text="AutoDrive HUD 的 Gui 比例" />
+		<text name="gui_ad_gui_scale_tooltip"					text="保留默認以在遊戲縮放設置中使用" />
+		<text name="gui_ad_notifications"						text="通知" />
+		<text name="gui_ad_notifications_text_1"				text="已禁用" />
+		<text name="gui_ad_notifications_text_2"				text="簡要" />
+		<text name="gui_ad_notifications_text_3"				text="默認" />
+		<text name="gui_ad_notifications_text_4"				text="長" />
+		<text name="gui_ad_notifications_text_5"				text="超長" />
+		<text name="gui_ad_notifications_text_6"				text="無限制" />
+		<text name="gui_ad_notifications_tooltip"				text="通知的顯示時間：無顯示/大約。 2,5s / 5s / 10s / 25s / 顯示直到用戶關閉" />
+		<text name="gui_ad_exitField"							text="退出田地" />
+		<text name="gui_ad_exitField_tooltip"					text="卸載車輛的離開田地行動方式" />
+		<text name="gui_ad_default"								text="默認" />
+		<text name="gui_ad_after_start"							text="後面開始" />
+		<text name="gui_ad_closest"								text="最近點" />
+		<text name="gui_ad_showHelp"							text="顯示幫助" />
+		<text name="gui_ad_showHelp_tooltip"					text="在F1窗口中顯示綁定鍵" />
+		<text name="gui_ad_driverWages"							text="司機的工資" />
+		<text name="gui_ad_driverWages_tooltip"					text="司機的工資將乘以這個值" />
+		<text name="gui_ad_showNextPath"						text="顯示下一個路徑" />
+		<text name="gui_ad_showNextPath_tooltip"				text="啟用/禁用下兩個航點的顯示" />
+		<text name="gui_ad_avoidFruit"							text="避開作物" />
+		<text name="gui_ad_avoidFruit_tooltip"					text="聯合卸貨車輛試圖避免破壞作物" />
+		<text name="gui_ad_pathFinderTime"						text="查找路徑系數" />
+		<text name="gui_ad_pathFinderTime_tooltip"				text="確定允許查找路徑算法搜索到來自收割機的無碰撞路徑的距離。 僅應略微增加，以防在有足夠田地邊距的大塊土地上避開作物不起作用。" />
+		<text name="gui_ad_lineHeight"							text="路線高度" />
+		<text name="gui_ad_lineHeight_tooltip"					text="編輯模式下路線的顯示高度。 位於地面或拖拉機上方" />
+		<text name="gui_ad_ground"								text="地面" />
+		<text name="gui_ad_aboveDriver"							text="拖拉機上方" />
+		<text name="gui_ad_enableTrafficDetection"				text="碰撞檢測" />
+		<text name="gui_ad_enableTrafficDetection_tooltip"		text="高級碰撞檢測，還可以檢測 AI 交通、標志、圍欄等。 Off, detect FS 22 or FS 19 collision" />
+		<text name="gui_ad_shovelWidth"							text="工具寬度（加法）" />
+		<text name="gui_ad_shovelWidth_tooltip"					text="如果自動檢測到的工具寬度太小，可以增加這個值" />
+		<text name="gui_ad_preCallLevel"						text="預呼叫級別" />
+		<text name="gui_ad_preCallLevel_tooltip"				text="設定預呼叫卸載車輛的填充水平。" />
+		<text name="gui_ad_none"					            text="無" />
+		<text name="gui_ad_onlyPickup"					        text="僅裝載" />
+		<text name="gui_ad_onlyDeliver"					        text="僅卸載" />
+		<text name="gui_ad_PickupandDeliver"					text="裝載和卸載" />
+		<text name="gui_ad_rotateTargets"					    text="循環裝載和卸載" />
+		<text name="gui_ad_rotateTargets_tooltip"			    text="4種模式:不更改目標/僅裝載目標/僅卸載目標/文件夾中的裝載和卸載目標循環（不使用默認文件夾）（僅在使用文件夾處於活動狀態時才考慮）" />
+		<text name="gui_ad_maxTriggerDistance"					text="最大觸發距離" />
+		<text name="gui_ad_maxTriggerDistance_tooltip"			text="檢測和激活目標觸發器的距離。" />
+		<text name="gui_ad_useGlobalSetting"					text="Use global setting" />
+		<text name="gui_ad_useBeaconLights"						text="信標燈" />
+		<text name="gui_ad_useBeaconLights_tooltip"				text="是 - 在田地外自動使用信標燈/否 - 信標燈不會自動打開或關閉" />
+
+		<text name="gui_ad_worklightsWhenLoading"				text="裝載/卸載時的工作燈" />
+		<text name="gui_ad_worklightsWhenLoading_tooltip"		text="是 - 在觸發器上裝載或卸載時使用工作燈" />
+		<text name="gui_ad_worklightsWhenSilo"					text="筒倉工作燈" />
+		<text name="gui_ad_worklightsWhenSilo_tooltip"			text="是 - 在筒倉中使用工作燈" />
+		<text name="gui_ad_hazardLightReverse"					text="危險信號燈" />
+		<text name="gui_ad_hazardLightReverse_tooltip"			text="是 - 倒車時使用危險信號燈" />
+
+    <text name="gui_ad_activeUnloading"						text="主動卸貨" />
+		<text name="gui_ad_activeUnloading_tooltip"				text="收割機行駛時卸載。" />
+		<text name="gui_ad_restrictToField"						text="將路徑查找限制在田地" />
+		<text name="gui_ad_restrictToField_tooltip"				text="如果卸載車輛已經停在田間，他會將路徑查找限制在田間區域內。" />
+		<text name="gui_ad_showTooltips"						text="顯示工具提示" />
+		<text name="gui_ad_showTooltips_tooltip"				text="在 HUD 中顯示按鈕的工具提示。" />
+		<text name="gui_ad_enterTargetNameTitle_add"			text="添加目標" />
+		<text name="gui_ad_enterTargetNameTitle_edit"			text="編輯目標" />
+		<text name="gui_ad_enterTargetNameText"					text="插入目標名稱：" />
+		<text name="gui_ad_createButtonText"					text="創建" />
+		<text name="gui_ad_enterDriverNameTitle"				text="重命名司機" />
+		<text name="gui_ad_enterDriverNameText"					text="插入司機名稱：" />
+		<text name="gui_ad_enterGroupNameTitle"					text="創建文件夾" />
+		<text name="gui_ad_enterGroupNameText"					text="插入文件夾名稱：" />
+		<text name="gui_ad_autoRefuel"							text="自動加油" />
+		<text name="gui_ad_autoRefuel_tooltip"					text="當燃油油位低時，行駛至加油目的地（接近加油觸發器）。" />
+		<text name="gui_ad_autoRepair"							text="自動維修" />
+		<text name="gui_ad_autoRepair_tooltip"					text="當損壞程度太高時，開車到車間目的地（接近維修觸發器）。" />
+		<text name="gui_ad_filter"								text="篩選" />
+		<text name="gui_ad_enterDestinationFilterTitle"			text="更改目標篩選文本" />
+		<text name="gui_ad_enterDestinationFilterText"			text="插入篩選文本：" />
+		<text name="gui_ad_shovelHeight"						text="工具高度" />
+		<text name="gui_ad_shovelHeight_tooltip"				text="如果自動檢測到的工具高度不正確。 使用它來調整目標地面高度" />
+		<text name="gui_ad_showMarkersOnMap"					text="顯示標記" />
+		<text name="gui_ad_showMarkersOnMap_tooltip"			text="在遊戲地圖上顯示標記/目的地" />
+		<text name="gui_ad_switchToMarkersOnMap"				text="切換到標記" />
+		<text name="gui_ad_switchToMarkersOnMap_tooltip"		text="在點擊地圖熱點時設置目標/卸載目標" />
+		<text name="gui_ad_cornerSpeed"							text="轉彎速度" />
+		<text name="gui_ad_cornerSpeed_tooltip"					text="調整個別車輛的轉彎速度。 重量和當前速度仍會影響制動點" />
+		<text name="gui_ad_callSecondUnloader"					text="呼叫第二輛卸載拖車" />
+		<text name="gui_ad_callSecondUnloader_tooltip"			text="當前卸貨拖車達到設定的填充水平時，呼叫第二輛卸載拖車" />
+		<text name="gui_ad_followOnlyOnField"					text="將卸貨車輛限制在田地區域" />
+		<text name="gui_ad_followOnlyOnField_tooltip"			text="在主動卸貨時將卸貨車輛限制在田地範圍內" />
+		<text name="gui_ad_addSettingsToHUD"					text="將設置添加到 HUD" />
+		<text name="gui_ad_addSettingsToHUD_tooltip"			text="向 HUD 添加按鈕以在不打開此菜單的情況下更改設置" />
+		<text name="gui_ad_iconSetToUse"						text="個性化Logo" />
+		<text name="gui_ad_iconSetToUse_tooltip"				text="默認Logo或個性化Logo - 可以擴展選擇。" />
+		<text name="gui_ad_secondEditorModeAllowed"				text="使用第二編輯器模式" />
+		<text name="gui_ad_secondEditorModeAllowed_tooltip"		text="使用第二編輯器模式,而不是按住左CTRL" />
+		<text name="gui_ad_wideHUD"								text="寬HUD" />
+		<text name="gui_ad_wideHUD_tooltip"						text="使用寬 HUD 模式，該模式還允許在 HUD 中添加更多設置按鈕" />
+		<text name="gui_ad_playSounds"							text="聲音" />
+		<text name="gui_ad_playSounds_tooltip"					text="啟用滑鼠點擊和通知的音效" />
+		<text name="gui_ad_scaleLines"							text="刻度線" />
+		<text name="gui_ad_scaleLines_tooltip"					text="Scale Thickness of connection lines" />
+		<text name="gui_ad_syncMultiTargets"					text="同步多個目的地" />
+		<text name="gui_ad_syncMultiTargets_tooltip"			text="如果幾個司機開車到同一個目的地，目的地選擇是同步的。" />
+		<text name="gui_ad_enableParkAtJobFinished"				text="工作完成後停車" />
+		<text name="gui_ad_enableParkAtJobFinished_tooltip"		text="僅在裝載和卸載模式下可用，裝載：如果作業完成，車輛/機具將接近到保存的停放位置。 在 Dedi-Server 上僅適用於停車！" />
+		<text name="gui_ad_autoTipSide"                         text="自動卸料側" />
+		<text name="gui_ad_autoTipSide_tooltip"                 text="是 - AutoDrive 自動選擇卸載側 / 否 - 使用選定的卸載側" />
+		<text name="gui_ad_autoTrailerCover"                    text="自動拖車蓋" />
+		<text name="gui_ad_autoTrailerCover_tooltip"            text="是 - AutoDrive 根據需要打開和關閉拖車蓋/否 - AutoDrive 不會打開或關閉拖車蓋" />
+		<text name="gui_ad_useForwardTurningManoeuvre"          text="向前轉彎機動" />
+		<text name="gui_ad_useForwardTurningManoeuvre_tooltip"  text="是 - AutoDrive 卸料車輛嘗試規劃一條前進路徑以適應聯合收割機的 90° 轉彎。 / 否 - 卸載車輛將在轉彎前倒車" />
+		<text name="gui_ad_ALUnload"                            text="自動裝載：卸載位置" />
+		<text name="gui_ad_ALUnload_tooltip"                    text="開關自動裝載(Autoload拖車MOD)，裝載拖車中間卸載，左右邊卸載(位置取決於車輛設置,而不是AD!)" />
+		<text name="gui_ad_AL_off"                              text="關閉卸載" />
+		<text name="gui_ad_AL_center"                           text="中間卸載" />
+		<text name="gui_ad_AL_left"                             text="左邊卸載" />
+		<text name="gui_ad_AL_behind"                           text="後面卸載" />
+		<text name="gui_ad_AL_right"                            text="右邊卸載" />
+		<text name="gui_ad_ALUnloadWaitTime"                    text="自動裝載：卸載後的等待時間" />
+		<text name="gui_ad_ALUnloadWaitTime_tooltip"            text="卸載後，繼續行駛前的等待時間 - 對中間卸載有用:0-不等待，選定的等待時間" />
+		<text name="gui_ad_scanConfirmationTextTitle"           text="AutoDrive - 路線生成" />
+		<text name="gui_ad_scanConfirmationText"                text="AutoDrive 是否應該根據地圖上的交通和輔助數據生成路線網絡？" />
+		<text name="gui_ad_noHarvesterAvailable"				text="未找到具有相同目標的收割機" />
+		<text name="gui_ad_noUnloaderAvailable"					text="沒有可用的相同目標司機" />
+		<text name="gui_ad_remainingDriveTimeInterval"			text="剩餘行駛時間" />
+		<text name="gui_ad_remainingDriveTimeInterval_tooltip"	text="對於外部模組：計算剩餘行駛時間的時間間隔。如果出現效能提升或停用問題." />
+
+		<text name="gui_ad_settingsPage_title"					text="設置 - AutoDrive" />
+		<text name="gui_ad_userSettingsPage_title"				text="用戶設置 - AutoDrive" />
+		<text name="gui_ad_vehicleSettingsPage_title"			text="車輛設置 - AutoDrive" />
+		<text name="gui_ad_combineUnloadSettingsPage_title"		text="收割機卸載設置 - AutoDrive" />
+		<text name="gui_ad_debugSettingsPage_title"				text="調試設置 - AutoDrive" />
+		<text name="gui_ad_eFeaturesSettingsPage_title"			text="實驗功能設置 - AutoDrive" />
+		<text name="gui_ad_environmentSettingsPage_title"		text="非功能設置 - AutoDrive" />
+		<text name="gui_ad_restoreButtonText"					text="恢覆" />
+		<text name="gui_ad_settingsClosingDialog_title"			text="所有更改都將丟失" />
+		<text name="gui_ad_settingsClosingDialog_text"			text="您確定要關閉設置而不保存嗎？" />
+		<text name="gui_ad_setDefaultButtonText" 				text="設為默認" />
+		<text name="gui_ad_routesManagerTitle" 					text="路線管理器" />
+		<text name="gui_ad_routesManagerTextTitle" 				text="插入路線名稱：" />
+		<text name="gui_ad_button_export" 						text="保存" />
+		<text name="gui_ad_button_import" 						text="加載" />
+		<text name="gui_ad_routeExportWarn_text" 				text="您確定要覆蓋現有路線嗎？" />
+		<text name="gui_ad_routeExportWarn_title" 				text="路線覆蓋" />
+		<text name="gui_ad_routeDeleteWarn_text" 				text="您確定要刪除路線嗎 '%s'?" />
+		<text name="gui_ad_routeDeleteWarn_title" 				text="路線刪除" />
+
+		<text name="statistic_driversTraveledDistance" 			text="與司機的行駛距離" />
+		<text name="statistic_driversHired" 					text="目前雇用的司機" />
+
+		<text name="gui_ad_debugChannelVehicle" 				text="車輛" />
+		<text name="gui_ad_debugChannelCombine" 				text="收割機" />
+		<text name="gui_ad_debugChannelTrailer" 				text="拖車" />
+		<text name="gui_ad_debugChannelDev" 					text="開發人員" />
+		<text name="gui_ad_debugChannelPath" 					text="路徑查找" />
+		<text name="gui_ad_debugChannelSensor" 					text="傳感器" />
+		<text name="gui_ad_debugChannelNetwork" 				text="網絡" />
+		<text name="gui_ad_debugChannelExternalInterface" 		text="外部接口" />
+		<text name="gui_ad_debugChannelRender" 					text="渲染" />
+		<text name="gui_ad_debugChannelRoadNetwork"	 			text="道路網絡" />
+		<text name="gui_ad_debugChannelBGA"						text="BGA模式" />
+		<text name="gui_ad_debugChannelTrains"					text="Trains" />
+		<text name="gui_ad_debugChannelAll" 					text="全部" />
+
+		<text name="gui_ad_notificationHistoryTitle" 			text="通知" />
+
+		<text name="gui_ad_colorSettingsTitle" 			        text="顏色分配" />
+        <!-- Please keep the numbers in the translation texts - they are used to sort / group the entries in the list -->
+		<text name="ad_color_singleConnection" 			        text="01 單向連接線路" />
+		<text name="ad_color_dualConnection" 			        text="02 雙向連接線路" />
+		<text name="ad_color_reverseConnection" 			    text="03 反向連接線路" />
+		<text name="ad_color_default" 			                text="04 單向和反向連接的航點" />
+		<text name="ad_color_subPrioSingleConnection" 			text="05 單向支線線路連接線" />
+		<text name="ad_color_subPrioDualConnection" 			text="06 雙向線路連接線" />
+		<text name="ad_color_subPrioNode" 			            text="07 支線航點" />
+		<text name="ad_color_hoveredNode" 			            text="08 滑鼠指針下的航點（懸停）" />
+		<text name="ad_color_previousNode" 			            text="09 上一個連接的航路點到光標下的航點" />
+		<text name="ad_color_nextNode" 			                text="10 連接下一個航點" />
+		<text name="ad_color_selectedNode" 			            text="11 用滑鼠單擊標記的航點" />
+		<text name="ad_color_currentConnection" 			    text="12 下一條路徑" />
+		<text name="ad_color_closestLine" 			            text="13 從車輛到最近航點的線" />
+		<text name="ad_color_editorHeightLine" 			        text="14 從地面航刪除所有點到上述車輛的線" />
+
+		<text name="ad_color_previewSingleConnection" 	        text="15 curve preview OK, single-way connection" />
+		<text name="ad_color_previewDualConnection" 	        text="16 curve preview OK, dual-way connection" />
+		<text name="ad_color_previewSubPrioSingleConnection"    text="17 curve preview OK, secondary single-way connection" />
+		<text name="ad_color_previewSubPrioDualConnection" 	    text="18 curve preview OK, secondary dual-way connection" />
+		<text name="ad_color_previewOk" 			            text="19 曲線預覽沒問題，沒有碰撞" />
+		<text name="ad_color_previewNotOk" 			            text="20 曲線預覽注意，有碰撞" />
+		<text name="ad_color_textInputBackground" 			    text="21 Background for inputs of text, targets etc." />
+
+		<text name="button_delete_all" 							text="全部刪除" />
+		<text name="button_reset_selected" 					    text="重置選擇" />
+		<text name="AD_task_pathfinding"						text="查找路徑" />
+		<text name="AD_task_catch_up_with_combine"				text="駛向收割機" />
+		<text name="AD_task_clearcrop"							text="清理作物" />
+		<text name="AD_task_drive_to_destination"				text="開車到目的地" />
+		<text name="AD_task_drive_to_vehicle"					text="駛向目標車輛" />
+		<text name="AD_task_drive_to_combine_pipe"				text="收割機行駛卸載" />
+		<text name="AD_task_unloading_combine"					text="卸載聯合收割機" />
+		<text name="AD_task_reversing_from_combine"				text="收割機倒車" />
+		<text name="AD_task_waiting_for_space"					text="等待空位" />
+		<text name="AD_task_wait_for_combine_turn"				text="等待收割機" />
+		<text name="AD_task_drive_to_load_point"				text="前往裝載點" />
+		<text name="AD_task_drive_to_refuel_point"				text="前往加油站" />
+		<text name="AD_task_drive_to_repair_point"				text="前往維修站" />
+		<text name="AD_task_stop_and_disable"					text="停止" />
+		<text name="AD_task_drive_to_unload_point"				text="前往卸載點" />
+		<text name="AD_task_wait_for_call"						text="等待呼叫" />
+		<text name="AD_task_chasing_combine"					text="接近收割機" />	
+		<text name="AD_task_wait_for_combine_pass_by"			text="讓收割機通過" />	
+		<text name="AD_task_catching_chase_side"				text="查找位置" />	
+		<text name="AD_task_chase_side"							text="位置" />	
+		<text name="AD_task_chase_side_left"					text="左" />	
+		<text name="AD_task_chase_side_rear"					text="後" />	
+		<text name="AD_task_chase_side_right"					text="右" />		
+		<text name="AD_task_waiting_for_room"					text="等待空位" />
+		<text name="AD_task_exiting_field"						text="離開田地" />
+		<text name="AD_task_reversing_from_collision"			text="查找空位" />
+        <text name="AD_task_drive_to_park"				        text="前往到停車位" />
+		<text name="AD_task_unload_area_in_fruit"			    text="收割機卸貨區卡住" />
+
+		<text name = "gui_CPAD_off"								text = "關閉"/>
+		<text name = "gui_CPAD_simple"							text = "簡略"/>
+		<text name = "gui_CPAD_full"							text = "詳細"/>		
+		<text name = "gui_ad_combineCPADHudMouse"				text = "收割機 CP/AD 按鈕"/>
+    	<text name = "gui_ad_combineCPADHudMouse_tooltip"		text = "關閉：默認/簡單:CP:秒。 滑鼠操作 > 滑鼠開 + 關,AD:顯示/隱藏 HUD > 兩個 hud 開 + 關 / 完整：與“簡單”相同，但可以單獨切換 hud / 必需：在 CP 菜單中禁用右鍵單擊 HUD"/>
+		
+		<text name = "gui_ad_editorTip_1"								text = "簡單的滑鼠左鍵點擊："/>
+		<text name = "gui_ad_editorTip_2"								text = "僅滑鼠:選擇第一個點"/>
+		<text name = "gui_ad_editorTip_3"								text = "左CTRL = 創建節點"/>
+		<text name = "gui_ad_editorTip_4"								text = "LALT = 刪除節點"/>
+		<text name = "gui_ad_editorTip_5"								text = "左SHIFT = 將點標記為支線"/>
+		<text name = "gui_ad_editorTip_6"								text = "點擊第二個點："/>
+		<text name = "gui_ad_editorTip_7"								text = "創建/刪除連接"/>
+		<text name = "gui_ad_editorTip_8"								text = "右SHIFT = 生成反向路徑"/>
+		<text name = "gui_ad_editorTip_9"								text = "第一個點是交叉點，第二個是相鄰點："/>
+		<text name = "gui_ad_editorTip_10"								text = "左CTRL: 更改路線類型"/>
+		<text name = "gui_ad_editorTip_11"								text = "左SHIFT = 更改支線"/>
+	</texts>
+</l10n>

@@ -28,11 +28,14 @@ function UnloadAtDestinationTask:setUp()
         self.state = UnloadAtDestinationTask.STATE_PATHPLANNING
         if self.vehicle.ad.restartCP == true then
             if self.vehicle.ad.stateModule:getMode() == AutoDrive.MODE_PICKUPANDDELIVER then
+                self.vehicle.ad.pathFinderModule:reset()
                 self.vehicle.ad.pathFinderModule:startPathPlanningToWayPoint(self.vehicle.ad.stateModule:getFirstWayPoint(), self.destinationID)
             else
+                self.vehicle.ad.pathFinderModule:reset()
                 self.vehicle.ad.pathFinderModule:startPathPlanningToWayPoint(self.vehicle.ad.stateModule:getSecondWayPoint(), self.destinationID)
             end
         else
+            self.vehicle.ad.pathFinderModule:reset()
             self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.destinationID)
         end
     else
@@ -62,14 +65,17 @@ function UnloadAtDestinationTask:update(dt)
             self.wayPoints = self.vehicle.ad.pathFinderModule:getPath()
             if self.wayPoints == nil or #self.wayPoints == 0 then
                 if self.vehicle.ad.pathFinderModule:isTargetBlocked() then
-                    -- If the selected field exit isn't reachable, try the closest one                  
+                    -- If the selected field exit isn't reachable, try the closest one
+                    self.vehicle.ad.pathFinderModule:reset()
                     self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.vehicle.ad.stateModule:getSecondWayPoint())
                 elseif self.vehicle.ad.pathFinderModule:timedOut() or self.vehicle.ad.pathFinderModule:isBlocked() then
                     -- Add some delay to give the situation some room to clear itself
                     self.vehicle.ad.modes[AutoDrive.MODE_UNLOAD]:notifyAboutFailedPathfinder()
+                    self.vehicle.ad.pathFinderModule:reset()
                     self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.vehicle.ad.stateModule:getSecondWayPoint())
                     self.vehicle.ad.pathFinderModule:addDelayTimer(10000)
                 else
+                    self.vehicle.ad.pathFinderModule:reset()
                     self.vehicle.ad.pathFinderModule:startPathPlanningToNetwork(self.vehicle.ad.stateModule:getSecondWayPoint())
                 end
 
@@ -247,8 +253,8 @@ end
 
 function UnloadAtDestinationTask:getI18nInfo()
     if self.state == UnloadAtDestinationTask.STATE_PATHPLANNING then
-        local actualState, maxStates = self.vehicle.ad.pathFinderModule:getCurrentState()
-        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d ", actualState, maxStates)
+        local actualState, maxStates, steps, max_pathfinder_steps = self.vehicle.ad.pathFinderModule:getCurrentState()
+        return "$l10n_AD_task_pathfinding;" .. string.format(" %d / %d - %d / %d", actualState, maxStates, steps, max_pathfinder_steps)
     else
         return "$l10n_AD_task_drive_to_unload_point;"
     end

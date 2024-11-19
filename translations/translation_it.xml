@@ -222,6 +222,8 @@
         <text name="gui_ad_playSounds_tooltip"          	text="Abilita gli effetti sonori per i clic del mouse e le notifiche" />
 		<text name="gui_ad_scaleLines"							text="Spessore linee" />
 		<text name="gui_ad_scaleLines_tooltip"					text="Spessore delle linee di connessione" />
+		<text name="gui_ad_scaleMarkerText"						text="Scale Destination Name" />
+		<text name="gui_ad_scaleMarkerText_tooltip"				text="Scale Size of Destination Names" />
         <text name="gui_ad_syncMultiTargets"           		text="Sincronizza obbiettivi multipli" />
         <text name="gui_ad_syncMultiTargets_tooltip"        	text="Più autisti che utilizzano la stessa cartella per più obiettivi sincronizzeranno gli obiettivi successivi" />
         <text name="gui_ad_enableParkAtJobFinished"         	text="Parcheggia a lavoro finito" />

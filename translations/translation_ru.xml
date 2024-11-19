@@ -222,6 +222,8 @@
 		<text name="gui_ad_playSounds_tooltip"					text="Включает звуковые эффекты для щелчков мыши и уведомлений." />
 		<text name="gui_ad_scaleLines"							text="Размер линий" />
 		<text name="gui_ad_scaleLines_tooltip"					text="Размер толщины линий соединений." />
+		<text name="gui_ad_scaleMarkerText"						text="Scale Destination Name" />
+		<text name="gui_ad_scaleMarkerText_tooltip"				text="Scale Size of Destination Names" />
 		<text name="gui_ad_syncMultiTargets"					text="Синхронизация нескольких локаций" />
 		<text name="gui_ad_syncMultiTargets_tooltip"			text="Если несколько водителей едут в одно и то же место, выбор места назначения синхронизируется." />
 		<text name="gui_ad_enableParkAtJobFinished"				text="Припарковать по завершению" />
