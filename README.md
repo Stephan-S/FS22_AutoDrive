@@ -7,7 +7,7 @@ Direct Download: https://github.com/Stephan-S/FS22_AutoDrive/releases/latest/dow
 
 ## Discord Server:
 For help & support, feel free to join us on Discord: 
-https://discord.gg/9D4B5hX
+https://discord.gg/2XfnM59DFy
 
 ### For a little thank you
 If you like our work, feel free to buy us a coffee (of which we drink quite a lot :D )  
