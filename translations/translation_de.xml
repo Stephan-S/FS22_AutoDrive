@@ -310,8 +310,8 @@
 		<text name="ad_color_nextNode" 			                text="10 nächster verbundener Wegpunkt zum Wegpunkt unter Mauszeiger" />
 		<text name="ad_color_selectedNode" 			            text="11 mit Mausklick markierter Wegpunkt" />
 		<text name="ad_color_currentConnection" 			    text="12 Pfeil nächster Pfad" />
-		<text name="ad_color_closestLine" 			            text="13 Linie Fahrzeug <-> naheliegendster Wegpunkt" />
-		<text name="ad_color_editorHeightLine" 			        text="14 senkrechte Linie Wegpunkt am Boden <-> Wegpunkt über dem Fahrzeug" />
+		<text name="ad_color_closestLine" 			            text="13 Linie Fahrzeug zum naheliegendster Wegpunkt" />
+		<text name="ad_color_editorHeightLine" 			        text="14 senkrechte Linie Wegpunkt am Boden - Wegpunkt über dem Fahrzeug" />
 		<text name="ad_color_previewSingleConnection" 	        text="15 Kurve Vorschauline OK, Hauptstrecke eine Richtung" />
 		<text name="ad_color_previewDualConnection" 	        text="16 Kurve Vorschauline OK, Hauptstrecke zwei Richtungen" />
 		<text name="ad_color_previewSubPrioSingleConnection"    text="17 Kurve Vorschauline OK, Nebenstrecke eine Richtung" />
